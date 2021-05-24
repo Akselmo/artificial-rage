@@ -2,3 +2,4 @@
 *.code-workspace
 /Makefile
 /Makefile.Android
+/raylib/
