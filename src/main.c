@@ -1,9 +1,8 @@
 //Scifi FPS, uses RayLib library
 //Made by Akseli
-//Compile: gcc main.c -o game.exe -O1 -Wall -std=c99 -Wno-missing-braces -I include\ -L lib -lraylib -lopengl32 -lgdi32 -lwinmm
 #include <stdio.h>
 
-#include "include/raylib.h"
+#include "../include/raylib.h"
 #include "player/player.h"
 #include "settings/settings.h"
 #include "level/level.h"

@@ -1,10 +1,5 @@
-#include"../include/raylib.h"
+#include"../../include/raylib.h"
 
-#define CAMERA_FIRST_PERSON_STEP_TRIGONOMETRIC_DIVIDER  0.0f
-#define CAMERA_FIRST_PERSON_STEP_DIVIDER                00.0f
-#define CAMERA_FIRST_PERSON_WAVING_DIVIDER              000.0f
-
-//TODO: override headbob
 
 Camera PlayerCamera(float fov)
 {
