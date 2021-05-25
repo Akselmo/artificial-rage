@@ -1,6 +1,3 @@
 /.vscode
 *.code-workspace
-/Makefile.Android
-/raylib/
-/include/raylib.h
-/lib/libraylib.a
+

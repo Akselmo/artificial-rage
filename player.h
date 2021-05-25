@@ -1,2 +1,4 @@
 #include"include/raylib.h"
-Camera PlayerCamera(void);
+
+
+Camera PlayerCamera(float fov);
