@@ -9,8 +9,8 @@ void DrawLevel(Vector2 size)
     //Vector3: (X, Y, Z)
     float xHalfSize = size.x/2;
     float yHalfSize = size.y/2;
-    DrawCube((Vector3){ -size.x, 2.5f, 0.0f }, 1.0f, 5.0f, size.x, BLUE);
-    DrawCube((Vector3){ size.x, 2.5f, 0.0f }, 1.0f, 5.0f, size.x, LIME);
-    DrawCube((Vector3){ 0.0f, 2.5f, size.y}, size.y, 5.0f, 1.0f, GOLD); 
-    DrawCube((Vector3){ 0.0f, 2.5f, -size.y}, size.y, 5.0f, 1.0f, PURPLE);
+    DrawCube((Vector3){ -xHalfSize, 2.5f, 0.0f }, 1.0f, 5.0f, size.y, BLUE);
+    DrawCube((Vector3){ xHalfSize, 2.5f, 0.0f }, 1.0f, 5.0f, size.y, LIME);
+    DrawCube((Vector3){ 0.0f, 2.5f, yHalfSize}, size.x, 5.0f, 1.0f, GOLD); 
+    DrawCube((Vector3){ 0.0f, 2.5f, -yHalfSize}, size.x, 5.0f, 1.0f, PURPLE);
 }

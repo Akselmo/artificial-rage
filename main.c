@@ -24,7 +24,7 @@ void Initialize(void)
     camera = PlayerCamera(fov);
 
     //Random level size
-    levelSize = (Vector2){ GetRandomValue(20,50), GetRandomValue(20,50)};
+    levelSize = (Vector2){ GetRandomValue(32,128), GetRandomValue(32,128)};
 
     //Show level size in logs
     char str[64];
