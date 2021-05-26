@@ -1,5 +1,5 @@
 #include"../../include/raylib.h"
-
+#include"settings.h"
 
 void InitializeGame(void)
 {
@@ -20,4 +20,11 @@ float GetFOV(void)
 {
     //Get FOV from config file
     return 60.0f;
+}
+
+//TODO: instead of reading keys from initialization, read a file instead
+//Then we dont have to feed parameters
+int GetCustomInput(int key)
+{
+    return key;
 }

@@ -5,12 +5,8 @@
 #include "../include/raylib.h"
 #include "player/player.h"
 #include "settings/settings.h"
-#include "level/level.h"
-
 //Public variables
 Camera camera;
-float fov;
-float mouseSensitivity;
 Vector2 levelSize;
 
 //Initialization
@@ -18,9 +14,18 @@ void Initialize(void)
 {
     //Initialize game
     InitializeGame();
-    fov = GetFOV();
-    mouseSensitivity = GetSensitivity();
-    camera = PlayerCamera(fov);
+        
+    //TODO: Instead of setting keys and other settings here, we could set them when creating the player
+    float fov = GetFOV();
+    float mouseSensitivity = GetSensitivity();
+    int moveFront = GetCustomInput(KEY_W);
+    int moveBack = GetCustomInput(KEY_S);
+    int moveRight = GetCustomInput(KEY_D);
+    int moveLeft = GetCustomInput(KEY_A);
+    int fireGun = MOUSE_LEFT_BUTTON; //etc etc
+
+    //Firing will happen in different function so no firing key needed here
+    camera = CustomFPSCamera(fov, 4.0f, 4.0f, moveFront, moveBack, moveRight, moveLeft, mouseSensitivity);
 
     //Random level size
     levelSize = (Vector2){ GetRandomValue(32,128), GetRandomValue(32,128)};
@@ -32,8 +37,6 @@ void Initialize(void)
     snprintf(str, sizeof(str), "{\"levelSize.x\":\"%.2f\", \"levelSize.y\":\"%.3f\"}", f1, f2);
     TraceLog(LOG_INFO,str);
 
-
-    SetCameraMode(camera, CAMERA_FIRST_PERSON); 
 }
 
 //Main game loop
@@ -47,7 +50,7 @@ int main()
     while (!WindowShouldClose())
     {
 
-        UpdateCamera(&camera, 20.0f, mouseSensitivity);
+        UpdateFPSCamera(&camera);
 
         BeginDrawing();
 

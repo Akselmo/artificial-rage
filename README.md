@@ -6,12 +6,12 @@ WIP
 
 WIP. These notes are just for myself for now.
 
-* Do changes for Raylib source according to [raylib_changes.txt](raylib_changes.txt)
+* Compile raylib for your platform from source
 
-* Then compile raylib for your platform
+* Copy the libraylib.a into lib\PLATFORM (for example lib\win)
 
-* Copy the libraylib.a into lib\platform
-
-* Copy raylib.h to include
+* Copy the following to include
+..*raylib.h
+..*raymath.h
 
 Make sure CMake builds the game for your platform. Right now it's setup for windows only
