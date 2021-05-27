@@ -8,7 +8,9 @@ WIP. These notes are just for myself for now.
 
 * Compile raylib for your platform from source
 
-* Copy the libraylib.a into lib\PLATFORM (for example lib\win)
+* Copy your built libraylib.a into lib
+    * Right now the Cmake file only supports building for windows
+    * Plan is to make it support other systems too
 
 * Copy the following to include:
     * raylib.h
