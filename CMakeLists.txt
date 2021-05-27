@@ -7,6 +7,6 @@ add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 #Currently compiles only for Windows. 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/win/libraylib.a opengl32 gdi32 winmm)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a opengl32 gdi32 winmm)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
