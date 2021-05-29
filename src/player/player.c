@@ -9,6 +9,9 @@
 #define CAMERA_MAX_CLAMP -89.0f
 #define CAMERA_PANNING_DIVIDER  5.1f
 
+//Globals
+Model playerHitboxModel;
+
 //Struct for all the camera data
 typedef struct {
     float targetDistance;
@@ -56,25 +59,24 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     camera.fovy = fov; //get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
+    //Distances
     Vector3 v1 = camera.position;
     Vector3 v2 = camera.target;
-
-    //Distances
     float dx = v2.x - v1.x;
     float dy = v2.y - v1.y;
     float dz = v2.z - v1.z;
 
     // Distance to target
-    CAMERA.targetDistance = sqrtf(dx*dx + dy*dy + dz*dz);   
+    CAMERA.targetDistance = sqrtf(dx*dx + dy*dy + dz*dz);
 
     // Camera angle calculation
     // Camera angle in plane XZ (0 aligned with Z, move positive CCW)
     CAMERA.angle.x = atan2f(dx, dz); 
-    // Camera angle in plane XY (0 aligned with X, move positive CW)                       
-    CAMERA.angle.y = atan2f(dy, sqrtf(dx*dx + dz*dz));      
+    // Camera angle in plane XY (0 aligned with X, move positive CW)
+    CAMERA.angle.y = atan2f(dy, sqrtf(dx*dx + dz*dz));
 
     // Init player eyes position to camera Y position
-    CAMERA.playerEyesPosition = camera.position.y;   
+    CAMERA.playerEyesPosition = camera.position.y;
 
     //Setup custom movement keys
     CAMERA.moveFront = moveFront;
@@ -85,6 +87,9 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
     DisableCursor();
 
+    Mesh playerHitboxMesh = GenMeshCube(1.0f,2.0f,1.0f);
+    playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
+
     return camera;
 }
 
@@ -92,6 +97,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
 void UpdateFPSCamera(Camera *camera)
 {
+    
     static Vector2 previousMousePosition = { 0.0f, 0.0f };
 
     Vector2 mousePositionDelta = { 0.0f, 0.0f };
@@ -164,5 +170,19 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
-    
+
+
+}
+
+//TODO: Actual collision checking
+/*
+bool CheckCollision(BoundingBox target)
+{
+    BoundingBox bb = MeshBoundingBox(playerHitboxModel.meshes[0]);
+    return CheckCollisionBoxes(bb, target);
+}*/
+
+void DrawPlayerHitbox(Camera camera)
+{
+    DrawModelWires(playerHitboxModel, camera.position, 1.0f, BLANK);
 }

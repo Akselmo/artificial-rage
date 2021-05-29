@@ -3,3 +3,7 @@
 Camera CustomFPSCamera(float pos_x, float pos_z);
 
 void UpdateFPSCamera(Camera *camera);
+
+void DrawPlayerHitbox(Camera camera);
+
+bool CheckCollision(BoundingBox target);
