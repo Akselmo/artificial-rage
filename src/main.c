@@ -6,7 +6,7 @@
 #include "settings/settings.h"
 
 //Global variables
-Camera camera;
+Camera playerCamera;
 Vector2 levelSize;
 
 //Initialization
@@ -16,7 +16,7 @@ void Initialize(void)
     InitializeGame();
 
     //Add player camera
-    camera = CustomFPSCamera(4.0f, 4.0f);
+    playerCamera = CustomFPSCamera(4.0f, 4.0f);
 
     //Random level size
     levelSize = (Vector2){ GetRandomValue(32,128), GetRandomValue(32,128)};
@@ -41,14 +41,15 @@ int main()
     while (!WindowShouldClose())
     {
 
-        UpdateFPSCamera(&camera);
+        UpdateFPSCamera(&playerCamera);
 
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
 
-            BeginMode3D(camera);
+            BeginMode3D(playerCamera);
 
+                DrawPlayerHitbox(playerCamera);
                 DrawLevel(levelSize);
 
             EndMode3D();
