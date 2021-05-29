@@ -1,5 +1,6 @@
 #include"../../include/raylib.h"
 #include"../../include/raymath.h"
+#include"../settings/settings.h"
 #include <math.h>  
 
 //Took some parts of raylib camera.h and made my own camera based on that for full control
@@ -35,10 +36,20 @@ static CameraData CAMERA = {
 };
 
 
-Camera CustomFPSCamera(float fov, float pos_x, float pos_z, int moveFront, int moveBack, int moveRight, int moveLeft, float sensitivity)
+Camera CustomFPSCamera(float pos_x, float pos_z)
 {
     Camera camera = { 0 };
     
+    //Get Settings
+    float fov = GetFOV();
+    float mouseSensitivity = GetSensitivity();
+    int moveFront = GetCustomInput(KEY_W);
+    int moveBack = GetCustomInput(KEY_S);
+    int moveRight = GetCustomInput(KEY_D);
+    int moveLeft = GetCustomInput(KEY_A);
+    int fireGun = MOUSE_LEFT_BUTTON;
+
+    //Place camera and apply settings
     camera.position = (Vector3){ pos_x, 2.5f, pos_z };
     camera.target = (Vector3){ 0.0f, 1.8f, 0.0f };
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
@@ -70,7 +81,7 @@ Camera CustomFPSCamera(float fov, float pos_x, float pos_z, int moveFront, int m
     CAMERA.moveBack = moveBack;
     CAMERA.moveRight = moveRight;
     CAMERA.moveLeft = moveLeft;
-    CAMERA.mouseSensitivity = sensitivity;
+    CAMERA.mouseSensitivity = mouseSensitivity;
 
     DisableCursor();
 

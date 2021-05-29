@@ -1,11 +1,11 @@
 //Scifi FPS, uses RayLib library
 //Made by Akseli
 #include <stdio.h>
-
 #include "../include/raylib.h"
 #include "player/player.h"
 #include "settings/settings.h"
-//Public variables
+
+//Global variables
 Camera camera;
 Vector2 levelSize;
 
@@ -14,18 +14,9 @@ void Initialize(void)
 {
     //Initialize game
     InitializeGame();
-        
-    //TODO: Instead of setting keys and other settings here, we could set them when creating the player
-    float fov = GetFOV();
-    float mouseSensitivity = GetSensitivity();
-    int moveFront = GetCustomInput(KEY_W);
-    int moveBack = GetCustomInput(KEY_S);
-    int moveRight = GetCustomInput(KEY_D);
-    int moveLeft = GetCustomInput(KEY_A);
-    int fireGun = MOUSE_LEFT_BUTTON; //etc etc
 
-    //Firing will happen in different function so no firing key needed here
-    camera = CustomFPSCamera(fov, 4.0f, 4.0f, moveFront, moveBack, moveRight, moveLeft, mouseSensitivity);
+    //Add player camera
+    camera = CustomFPSCamera(4.0f, 4.0f);
 
     //Random level size
     levelSize = (Vector2){ GetRandomValue(32,128), GetRandomValue(32,128)};

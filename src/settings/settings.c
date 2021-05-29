@@ -28,3 +28,4 @@ int GetCustomInput(int key)
 {
     return key;
 }
+

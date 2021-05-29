@@ -1,5 +1,3 @@
-#include"../player/player.h"
-
 void InitializeGame(void);
 
 float GetSensitivity(void);
