@@ -1,32 +1,26 @@
 //Scifi FPS, uses RayLib library
 //Made by Akseli
 #include <stdio.h>
+#include <stdlib.h>
 #include "../include/raylib.h"
 #include "player/player.h"
 #include "settings/settings.h"
+#include "level/level.h"
 
 //Global variables
 Camera playerCamera;
 Vector2 levelSize;
-
+Model levelModel;
 //Initialization
 void Initialize(void)
 {
     //Initialize game
     InitializeGame();
 
+    levelModel = BuildLevel();
     //Add player camera
-    playerCamera = CustomFPSCamera(4.0f, 4.0f);
-
-    //Random level size
-    levelSize = (Vector2){ GetRandomValue(32,128), GetRandomValue(32,128)};
-
-    //Show level size in logs
-    char str[64];
-    float f1 = levelSize.x;
-    float f2 = levelSize.y;
-    snprintf(str, sizeof(str), "{\"levelSize.x\":\"%.2f\", \"levelSize.y\":\"%.3f\"}", f1, f2);
-    TraceLog(LOG_INFO,str);
+    Vector3 startPos = GetStartPosition();
+    playerCamera = CustomFPSCamera(startPos.x, startPos.z);
 
 }
 
@@ -40,18 +34,23 @@ int main()
     // Main game loop
     while (!WindowShouldClose())
     {
-
+        Vector3 oldPlayerPos = playerCamera.position;
         UpdateFPSCamera(&playerCamera);
+        if (CheckLevelCollision((Vector2){playerCamera.position.x, playerCamera.position.z},0.1f))
+        {
+            playerCamera.position = oldPlayerPos;
+        }
 
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
             BeginMode3D(playerCamera);
-
+                
+                DrawLevel(levelModel);
                 DrawPlayerHitbox(playerCamera);
-                DrawLevel(levelSize);
-
+                
+                
             EndMode3D();
 
             DrawFPS(10, 10);

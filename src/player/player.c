@@ -8,9 +8,11 @@
 #define CAMERA_MIN_CLAMP 89.0f
 #define CAMERA_MAX_CLAMP -89.0f
 #define CAMERA_PANNING_DIVIDER  5.1f
+#define PLAYER_START_POSITION_Y 0.4f
 
 //Globals
 Model playerHitboxModel;
+Vector3 playerSize;
 
 //Struct for all the camera data
 typedef struct {
@@ -53,8 +55,8 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     int fireGun = MOUSE_LEFT_BUTTON;
 
     //Place camera and apply settings
-    camera.position = (Vector3){ pos_x, 2.5f, pos_z };
-    camera.target = (Vector3){ 0.0f, 1.8f, 0.0f };
+    camera.position = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
+    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
     camera.fovy = fov; //get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
@@ -87,7 +89,9 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
     DisableCursor();
 
-    Mesh playerHitboxMesh = GenMeshCube(1.0f,2.0f,1.0f);
+    //Create player hitbox
+    playerSize = (Vector3){1.0f,0.5f,1.0f};
+    Mesh playerHitboxMesh = GenMeshCube(playerSize.x,playerSize.y,playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
 
     return camera;
@@ -174,15 +178,8 @@ void UpdateFPSCamera(Camera *camera)
 
 }
 
-//TODO: Actual collision checking
-/*
-bool CheckCollision(BoundingBox target)
-{
-    BoundingBox bb = MeshBoundingBox(playerHitboxModel.meshes[0]);
-    return CheckCollisionBoxes(bb, target);
-}*/
-
+//Used for getting hit by enemy
 void DrawPlayerHitbox(Camera camera)
 {
-    DrawModelWires(playerHitboxModel, camera.position, 1.0f, BLANK);
+    DrawModelWires(playerHitboxModel, camera.position, 1.0f, GREEN);
 }

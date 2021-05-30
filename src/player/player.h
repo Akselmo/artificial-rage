@@ -6,4 +6,4 @@ void UpdateFPSCamera(Camera *camera);
 
 void DrawPlayerHitbox(Camera camera);
 
-bool CheckCollision(BoundingBox target);
+bool CheckCollision(Camera camera, BoundingBox other);
