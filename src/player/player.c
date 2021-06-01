@@ -1,6 +1,8 @@
 #include"../../include/raylib.h"
 #include"../../include/raymath.h"
 #include"../settings/settings.h"
+#include"../main.h"
+#include"player_weapon.h"
 #include <math.h>  
 
 //Took some parts of raylib camera.h and made my own camera based on that for full control
@@ -9,10 +11,13 @@
 #define CAMERA_MAX_CLAMP -89.0f
 #define CAMERA_PANNING_DIVIDER  5.1f
 #define PLAYER_START_POSITION_Y 0.4f
+#define MAX_HEALTH 100
 
 //Globals
 Model playerHitboxModel;
 Vector3 playerSize;
+int playerHealth = 100;
+bool playerDead = false;
 
 //Struct for all the camera data
 typedef struct {
@@ -24,14 +29,6 @@ typedef struct {
     float playerSpeed;       
 } CameraData;
 
-//Movement keys enum for directions
-typedef enum {
-    MOVE_FRONT = 0,
-    MOVE_BACK = 1,
-    MOVE_RIGHT = 2,
-    MOVE_LEFT = 3
-} CameraMove;
-
 static CameraData CAMERA = {
     .targetDistance = 0,
     .playerEyesPosition = 1.85f,
@@ -39,6 +36,16 @@ static CameraData CAMERA = {
     .mouseSensitivity = 0.003f,
     .playerSpeed = 30.0f
 };
+
+
+
+//Movement keys enum for directions
+typedef enum {
+    MOVE_FRONT = 0,
+    MOVE_BACK = 1,
+    MOVE_RIGHT = 2,
+    MOVE_LEFT = 3
+} CameraMove;
 
 
 Camera CustomFPSCamera(float pos_x, float pos_z)
@@ -81,13 +88,16 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     CAMERA.playerEyesPosition = camera.position.y;
 
     //Setup custom movement keys
+    DisableCursor();
     CAMERA.moveFront = moveFront;
     CAMERA.moveBack = moveBack;
     CAMERA.moveRight = moveRight;
     CAMERA.moveLeft = moveLeft;
     CAMERA.mouseSensitivity = mouseSensitivity;
 
-    DisableCursor();
+    //Initialize weapon stuff
+    InitializeWeaponKeys();
+    
 
     //Create player hitbox
     playerSize = (Vector3){1.0f,0.5f,1.0f};
@@ -174,12 +184,46 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
+    //Im boring and hardcode the weapon firing key for now
 
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+    {
+        FireWeapon(camera->position,camera->target);
+    }
 
 }
 
 //Used for getting hit by enemy
 void DrawPlayerHitbox(Camera camera)
 {
-    DrawModelWires(playerHitboxModel, camera.position, 1.0f, GREEN);
+    DrawModelWires(playerHitboxModel, camera.target, 1.0f, GREEN);
 }
+
+void DrawPlayerAim(Camera *camera)
+{
+    Ray rayCast;
+    Vector3 v = Vector3Normalize(Vector3Subtract(camera->position, camera->target));
+    rayCast.position = camera->target;
+    rayCast.direction = v;
+    DrawRay(rayCast, RED);
+}
+
+int GetHealth()
+{
+    return playerHealth;
+}
+
+//Use minus for removing health
+void SetHealth(int healthToAdd)
+{
+    playerHealth += healthToAdd;
+    if (playerHealth > MAX_HEALTH)
+    {
+        playerHealth = MAX_HEALTH;
+    }
+    else if (playerHealth <= 0)
+    {
+       playerDead = true;
+    }
+}
+
