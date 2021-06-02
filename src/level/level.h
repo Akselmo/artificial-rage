@@ -5,6 +5,7 @@
 typedef struct {
     Vector3 levelBlockPosition;
     Model levelBlockModel;
+    int modelId;
 } LevelData;
 
 void DrawLevel();

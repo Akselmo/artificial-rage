@@ -3,6 +3,7 @@
 #include"../settings/settings.h"
 #include"../main.h"
 #include"player_weapon.h"
+#include"../level/level.h"
 #include <math.h>  
 
 //Took some parts of raylib camera.h and made my own camera based on that for full control
@@ -63,7 +64,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
     //Place camera and apply settings
     camera.position = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
+    camera.target = (Vector3){ 0.0f, 0.5f, 0.0f };
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
     camera.fovy = fov; //get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
@@ -100,7 +101,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     
 
     //Create player hitbox
-    playerSize = (Vector3){1.0f,0.5f,1.0f};
+    playerSize = (Vector3){0.5f,0.5f,0.5f};
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x,playerSize.y,playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
 
@@ -111,6 +112,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
 void UpdateFPSCamera(Camera *camera)
 {
+
     
     static Vector2 previousMousePosition = { 0.0f, 0.0f };
 
@@ -181,15 +183,13 @@ void UpdateFPSCamera(Camera *camera)
     camera->target.y = camera->position.y - transform.m13;
     camera->target.z = camera->position.z - transform.m14;
 
+
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
     //Im boring and hardcode the weapon firing key for now
 
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-    {
-        FireWeapon(camera->position,camera->target);
-    }
+
 
 }
 
@@ -197,15 +197,6 @@ void UpdateFPSCamera(Camera *camera)
 void DrawPlayerHitbox(Camera camera)
 {
     DrawModelWires(playerHitboxModel, camera.target, 1.0f, GREEN);
-}
-
-void DrawPlayerAim(Camera *camera)
-{
-    Ray rayCast;
-    Vector3 v = Vector3Normalize(Vector3Subtract(camera->position, camera->target));
-    rayCast.position = camera->target;
-    rayCast.direction = v;
-    DrawRay(rayCast, RED);
 }
 
 int GetHealth()
@@ -227,3 +218,12 @@ void SetHealth(int healthToAdd)
     }
 }
 
+void PlayerFire(Camera *camera)
+{
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+    {
+        int entityAmount = sizeof(GetAllEntities());
+        int levelSize = sizeof(GetLevelData()->levelBlockModel);
+        FireWeapon(camera->position,camera->target, levelSize,entityAmount);
+    }
+}

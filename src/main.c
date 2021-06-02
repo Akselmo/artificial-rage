@@ -47,21 +47,24 @@ int main()
     // Main game loop
     while (!WindowShouldClose())
     {
-        Vector3 oldPlayerPos = playerCamera.position;
-        UpdateFPSCamera(&playerCamera);
-        if (CheckLevelCollision((Vector2){playerCamera.position.x, playerCamera.position.z},0.1f))
-        {
-            playerCamera.position = oldPlayerPos;
-        }
+
 
         BeginDrawing();
 
             ClearBackground(BLACK);
 
             BeginMode3D(playerCamera);
+            
+                Vector3 oldPlayerPos = playerCamera.position;
+                UpdateFPSCamera(&playerCamera);
                 
+                if (CheckLevelCollision((Vector2){playerCamera.position.x, playerCamera.position.z},0.1f))
+                {
+                    playerCamera.position = oldPlayerPos;
+                }
+                PlayerFire(&playerCamera);
                 DrawLevel();
-                DrawPlayerAim(&playerCamera);
+                //DrawPlayerHitbox(playerCamera);
                 
             EndMode3D();
 

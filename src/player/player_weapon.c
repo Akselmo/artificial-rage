@@ -2,6 +2,7 @@
 #include"../../include/raymath.h"
 #include"../settings/settings.h"
 #include"../level/level.h"
+
 #include"player.h"
 #include"../main.h"
 #include<stdio.h>
@@ -90,9 +91,51 @@ void ChangeWeapon()
     printf("Switched weapon to %d\n", weaponEquipped);
 }
 
+int id;
 
+float TestLevelHit(Ray rayCast, int levelSize)
+{
+    float distance = INFINITY;
+    LevelData* levelData = GetLevelData();
+    for (int i=0; i < levelSize; i++)
+    {
 
-void FireWeapon(Vector3 playerPosition, Vector3 target)
+        Vector3 pos = levelData[i].levelBlockPosition;
+        RayHitInfo hitLevel = GetCollisionRayMesh(rayCast,levelData[i].levelBlockModel.meshes[0],MatrixTranslate(pos.x,pos.y,pos.z));
+        if (hitLevel.hit)
+        {
+            if (hitLevel.distance < distance)
+            {
+                distance = hitLevel.distance;
+                id = levelData[i].modelId;
+            }
+        } 
+        
+    }
+    return distance;
+}
+
+float TestEntityHit(Ray rayCast, int entityAmount)
+{
+    float distance = INFINITY;
+    Model* entities = GetAllEntities();
+    for (int i=0; i < entityAmount; i++)
+    {
+
+        //See if we need meshes here too
+        RayHitInfo hitEntities = GetCollisionRayModel(rayCast,entities[i]);
+        if (hitEntities.hit)
+        {
+            if (hitEntities.distance < distance)
+            {
+                distance = hitEntities.distance;
+            }
+        }
+    }
+    return distance;
+}
+
+void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entities)
 {
     Ray rayCast;
     
@@ -100,40 +143,21 @@ void FireWeapon(Vector3 playerPosition, Vector3 target)
     rayCast.direction = v;
     rayCast.position = playerPosition;
 
-    float levelHit = TestLevelHit(rayCast);
-    float entityHit = TestEntityHit(rayCast);
+    float levelDistance = TestLevelHit(rayCast, levelSize);
+    float entityDistance = TestEntityHit(rayCast, entities);    
 
-    printf("Levelhit %f Entityhit %f \n", levelHit, entityHit);
-
-}
-
-float TestLevelHit(Ray rayCast)
-{
-    LevelData* levelData = GetLevelData();
-    for (int i=0; i < MAX_LEVEL_SIZE; i++)
+    if (levelDistance != INFINITY ||entityDistance != INFINITY)
     {
-        RayHitInfo hitLevel = GetCollisionRayModel(rayCast,levelData[i].levelBlockModel);
-        //TODO: compare and get the lowest distance as the hit
-        if (hitLevel.hit)
+        if (levelDistance < entityDistance)
         {
-            printf("Gun hit level");
-            return hitLevel.distance;
+            //We hit wall before we hit anything
         }
+        else
+        {
+            //we hit the entity instead
+        }
+      //printf("Levelhit %f Entityhit %f \n", levelDistance, entityDistance);
+      printf("id: %d\n", id);
     }
-    return INFINITY;
-}
 
-float TestEntityHit(Ray rayCast)
-{
-    Model* entities = GetAllModels();
-    for (int i=0; i < MAX_ENTITIES; i++)
-    {
-        RayHitInfo hitEntities = GetCollisionRayModel(rayCast,entities[i]);
-        if (hitEntities.hit)
-        {
-            printf("Gun hit entity");
-            return hitEntities.distance;
-        }
-    }
-    return INFINITY;
 }

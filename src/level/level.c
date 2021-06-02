@@ -1,6 +1,7 @@
 #include"../../include/raylib.h"
 #include"../main.h"
 #include"level.h"
+#include"../../include/raymath.h"
 #include<stdio.h>
 
 //this is 128*128
@@ -89,6 +90,7 @@ void PlaceLevelBlocks()
                 
                 levelData[i].levelBlockModel = cubeModel;
                 levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                levelData[i].modelId = i;
                 i++;
             }
             //TODO: 
@@ -138,6 +140,7 @@ void PlaceAllEntities()
 
 void DrawLevel()
 {
+
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
         DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
@@ -195,8 +198,9 @@ bool CheckLevelCollision(Vector2 entityPos, float entityRadius)
 
         }
     }
-    return false;
     */
+    return false;
+    
 }
 
 LevelData* GetLevelData()
