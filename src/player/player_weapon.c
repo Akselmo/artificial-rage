@@ -1,6 +1,7 @@
 #include"../../include/raylib.h"
 #include"../../include/raymath.h"
 #include"../settings/settings.h"
+#include"../level/level.h"
 #include"player.h"
 #include"../main.h"
 #include<stdio.h>
@@ -98,15 +99,41 @@ void FireWeapon(Vector3 playerPosition, Vector3 target)
     Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition,target));
     rayCast.direction = v;
     rayCast.position = playerPosition;
-    Model* local = GetAllModels();
-    for (int i=0; i < 128; i++)
+
+    float levelHit = TestLevelHit(rayCast);
+    float entityHit = TestEntityHit(rayCast);
+
+    printf("Levelhit %f Entityhit %f \n", levelHit, entityHit);
+
+}
+
+float TestLevelHit(Ray rayCast)
+{
+    LevelData* levelData = GetLevelData();
+    for (int i=0; i < MAX_LEVEL_SIZE; i++)
     {
-        RayHitInfo hit = GetCollisionRayModel(rayCast,local[i]);
-        
-        if (hit.hit)
+        RayHitInfo hitLevel = GetCollisionRayModel(rayCast,levelData[i].levelBlockModel);
+        //TODO: compare and get the lowest distance as the hit
+        if (hitLevel.hit)
         {
-            printf("Gun hit %f\n", hit.distance);
+            printf("Gun hit level");
+            return hitLevel.distance;
         }
     }
-    
+    return INFINITY;
+}
+
+float TestEntityHit(Ray rayCast)
+{
+    Model* entities = GetAllModels();
+    for (int i=0; i < MAX_ENTITIES; i++)
+    {
+        RayHitInfo hitEntities = GetCollisionRayModel(rayCast,entities[i]);
+        if (hitEntities.hit)
+        {
+            printf("Gun hit entity");
+            return hitEntities.distance;
+        }
+    }
+    return INFINITY;
 }

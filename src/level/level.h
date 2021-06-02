@@ -1,5 +1,6 @@
 #include"../../include/raylib.h"
 
+#define MAX_LEVEL_SIZE 16384
 
 typedef struct {
     Vector3 levelBlockPosition;
@@ -15,3 +16,5 @@ bool CheckLevelCollision(Vector2 entityPos, float entityRadius);
 Vector3 GetMapPosition();
 
 Vector3 GetStartPosition();
+
+LevelData* GetLevelData();

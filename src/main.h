@@ -1,3 +1,5 @@
 #include "../include/raylib.h"
 
-Model* GetAllModels();
+#define MAX_ENTITIES 128
+
+Model* GetAllEntities();

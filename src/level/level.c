@@ -1,9 +1,9 @@
 #include"../../include/raylib.h"
-#include"level.h";
+#include"../main.h"
+#include"level.h"
 #include<stdio.h>
 
 //this is 128*128
-#define MAX_LEVEL_SIZE 16384
 
 
 //Globals
@@ -47,6 +47,7 @@ void BuildLevel()
     UnloadImage(levelImageMap);
     UnloadImage(entityImageMap);
     PlaceAllEntities();
+
 
 }
 
@@ -196,6 +197,11 @@ bool CheckLevelCollision(Vector2 entityPos, float entityRadius)
     }
     return false;
     */
+}
+
+LevelData* GetLevelData()
+{
+    return levelData;
 }
 
 Vector3 GetMapPosition()

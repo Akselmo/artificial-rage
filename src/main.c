@@ -6,7 +6,7 @@
 #include "player/player.h"
 #include "settings/settings.h"
 #include "level/level.h"
-
+#include "main.h"
 
 
 //Global variables
@@ -14,8 +14,8 @@
 Camera playerCamera;
 Vector2 levelSize;
 Model *levelModel;
-//Should be enough room for models...
-Model allModels[128];
+//Should be enough room for entities, such as clutter, weapon pickups, etc...
+Model allEntities[MAX_ENTITIES];
 
 //Initialization
 void Initialize(void)
@@ -75,7 +75,7 @@ int main()
     return 0;
 }
 
-Model* GetAllModels()
+Model* GetAllEntities()
 {
-    return allModels;
+    return allEntities;
 }
