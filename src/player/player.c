@@ -187,7 +187,9 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
-    //Im boring and hardcode the weapon firing key for now
+    //Check if we need to switch weapon
+    ChangeWeapon();
+
 
 
 
@@ -196,13 +198,14 @@ void UpdateFPSCamera(Camera *camera)
 //Used for getting hit by enemy
 void DrawPlayerHitbox(Camera camera)
 {
-    DrawModelWires(playerHitboxModel, camera.target, 1.0f, GREEN);
+    DrawModelWires(playerHitboxModel, camera.position, 1.0f, GREEN);
 }
 
 int GetHealth()
 {
     return playerHealth;
 }
+
 
 //Use minus for removing health
 void SetHealth(int healthToAdd)

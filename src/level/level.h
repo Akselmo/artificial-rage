@@ -12,10 +12,12 @@ void DrawLevel();
 
 void BuildLevel();
 
-bool CheckLevelCollision(Vector2 entityPos, float entityRadius);
+bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize);
 
 Vector3 GetMapPosition();
 
 Vector3 GetStartPosition();
 
 LevelData* GetLevelData();
+
+int GetLevelBlockAmount();

@@ -2,10 +2,10 @@
 #include"../../include/raymath.h"
 #include"../settings/settings.h"
 #include"../level/level.h"
-
 #include"player.h"
 #include"../main.h"
 #include<stdio.h>
+#include <time.h>
 
 //Fist has always ammo! :)
 #define FIST_AMMO 1 
@@ -15,33 +15,45 @@
 #define ROCKET_AMMO_MAX 25
 
 int weaponEquipped;
+float fireRate = 1.0f;
+float nextFire = -1.0f;
 
 typedef struct {
     int fistKey;
+    float fistFirerate;
 
     int pistolKey;
     int pistolAmmo;
+    float pistolFirerate;
 
     int rifleKey;
     int rifleAmmo;
+    float rifleFirerate;
 
     int shotgunKey;
     int shotgunAmmo;
+    float shotgunFirerate;
 
     int rocketKey;
     int rocketAmmo;   
+    float rocketFirerate;
 } WeaponData;
 
 static WeaponData WEAPONDATA = {
     .fistKey = KEY_ONE,
+    .fistFirerate = 0.9f,
     .pistolKey = KEY_TWO,
     .pistolAmmo = 0,
+    .pistolFirerate = 0.4f,
     .rifleKey = KEY_THREE,
     .rifleAmmo = 0,
+    .rifleFirerate = 0.25f,
     .shotgunKey = KEY_FOUR,
     .shotgunAmmo = 0,
+    .shotgunFirerate = 0.75,
     .rocketKey = KEY_FIVE,
-    .rocketAmmo = 0
+    .rocketAmmo = 0,
+    .rocketFirerate = 1.0f
 };
 
 
@@ -70,25 +82,30 @@ void ChangeWeapon()
     if (key == WEAPONDATA.fistKey)
     {
         weaponEquipped = FIST;
+        fireRate = WEAPONDATA.fistFirerate;
+        printf("Fist equipped\n");
     }
     else if (key == WEAPONDATA.pistolKey)
     {
         weaponEquipped = PISTOL;
+        fireRate = WEAPONDATA.pistolFirerate;
     }
     else if (key == WEAPONDATA.rifleKey)
     {
         weaponEquipped = RIFLE;
+        fireRate = WEAPONDATA.rifleFirerate;
     }
     else if (key == WEAPONDATA.shotgunKey)
     {
         weaponEquipped = SHOTGUN;
+        fireRate = WEAPONDATA.shotgunFirerate;
     }
     else if (key == WEAPONDATA.rocketKey)
     {
         weaponEquipped = ROCKET;
+        fireRate = WEAPONDATA.rocketFirerate;
     }
     //Weapon switching goes here
-    printf("Switched weapon to %d\n", weaponEquipped);
 }
 
 int id;
@@ -97,7 +114,8 @@ float TestLevelHit(Ray rayCast, int levelSize)
 {
     float distance = INFINITY;
     LevelData* levelData = GetLevelData();
-    for (int i=0; i < levelSize; i++)
+    //Make sure the level size is all the cubes
+    for (int i=0; i < GetLevelBlockAmount(); i++)
     {
 
         Vector3 pos = levelData[i].levelBlockPosition;
@@ -135,29 +153,82 @@ float TestEntityHit(Ray rayCast, int entityAmount)
     return distance;
 }
 
-void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entities)
+bool WeaponHasAmmo()
 {
-    Ray rayCast;
-    
-    Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition,target));
-    rayCast.direction = v;
-    rayCast.position = playerPosition;
-
-    float levelDistance = TestLevelHit(rayCast, levelSize);
-    float entityDistance = TestEntityHit(rayCast, entities);    
-
-    if (levelDistance != INFINITY ||entityDistance != INFINITY)
+    int ammo;
+    if (weaponEquipped == FIST)
     {
-        if (levelDistance < entityDistance)
-        {
-            //We hit wall before we hit anything
-        }
-        else
-        {
-            //we hit the entity instead
-        }
-      //printf("Levelhit %f Entityhit %f \n", levelDistance, entityDistance);
-      printf("id: %d\n", id);
+        return true;
+    }
+
+    switch (weaponEquipped)
+    {
+        case PISTOL:
+            ammo = WEAPONDATA.pistolAmmo;
+            break;
+
+        case RIFLE:
+            ammo = WEAPONDATA.rifleAmmo;
+            break;
+        
+        case SHOTGUN:
+            ammo = WEAPONDATA.shotgunAmmo;
+            break;
+
+        case ROCKET:
+            ammo = WEAPONDATA.rocketAmmo;
+            break;
+    }
+
+    if (ammo > 0)
+    {
+        ammo--;
+        return true;
+    }
+    else
+    {
+        return false;
     }
 
 }
+
+
+void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entities)
+{
+    if (WeaponHasAmmo())
+    {
+        if (nextFire > 0)
+        {
+            nextFire -= GetFrameTime();
+            return;
+        }
+        else
+        {
+            Ray rayCast;
+            
+            Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition,target));
+            rayCast.direction = v;
+            rayCast.position = playerPosition;
+
+            float levelDistance = TestLevelHit(rayCast, levelSize);
+            float entityDistance = TestEntityHit(rayCast, entities);    
+
+            if (levelDistance != INFINITY ||entityDistance != INFINITY)
+            {
+                if (levelDistance < entityDistance)
+                {
+                    //We hit wall before we hit anything
+                }
+                else
+                {
+                    //we hit the entity instead
+                }
+                //printf("Levelhit %f Entityhit %f \n", levelDistance, entityDistance);
+                printf("id: %d\n", id);
+                nextFire = fireRate;
+            }
+        }
+    }
+
+}
+

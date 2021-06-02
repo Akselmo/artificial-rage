@@ -12,6 +12,5 @@ int GetHealth();
 
 void SetHealth(int healthToAdd);
 
-
 void PlayerFire(Camera *camera);
 
