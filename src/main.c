@@ -13,7 +13,7 @@
 
 Camera playerCamera;
 Vector2 levelSize;
-Model levelModel;
+Model *levelModel;
 //Should be enough room for models...
 Model allModels[128];
 
@@ -23,11 +23,11 @@ void Initialize(void)
     //Initialize game
     InitializeGame();
 
-    levelModel = BuildLevel();
+    BuildLevel();
     //Add enemies
 
     //Add all models in the level to allModels
-    allModels[0] = levelModel;
+    //allModels[0] = levelModel;
     //Foreach every model in enemy model array
 
 
@@ -60,7 +60,7 @@ int main()
 
             BeginMode3D(playerCamera);
                 
-                DrawLevel(levelModel);
+                DrawLevel();
                 DrawPlayerAim(&playerCamera);
                 
             EndMode3D();

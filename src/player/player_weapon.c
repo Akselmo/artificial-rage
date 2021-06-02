@@ -6,11 +6,11 @@
 #include<stdio.h>
 
 //Fist has always ammo! :)
-#define FIST_AMMO = 1 
-#define PISTOL_AMMO_MAX = 100
-#define RIFLE_AMMO_MAX = 200
-#define SHOTGUN_AMMO_MAX = 50
-#define ROCKET_AMMO_MAX = 25
+#define FIST_AMMO 1 
+#define PISTOL_AMMO_MAX 100
+#define RIFLE_AMMO_MAX 200
+#define SHOTGUN_AMMO_MAX 50
+#define ROCKET_AMMO_MAX 25
 
 int weaponEquipped;
 

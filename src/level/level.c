@@ -1,5 +1,10 @@
 #include"../../include/raylib.h"
+#include"level.h";
 #include<stdio.h>
+
+//this is 128*128
+#define MAX_LEVEL_SIZE 16384
+
 
 //Globals
 
@@ -8,6 +13,7 @@ Color *levelMapPixels;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
 Image levelImageMap;
+LevelData levelData[MAX_LEVEL_SIZE];
 
 //Entities
 Color* entityMapPixels;
@@ -16,9 +22,11 @@ Image entityImageMap;
 
 Vector3 startPosition;
 
+
+
 //TODO: Add integer so you can select which level to load
 //      Create map from different layers: Map layer, entity layer
-Model BuildLevel()
+void BuildLevel()
 {
     // Load level cubicmap image (RAM)
     levelImageMap = LoadImage("../assets/level.png");
@@ -28,25 +36,69 @@ Model BuildLevel()
     entityImageMap = LoadImage("../assets/entities.png");
     entityCubicMap = LoadTextureFromImage(entityImageMap);
 
-    // Convert image to texture to display (VRAM)
-    Mesh mesh = GenMeshCubicmap(levelImageMap, (Vector3){ 1.0f, 1.0f, 1.0f });
-    Model model = LoadModelFromMesh(mesh);
-
-    // NOTE: By default each cube is mapped to one part of texture atlas
-    // Load map texture
-    Texture2D texture = LoadTexture("../assets/level_texture.png");    
-    // Set map diffuse texture
-    model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;             
     // Get map image data to be used for collision detection
     levelMapPixels = LoadImageColors(levelImageMap);
     entityMapPixels = LoadImageColors(entityImageMap);
+
+    PlaceLevelBlocks();
+
+
     // Unload image from RAM
     UnloadImage(levelImageMap);
     UnloadImage(entityImageMap);
     PlaceAllEntities();
 
+}
 
-    return model;
+void PlaceLevelBlocks()
+{
+
+    // Place all items based on their colors
+    
+    float mapPosZ = (float) levelCubicMap.height;
+    float mapPosX = (float) levelCubicMap.width;
+    
+    
+    // NOTE: By default each cube is mapped to one part of texture atlas
+    // Load map texture
+    Texture2D texture = LoadTexture("../assets/level_texture.png");    
+    // Set map diffuse texture 
+    Mesh cube = GenMeshCube(1.0f,1.0f,1.0f);
+    Model cubeModel = LoadModelFromMesh(cube);
+    cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; 
+
+    levelMapPosition = (Vector3){ -mapPosX/2, 0.5f, -mapPosZ/2 };
+
+    int i = 0;
+    for (int y = 0; y < levelCubicMap.height; y++)
+    {
+        for (int x = 0; x < levelCubicMap.width; x++)
+        {
+
+            float mx = levelMapPosition.x - 0.5f + x*1.0f;
+            float my = levelMapPosition.z - 0.5f + y*1.0f;
+
+            Rectangle rect = (Rectangle){ mx, my, 1.0f, 1.0f };
+
+            //Find start, which is red (255,0,0)
+            if (levelMapPixels[y*levelCubicMap.width + x].r == 255 &&
+                levelMapPixels[y*levelCubicMap.width + x].g == 255 &&
+                levelMapPixels[y*levelCubicMap.width + x].b == 255)
+            {
+                
+                levelData[i].levelBlockModel = cubeModel;
+                levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                i++;
+            }
+            //TODO: 
+            //Green, place goal
+            //Yellow, place enemy
+            //Blue, place keycard
+            //Ammo and stuff??
+
+        }
+    }
+    
 }
 
 void PlaceAllEntities()
@@ -83,13 +135,18 @@ void PlaceAllEntities()
     }
 }
 
-void DrawLevel(Model model)
+void DrawLevel()
 {
-    DrawModel(model, levelMapPosition, 1.0f, WHITE);
+    for (int i = 0; i < MAX_LEVEL_SIZE; i++)
+    {
+        DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
+    }
+   
 }
 
 bool CheckLevelCollision(Vector2 entityPos, float entityRadius)
 {
+    /*
     // Check collision of entity (Player, enemy, etc..)
     int entityCellX = (int)(entityPos.x - levelMapPosition.x + 0.5f);
     int entityCellY = (int)(entityPos.y - levelMapPosition.z + 0.5f);
@@ -138,6 +195,7 @@ bool CheckLevelCollision(Vector2 entityPos, float entityRadius)
         }
     }
     return false;
+    */
 }
 
 Vector3 GetMapPosition()

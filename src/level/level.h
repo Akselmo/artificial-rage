@@ -1,8 +1,14 @@
 #include"../../include/raylib.h"
 
-void DrawLevel(Model model);
 
-Model BuildLevel();
+typedef struct {
+    Vector3 levelBlockPosition;
+    Model levelBlockModel;
+} LevelData;
+
+void DrawLevel();
+
+void BuildLevel();
 
 bool CheckLevelCollision(Vector2 entityPos, float entityRadius);
 
