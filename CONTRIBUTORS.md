@@ -1,7 +1,7 @@
 # Contributors
 
 I try to keep this list as up to date as possible. If you feel like your name is missing, hit me up!
-- Akselmo
+\- Akselmo
 
 
 * [Akselmo](https://twitter.com/Akselmo): project lead, programming, design, all that stuff.
