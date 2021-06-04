@@ -16,6 +16,12 @@ Vector3 levelMapPosition;
 Texture2D levelCubicMap;
 Image levelImageMap;
 LevelData levelData[MAX_LEVEL_SIZE];
+Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
+Model planeFloor;
+Material* floorMaterial;
+Model planeCeiling;
+Material* ceilingMaterial;
+char *wallTextures[2];
 
 //Entities
 Color* entityMapPixels;
@@ -27,7 +33,8 @@ int levelBlockAmount;
 
 
 //TODO: Add integer so you can select which level to load
-//      Create map from different layers: Map layer, entity layer
+//      Load textures from file, instead of being built into EXE
+//
 void BuildLevel()
 {
     // Load level cubicmap image (RAM)
@@ -60,17 +67,22 @@ void PlaceLevelBlocks()
     
     float mapPosZ = (float) levelCubicMap.height;
     float mapPosX = (float) levelCubicMap.width;
-    
-    
+
+    Texture2D ceilingTexture = LoadTexture("../assets/ceiling.png");
+    Texture2D floorTexture = LoadTexture("../assets/floor.png");
+    planeCeiling = LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    planeFloor = LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+
+    planeCeiling.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
+    planeFloor.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = floorTexture;
+
     // NOTE: By default each cube is mapped to one part of texture atlas
-    // Load map texture
-    Texture2D texture = LoadTexture("../assets/level_texture.png");    
-    // Set map diffuse texture 
-    Mesh cube = GenMeshCube(1.0f,1.0f,1.0f);
-    Model cubeModel = LoadModelFromMesh(cube);
-    cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; 
+    // Load map texture, hardcoded for now. 
+    wallTextures[0] = "../assets/wall1.png";
+    wallTextures[1] = "../assets/wall2.png";
 
     levelMapPosition = (Vector3){ -mapPosX/2, 0.5f, -mapPosZ/2 };
+    
 
     int i = 0;
     for (int y = 0; y < levelCubicMap.height; y++)
@@ -88,7 +100,13 @@ void PlaceLevelBlocks()
                 levelMapPixels[y*levelCubicMap.width + x].g == 255 &&
                 levelMapPixels[y*levelCubicMap.width + x].b == 255)
             {
-                
+
+                Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0,1)]);
+                // Set map diffuse texture 
+                Mesh cube = GenMeshCube(1.0f,1.0f,1.0f);
+                Model cubeModel = LoadModelFromMesh(cube);
+                cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; 
+
                 levelData[i].levelBlockModel = cubeModel;
                 levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
                 levelData[i].modelId = i;
@@ -142,15 +160,19 @@ void PlaceAllEntities()
     }
 }
 
+
 void DrawLevel()
 {
-
+    
+    DrawModel(planeFloor, levelMapPosition, 1.0f, WHITE);
+    DrawModelEx(planeCeiling, (Vector3) {levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f,1.0f,1.0f}, WHITE);
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
         DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
     }
    
 }
+
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
 {
@@ -174,7 +196,7 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
                                                         wallPos.y + wallSize.y/2,
                                                         wallPos.z + wallSize.z/2 }};
 
-        DrawBoundingBox(levelBox,GREEN);
+        //DrawBoundingBox(levelBox,GREEN);
 
         if (CheckCollisionBoxes(entityBox,levelBox))
         {
@@ -183,6 +205,89 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
     }
     return false;
 }
+
+void AllocateMeshData(Mesh* mesh, int triangleCount)
+{
+    mesh->vertexCount = triangleCount * 3;
+    mesh->triangleCount = triangleCount;
+
+    mesh->vertices = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->texcoords = (float*)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
+    mesh->normals = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+}
+
+Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
+{
+    //X width, Z height
+    Mesh mesh = { 0 };
+    AllocateMeshData(&mesh, 2);
+
+    //First triangle
+    mesh.vertices[0] = 0;
+    mesh.vertices[1] = 0;
+    mesh.vertices[2] = 0;
+    mesh.normals[0] = 0;
+    mesh.normals[1] = 1;
+    mesh.normals[2] = 0;
+    mesh.texcoords[0] = 0;
+    mesh.texcoords[1] = 0;
+
+    
+    mesh.vertices[3] = width;
+    mesh.vertices[4] = 0;
+    mesh.vertices[5] = height;
+    mesh.normals[3] = 0;
+    mesh.normals[4] = 1;
+    mesh.normals[5] = 0;
+    mesh.texcoords[2] = width/textureSize;
+    mesh.texcoords[3] = height / textureSize;
+
+    
+    //Second triangle
+    mesh.vertices[6] = width;
+    mesh.vertices[7] = 0;
+    mesh.vertices[8] = 0;
+    mesh.normals[6] = 0;
+    mesh.normals[7] = 1;
+    mesh.normals[8] = 0;
+    mesh.texcoords[4] = width / textureSize;
+    mesh.texcoords[5] = 0;
+
+    
+    mesh.vertices[9] = 0;
+    mesh.vertices[10] = 0;
+    mesh.vertices[11] = 0;
+    mesh.normals[9] = 0;
+    mesh.normals[10] = 1;
+    mesh.normals[11] = 0;
+    mesh.texcoords[6] = 0;
+    mesh.texcoords[7] = 0;
+
+    
+    mesh.vertices[12] = 0;
+    mesh.vertices[13] = 0;
+    mesh.vertices[14] = height;
+    mesh.normals[12] = 0;
+    mesh.normals[13] = 1;
+    mesh.normals[14] = 0;
+    mesh.texcoords[8] = 0;
+    mesh.texcoords[9] = height / textureSize;
+
+    
+    mesh.vertices[15] = width;
+    mesh.vertices[16] = 0;
+    mesh.vertices[17] = height;
+    mesh.normals[15] = 0;
+    mesh.normals[16] = 1;
+    mesh.normals[17] = 0;
+    mesh.texcoords[10] = width / textureSize;
+    mesh.texcoords[11] = height / textureSize;
+
+    UploadMesh(&mesh, false);
+
+    return mesh;
+}
+
 
 LevelData* GetLevelData()
 {

@@ -110,7 +110,7 @@ void ChangeWeapon()
 
 int id;
 
-float TestLevelHit(Ray rayCast, int levelSize)
+float TestLevelHit(Ray rayCast)
 {
     float distance = INFINITY;
     LevelData* levelData = GetLevelData();
@@ -210,7 +210,7 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             rayCast.direction = v;
             rayCast.position = playerPosition;
 
-            float levelDistance = TestLevelHit(rayCast, levelSize);
+            float levelDistance = TestLevelHit(rayCast);
             float entityDistance = TestEntityHit(rayCast, entities);    
 
             if (levelDistance != INFINITY ||entityDistance != INFINITY)
