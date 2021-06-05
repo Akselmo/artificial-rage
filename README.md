@@ -1,4 +1,4 @@
-# Scifi FPS 
+# Artificial Rage - a Scifi FPS
 
 WIP
 
