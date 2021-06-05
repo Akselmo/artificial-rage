@@ -112,6 +112,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
 void UpdateFPSCamera(Camera *camera)
 {
+    Vector3 oldPlayerPos = camera->position;
 
     
     static Vector2 previousMousePosition = { 0.0f, 0.0f };
@@ -187,18 +188,14 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
+    if (CheckLevelCollision(camera->position, (Vector3){0.1f,0.1f,0.1f}))
+    {
+        camera->position = oldPlayerPos;
+    }
+
     //Check if we need to switch weapon
     ChangeWeapon();
 
-
-
-
-}
-
-//Used for getting hit by enemy
-void DrawPlayerHitbox(Camera camera)
-{
-    DrawModelWires(playerHitboxModel, camera.position, 1.0f, GREEN);
 }
 
 int GetHealth()

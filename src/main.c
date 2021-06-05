@@ -38,6 +38,26 @@ void Initialize(void)
 }
 
 //Main game loop
+void GameUpdate()
+{
+    BeginDrawing();
+
+        ClearBackground(BLACK);
+
+        BeginMode3D(playerCamera);
+        
+            UpdateFPSCamera(&playerCamera);
+            PlayerFire(&playerCamera);
+            DrawLevel();
+            
+        EndMode3D();
+
+        DrawFPS(10, 10);
+
+    EndDrawing();
+}
+
+//Main loop
 int main() 
 {
 
@@ -47,31 +67,7 @@ int main()
     // Main game loop
     while (!WindowShouldClose())
     {
-
-
-        BeginDrawing();
-
-            ClearBackground(BLACK);
-
-            BeginMode3D(playerCamera);
-            
-                Vector3 oldPlayerPos = playerCamera.position;
-                UpdateFPSCamera(&playerCamera);
-                
-                if (CheckLevelCollision(playerCamera.position, (Vector3){0.1f,0.1f,0.1f}))
-                {
-                    playerCamera.position = oldPlayerPos;
-                }
-                
-                PlayerFire(&playerCamera);
-                DrawLevel();
-                //DrawPlayerHitbox(playerCamera);
-                
-            EndMode3D();
-
-            DrawFPS(10, 10);
-
-        EndDrawing();
+        GameUpdate();
     }
 
     // End game 
@@ -83,3 +79,4 @@ Model* GetAllEntities()
 {
     return allEntities;
 }
+
