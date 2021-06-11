@@ -7,6 +7,8 @@ add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
+#Raylib version used: 3.7.0
+
 IF (WIN32) #windows
     target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a opengl32 gdi32 winmm)
 ENDIF()
