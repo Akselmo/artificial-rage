@@ -11,8 +11,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
 IF (WIN32) #windows
     target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a opengl32 gdi32 winmm)
-ENDIF()
-IF (UNIX AND NOT APPLE) #linux
+ELSEIF (UNIX AND NOT APPLE) #linux
     target_link_libraries(${PROJECT_NAME} PRIVATE raylib GL m pthread dl rt X11)
 ELSE() #mac, thanks TheGrand547!
     target_link_libraries(${PROJECT_NAME} PRIVATE raylib "-framework OpenGL" "-framework IOKit" "-framework Cocoa")
