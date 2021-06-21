@@ -1,5 +1,5 @@
-#include"../../include/raylib.h"
-#include"settings.h"
+#include "../../include/raylib.h"
+#include "settings.h"
 
 void InitializeGame(void)
 {
@@ -28,4 +28,3 @@ int GetCustomInput(int key)
 {
     return key;
 }
-

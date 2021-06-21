@@ -1,8 +1,9 @@
-#include"../../include/raylib.h"
+#include "../../include/raylib.h"
 
 #define MAX_LEVEL_SIZE 16384
 
-typedef struct {
+typedef struct
+{
     Vector3 levelBlockPosition;
     Model levelBlockModel;
     int modelId;
@@ -18,7 +19,6 @@ Vector3 GetMapPosition();
 
 Vector3 GetStartPosition();
 
-LevelData* GetLevelData();
+LevelData *GetLevelData();
 
 int GetLevelBlockAmount();
-

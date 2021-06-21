@@ -1,12 +1,11 @@
-#include"../../include/raylib.h"
-#include"../main.h"
-#include"level.h"
-#include"../player/player.h"
-#include"../../include/raymath.h"
-#include<stdio.h>
+#include "../../include/raylib.h"
+#include "../main.h"
+#include "level.h"
+#include "../player/player.h"
+#include "../../include/raymath.h"
+#include <stdio.h>
 
 //this is 128*128
-
 
 //Globals
 
@@ -18,19 +17,18 @@ Image levelImageMap;
 LevelData levelData[MAX_LEVEL_SIZE];
 Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
 Model planeFloor;
-Material* floorMaterial;
+Material *floorMaterial;
 Model planeCeiling;
-Material* ceilingMaterial;
+Material *ceilingMaterial;
 char *wallTextures[2];
 
 //Entities
-Color* entityMapPixels;
+Color *entityMapPixels;
 Texture2D entityCubicMap;
 Image entityImageMap;
 
 Vector3 startPosition;
 int levelBlockAmount;
-
 
 //TODO: Add integer so you can select which level to load
 //      Load textures from file, instead of being built into EXE
@@ -41,7 +39,7 @@ void BuildLevel()
     levelImageMap = LoadImage("../assets/level.png");
     levelCubicMap = LoadTextureFromImage(levelImageMap);
 
-    // Load entity cubicmap 
+    // Load entity cubicmap
     entityImageMap = LoadImage("../assets/entities.png");
     entityCubicMap = LoadTextureFromImage(entityImageMap);
 
@@ -51,22 +49,19 @@ void BuildLevel()
 
     PlaceLevelBlocks();
 
-
     // Unload image from RAM
     UnloadImage(levelImageMap);
     UnloadImage(entityImageMap);
     PlaceAllEntities();
-
-
 }
 
 void PlaceLevelBlocks()
 {
 
     // Place all items based on their colors
-    
-    float mapPosZ = (float) levelCubicMap.height;
-    float mapPosX = (float) levelCubicMap.width;
+
+    float mapPosZ = (float)levelCubicMap.height;
+    float mapPosX = (float)levelCubicMap.width;
 
     Texture2D ceilingTexture = LoadTexture("../assets/ceiling.png");
     Texture2D floorTexture = LoadTexture("../assets/floor.png");
@@ -77,12 +72,11 @@ void PlaceLevelBlocks()
     planeFloor.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = floorTexture;
 
     // NOTE: By default each cube is mapped to one part of texture atlas
-    // Load map texture, hardcoded for now. 
+    // Load map texture, hardcoded for now.
     wallTextures[0] = "../assets/wall1.png";
     wallTextures[1] = "../assets/wall2.png";
 
-    levelMapPosition = (Vector3){ -mapPosX/2, 0.5f, -mapPosZ/2 };
-    
+    levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
 
     int i = 0;
     for (int y = 0; y < levelCubicMap.height; y++)
@@ -90,136 +84,130 @@ void PlaceLevelBlocks()
         for (int x = 0; x < levelCubicMap.width; x++)
         {
 
-            float mx = levelMapPosition.x - 0.5f + x*1.0f;
-            float my = levelMapPosition.z - 0.5f + y*1.0f;
+            float mx = levelMapPosition.x - 0.5f + x * 1.0f;
+            float my = levelMapPosition.z - 0.5f + y * 1.0f;
 
-            Rectangle rect = (Rectangle){ mx, my, 1.0f, 1.0f };
+            Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
 
             //Find start, which is red (255,0,0)
-            if (levelMapPixels[y*levelCubicMap.width + x].r == 255 &&
-                levelMapPixels[y*levelCubicMap.width + x].g == 255 &&
-                levelMapPixels[y*levelCubicMap.width + x].b == 255)
+            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
+                levelMapPixels[y * levelCubicMap.width + x].g == 255 &&
+                levelMapPixels[y * levelCubicMap.width + x].b == 255)
             {
 
-                Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0,1)]);
-                // Set map diffuse texture 
-                Mesh cube = GenMeshCube(1.0f,1.0f,1.0f);
+                Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
+                // Set map diffuse texture
+                Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
-                cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; 
+                cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 levelData[i].levelBlockModel = cubeModel;
                 levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
                 levelData[i].modelId = i;
                 i++;
             }
-            //TODO: 
+            //TODO:
             //Green, place goal
             //Yellow, place enemy
             //Blue, place keycard
             //Ammo and stuff??
-
         }
     }
     levelBlockAmount = i;
     printf("Level has total %d blocks \n", levelBlockAmount);
-    
 }
 
 void PlaceAllEntities()
 {
     // Place all items based on their colors
-    float mapPosZ = (float) entityCubicMap.height;
-    float mapPosX = (float) entityCubicMap.width;
-    levelMapPosition = (Vector3){ -mapPosX/2, 0.0f, -mapPosZ/2 };
+    float mapPosZ = (float)entityCubicMap.height;
+    float mapPosX = (float)entityCubicMap.width;
+    levelMapPosition = (Vector3){-mapPosX / 2, 0.0f, -mapPosZ / 2};
 
     for (int y = 0; y < entityCubicMap.height; y++)
     {
         for (int x = 0; x < entityCubicMap.width; x++)
         {
 
-            float mx = levelMapPosition.x - 0.5f + x*1.0f;
-            float my = levelMapPosition.z - 0.5f + y*1.0f;
+            float mx = levelMapPosition.x - 0.5f + x * 1.0f;
+            float my = levelMapPosition.z - 0.5f + y * 1.0f;
 
-            Rectangle rect = (Rectangle){ mx, my, 1.0f, 1.0f };
+            Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
 
             //Find start, which is red (255,0,0)
-            if (entityMapPixels[y*entityCubicMap.width + x].r == 255 &&
-                entityMapPixels[y*entityCubicMap.width + x].g == 0 &&
-                entityMapPixels[y*entityCubicMap.width + x].b == 0)
+            if (entityMapPixels[y * entityCubicMap.width + x].r == 255 &&
+                entityMapPixels[y * entityCubicMap.width + x].g == 0 &&
+                entityMapPixels[y * entityCubicMap.width + x].b == 0)
             {
-                startPosition = (Vector3) {mx,0.0f,my};
+                startPosition = (Vector3){mx, 0.0f, my};
             }
-            //TODO: 
+            //TODO:
             //Green, place goal
             //Yellow, place enemy
             //Blue, place keycard
             //Ammo and stuff??
             //Remember to add up all the entities into a variable
-
         }
     }
 }
 
-
 void DrawLevel()
 {
-    
+
     DrawModel(planeFloor, levelMapPosition, 1.0f, WHITE);
-    DrawModelEx(planeCeiling, (Vector3) {levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f,1.0f,1.0f}, WHITE);
+    DrawModelEx(planeCeiling, (Vector3){levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
         DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
     }
-   
 }
-
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
 {
-    LevelData* levelData = GetLevelData();
+    LevelData *levelData = GetLevelData();
 
-    BoundingBox entityBox = (BoundingBox){(Vector3){ entityPos.x - entitySize.x/2,
-                                                     entityPos.y - entitySize.y/2,
-                                                     entityPos.z - entitySize.z/2 },
-                                          (Vector3){ entityPos.x + entitySize.x/2,
-                                                     entityPos.y + entitySize.y/2,
-                                                     entityPos.z + entitySize.z/2 }};
+    BoundingBox entityBox = (BoundingBox){(Vector3){entityPos.x - entitySize.x / 2,
+                                                    entityPos.y - entitySize.y / 2,
+                                                    entityPos.z - entitySize.z / 2},
+                                          (Vector3){entityPos.x + entitySize.x / 2,
+                                                    entityPos.y + entitySize.y / 2,
+                                                    entityPos.z + entitySize.z / 2}};
 
-    for (int i=0; i < levelBlockAmount; i++)
+    for (int i = 0; i < levelBlockAmount; i++)
     {
         Vector3 wallPos = levelData[i].levelBlockPosition;
-        Vector3 wallSize = {1.0f,1.0f,1.0f};
-        BoundingBox levelBox = (BoundingBox){(Vector3){ wallPos.x - wallSize.x/2,
-                                                        wallPos.y - wallSize.y/2,
-                                                        wallPos.z - wallSize.z/2 },
-                                             (Vector3){ wallPos.x + wallSize.x/2,
-                                                        wallPos.y + wallSize.y/2,
-                                                        wallPos.z + wallSize.z/2 }};
+        Vector3 wallSize = {1.0f, 1.0f, 1.0f};
+        BoundingBox levelBox = (BoundingBox){(Vector3){wallPos.x - wallSize.x / 2,
+                                                       wallPos.y - wallSize.y / 2,
+                                                       wallPos.z - wallSize.z / 2},
+                                             (Vector3){wallPos.x + wallSize.x / 2,
+                                                       wallPos.y + wallSize.y / 2,
+                                                       wallPos.z + wallSize.z / 2}};
 
         //DrawBoundingBox(levelBox,GREEN);
 
-        if (CheckCollisionBoxes(entityBox,levelBox))
+        if (CheckCollisionBoxes(entityBox, levelBox))
         {
             return true;
-        } 
+        }
     }
     return false;
 }
 
-void AllocateMeshData(Mesh* mesh, int triangleCount)
+void AllocateMeshData(Mesh *mesh, int triangleCount)
 {
     mesh->vertexCount = triangleCount * 3;
     mesh->triangleCount = triangleCount;
 
-    mesh->vertices = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
-    mesh->texcoords = (float*)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
-    mesh->normals = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->vertices = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
+    mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
     //X width, Z height
-    Mesh mesh = { 0 };
+    Mesh mesh = {0};
     AllocateMeshData(&mesh, 2);
 
     //First triangle
@@ -232,17 +220,15 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     mesh.texcoords[0] = 0;
     mesh.texcoords[1] = 0;
 
-    
     mesh.vertices[3] = width;
     mesh.vertices[4] = 0;
     mesh.vertices[5] = height;
     mesh.normals[3] = 0;
     mesh.normals[4] = 1;
     mesh.normals[5] = 0;
-    mesh.texcoords[2] = width/textureSize;
+    mesh.texcoords[2] = width / textureSize;
     mesh.texcoords[3] = height / textureSize;
 
-    
     //Second triangle
     mesh.vertices[6] = width;
     mesh.vertices[7] = 0;
@@ -253,7 +239,6 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     mesh.texcoords[4] = width / textureSize;
     mesh.texcoords[5] = 0;
 
-    
     mesh.vertices[9] = 0;
     mesh.vertices[10] = 0;
     mesh.vertices[11] = 0;
@@ -263,7 +248,6 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     mesh.texcoords[6] = 0;
     mesh.texcoords[7] = 0;
 
-    
     mesh.vertices[12] = 0;
     mesh.vertices[13] = 0;
     mesh.vertices[14] = height;
@@ -273,7 +257,6 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     mesh.texcoords[8] = 0;
     mesh.texcoords[9] = height / textureSize;
 
-    
     mesh.vertices[15] = width;
     mesh.vertices[16] = 0;
     mesh.vertices[17] = height;
@@ -288,8 +271,7 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     return mesh;
 }
 
-
-LevelData* GetLevelData()
+LevelData *GetLevelData()
 {
     return levelData;
 }

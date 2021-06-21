@@ -1,6 +1,7 @@
-#include"../../include/raylib.h"
+#include "../../include/raylib.h"
 
-typedef struct Enemy {
+typedef struct Enemy
+{
     int health;
     int damage;
     Vector3 startPosition;

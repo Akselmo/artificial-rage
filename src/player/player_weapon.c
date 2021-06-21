@@ -1,14 +1,14 @@
-#include"../../include/raylib.h"
-#include"../../include/raymath.h"
-#include"../settings/settings.h"
-#include"../level/level.h"
-#include"player.h"
-#include"../main.h"
-#include<stdio.h>
+#include "../../include/raylib.h"
+#include "../../include/raymath.h"
+#include "../settings/settings.h"
+#include "../level/level.h"
+#include "player.h"
+#include "../main.h"
+#include <stdio.h>
 #include <time.h>
 
 //Fist has always ammo! :)
-#define FIST_AMMO 1 
+#define FIST_AMMO 1
 #define PISTOL_AMMO_MAX 100
 #define RIFLE_AMMO_MAX 200
 #define SHOTGUN_AMMO_MAX 50
@@ -18,7 +18,8 @@ int weaponEquipped;
 float fireRate = 1.0f;
 float nextFire = -1.0f;
 
-typedef struct {
+typedef struct
+{
     int fistKey;
     float fistFirerate;
 
@@ -35,7 +36,7 @@ typedef struct {
     float shotgunFirerate;
 
     int rocketKey;
-    int rocketAmmo;   
+    int rocketAmmo;
     float rocketFirerate;
 } WeaponData;
 
@@ -53,18 +54,16 @@ static WeaponData WEAPONDATA = {
     .shotgunFirerate = 0.75,
     .rocketKey = KEY_FIVE,
     .rocketAmmo = 0,
-    .rocketFirerate = 1.0f
-};
+    .rocketFirerate = 1.0f};
 
-
-typedef enum {
+typedef enum
+{
     FIST = 1,
     PISTOL = 2,
     RIFLE = 3,
     SHOTGUN = 4,
     ROCKET = 5
 } Weapons;
-
 
 void InitializeWeaponKeys()
 {
@@ -113,13 +112,13 @@ int id;
 float TestLevelHit(Ray rayCast)
 {
     float distance = INFINITY;
-    LevelData* levelData = GetLevelData();
+    LevelData *levelData = GetLevelData();
     //Make sure the level size is all the cubes
-    for (int i=0; i < GetLevelBlockAmount(); i++)
+    for (int i = 0; i < GetLevelBlockAmount(); i++)
     {
 
         Vector3 pos = levelData[i].levelBlockPosition;
-        RayHitInfo hitLevel = GetCollisionRayMesh(rayCast,levelData[i].levelBlockModel.meshes[0],MatrixTranslate(pos.x,pos.y,pos.z));
+        RayHitInfo hitLevel = GetCollisionRayMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
         if (hitLevel.hit)
         {
             if (hitLevel.distance < distance)
@@ -127,8 +126,7 @@ float TestLevelHit(Ray rayCast)
                 distance = hitLevel.distance;
                 id = levelData[i].modelId;
             }
-        } 
-        
+        }
     }
     return distance;
 }
@@ -136,12 +134,12 @@ float TestLevelHit(Ray rayCast)
 float TestEntityHit(Ray rayCast, int entityAmount)
 {
     float distance = INFINITY;
-    Model* entities = GetAllEntities();
-    for (int i=0; i < entityAmount; i++)
+    Model *entities = GetAllEntities();
+    for (int i = 0; i < entityAmount; i++)
     {
 
         //See if we need meshes here too
-        RayHitInfo hitEntities = GetCollisionRayModel(rayCast,entities[i]);
+        RayHitInfo hitEntities = GetCollisionRayModel(rayCast, entities[i]);
         if (hitEntities.hit)
         {
             if (hitEntities.distance < distance)
@@ -163,21 +161,21 @@ bool WeaponHasAmmo()
 
     switch (weaponEquipped)
     {
-        case PISTOL:
-            ammo = WEAPONDATA.pistolAmmo;
-            break;
+    case PISTOL:
+        ammo = WEAPONDATA.pistolAmmo;
+        break;
 
-        case RIFLE:
-            ammo = WEAPONDATA.rifleAmmo;
-            break;
-        
-        case SHOTGUN:
-            ammo = WEAPONDATA.shotgunAmmo;
-            break;
+    case RIFLE:
+        ammo = WEAPONDATA.rifleAmmo;
+        break;
 
-        case ROCKET:
-            ammo = WEAPONDATA.rocketAmmo;
-            break;
+    case SHOTGUN:
+        ammo = WEAPONDATA.shotgunAmmo;
+        break;
+
+    case ROCKET:
+        ammo = WEAPONDATA.rocketAmmo;
+        break;
     }
 
     if (ammo > 0)
@@ -189,9 +187,7 @@ bool WeaponHasAmmo()
     {
         return false;
     }
-
 }
-
 
 void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entities)
 {
@@ -205,15 +201,15 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
         else
         {
             Ray rayCast;
-            
-            Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition,target));
+
+            Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition, target));
             rayCast.direction = v;
             rayCast.position = playerPosition;
 
             float levelDistance = TestLevelHit(rayCast);
-            float entityDistance = TestEntityHit(rayCast, entities);    
+            float entityDistance = TestEntityHit(rayCast, entities);
 
-            if (levelDistance != INFINITY ||entityDistance != INFINITY)
+            if (levelDistance != INFINITY || entityDistance != INFINITY)
             {
                 if (levelDistance < entityDistance)
                 {
@@ -229,6 +225,4 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             }
         }
     }
-
 }
-

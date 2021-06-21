@@ -2,4 +2,4 @@
 
 #define MAX_ENTITIES 128
 
-Model* GetAllEntities();
+Model *GetAllEntities();

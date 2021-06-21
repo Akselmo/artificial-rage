@@ -8,7 +8,6 @@
 #include "level/level.h"
 #include "main.h"
 
-
 //Global variables
 
 Camera playerCamera;
@@ -30,11 +29,9 @@ void Initialize(void)
     //allModels[0] = levelModel;
     //Foreach every model in enemy model array
 
-
     //Add player camera
     Vector3 startPos = GetStartPosition();
     playerCamera = CustomFPSCamera(startPos.x, startPos.z);
-
 }
 
 //Main game loop
@@ -42,23 +39,23 @@ void GameUpdate()
 {
     BeginDrawing();
 
-        ClearBackground(BLACK);
+    ClearBackground(BLACK);
 
-        BeginMode3D(playerCamera);
-        
-            UpdateFPSCamera(&playerCamera);
-            PlayerFire(&playerCamera);
-            DrawLevel();
-            
-        EndMode3D();
+    BeginMode3D(playerCamera);
 
-        DrawFPS(10, 10);
+    UpdateFPSCamera(&playerCamera);
+    PlayerFire(&playerCamera);
+    DrawLevel();
+
+    EndMode3D();
+
+    DrawFPS(10, 10);
 
     EndDrawing();
 }
 
 //Main loop
-int main() 
+int main()
 {
 
     //Initialize game
@@ -70,13 +67,12 @@ int main()
         GameUpdate();
     }
 
-    // End game 
+    // End game
     CloseWindow();
     return 0;
 }
 
-Model* GetAllEntities()
+Model *GetAllEntities()
 {
     return allEntities;
 }
-
