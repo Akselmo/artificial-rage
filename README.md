@@ -1,5 +1,5 @@
 # Artificial Rage - a Scifi FPS
-![https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord](https://discord.gg/PZkYZRx)
+![https://discord.gg/PZkYZRx](https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord)
 
 WIP
 
