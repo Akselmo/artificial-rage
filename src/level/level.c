@@ -22,11 +22,6 @@ Model planeCeiling;
 Material *ceilingMaterial;
 char *wallTextures[2];
 
-//Entities
-Color *entityMapPixels;
-Texture2D entityCubicMap;
-Image entityImageMap;
-
 Vector3 startPosition;
 int levelBlockAmount;
 
@@ -39,22 +34,17 @@ void BuildLevel()
     levelImageMap = LoadImage("../assets/level.png");
     levelCubicMap = LoadTextureFromImage(levelImageMap);
 
-    // Load entity cubicmap
-    entityImageMap = LoadImage("../assets/entities.png");
-    entityCubicMap = LoadTextureFromImage(entityImageMap);
-
     // Get map image data to be used for collision detection
     levelMapPixels = LoadImageColors(levelImageMap);
-    entityMapPixels = LoadImageColors(entityImageMap);
 
     PlaceLevelBlocks();
 
     // Unload image from RAM
     UnloadImage(levelImageMap);
-    UnloadImage(entityImageMap);
-    PlaceAllEntities();
 }
 
+//TODO: Entities can be moved here! Map file can be one png.
+//      Move everything in this method, and change it's name
 void PlaceLevelBlocks()
 {
 
@@ -89,7 +79,7 @@ void PlaceLevelBlocks()
 
             Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
 
-            //Find start, which is red (255,0,0)
+            //Find walls, which is white (255,255,255)
             if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
                 levelMapPixels[y * levelCubicMap.width + x].g == 255 &&
                 levelMapPixels[y * levelCubicMap.width + x].b == 255)
@@ -106,38 +96,11 @@ void PlaceLevelBlocks()
                 levelData[i].modelId = i;
                 i++;
             }
-            //TODO:
-            //Green, place goal
-            //Yellow, place enemy
-            //Blue, place keycard
-            //Ammo and stuff??
-        }
-    }
-    levelBlockAmount = i;
-    printf("Level has total %d blocks \n", levelBlockAmount);
-}
-
-void PlaceAllEntities()
-{
-    // Place all items based on their colors
-    float mapPosZ = (float)entityCubicMap.height;
-    float mapPosX = (float)entityCubicMap.width;
-    levelMapPosition = (Vector3){-mapPosX / 2, 0.0f, -mapPosZ / 2};
-
-    for (int y = 0; y < entityCubicMap.height; y++)
-    {
-        for (int x = 0; x < entityCubicMap.width; x++)
-        {
-
-            float mx = levelMapPosition.x - 0.5f + x * 1.0f;
-            float my = levelMapPosition.z - 0.5f + y * 1.0f;
-
-            Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
 
             //Find start, which is red (255,0,0)
-            if (entityMapPixels[y * entityCubicMap.width + x].r == 255 &&
-                entityMapPixels[y * entityCubicMap.width + x].g == 0 &&
-                entityMapPixels[y * entityCubicMap.width + x].b == 0)
+            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
+                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
+                levelMapPixels[y * levelCubicMap.width + x].b == 0)
             {
                 startPosition = (Vector3){mx, 0.0f, my};
             }
@@ -146,15 +109,17 @@ void PlaceAllEntities()
             //Yellow, place enemy
             //Blue, place keycard
             //Ammo and stuff??
-            //Remember to add up all the entities into a variable
+            
         }
     }
+    levelBlockAmount = i;
+    printf("Level has total %d blocks \n", levelBlockAmount);
 }
 
 void DrawLevel()
 {
 
-    DrawModel(planeFloor, levelMapPosition, 1.0f, WHITE);
+    DrawModel(planeFloor, (Vector3){levelMapPosition.x, 0.0f, levelMapPosition.z}, 1.0f, WHITE);
     DrawModelEx(planeCeiling, (Vector3){levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
