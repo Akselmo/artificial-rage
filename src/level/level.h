@@ -17,7 +17,7 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize);
 
 Vector3 GetMapPosition();
 
-Vector3 GetStartPosition();
+Vector3 GetLevelStartPosition();
 
 LevelData *GetLevelData();
 

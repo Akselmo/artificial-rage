@@ -20,3 +20,12 @@ WIP. These notes are just for myself for now.
     * raymath.h
 
 Make sure CMake builds the game for your platform. Right now it's setup for windows only
+
+## Entity RGB Values
+
+| Entity Name        | RGB Value   |
+|--------------------|-------------|
+| NONE               | 0,0,0       |
+| wall               | 255,255,255 |
+| levelStartPosition | 0,255,0     |
+| levelEndPosition   | 0,0,255     |

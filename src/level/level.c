@@ -22,7 +22,8 @@ Model planeCeiling;
 Material *ceilingMaterial;
 char *wallTextures[2];
 
-Vector3 startPosition;
+Vector3 levelStartPosition;
+Vector3 levelEndPosition;
 int levelBlockAmount;
 
 //TODO: Add integer so you can select which level to load
@@ -97,18 +98,25 @@ void PlaceLevelBlocks()
                 i++;
             }
 
-            //Find start, which is red (255,0,0)
-            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
-                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
+            //Find start, which is green (0,255,0)
+            if (levelMapPixels[y * levelCubicMap.width + x].r == 0 &&
+                levelMapPixels[y * levelCubicMap.width + x].g == 255 &&
                 levelMapPixels[y * levelCubicMap.width + x].b == 0)
             {
-                startPosition = (Vector3){mx, 0.0f, my};
+                levelStartPosition = (Vector3){mx, 0.0f, my};
+            }
+
+            //Find end, which is blue (0,0,255)
+            if (levelMapPixels[y * levelCubicMap.width + x].r == 0 &&
+                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
+                levelMapPixels[y * levelCubicMap.width + x].b == 255)
+            {
+                levelEndPosition = (Vector3){mx, 0.0f, my};
             }
             //TODO:
-            //Green, place goal
-            //Yellow, place enemy
-            //Blue, place keycard
-            //Ammo and stuff??
+            //Create function for picking the color from rgb struct 
+            //so this doesnt get super messy looking
+            //For entities and their RGB values: check README.md
             
         }
     }
@@ -246,9 +254,9 @@ Vector3 GetMapPosition()
     return levelMapPosition;
 }
 
-Vector3 GetStartPosition()
+Vector3 GetLevelStartPosition()
 {
-    return startPosition;
+    return levelStartPosition;
 }
 
 int GetLevelBlockAmount()

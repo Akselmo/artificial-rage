@@ -30,7 +30,7 @@ void Initialize(void)
     //Foreach every model in enemy model array
 
     //Add player camera
-    Vector3 startPos = GetStartPosition();
+    Vector3 startPos = GetLevelStartPosition();
     playerCamera = CustomFPSCamera(startPos.x, startPos.z);
 }
 
