@@ -12,7 +12,7 @@
 #define PISTOL_AMMO_MAX 100
 #define RIFLE_AMMO_MAX 200
 #define SHOTGUN_AMMO_MAX 50
-#define railgun_AMMO_MAX 25
+#define RAILGUN_AMMO_MAX 25
 
 int weaponEquipped;
 float fireRate = 1.0f;
