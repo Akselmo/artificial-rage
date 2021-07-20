@@ -12,7 +12,7 @@
 #define PISTOL_AMMO_MAX 100
 #define RIFLE_AMMO_MAX 200
 #define SHOTGUN_AMMO_MAX 50
-#define ROCKET_AMMO_MAX 25
+#define railgun_AMMO_MAX 25
 
 int weaponEquipped;
 float fireRate = 1.0f;
@@ -35,9 +35,9 @@ typedef struct
     int shotgunAmmo;
     float shotgunFirerate;
 
-    int rocketKey;
-    int rocketAmmo;
-    float rocketFirerate;
+    int railgunKey;
+    int railgunAmmo;
+    float railgunFirerate;
 } WeaponData;
 
 static WeaponData WEAPONDATA = {
@@ -52,9 +52,9 @@ static WeaponData WEAPONDATA = {
     .shotgunKey = KEY_FOUR,
     .shotgunAmmo = 0,
     .shotgunFirerate = 0.75,
-    .rocketKey = KEY_FIVE,
-    .rocketAmmo = 0,
-    .rocketFirerate = 1.0f};
+    .railgunKey = KEY_FIVE,
+    .railgunAmmo = 0,
+    .railgunFirerate = 1.0f};
 
 typedef enum
 {
@@ -62,7 +62,7 @@ typedef enum
     PISTOL = 2,
     RIFLE = 3,
     SHOTGUN = 4,
-    ROCKET = 5
+    RAILGUN = 5
 } Weapons;
 
 void InitializeWeaponKeys()
@@ -71,7 +71,7 @@ void InitializeWeaponKeys()
     WEAPONDATA.pistolKey = GetCustomInput(KEY_TWO);
     WEAPONDATA.rifleKey = GetCustomInput(KEY_THREE);
     WEAPONDATA.shotgunKey = GetCustomInput(KEY_FOUR);
-    WEAPONDATA.rocketKey = GetCustomInput(KEY_FIVE);
+    WEAPONDATA.railgunKey = GetCustomInput(KEY_FIVE);
 }
 
 void ChangeWeapon()
@@ -99,10 +99,10 @@ void ChangeWeapon()
         weaponEquipped = SHOTGUN;
         fireRate = WEAPONDATA.shotgunFirerate;
     }
-    else if (key == WEAPONDATA.rocketKey)
+    else if (key == WEAPONDATA.railgunKey)
     {
-        weaponEquipped = ROCKET;
-        fireRate = WEAPONDATA.rocketFirerate;
+        weaponEquipped = RAILGUN;
+        fireRate = WEAPONDATA.railgunFirerate;
     }
     //Weapon switching goes here
 }
@@ -173,8 +173,8 @@ bool WeaponHasAmmo()
         ammo = WEAPONDATA.shotgunAmmo;
         break;
 
-    case ROCKET:
-        ammo = WEAPONDATA.rocketAmmo;
+    case RAILGUN:
+        ammo = WEAPONDATA.railgunAmmo;
         break;
     }
 
