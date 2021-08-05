@@ -4,7 +4,9 @@
     <img src="https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord"></a>
 </p>
 
-WIP
+This project is archived due to lack of interest. I will be switching it to Godot engine instead.
+
+C and Raylib is fun, but I really don't have the time to make a full fledged 3D FPS game with it. 
 
 ## Howto compile for different platforms
 
