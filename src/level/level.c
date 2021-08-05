@@ -2,12 +2,9 @@
 #include "../main.h"
 #include "level.h"
 #include "../player/player.h"
+#include "../enemy/enemy.h"
 #include "../../include/raymath.h"
 #include <stdio.h>
-
-//this is 128*128
-
-//Globals
 
 //Level
 Color *levelMapPixels;
@@ -25,6 +22,8 @@ char *wallTextures[2];
 Vector3 levelStartPosition;
 Vector3 levelEndPosition;
 int levelBlockAmount;
+
+Enemy *enemies[];
 
 //TODO: Add integer so you can select which level to load
 //      Load textures from file, instead of being built into EXE
@@ -68,6 +67,7 @@ void PlaceLevelBlocks()
     wallTextures[1] = "../assets/wall2.png";
 
     levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
+    int enemyAmount = 0;
 
     int i = 0;
     for (int y = 0; y < levelCubicMap.height; y++)
@@ -112,6 +112,14 @@ void PlaceLevelBlocks()
                 levelMapPixels[y * levelCubicMap.width + x].b == 255)
             {
                 levelEndPosition = (Vector3){mx, 0.0f, my};
+            }
+
+            //Find enemy, which is red (255,0,0)
+            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
+                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
+                levelMapPixels[y * levelCubicMap.width + x].b == 0)
+            {
+                
             }
             //TODO:
             //Create function for picking the color from rgb struct 

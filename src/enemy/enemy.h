@@ -13,4 +13,8 @@ typedef struct Enemy
 
 void UpdateEnemies();
 
+void AddEnemy(float pos_x, float pos_y);
+
+void DrawEnemy();
+
 bool CheckEnemyCollision(Vector3 entityPos, Vector3 entitySize);

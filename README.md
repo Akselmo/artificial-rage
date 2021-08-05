@@ -30,3 +30,4 @@ Make sure CMake builds the game for your platform. Right now it's setup for wind
 | wall               | 255,255,255 |
 | levelStartPosition | 0,255,0     |
 | levelEndPosition   | 0,0,255     |
+| enemy              | 255,0,0     |
