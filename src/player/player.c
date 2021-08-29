@@ -176,11 +176,13 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
+    
     if (CheckLevelCollision(camera->position, (Vector3){0.1f, 0.1f, 0.1f}))
     {
         camera->position = oldPlayerPos;
     }
-
+    
+    
     //Check if we need to switch weapon
     ChangeWeapon();
 }

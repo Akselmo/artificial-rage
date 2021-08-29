@@ -8,13 +8,21 @@ Vector3 enemySize;
 
 //Since we use billboarding we dont have to know rotation
 
-void AddEnemy(float pos_x, float pos_y)
+Enemy AddEnemy(float pos_x, float pos_y)
 {
     enemyPosition = (Vector3){pos_x, ENEMY_START_POSITION_Y, pos_y};
     enemySize = (Vector3){0.25f, 0.25f, 0.25f};
+    Enemy enemy = {
+        .position = enemyPosition,
+        .size = enemySize,
+        .dead = false,
+        .damage = 5,
+        .health = 50,
+    };
+    return enemy;
 }
 
-void DrawEnemy()
+void DrawEnemy(Enemy enemy)
 {
-    DrawCubeV(enemyPosition, enemySize, RED);
+    DrawCubeV(enemy.position, enemy.size, RED);
 }

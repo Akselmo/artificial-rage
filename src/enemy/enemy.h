@@ -4,17 +4,16 @@ typedef struct Enemy
 {
     int health;
     int damage;
-    Vector3 startPosition;
-    Vector3 enemyHitboxPosition;
-    Vector3 enemyHitboxSize;
-    BoundingBox enemyBoundingBox;
+    Vector3 position;
+    Vector3 size;
+    BoundingBox boundingBox;
     bool dead;
 } Enemy;
 
 void UpdateEnemies();
 
-void AddEnemy(float pos_x, float pos_y);
+Enemy AddEnemy(float pos_x, float pos_y);
 
-void DrawEnemy();
+void DrawEnemy(Enemy enemy);
 
 bool CheckEnemyCollision(Vector3 entityPos, Vector3 entitySize);

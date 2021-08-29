@@ -23,7 +23,8 @@ Vector3 levelStartPosition;
 Vector3 levelEndPosition;
 int levelBlockAmount;
 
-Enemy *enemies[];
+//Enemies
+Enemy enemies[MAX_LEVEL_SIZE];
 
 //TODO: Add integer so you can select which level to load
 //      Load textures from file, instead of being built into EXE
@@ -119,6 +120,8 @@ void PlaceLevelBlocks()
                 levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
                 levelMapPixels[y * levelCubicMap.width + x].b == 0)
             {
+                enemies[enemyAmount] = AddEnemy(mx,my);
+                enemyAmount++;
                 
             }
             //TODO:
@@ -139,7 +142,14 @@ void DrawLevel()
     DrawModelEx(planeCeiling, (Vector3){levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
-        DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
+        if (&levelData[i] != NULL)
+        {
+            DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
+        }
+        if (&enemies[i] != NULL)
+        {
+            DrawEnemy(enemies[i]);
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 #include "player/player.h"
 #include "settings/settings.h"
 #include "level/level.h"
+#include "enemy/enemy.h"
 #include "main.h"
 
 //Global variables

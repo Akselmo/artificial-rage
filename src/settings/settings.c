@@ -5,7 +5,7 @@ void InitializeGame(void)
 {
     const int screenWidth = 800;
     const int screenHeight = 600;
-    InitWindow(screenWidth, screenHeight, "ScifiFPS");
+    InitWindow(screenWidth, screenHeight, "Artificial Rage");
     SetTargetFPS(60);
 }
 

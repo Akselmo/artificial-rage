@@ -22,3 +22,4 @@ Vector3 GetLevelStartPosition();
 LevelData *GetLevelData();
 
 int GetLevelBlockAmount();
+
