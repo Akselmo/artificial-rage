@@ -32,8 +32,24 @@ Enemy enemies[MAX_LEVEL_SIZE];
 //Items (contains interactable and non-interactable items)
 Item items[MAX_LEVEL_SIZE];
 
+
+bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
+{
+    if (levelMapPixels[y * width + x].r == r &&
+        levelMapPixels[y * width + x].g == g &&
+        levelMapPixels[y * width + x].b == b)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 //TODO: Entities can be moved here! Map file can be one png.
 //      Move everything in this method, and change it's name
+// should first calculate the needed size of items, then redo it and add the items = more memory efficient
 void PlaceLevelBlocks()
 {
 
@@ -88,29 +104,22 @@ void PlaceLevelBlocks()
             }
 
             //Find start, which is green (0,255,0)
-            if (levelMapPixels[y * levelCubicMap.width + x].r == 0 &&
-                levelMapPixels[y * levelCubicMap.width + x].g == 255 &&
-                levelMapPixels[y * levelCubicMap.width + x].b == 0)
+            if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
             {
                 levelStartPosition = (Vector3){mx, 0.0f, my};
             }
 
             //Find end, which is blue (0,0,255)
-            if (levelMapPixels[y * levelCubicMap.width + x].r == 0 &&
-                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
-                levelMapPixels[y * levelCubicMap.width + x].b == 255)
+            if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 0, 255))
             {
                 levelEndPosition = (Vector3){mx, 0.0f, my};
             }
 
             //Find enemy, which is red (255,0,0)
-            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
-                levelMapPixels[y * levelCubicMap.width + x].g == 0 &&
-                levelMapPixels[y * levelCubicMap.width + x].b == 0)
+            if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
             {
                 enemies[enemyAmount] = AddEnemy(mx,my);
                 enemyAmount++;
-                
             }
             //TODO:
             //Create function for picking the color from rgb struct 
@@ -122,6 +131,8 @@ void PlaceLevelBlocks()
     levelBlockAmount = i;
     printf("Level has total %d blocks \n", levelBlockAmount);
 }
+
+
 
 void DrawLevel()
 {
@@ -140,7 +151,7 @@ void DrawLevel()
         }
         if (&items[i] != NULL)
         {
-            //UpdateItem(items[i]); Why is this undefined?
+            //UpdateItem(items[i]); commented out due to making the game slow
         }
     }
 }
