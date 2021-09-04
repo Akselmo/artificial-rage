@@ -3,9 +3,6 @@
 <p>
     <a href="https://discord.gg/PZkYZRx">
     <img src="https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord"></a>
-</p>
-
-<p>
     <a href="https://matrix.to/#/#skalegames:matrix.org">
     <img src="https://img.shields.io/matrix/skalegames:matrix.org?label=Skale%20Games%20Matrix"></a>
 </p>
