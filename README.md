@@ -1,4 +1,5 @@
 # Artificial Rage - a Scifi FPS
+
 <p>
     <a href="https://discord.gg/PZkYZRx">
     <img src="https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord"></a>
@@ -6,7 +7,7 @@
 
 This project is archived due to lack of interest. I will be switching it to Godot engine instead.
 
-C and Raylib is fun, but I really don't have the time to make a full fledged 3D FPS game with it. 
+C and Raylib is fun, but I really don't have the time to make a full fledged 3D FPS game with it.
 
 ## Howto compile for different platforms
 
@@ -17,8 +18,8 @@ WIP. These notes are just for myself for now.
 * Copy your built libraylib.a into lib
 
 * Copy the following to include:
-    * raylib.h
-    * raymath.h
+  * raylib.h
+  * raymath.h
 
 **Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new files.**
 
