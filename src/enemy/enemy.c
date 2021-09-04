@@ -22,7 +22,18 @@ Enemy AddEnemy(float pos_x, float pos_y)
     return enemy;
 }
 
+void UpdateEnemy(Enemy enemy)
+{
+    DrawEnemy(enemy);
+    UpdateEnemyCollision(enemy);
+}
+
 void DrawEnemy(Enemy enemy)
 {
     DrawCubeV(enemy.position, enemy.size, RED);
+}
+
+void UpdateEnemyCollision(Enemy enemy)
+{
+    //update bounding box here
 }

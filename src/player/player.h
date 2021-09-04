@@ -1,3 +1,6 @@
+#ifndef PLAYER
+#define PLAYER
+
 #include "../../include/raylib.h"
 
 Camera CustomFPSCamera(float pos_x, float pos_z);
@@ -11,3 +14,5 @@ int GetHealth();
 void SetHealth(int healthToAdd);
 
 void PlayerFire(Camera *camera);
+
+#endif

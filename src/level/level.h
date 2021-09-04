@@ -1,3 +1,6 @@
+#ifndef LEVEL
+#define LEVEL
+
 #include "../../include/raylib.h"
 
 #define MAX_LEVEL_SIZE 16384
@@ -23,3 +26,4 @@ LevelData *GetLevelData();
 
 int GetLevelBlockAmount();
 
+#endif

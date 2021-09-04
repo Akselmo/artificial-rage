@@ -1,10 +1,13 @@
+#include <stdio.h>
 #include "../../include/raylib.h"
-#include "../main.h"
+#include "../../include/raymath.h"
 #include "level.h"
+#include "../main.h"
 #include "../player/player.h"
 #include "../enemy/enemy.h"
-#include "../../include/raymath.h"
-#include <stdio.h>
+#include "../item/item.h"
+
+//Level has level data, enemies and items
 
 //Level
 Color *levelMapPixels;
@@ -26,23 +29,8 @@ int levelBlockAmount;
 //Enemies
 Enemy enemies[MAX_LEVEL_SIZE];
 
-//TODO: Add integer so you can select which level to load
-//      Load textures from file, instead of being built into EXE
-//
-void BuildLevel()
-{
-    // Load level cubicmap image (RAM)
-    levelImageMap = LoadImage("../assets/level.png");
-    levelCubicMap = LoadTextureFromImage(levelImageMap);
-
-    // Get map image data to be used for collision detection
-    levelMapPixels = LoadImageColors(levelImageMap);
-
-    PlaceLevelBlocks();
-
-    // Unload image from RAM
-    UnloadImage(levelImageMap);
-}
+//Items (contains interactable and non-interactable items)
+Item items[MAX_LEVEL_SIZE];
 
 //TODO: Entities can be moved here! Map file can be one png.
 //      Move everything in this method, and change it's name
@@ -148,7 +136,11 @@ void DrawLevel()
         }
         if (&enemies[i] != NULL)
         {
-            DrawEnemy(enemies[i]);
+            UpdateEnemy(enemies[i]);
+        }
+        if (&items[i] != NULL)
+        {
+            //UpdateItem(items[i]); Why is this undefined?
         }
     }
 }
@@ -280,4 +272,22 @@ Vector3 GetLevelStartPosition()
 int GetLevelBlockAmount()
 {
     return levelBlockAmount;
+}
+
+//TODO: Add integer so you can select which level to load
+//      Load textures from file, instead of being built into EXE
+//
+void BuildLevel()
+{
+    // Load level cubicmap image (RAM)
+    levelImageMap = LoadImage("../assets/level.png");
+    levelCubicMap = LoadTextureFromImage(levelImageMap);
+
+    // Get map image data to be used for collision detection
+    levelMapPixels = LoadImageColors(levelImageMap);
+
+    PlaceLevelBlocks();
+
+    // Unload image from RAM
+    UnloadImage(levelImageMap);
 }
