@@ -7,9 +7,7 @@
     <img src="https://img.shields.io/matrix/skalegames:matrix.org?label=Skale%20Games%20Matrix"></a>
 </p>
 
-This project is archived due to lack of interest. I will be switching it to Godot engine instead.
-
-C and Raylib is fun, but I really don't have the time to make a full fledged 3D FPS game with it.
+A simple FPS project
 
 ## Howto compile for different platforms
 
