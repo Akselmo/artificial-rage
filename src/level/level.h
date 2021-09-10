@@ -11,7 +11,9 @@ typedef struct
     Model levelBlockModel;
     int modelId;
 } LevelData;
+
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize);
+
 void DrawLevel();
 
 void BuildLevel();
