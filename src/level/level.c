@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "../../include/raylib.h"
 #include "../../include/raymath.h"
@@ -10,16 +12,17 @@
 //Level has level data, enemies and items
 
 //Level
-Color *levelMapPixels;
+LevelData *levelData = NULL;
+
+Color *levelMapPixels = NULL;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
 Image levelImageMap;
-LevelData levelData[MAX_LEVEL_SIZE];
 Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
 Model planeFloor;
-Material *floorMaterial;
+Material *floorMaterial = NULL;
 Model planeCeiling;
-Material *ceilingMaterial;
+Material *ceilingMaterial= NULL;
 char *wallTextures[2];
 
 Vector3 levelStartPosition;
@@ -27,10 +30,10 @@ Vector3 levelEndPosition;
 int levelBlockAmount;
 
 //Enemies
-Enemy enemies[MAX_LEVEL_SIZE];
+Enemy *enemies = NULL;
 
 //Items (contains interactable and non-interactable items)
-Item items[MAX_LEVEL_SIZE];
+Item *items = NULL;
 
 
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
@@ -72,9 +75,13 @@ void PlaceLevelBlocks()
     wallTextures[1] = "../assets/wall2.png";
 
     levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
-    int enemyAmount = 0;
+    
+    int enemyAmount = 1;
+    int i = 1;
 
-    int i = 0;
+    LevelData* levelData = malloc(i*sizeof(LevelData));
+    Enemy* enemies = malloc(enemyAmount*sizeof(Enemy));
+    
     for (int y = 0; y < levelCubicMap.height; y++)
     {
         for (int x = 0; x < levelCubicMap.width; x++)
@@ -86,9 +93,7 @@ void PlaceLevelBlocks()
             Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
 
             //Find walls, which is white (255,255,255)
-            if (levelMapPixels[y * levelCubicMap.width + x].r == 255 &&
-                levelMapPixels[y * levelCubicMap.width + x].g == 255 &&
-                levelMapPixels[y * levelCubicMap.width + x].b == 255)
+            if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 255, 255))
             {
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
@@ -96,12 +101,20 @@ void PlaceLevelBlocks()
                 Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+                
+                ulong d = sizeof(LevelData);
 
-                levelData[i].levelBlockModel = cubeModel;
-                levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
-                levelData[i].modelId = i;
+                LevelData* tmpLevel = realloc(levelData, (i+1) * sizeof(LevelData));
+                if (tmpLevel)
+                {
+                    levelData = tmpLevel;
+                    levelData->levelBlockModel = cubeModel;
+                    levelData->levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                    levelData->modelId = i;
+                }
                 i++;
             }
+            
 
             //Find start, which is green (0,255,0)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
@@ -118,16 +131,20 @@ void PlaceLevelBlocks()
             //Find enemy, which is red (255,0,0)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
             {
-                enemies[enemyAmount] = AddEnemy(mx,my);
+                Enemy* tmpEnemies = realloc(enemies, (enemyAmount+1) * sizeof(Enemy));
+                if (tmpEnemies)
+                {
+                    enemies = tmpEnemies;
+                    *enemies = AddEnemy(mx,my);
+                }
                 enemyAmount++;
             }
             //TODO:
-            //Create function for picking the color from rgb struct 
-            //so this doesnt get super messy looking
             //For entities and their RGB values: check README.md
             
         }
     }
+    
     levelBlockAmount = i;
     printf("Level has total %d blocks \n", levelBlockAmount);
 }
@@ -139,19 +156,25 @@ void DrawLevel()
 
     DrawModel(planeFloor, (Vector3){levelMapPosition.x, 0.0f, levelMapPosition.z}, 1.0f, WHITE);
     DrawModelEx(planeCeiling, (Vector3){levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
+    LevelData *loopLevelData = levelData;
+    Enemy *loopEnemies = enemies;
+    Item *loopItems = items;
     for (int i = 0; i < MAX_LEVEL_SIZE; i++)
     {
-        if (&levelData[i] != NULL)
+        if (loopLevelData != NULL)
         {
-            DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
+            DrawModel(loopLevelData->levelBlockModel, levelData->levelBlockPosition, 1.0f, WHITE);
+            loopLevelData++;
         }
-        if (&enemies[i] != NULL)
+        if (loopEnemies != NULL)
         {
-            UpdateEnemy(enemies[i]);
+            UpdateEnemy(*loopEnemies);
+            loopEnemies++;
         }
-        if (&items[i] != NULL)
+        if (loopItems != NULL)
         {
-            //UpdateItem(items[i]); commented out due to making the game slow
+            UpdateItem(*loopItems); //commented out due to making the game slow
+            loopItems++;
         }
     }
 }
