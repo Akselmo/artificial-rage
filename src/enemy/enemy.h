@@ -16,5 +16,7 @@ typedef struct Enemy
 Enemy AddEnemy(float pos_x, float pos_y);
 
 void UpdateEnemy(Enemy enemy);
+void DrawEnemy(Enemy enemy);
+void UpdateEnemyCollision(Enemy enemy);
 
 #endif
