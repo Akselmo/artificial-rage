@@ -79,8 +79,8 @@ void PlaceLevelBlocks()
     int enemyAmount = 1;
     int i = 1;
 
-    LevelData* levelData = malloc(i*sizeof(LevelData));
-    Enemy* enemies = malloc(enemyAmount*sizeof(Enemy));
+    levelData = malloc(i*sizeof(LevelData));
+    enemies = malloc(enemyAmount*sizeof(Enemy));
     
     for (int y = 0; y < levelCubicMap.height; y++)
     {
