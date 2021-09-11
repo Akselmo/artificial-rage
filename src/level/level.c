@@ -12,7 +12,7 @@
 //Level has level data, enemies and items
 
 //Level
-LevelData **levelData = NULL;
+LevelData *levelData = NULL;
 Color *levelMapPixels = NULL;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
@@ -99,14 +99,14 @@ void PlaceLevelBlocks()
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
                 
-                LevelData **tmpLevel = realloc(levelData, (levelBlockAmount+1) * sizeof(*levelData));
+                LevelData* tmpLevel = realloc(levelData, (levelBlockAmount+1) * sizeof(LevelData));
                 if (tmpLevel)
                 {
                     levelData = tmpLevel;
-                    LevelData *d = levelData[levelBlockAmount];
-                    levelData[levelBlockAmount]->levelBlockModel = cubeModel;
-                    levelData[levelBlockAmount]->levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
-                    levelData[levelBlockAmount]->modelId = levelBlockAmount;
+                    levelData->levelBlockModel = cubeModel;
+                    levelData->levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                    levelData->modelId = levelBlockAmount;
+
                 }
                 levelBlockAmount++;
             }
