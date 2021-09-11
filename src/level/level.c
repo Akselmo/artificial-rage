@@ -12,8 +12,7 @@
 //Level has level data, enemies and items
 
 //Level
-LevelData *levelData = NULL;
-
+LevelData **levelData = NULL;
 Color *levelMapPixels = NULL;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
@@ -24,13 +23,14 @@ Material *floorMaterial = NULL;
 Model planeCeiling;
 Material *ceilingMaterial= NULL;
 char *wallTextures[2];
-
 Vector3 levelStartPosition;
 Vector3 levelEndPosition;
-int levelBlockAmount;
+int levelBlockAmount = 1;
 
 //Enemies
 Enemy *enemies = NULL;
+int enemyAmount = 1;
+
 
 //Items (contains interactable and non-interactable items)
 Item *items = NULL;
@@ -76,10 +76,7 @@ void PlaceLevelBlocks()
 
     levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
     
-    int enemyAmount = 1;
-    int i = 1;
-
-    levelData = malloc(i*sizeof(LevelData));
+    levelData = malloc(levelBlockAmount*sizeof(*levelData));
     enemies = malloc(enemyAmount*sizeof(Enemy));
     
     for (int y = 0; y < levelCubicMap.height; y++)
@@ -102,17 +99,16 @@ void PlaceLevelBlocks()
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
                 
-                ulong d = sizeof(LevelData);
-
-                LevelData* tmpLevel = realloc(levelData, (i+1) * sizeof(LevelData));
+                LevelData **tmpLevel = realloc(levelData, (levelBlockAmount+1) * sizeof(*levelData));
                 if (tmpLevel)
                 {
                     levelData = tmpLevel;
-                    levelData->levelBlockModel = cubeModel;
-                    levelData->levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
-                    levelData->modelId = i;
+                    LevelData *d = levelData[levelBlockAmount];
+                    levelData[levelBlockAmount]->levelBlockModel = cubeModel;
+                    levelData[levelBlockAmount]->levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                    levelData[levelBlockAmount]->modelId = levelBlockAmount;
                 }
-                i++;
+                levelBlockAmount++;
             }
             
 
@@ -145,7 +141,6 @@ void PlaceLevelBlocks()
         }
     }
     
-    levelBlockAmount = i;
     printf("Level has total %d blocks \n", levelBlockAmount);
 }
 
@@ -159,22 +154,23 @@ void DrawLevel()
     LevelData *loopLevelData = levelData;
     Enemy *loopEnemies = enemies;
     Item *loopItems = items;
-    for (int i = 0; i < MAX_LEVEL_SIZE; i++)
+
+
+    for (int i = 0; i < 1; i++)
     {
         if (loopLevelData != NULL)
         {
-            DrawModel(loopLevelData->levelBlockModel, levelData->levelBlockPosition, 1.0f, WHITE);
+            DrawModel(loopLevelData->levelBlockModel, loopLevelData->levelBlockPosition, 1.0f, WHITE);
             loopLevelData++;
         }
+    }
+    
+    for (int x = 0; x < 1; x++)
+    {
         if (loopEnemies != NULL)
         {
             UpdateEnemy(*loopEnemies);
             loopEnemies++;
-        }
-        if (loopItems != NULL)
-        {
-            UpdateItem(*loopItems); //commented out due to making the game slow
-            loopItems++;
         }
     }
 }
