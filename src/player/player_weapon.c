@@ -2,6 +2,7 @@
 #include "../../include/raymath.h"
 #include "../settings/settings.h"
 #include "../level/level.h"
+#include "../enemy/enemy.h"
 #include "player.h"
 #include "../main.h"
 #include <stdio.h>
@@ -133,23 +134,45 @@ float TestLevelHit(Ray rayCast)
 
 float TestEntityHit(Ray rayCast, int entityAmount)
 {
-    float distance = INFINITY;
-    Model *entities = GetAllEntities();
-    for (int i = 0; i < entityAmount; i++)
+    float distance = 0.0f;
+    float levelDistance = INFINITY;
+    float enemyDistance = INFINITY;
+    LevelData *levelData = GetLevelData();
+    Enemy *enemies = GetEnemies();
+    for (int i = 0; i < GetLevelBlockAmount(); i++)
     {
 
         //See if we need meshes here too
-        RayHitInfo hitEntities = GetCollisionRayModel(rayCast, entities[i]);
-        if (hitEntities.hit)
+        RayHitInfo levelEntities = GetCollisionRayModel(rayCast, levelData[i].levelBlockModel);
+        if (levelEntities.hit)
         {
-            if (hitEntities.distance < distance)
+            if (levelEntities.distance < levelDistance)
             {
-                distance = hitEntities.distance;
+                levelDistance = levelEntities.distance;
             }
         }
+
+        bool enemyHit = CheckCollisionRayBox(rayCast, enemies[i].boundingBox);
+        if (enemyHit)
+        {
+            if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+            {
+                enemyDistance = levelEntities.distance;
+            }
+        }
+
+    }
+    if (enemyDistance < levelDistance)
+    {
+        distance = enemyDistance;
+    }
+    else
+    {
+        distance = levelDistance;
     }
     return distance;
 }
+
 
 bool WeaponHasAmmo()
 {
@@ -206,20 +229,13 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             rayCast.direction = v;
             rayCast.position = playerPosition;
 
-            float levelDistance = TestLevelHit(rayCast);
+            //float levelDistance = TestLevelHit(rayCast);
             float entityDistance = TestEntityHit(rayCast, entities);
 
-            if (levelDistance != INFINITY || entityDistance != INFINITY)
+            if (entityDistance != INFINITY)
             {
-                if (levelDistance < entityDistance)
-                {
-                    //We hit wall before we hit anything
-                }
-                else
-                {
-                    //we hit the entity instead
-                }
-                //printf("Levelhit %f Entityhit %f \n", levelDistance, entityDistance);
+
+                printf("Entityhit %f \n", entityDistance);
                 printf("id: %d\n", id);
                 nextFire = fireRate;
             }

@@ -16,7 +16,6 @@ Camera playerCamera;
 Vector2 levelSize;
 Model *levelModel;
 //Should be enough room for entities, such as clutter, weapon pickups, etc...
-Model allEntities[MAX_ENTITIES];
 
 //Initialization
 void Initialize(void)
@@ -72,9 +71,4 @@ int main()
     // End game
     CloseWindow();
     return 0;
-}
-
-Model *GetAllEntities()
-{
-    return allEntities;
 }

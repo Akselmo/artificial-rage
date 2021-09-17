@@ -15,4 +15,8 @@ void SetHealth(int healthToAdd);
 
 void PlayerFire(Camera *camera);
 
+BoundingBox GetPlayerBoundingBox();
+
+Vector3 GetPlayerPosition();
+
 #endif

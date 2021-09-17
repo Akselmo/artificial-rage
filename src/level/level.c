@@ -35,8 +35,6 @@ Enemy *enemies = NULL;
 //Items (contains interactable and non-interactable items)
 Item *items = NULL;
 
-//PROTOTYPES
-BoundingBox MakeBoundingBox(Vector3 position, Vector3 size);
 
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
 {
@@ -279,6 +277,11 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
 LevelData *GetLevelData()
 {
     return levelData;
+}
+
+Enemy *GetEnemies()
+{
+    return enemies;
 }
 
 Vector3 GetMapPosition()

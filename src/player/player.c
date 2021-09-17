@@ -17,8 +17,10 @@
 //Globals
 Model playerHitboxModel;
 Vector3 playerSize;
+Vector3 playerPosition;
 int playerHealth = 100;
 bool playerDead = false;
+BoundingBox playerBoundingBox;
 
 //Struct for all the camera data
 typedef struct
@@ -109,6 +111,9 @@ void UpdateFPSCamera(Camera *camera)
 {
     Vector3 oldPlayerPos = camera->position;
 
+    playerBoundingBox = MakeBoundingBox(camera->position, playerSize);
+
+
     static Vector2 previousMousePosition = {0.0f, 0.0f};
 
     Vector2 mousePositionDelta = {0.0f, 0.0f};
@@ -182,6 +187,8 @@ void UpdateFPSCamera(Camera *camera)
         camera->position = oldPlayerPos;
     }
     
+    playerPosition = camera->position;
+
     //Check if we need to switch weapon
     ChangeWeapon();
 }
@@ -189,6 +196,16 @@ void UpdateFPSCamera(Camera *camera)
 int GetHealth()
 {
     return playerHealth;
+}
+
+BoundingBox GetPlayerBoundingBox()
+{
+    return playerBoundingBox;
+}
+
+Vector3 GetPlayerPosition()
+{
+    return playerPosition;
 }
 
 //Use minus for removing health
@@ -209,8 +226,7 @@ void PlayerFire(Camera *camera)
 {
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
     {
-        int entityAmount = sizeof(GetAllEntities());
-        int levelSize = sizeof(GetLevelData()->levelBlockModel);
-        FireWeapon(camera->position, camera->target, levelSize, entityAmount);
+        
+        FireWeapon(camera->position, camera->target, GetLevelBlockAmount(), GetLevelBlockAmount());
     }
 }

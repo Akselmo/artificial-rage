@@ -2,6 +2,7 @@
 #define LEVEL
 
 #include "../../include/raylib.h"
+#include "../enemy/enemy.h"
 
 #define MAX_LEVEL_SIZE 16384
 
@@ -25,6 +26,10 @@ Vector3 GetMapPosition();
 Vector3 GetLevelStartPosition();
 
 LevelData *GetLevelData();
+
+Enemy *GetEnemies();
+
+BoundingBox MakeBoundingBox(Vector3 position, Vector3 size);
 
 int GetLevelBlockAmount();
 
