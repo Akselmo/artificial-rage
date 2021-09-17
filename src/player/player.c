@@ -98,7 +98,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     InitializeWeaponKeys();
 
     //Create player hitbox
-    playerSize = (Vector3){0.5f, 0.5f, 0.5f};
+    playerSize = (Vector3){0.1f, 0.1f, 0.1f};
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x, playerSize.y, playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
 
@@ -177,11 +177,10 @@ void UpdateFPSCamera(Camera *camera)
     camera->position.y = CAMERA.playerEyesPosition;
 
     
-    if (CheckLevelCollision(camera->position, (Vector3){0.1f, 0.1f, 0.1f}))
+    if (CheckLevelCollision(camera->position, playerSize))
     {
         camera->position = oldPlayerPos;
     }
-    
     
     //Check if we need to switch weapon
     ChangeWeapon();

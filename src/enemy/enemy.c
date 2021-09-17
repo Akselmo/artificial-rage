@@ -25,7 +25,7 @@ Enemy AddEnemy(float pos_x, float pos_y)
 void UpdateEnemy(Enemy enemy)
 {
     DrawEnemy(enemy);
-    UpdateEnemyCollision(enemy);
+    UpdateEnemyPosition(enemy);
 }
 
 void DrawEnemy(Enemy enemy)
@@ -33,7 +33,7 @@ void DrawEnemy(Enemy enemy)
     DrawCubeV(enemy.position, enemy.size, RED);
 }
 
-void UpdateEnemyCollision(Enemy enemy)
+void UpdateEnemyPosition(Enemy enemy)
 {
-    //update bounding box here
+    //move enemy here
 }

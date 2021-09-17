@@ -35,6 +35,8 @@ Enemy *enemies = NULL;
 //Items (contains interactable and non-interactable items)
 Item *items = NULL;
 
+//PROTOTYPES
+BoundingBox MakeBoundingBox(Vector3 position, Vector3 size);
 
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
 {
@@ -158,34 +160,43 @@ void DrawLevel()
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
 {
-    LevelData *levelData = GetLevelData();
 
-    BoundingBox entityBox = (BoundingBox){(Vector3){entityPos.x - entitySize.x / 2,
-                                                    entityPos.y - entitySize.y / 2,
-                                                    entityPos.z - entitySize.z / 2},
-                                          (Vector3){entityPos.x + entitySize.x / 2,
-                                                    entityPos.y + entitySize.y / 2,
-                                                    entityPos.z + entitySize.z / 2}};
-
+    BoundingBox entityBox = MakeBoundingBox(entityPos, entitySize);
+    
     for (int i = 0; i < mapSize; i++)
     {
+        //Level blocks
         Vector3 wallPos = levelData[i].levelBlockPosition;
         Vector3 wallSize = {1.0f, 1.0f, 1.0f};
-        BoundingBox levelBox = (BoundingBox){(Vector3){wallPos.x - wallSize.x / 2,
-                                                       wallPos.y - wallSize.y / 2,
-                                                       wallPos.z - wallSize.z / 2},
-                                             (Vector3){wallPos.x + wallSize.x / 2,
-                                                       wallPos.y + wallSize.y / 2,
-                                                       wallPos.z + wallSize.z / 2}};
+        BoundingBox levelBox = MakeBoundingBox(wallPos, wallSize);
 
-        //DrawBoundingBox(levelBox,GREEN);
+        //Enemies
+        Vector3 enemyPos = enemies[i].position;
+        Vector3 enemySize = enemies[i].size;
+        BoundingBox enemyBox = MakeBoundingBox(enemyPos, enemySize);
+
 
         if (CheckCollisionBoxes(entityBox, levelBox))
         {
             return true;
         }
+        else if (CheckCollisionBoxes(entityBox, enemyBox))
+        {
+            return true;
+        }
     }
     return false;
+}
+
+BoundingBox MakeBoundingBox(Vector3 position, Vector3 size)
+{
+    BoundingBox bb = (BoundingBox){(Vector3){position.x - size.x / 2,
+                                                   position.y - size.y / 2,
+                                                   position.z - size.z / 2},
+                                          (Vector3){position.x + size.x / 2,
+                                                   position.y + size.y / 2,
+                                                   position.z + size.z / 2}};
+    return bb;
 }
 
 void AllocateMeshData(Mesh *mesh, int triangleCount)
