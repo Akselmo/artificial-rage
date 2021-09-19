@@ -75,6 +75,12 @@ void InitializeWeaponKeys()
     WEAPONDATA.railgunKey = GetCustomInput(KEY_FIVE);
 }
 
+void SelectDefaultWeapon()
+{
+    weaponEquipped = FIST;
+    fireRate = WEAPONDATA.fistFirerate;
+}
+
 void ChangeWeapon()
 {
     int key = 0;
@@ -110,54 +116,41 @@ void ChangeWeapon()
 
 int id;
 
-float TestLevelHit(Ray rayCast)
-{
-    float distance = INFINITY;
-    LevelData *levelData = GetLevelData();
-    //Make sure the level size is all the cubes
-    for (int i = 0; i < GetLevelBlockAmount(); i++)
-    {
-
-        Vector3 pos = levelData[i].levelBlockPosition;
-        RayHitInfo hitLevel = GetCollisionRayMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
-        if (hitLevel.hit)
-        {
-            if (hitLevel.distance < distance)
-            {
-                distance = hitLevel.distance;
-                id = levelData[i].modelId;
-            }
-        }
-    }
-    return distance;
-}
 
 float TestEntityHit(Ray rayCast, int entityAmount)
 {
     float distance = 0.0f;
     float levelDistance = INFINITY;
     float enemyDistance = INFINITY;
+    int entitiesAmount = GetLevelBlockAmount();
     LevelData *levelData = GetLevelData();
     Enemy *enemies = GetEnemies();
-    for (int i = 0; i < GetLevelBlockAmount(); i++)
+    for (int i = 0; i < entitiesAmount; i++)
     {
-
         //See if we need meshes here too
-        RayHitInfo levelEntities = GetCollisionRayModel(rayCast, levelData[i].levelBlockModel);
-        if (levelEntities.hit)
+        if (levelData[i].modelId != 0)
         {
-            if (levelEntities.distance < levelDistance)
+            Vector3 pos = levelData[i].levelBlockPosition;
+            RayHitInfo hitLevel = GetCollisionRayMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            if (hitLevel.hit)
             {
-                levelDistance = levelEntities.distance;
+                levelData[i].levelBlockPosition = Vector3Zero();
+                if (hitLevel.distance < levelDistance)
+                {
+                    levelDistance = hitLevel.distance;
+                    id = levelData[i].modelId;
+                    
+                }
             }
         }
+
 
         bool enemyHit = CheckCollisionRayBox(rayCast, enemies[i].boundingBox);
         if (enemyHit)
         {
             if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
             {
-                enemyDistance = levelEntities.distance;
+                enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
             }
         }
 
@@ -226,7 +219,7 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             Ray rayCast;
 
             Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition, target));
-            rayCast.direction = v;
+            rayCast.direction = (Vector3){-1*v.x, -1*v.y, -1*v.z};
             rayCast.position = playerPosition;
 
             //float levelDistance = TestLevelHit(rayCast);

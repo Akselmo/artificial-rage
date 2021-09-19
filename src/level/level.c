@@ -142,7 +142,7 @@ void DrawLevel()
 
     for (int i = 0; i < mapSize; i++)
     {
-        if (&levelData[i] != NULL)
+        if (&levelData[i] != NULL && levelData[i].modelId != 0)
         {
             DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
         }
@@ -174,7 +174,7 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
         BoundingBox enemyBox = MakeBoundingBox(enemyPos, enemySize);
 
 
-        if (CheckCollisionBoxes(entityBox, levelBox))
+        if (CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
         {
             return true;
         }

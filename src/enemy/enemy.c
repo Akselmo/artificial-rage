@@ -54,7 +54,6 @@ void UpdateEnemyPosition(Enemy enemy)
     BoundingBox playerBb = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
     Vector3 v = Vector3Normalize(Vector3Subtract(enemyPosition, playerPosition));
-    printf("asd %f %f %f \n", v.x, v.y, v.z);
     rayCast.direction = v;
     rayCast.position = enemyPosition;
     DrawRay(rayCast, GREEN);  

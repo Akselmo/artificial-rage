@@ -103,6 +103,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     playerSize = (Vector3){0.1f, 0.1f, 0.1f};
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x, playerSize.y, playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
+    SelectDefaultWeapon();
 
     return camera;
 }
