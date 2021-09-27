@@ -1,7 +1,8 @@
 /.vscode
 *.code-workspace
 /build
-
+*.nvimrc
+o
 # Prerequisites
 *.d
 
