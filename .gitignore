@@ -1,6 +1,11 @@
 /.vscode
 *.code-workspace
+/Debug
+/Release
 /build
+/cmake-build-Debug
+/cmake-build-Release
+*/CMakeFiles
 *.nvimrc
 o
 # Prerequisites
