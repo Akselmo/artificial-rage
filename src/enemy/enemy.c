@@ -11,7 +11,7 @@ Vector3 enemyPosition;
 Vector3 enemySize;
 
 //Prototypes
-void UpdateEnemyPosition(enemy);
+void UpdateEnemyPosition(Enemy enemy);
 
 //Since we use billboarding we dont have to know rotation
 
