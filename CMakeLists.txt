@@ -1,3 +1,4 @@
+#Compiler used: GCC 10.3.0
 cmake_minimum_required(VERSION 3.0)
 project(scififps C)
 
@@ -20,5 +21,5 @@ ELSE() #mac, thanks TheGrand547!
     target_link_libraries(${PROJECT_NAME} PRIVATE ${RAYLIB} "-framework OpenGL" "-framework IOKit" "-framework Cocoa")
 ENDIF()
 
-#Compiler used: GCC 10.3.0
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+#Copy the level assets
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/level/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

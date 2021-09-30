@@ -60,8 +60,8 @@ void PlaceLevelBlocks()
     float mapPosZ = (float)levelCubicMap.height;
     float mapPosX = (float)levelCubicMap.width;
 
-    Texture2D ceilingTexture = LoadTexture("../assets/ceiling.png");
-    Texture2D floorTexture = LoadTexture("../assets/floor.png");
+    Texture2D ceilingTexture = LoadTexture("./assets/ceiling.png");
+    Texture2D floorTexture = LoadTexture("./assets/floor.png");
     planeCeiling = LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     planeFloor = LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
@@ -70,8 +70,8 @@ void PlaceLevelBlocks()
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     // Load map texture, hardcoded for now.
-    wallTextures[0] = "../assets/wall1.png";
-    wallTextures[1] = "../assets/wall2.png";
+    wallTextures[0] = "./assets/wall1.png";
+    wallTextures[1] = "./assets/wall2.png";
 
     levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
     mapSize = levelCubicMap.height * levelCubicMap.width;
@@ -305,7 +305,7 @@ int GetLevelBlockAmount()
 void BuildLevel()
 {
     // Load level cubicmap image (RAM)
-    levelImageMap = LoadImage("../assets/level.png");
+    levelImageMap = LoadImage("./assets/level.png");
     levelCubicMap = LoadTextureFromImage(levelImageMap);
 
     // Get map image data to be used for collision detection
