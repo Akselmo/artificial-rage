@@ -24,12 +24,6 @@ void Initialize(void)
     InitializeGame();
 
     BuildLevel();
-    //Add enemies
-
-    //Add all models in the level to allModels
-    //allModels[0] = levelModel;
-    //Foreach every model in enemy model array
-
     //Add player camera
     Vector3 startPos = GetLevelStartPosition();
     playerCamera = CustomFPSCamera(startPos.x, startPos.z);

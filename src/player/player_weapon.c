@@ -3,6 +3,7 @@
 #include "../settings/settings.h"
 #include "../level/level.h"
 #include "../enemy/enemy.h"
+#include "../utilities/utilities.h"
 #include "player.h"
 #include "../main.h"
 #include <stdio.h>
@@ -114,17 +115,21 @@ void ChangeWeapon()
     //Weapon switching goes here
 }
 
-int id;
 
 
-float TestEntityHit(Ray rayCast, int entityAmount)
+
+int TestEntityHit(Ray rayCast, int entityAmount)
 {
+    int id = 0;
     float distance = 0.0f;
     float levelDistance = INFINITY;
     float enemyDistance = INFINITY;
     int entitiesAmount = GetLevelBlockAmount();
     LevelData *levelData = GetLevelData();
     Enemy *enemies = GetEnemies();
+    Enemy enemyDataHit;
+   LevelData levelDataHit;
+
     for (int i = 0; i < entitiesAmount; i++)
     {
         //See if we need meshes here too
@@ -138,8 +143,7 @@ float TestEntityHit(Ray rayCast, int entityAmount)
                 if (hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
-                    id = levelData[i].modelId;
-                    
+                    levelDataHit = levelData[i];
                 }
             }
         }
@@ -151,19 +155,24 @@ float TestEntityHit(Ray rayCast, int entityAmount)
             if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
             {
                 enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
+                enemyDataHit = enemies[i];
             }
         }
 
     }
     if (enemyDistance < levelDistance)
     {
-        distance = enemyDistance;
+        //Enemy is closer so return its id
+        id = enemyDataHit.id;
+        printf("Hit enemy\n");
     }
     else
     {
-        distance = levelDistance;
+        //Wall is closer so return its id
+        id = levelDataHit.modelId;
+        printf("Hit wall\n");
     }
-    return distance;
+    return id;
 }
 
 
@@ -223,12 +232,10 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             rayCast.position = playerPosition;
 
             //float levelDistance = TestLevelHit(rayCast);
-            float entityDistance = TestEntityHit(rayCast, entities);
+            int id = TestEntityHit(rayCast, entities);
 
-            if (entityDistance != INFINITY)
+            if (id != 0)
             {
-
-                printf("Entityhit %f \n", entityDistance);
                 printf("id: %d\n", id);
                 nextFire = fireRate;
             }

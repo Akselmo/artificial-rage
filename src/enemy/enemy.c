@@ -15,10 +15,10 @@ void UpdateEnemyPosition(Enemy enemy);
 
 //Since we use billboarding we dont have to know rotation
 
-Enemy AddEnemy(float pos_x, float pos_y)
+Enemy AddEnemy(float pos_x, float pos_y, int id)
 {
     enemyPosition = (Vector3){pos_x, ENEMY_START_POSITION_Y, pos_y};
-    enemySize = (Vector3){0.25f, 0.25f, 0.25f};
+    enemySize = (Vector3){0.25f, 0.8f, 0.25f};
     Enemy enemy = {
         .position = enemyPosition,
         .size = enemySize,
@@ -26,6 +26,7 @@ Enemy AddEnemy(float pos_x, float pos_y)
         .damage = 5,
         .health = 50,
         .boundingBox = MakeBoundingBox(enemyPosition, enemySize),
+        .id = id,
     };
     return enemy;
 }
@@ -54,12 +55,11 @@ void UpdateEnemyPosition(Enemy enemy)
     BoundingBox playerBb = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
     Vector3 v = Vector3Normalize(Vector3Subtract(enemyPosition, playerPosition));
-    rayCast.direction = v;
+    rayCast.direction = (Vector3){-1.0f*v.x, -1.0f*v.y, -1.0f*v.z};
     rayCast.position = enemyPosition;
     DrawRay(rayCast, GREEN);  
     if (CheckCollisionRayBox(rayCast, playerBb))
     {
-        printf(" Enemy sees player :) ");
+       // printf(" Enemy sees player :) \n ");
     }
-
 }

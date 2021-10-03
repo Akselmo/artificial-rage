@@ -120,7 +120,7 @@ void PlaceLevelBlocks()
             //Find enemy, which is red (255,0,0)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
             {
-                enemies[i] = AddEnemy(mx,my);
+                enemies[i] = AddEnemy(mx, my, i);
             }
             //TODO:
             //For entities and their RGB values: check README.md

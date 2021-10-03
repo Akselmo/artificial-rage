@@ -11,9 +11,10 @@ typedef struct Enemy
     Vector3 size;
     BoundingBox boundingBox;
     bool dead;
+    int id;
 } Enemy;
 
-Enemy AddEnemy(float pos_x, float pos_y);
+Enemy AddEnemy(float pos_x, float pos_y, int id);
 
 void UpdateEnemy(Enemy enemy);
 void DrawEnemy(Enemy enemy);
