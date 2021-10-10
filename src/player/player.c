@@ -22,6 +22,8 @@ int playerHealth = 100;
 bool playerDead = false;
 BoundingBox playerBoundingBox;
 
+float nextFire = 0.0f;
+
 //Struct for all the camera data
 typedef struct
 {
@@ -182,12 +184,12 @@ void UpdateFPSCamera(Camera *camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
-    
+
     if (CheckLevelCollision(camera->position, playerSize))
     {
         camera->position = oldPlayerPos;
     }
-    
+
     playerPosition = camera->position;
 
     //Check if we need to switch weapon
@@ -223,11 +225,14 @@ void SetHealth(int healthToAdd)
     }
 }
 
+
 void PlayerFire(Camera *camera)
 {
+    //Calculate fire rate countdown here
+    nextFire -= GetFrameTime();
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
     {
-        
-        FireWeapon(camera->position, camera->target, GetLevelBlockAmount(), GetLevelBlockAmount());
+        nextFire = FireWeapon(camera->position, camera->target, nextFire);
     }
+
 }

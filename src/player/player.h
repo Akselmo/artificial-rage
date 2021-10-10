@@ -3,6 +3,8 @@
 
 #include "../../include/raylib.h"
 
+#define PLAYER_ID -1
+
 Camera CustomFPSCamera(float pos_x, float pos_z);
 
 void UpdateFPSCamera(Camera *camera);

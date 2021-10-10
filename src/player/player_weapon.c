@@ -17,8 +17,7 @@
 #define RAILGUN_AMMO_MAX 25
 
 int weaponEquipped;
-float fireRate = 1.0f;
-float nextFire = -1.0f;
+float fireRate;
 
 typedef struct
 {
@@ -115,10 +114,7 @@ void ChangeWeapon()
     //Weapon switching goes here
 }
 
-
-
-
-int TestEntityHit(Ray rayCast, int entityAmount)
+int TestEntityHit(Ray rayCast)
 {
     int id = 0;
     float distance = 0.0f;
@@ -128,7 +124,7 @@ int TestEntityHit(Ray rayCast, int entityAmount)
     LevelData *levelData = GetLevelData();
     Enemy *enemies = GetEnemies();
     Enemy enemyDataHit;
-   LevelData levelDataHit;
+    LevelData levelDataHit;
 
     for (int i = 0; i < entitiesAmount; i++)
     {
@@ -214,14 +210,14 @@ bool WeaponHasAmmo()
     }
 }
 
-void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entities)
+float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
 {
     if (WeaponHasAmmo())
     {
+        //Nextfire resets every time when clicked
         if (nextFire > 0)
         {
             nextFire -= GetFrameTime();
-            return;
         }
         else
         {
@@ -231,8 +227,7 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             rayCast.direction = (Vector3){-1*v.x, -1*v.y, -1*v.z};
             rayCast.position = playerPosition;
 
-            //float levelDistance = TestLevelHit(rayCast);
-            int id = TestEntityHit(rayCast, entities);
+            int id = TestEntityHit(rayCast);
 
             if (id != 0)
             {
@@ -241,4 +236,5 @@ void FireWeapon(Vector3 playerPosition, Vector3 target, int levelSize, int entit
             }
         }
     }
+    return nextFire;
 }
