@@ -12,11 +12,13 @@ typedef struct Enemy
     BoundingBox boundingBox;
     bool dead;
     int id;
+    float tickRate;
+    float nextTick;
 } Enemy;
 
 Enemy AddEnemy(float pos_x, float pos_y, int id);
 
-void UpdateEnemy(Enemy enemy);
+void UpdateEnemy(Enemy* enemy);
 void DrawEnemy(Enemy enemy);
 
 #endif

@@ -78,7 +78,7 @@ void PlaceLevelBlocks()
 
     levelData = calloc(mapSize, sizeof(LevelData));
     enemies = calloc(mapSize, sizeof(Enemy));
-    
+
     for (int y = 0; y < levelCubicMap.height; y++)
     {
         for (int x = 0; x < levelCubicMap.width; x++)
@@ -99,7 +99,7 @@ void PlaceLevelBlocks()
                 Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-                
+
                 levelData[i].levelBlockModel = cubeModel;
                 levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
                 levelData[i].modelId = i;
@@ -124,10 +124,10 @@ void PlaceLevelBlocks()
             }
             //TODO:
             //For entities and their RGB values: check README.md
-            
+
         }
     }
-    
+
     printf("Level has total %d blocks \n", mapSize);
 }
 
@@ -142,25 +142,27 @@ void DrawLevel()
 
     for (int i = 0; i < mapSize; i++)
     {
-        if (&levelData[i] != NULL && levelData[i].modelId != 0)
+        LevelData *ld = &levelData[i];
+        Enemy *e = &enemies[i];
+        if (ld != NULL && ld->modelId != 0)
         {
-            DrawModel(levelData[i].levelBlockModel, levelData[i].levelBlockPosition, 1.0f, WHITE);
+            DrawModel(ld->levelBlockModel, ld->levelBlockPosition, 1.0f, WHITE);
         }
 
-        if (&enemies[i] != NULL)
+        if (e != NULL && e->id != 0)
         {
             //if enemies[i] has nothing dont do anything
-            UpdateEnemy(enemies[i]);
+            UpdateEnemy(e);
         }
     }
-    
+
 }
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
 {
 
     BoundingBox entityBox = MakeBoundingBox(entityPos, entitySize);
-    
+
     for (int i = 0; i < mapSize; i++)
     {
         //Level blocks
