@@ -15,9 +15,9 @@ typedef struct
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize);
 
-void DrawLevel();
-
 void BuildLevel();
+
+void DrawLevel();
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize);
 

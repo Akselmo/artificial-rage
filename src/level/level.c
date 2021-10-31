@@ -35,19 +35,28 @@ Enemy *enemies = NULL;
 //Items (contains interactable and non-interactable items)
 Item *items = NULL;
 
+//Prototypes
+bool CheckPixelForColor(int x, int width, int y, int r, int g, int b);
+void PlaceLevelBlocks();
+void AllocateMeshData(Mesh *mesh, int triangleCount);
 
-bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
+
+//TODO: Add integer so you can select which level to load
+//      Load textures from file, instead of being built into EXE
+//
+void BuildLevel()
 {
-    if (levelMapPixels[y * width + x].r == r &&
-        levelMapPixels[y * width + x].g == g &&
-        levelMapPixels[y * width + x].b == b)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    // Load level cubicmap image (RAM)
+    levelImageMap = LoadImage("./assets/level.png");
+    levelCubicMap = LoadTextureFromImage(levelImageMap);
+
+    // Get map image data to be used for collision detection
+    levelMapPixels = LoadImageColors(levelImageMap);
+
+    PlaceLevelBlocks();
+
+    // Unload image from RAM
+    UnloadImage(levelImageMap);
 }
 
 //TODO: Entities can be moved here! Map file can be one png.
@@ -131,8 +140,6 @@ void PlaceLevelBlocks()
     printf("Level has total %d blocks \n", mapSize);
 }
 
-
-
 void DrawLevel()
 {
 
@@ -197,16 +204,6 @@ BoundingBox MakeBoundingBox(Vector3 position, Vector3 size)
                                                    position.y + size.y / 2,
                                                    position.z + size.z / 2}};
     return bb;
-}
-
-void AllocateMeshData(Mesh *mesh, int triangleCount)
-{
-    mesh->vertexCount = triangleCount * 3;
-    mesh->triangleCount = triangleCount;
-
-    mesh->vertices = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
-    mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
-    mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
@@ -276,6 +273,31 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     return mesh;
 }
 
+void AllocateMeshData(Mesh *mesh, int triangleCount)
+{
+    mesh->vertexCount = triangleCount * 3;
+    mesh->triangleCount = triangleCount;
+
+    mesh->vertices = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
+    mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+}
+
+bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
+{
+    if (levelMapPixels[y * width + x].r == r &&
+        levelMapPixels[y * width + x].g == g &&
+        levelMapPixels[y * width + x].b == b)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//Gets/Sets
 LevelData *GetLevelData()
 {
     return levelData;
@@ -299,22 +321,4 @@ Vector3 GetLevelStartPosition()
 int GetLevelBlockAmount()
 {
     return mapSize;
-}
-
-//TODO: Add integer so you can select which level to load
-//      Load textures from file, instead of being built into EXE
-//
-void BuildLevel()
-{
-    // Load level cubicmap image (RAM)
-    levelImageMap = LoadImage("./assets/level.png");
-    levelCubicMap = LoadTextureFromImage(levelImageMap);
-
-    // Get map image data to be used for collision detection
-    levelMapPixels = LoadImageColors(levelImageMap);
-
-    PlaceLevelBlocks();
-
-    // Unload image from RAM
-    UnloadImage(levelImageMap);
 }

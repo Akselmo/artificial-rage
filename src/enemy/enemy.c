@@ -10,6 +10,7 @@
 
 //Prototypes
 void UpdateEnemyPosition(Enemy enemy);
+int TestPlayerHit(Ray rayCast);
 
 //Since we use billboarding we dont have to know rotation
 
