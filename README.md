@@ -28,8 +28,7 @@ WIP. These notes are just for myself for now.
 A very quick and dirty TODO list
 
 MVP features:
-
-- [x] custom player camera
+- [x] custom player camera
 - [x] level generation
 - [ ] weapon system
 - [ ] enemy movement
