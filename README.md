@@ -23,6 +23,67 @@ WIP. These notes are just for myself for now.
 
 **Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new files.**
 
+## TODO:
+
+A very quick and dirty TODO list
+
+MVP features:
+
+- [x] custom player camera
+- [x] level generation
+- [ ] weapon system
+- [ ] enemy movement
+- [ ] enemy shoot player
+    - [ ] player loses health
+- [ ] player shoot enemy
+    - [ ] enemy loses health
+    - [ ] enemy death
+- [ ] items
+    - [ ] pick up weapon, adds weapon and ammo
+    - [ ] pick up health
+    - [ ] pick up id-card to make ending teleporter work
+- [ ] menu (not needed for MVP really)
+    - [ ] main menu that has start, quit, options that tell about options file
+    - [ ] level loading screen
+        - [ ] one folder contains numbered folders that contain map files
+    - [ ] pause menu that has continue, restart and quit
+    - [ ] death screen that is pause menu with different title
+- [ ] ui
+    - [ ] player health
+    - [ ] player active weapon
+        - [ ] ammo
+
+Nice to haves:
+
+- [ ] clutter?
+    - [ ] some clutter items you can walk through, they dont block
+    - [ ] spawned in random positions on map?
+- [ ] doors?
+    - [ ] doors could be just walls that can be activated
+    - [ ] when activated they move down, then slide up at some point if player is not on same grid
+
+Code specific:
+
+- [ ] clean up
+- [ ] make more helper functions instead of cross referencing?
+- [ ] PROTOTYPES!!!!
+
+Art:
+
+- [ ] Weapon sprites
+- [ ] Enemy sprites
+- [ ] Some HUD stuff
+- [ ] UI buttons etc?
+- [ ] level stuff
+
+Sound/Music:
+
+- [ ] Simple gameplay music loops
+- [ ] weapon sounds
+- [ ] player sounds
+- [ ] enemy sounds
+
+
 ## Entity RGB Values
 
 | Entity Name        | RGB Value   |
