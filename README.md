@@ -30,6 +30,7 @@ A very quick and dirty TODO list
 MVP features:
 - [x] custom player camera
 - [x] level generation
+- [x] collisions for enemy/player/wall
 - [ ] weapon system
 - [ ] enemy movement
 - [ ] enemy shoot player
