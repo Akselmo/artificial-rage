@@ -9,8 +9,8 @@
 #define ENEMY_START_POSITION_Y 0.4f
 
 //Prototypes
-void UpdateEnemyPosition(Enemy enemy);
-int TestPlayerHit(Ray rayCast);
+void UpdateEnemyPosition(Enemy* enemy);
+bool TestPlayerHit(Enemy* enemy);
 
 //Since we use billboarding we dont have to know rotation
 
@@ -45,7 +45,7 @@ void UpdateEnemy(Enemy* enemy)
     }
     else
     {
-        UpdateEnemyPosition(*enemy);
+        UpdateEnemyPosition(enemy);
         enemy->nextTick = enemy->tickRate;
     }
 }
@@ -55,14 +55,21 @@ void DrawEnemy(Enemy enemy)
     DrawCubeV(enemy.position, enemy.size, RED);
 }
 
-int TestPlayerHit(Ray rayCast)
+bool TestPlayerHit(Enemy* enemy)
 {
-    int id = 0;
+
+    Ray rayCast;
+    BoundingBox playerBb = GetPlayerBoundingBox();
+    Vector3 playerPosition = GetPlayerPosition();
+    Vector3 v = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
+    rayCast.direction = (Vector3){-1.0f*v.x, -1.0f*v.y, -1.0f*v.z};
+    rayCast.position = enemy->position;
+
+    bool hitPlayer = false;
     float distance = 0.0f;
     float levelDistance = INFINITY;
     float playerDistance = INFINITY;
     int entitiesAmount = GetLevelBlockAmount();
-    Vector3 playerPosition = GetPlayerPosition();
     LevelData *levelData = GetLevelData();
     LevelData levelDataHit;
 
@@ -88,30 +95,30 @@ int TestPlayerHit(Ray rayCast)
     if (playerDistance < levelDistance)
     {
         //Player is closer
-        id = PLAYER_ID;
+        hitPlayer = true;
         printf("hit player \n");
     }
     else
     {
         //Wall is closer so return its id
-        id = levelDataHit.modelId;
+        hitPlayer = false;
     }
-    return id;
+    return hitPlayer;
 }
 
-void UpdateEnemyPosition(Enemy enemy)
+void UpdateEnemyPosition(Enemy* enemy)
 {
     //Move enemy towards player:
     //- Check if player can be seen (first raycast hit returns player)
     //- If in certain range from player, stop
     //- If cant see player, stop
     //- When stopped, fire
-    Ray rayCast;
-    BoundingBox playerBb = GetPlayerBoundingBox();
-    Vector3 playerPosition = GetPlayerPosition();
-    Vector3 v = Vector3Normalize(Vector3Subtract(enemy.position, playerPosition));
-    rayCast.direction = (Vector3){-1.0f*v.x, -1.0f*v.y, -1.0f*v.z};
-    rayCast.position = enemy.position;
-    DrawRay(rayCast, GREEN);
-    TestPlayerHit(rayCast);
-}
+    if (TestPlayerHit(enemy))
+    {
+        //printf("enemy %i should move\n", enemy.id);
+        //Change enemy size every tick to see this works
+        enemy->size = Vector3Add(enemy->size, (Vector3){0.1f,0.1f,0.1f});
+        printf("enemysize %f\n", enemy->size.x);
+
+    }
+ }
