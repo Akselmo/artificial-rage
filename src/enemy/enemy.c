@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #define ENEMY_START_POSITION_Y 0.4f
+#define MAX_DISTANCE_FROM_PLAYER 0.85f
 
 //Prototypes
 void UpdateEnemyPosition(Enemy* enemy);
@@ -30,6 +31,7 @@ Enemy AddEnemy(float pos_x, float pos_y, int id)
         .id = id,
         .tickRate = randomTickRate,
         .nextTick = -1.0f,
+        .speed = 0.01,
     };
     return enemy;
 }
@@ -38,15 +40,18 @@ Enemy AddEnemy(float pos_x, float pos_y, int id)
 
 void UpdateEnemy(Enemy* enemy)
 {
-    DrawEnemy(*enemy);
-    if (enemy->nextTick > 0)
+    if (!enemy->dead)
     {
-        enemy->nextTick -= GetFrameTime();
-    }
-    else
-    {
+        DrawEnemy(*enemy);
+        if (enemy->nextTick > 0)
+        {
+            enemy->nextTick -= GetFrameTime();
+        }
+        else
+        {
+            enemy->nextTick = enemy->tickRate;
+        }
         UpdateEnemyPosition(enemy);
-        enemy->nextTick = enemy->tickRate;
     }
 }
 
@@ -100,7 +105,7 @@ bool TestPlayerHit(Enemy* enemy)
     }
     else
     {
-        //Wall is closer so return its id
+        //Wall/other entity is closer so we didnt hit player
         hitPlayer = false;
     }
     return hitPlayer;
@@ -113,12 +118,19 @@ void UpdateEnemyPosition(Enemy* enemy)
     //- If in certain range from player, stop
     //- If cant see player, stop
     //- When stopped, fire
+    Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if (TestPlayerHit(enemy))
     {
-        //printf("enemy %i should move\n", enemy.id);
-        //Change enemy size every tick to see this works
-        enemy->size = Vector3Add(enemy->size, (Vector3){0.1f,0.1f,0.1f});
-        printf("enemysize %f\n", enemy->size.x);
-
+        if (fabsf(DistanceFromPlayer.x) >= MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= MAX_DISTANCE_FROM_PLAYER)
+        {
+            Vector3 enemyOldPosition = enemy->position;
+            enemy->position = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
+            if (CheckLevelCollision(enemy->position,enemy->size))
+            {
+                enemy->position = enemyOldPosition;
+            }
+        }
     }
  }
+
+

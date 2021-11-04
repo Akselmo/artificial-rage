@@ -165,6 +165,9 @@ void DrawLevel()
 
 }
 
+//TODO: Different level collision check per player and enemy
+//if enemy, check for other enemies and player + enemy shouldnt check on self
+//use ids for checking who is looking for data, player has static id PLAYER_ID
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
 {
 
@@ -178,10 +181,12 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize)
         BoundingBox levelBox = MakeBoundingBox(wallPos, wallSize);
 
         //Enemies
+        //If enemy, avoid checking own position, use id's for this
         Vector3 enemyPos = enemies[i].position;
         Vector3 enemySize = enemies[i].size;
         BoundingBox enemyBox = MakeBoundingBox(enemyPos, enemySize);
 
+        //If enemy, player
 
         if (CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
         {

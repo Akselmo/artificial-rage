@@ -14,6 +14,7 @@ typedef struct Enemy
     int id;
     float tickRate;
     float nextTick;
+    float speed;
 } Enemy;
 
 Enemy AddEnemy(float pos_x, float pos_y, int id);
