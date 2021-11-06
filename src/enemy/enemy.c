@@ -83,7 +83,7 @@ bool TestPlayerHit(Enemy* enemy)
         if (levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
-            RayHitInfo hitLevel = GetCollisionRayMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if (hitLevel.hit)
             {
                 if (hitLevel.distance < levelDistance)

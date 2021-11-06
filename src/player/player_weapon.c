@@ -132,7 +132,7 @@ int TestEntityHit(Ray rayCast)
         if (levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
-            RayHitInfo hitLevel = GetCollisionRayMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if (hitLevel.hit)
             {
                 levelData[i].levelBlockPosition = Vector3Zero();
@@ -145,8 +145,8 @@ int TestEntityHit(Ray rayCast)
         }
 
 
-        bool enemyHit = CheckCollisionRayBox(rayCast, enemies[i].boundingBox);
-        if (enemyHit)
+        RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
+        if (enemyHit.hit)
         {
             if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
             {
