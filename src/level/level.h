@@ -19,7 +19,7 @@ void BuildLevel();
 
 void DrawLevel();
 
-bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize);
+bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
 
 Vector3 GetMapPosition();
 

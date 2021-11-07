@@ -4,6 +4,7 @@
 #include "../main.h"
 #include "player_weapon.h"
 #include "../level/level.h"
+#include "player.h"
 #include <math.h>
 
 //Took some parts of raylib camera.h and made my own camera based on that for full control
@@ -185,7 +186,7 @@ void UpdateFPSCamera(Camera *camera)
     camera->position.y = CAMERA.playerEyesPosition;
 
 
-    if (CheckLevelCollision(camera->position, playerSize))
+    if (CheckLevelCollision(camera->position, playerSize, PLAYER_ID))
     {
         camera->position = oldPlayerPos;
     }

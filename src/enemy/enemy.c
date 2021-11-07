@@ -101,7 +101,6 @@ bool TestPlayerHit(Enemy* enemy)
     {
         //Player is closer
         hitPlayer = true;
-        printf("hit player \n");
     }
     else
     {
@@ -125,7 +124,7 @@ void UpdateEnemyPosition(Enemy* enemy)
         {
             Vector3 enemyOldPosition = enemy->position;
             enemy->position = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
-            if (CheckLevelCollision(enemy->position,enemy->size))
+            if (CheckLevelCollision(enemy->position,enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
             }
