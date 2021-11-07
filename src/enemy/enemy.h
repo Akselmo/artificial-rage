@@ -18,8 +18,8 @@ typedef struct Enemy
 } Enemy;
 
 Enemy AddEnemy(float pos_x, float pos_y, int id);
-
 void UpdateEnemy(Enemy* enemy);
 void DrawEnemy(Enemy enemy);
+void TakeDamage(Enemy* enemy, int damageAmount);
 
 #endif

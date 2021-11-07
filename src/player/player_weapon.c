@@ -17,45 +17,58 @@
 #define RAILGUN_AMMO_MAX 25
 
 int weaponEquipped;
-float fireRate;
+float weaponFireRate;
+int weaponDamage;
 
 typedef struct
 {
     int fistKey;
     float fistFirerate;
+    int fistDamage;
 
     int pistolKey;
     int pistolAmmo;
     float pistolFirerate;
+    int pistolDamage;
 
     int rifleKey;
     int rifleAmmo;
     float rifleFirerate;
+    int rifleDamage;
 
     int shotgunKey;
     int shotgunAmmo;
     float shotgunFirerate;
+    int shotgunDamage;
 
     int railgunKey;
     int railgunAmmo;
     float railgunFirerate;
+    int railgunDamage;
 } WeaponData;
 
-static WeaponData WEAPONDATA = {
+static WeaponData WEAPONDATA =
+{
     .fistKey = KEY_ONE,
     .fistFirerate = 0.9f,
+    .fistDamage = 5,
     .pistolKey = KEY_TWO,
     .pistolAmmo = 0,
     .pistolFirerate = 0.4f,
+    .pistolDamage = 3,
     .rifleKey = KEY_THREE,
     .rifleAmmo = 0,
     .rifleFirerate = 0.25f,
+    .rifleDamage = 3,
     .shotgunKey = KEY_FOUR,
     .shotgunAmmo = 0,
     .shotgunFirerate = 0.75,
+    .shotgunDamage = 7,
     .railgunKey = KEY_FIVE,
     .railgunAmmo = 0,
-    .railgunFirerate = 1.0f};
+    .railgunFirerate = 1.0f,
+    .railgunDamage = 30
+};
 
 typedef enum
 {
@@ -78,7 +91,7 @@ void InitializeWeaponKeys()
 void SelectDefaultWeapon()
 {
     weaponEquipped = FIST;
-    fireRate = WEAPONDATA.fistFirerate;
+    weaponFireRate = WEAPONDATA.fistFirerate;
 }
 
 void ChangeWeapon()
@@ -88,30 +101,35 @@ void ChangeWeapon()
     if (key == WEAPONDATA.fistKey)
     {
         weaponEquipped = FIST;
-        fireRate = WEAPONDATA.fistFirerate;
+        weaponFireRate = WEAPONDATA.fistFirerate;
+        weaponDamage = WEAPONDATA.fistDamage;
         printf("Fist equipped\n");
     }
     else if (key == WEAPONDATA.pistolKey)
     {
         weaponEquipped = PISTOL;
-        fireRate = WEAPONDATA.pistolFirerate;
+        weaponFireRate = WEAPONDATA.pistolFirerate;
+        weaponDamage = WEAPONDATA.pistolDamage;
     }
     else if (key == WEAPONDATA.rifleKey)
     {
         weaponEquipped = RIFLE;
-        fireRate = WEAPONDATA.rifleFirerate;
+        weaponFireRate = WEAPONDATA.rifleFirerate;
+        weaponDamage = WEAPONDATA.rifleDamage;
     }
     else if (key == WEAPONDATA.shotgunKey)
     {
         weaponEquipped = SHOTGUN;
-        fireRate = WEAPONDATA.shotgunFirerate;
+        weaponFireRate = WEAPONDATA.shotgunFirerate;
+        weaponDamage = WEAPONDATA.shotgunDamage;
     }
     else if (key == WEAPONDATA.railgunKey)
     {
         weaponEquipped = RAILGUN;
-        fireRate = WEAPONDATA.railgunFirerate;
+        weaponFireRate = WEAPONDATA.railgunFirerate;
+        weaponDamage = WEAPONDATA.railgunDamage;
     }
-    //Weapon switching goes here
+    //Weapon switching animation goes here
 }
 
 int TestEntityHit(Ray rayCast)
@@ -135,7 +153,6 @@ int TestEntityHit(Ray rayCast)
             RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if (hitLevel.hit)
             {
-                levelData[i].levelBlockPosition = Vector3Zero();
                 if (hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
@@ -148,10 +165,13 @@ int TestEntityHit(Ray rayCast)
         RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
         if (enemyHit.hit)
         {
-            if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+            if (!enemies[i].dead)
             {
-                enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
-                enemyDataHit = enemies[i];
+                if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+                {
+                    enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
+                    enemyDataHit = enemies[i];
+                }
             }
         }
 
@@ -160,13 +180,11 @@ int TestEntityHit(Ray rayCast)
     {
         //Enemy is closer so return its id
         id = enemyDataHit.id;
-        printf("Hit enemy\n");
     }
     else
     {
         //Wall is closer so return its id
         id = levelDataHit.modelId;
-        printf("Hit wall\n");
     }
     return id;
 }
@@ -231,8 +249,11 @@ float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
 
             if (id != 0)
             {
+                Enemy *enemies = GetEnemies();
+                TakeDamage(&enemies[id], weaponDamage);
                 printf("id: %d\n", id);
-                nextFire = fireRate;
+
+                nextFire = weaponFireRate;
             }
         }
     }
