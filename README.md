@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/matrix/skalegames:matrix.org?label=Skale%20Games%20Matrix"></a>
 </p>
 
-A simple FPS project
+A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
 
 ## Howto compile for different platforms
 
