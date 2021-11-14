@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #define ENEMY_START_POSITION_Y 0.4f
-#define MAX_DISTANCE_FROM_PLAYER 0.85f
+#define MAX_DISTANCE_FROM_PLAYER 1.25f
 
 //Prototypes
 void UpdateEnemyPosition(Enemy* enemy);
@@ -132,4 +132,14 @@ void UpdateEnemyPosition(Enemy* enemy)
     }
  }
 
-
+void TakeDamage(Enemy* enemy, int damageAmount)
+{
+    if (!enemy->dead)
+    {
+        enemy->health -= damageAmount;
+        if (enemy->health <= 0)
+        {
+            enemy->dead = true;
+        }
+    }
+}
