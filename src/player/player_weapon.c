@@ -92,6 +92,7 @@ void SelectDefaultWeapon()
 {
     weaponEquipped = FIST;
     weaponFireRate = WEAPONDATA.fistFirerate;
+    weaponDamage = WEAPONDATA.fistDamage;
 }
 
 void ChangeWeapon()
@@ -146,7 +147,6 @@ int TestEntityHit(Ray rayCast)
 
     for (int i = 0; i < entitiesAmount; i++)
     {
-        //See if we need meshes here too
         if (levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
@@ -160,8 +160,6 @@ int TestEntityHit(Ray rayCast)
                 }
             }
         }
-
-
         RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
         if (enemyHit.hit)
         {
@@ -178,13 +176,11 @@ int TestEntityHit(Ray rayCast)
     }
     if (enemyDistance < levelDistance)
     {
-        //Enemy is closer so return its id
         id = enemyDataHit.id;
     }
     else
     {
-        //Wall is closer so return its id
-        id = levelDataHit.modelId;
+        id = 0;
     }
     return id;
 }
@@ -232,7 +228,6 @@ float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
 {
     if (WeaponHasAmmo())
     {
-        //Nextfire resets every time when clicked
         if (nextFire > 0)
         {
             nextFire -= GetFrameTime();
@@ -243,16 +238,15 @@ float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
 
             Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition, target));
             rayCast.direction = (Vector3){-1*v.x, -1*v.y, -1*v.z};
-            rayCast.position = playerPosition;
+            //TODO: Set raycasting from middle of screen instead of player position
+            rayCast.position = (Vector3){playerPosition.x, 0.5f, playerPosition.z};
 
             int id = TestEntityHit(rayCast);
-
-            if (id != 0)
+            printf("Id hit: %i \n", id);
+            if (id != 0 && id != PLAYER_ID)
             {
-                Enemy *enemies = GetEnemies();
-                TakeDamage(&enemies[id], weaponDamage);
-                printf("id: %d\n", id);
-
+                TakeDamage(&GetEnemies()[id], weaponDamage);
+                printf("Enemy id %d takes %d damage\n", id, weaponDamage);
                 nextFire = weaponFireRate;
             }
         }

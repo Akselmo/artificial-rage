@@ -307,7 +307,7 @@ LevelData *GetLevelData()
     return levelData;
 }
 
-Enemy *GetEnemies()
+Enemy* GetEnemies()
 {
     return enemies;
 }
