@@ -233,7 +233,7 @@ void PlayerFire(Camera *camera)
     nextFire -= GetFrameTime();
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
     {
-        nextFire = FireWeapon(camera->position, camera->target, nextFire);
+        nextFire = FireWeapon(camera, nextFire);
     }
 
 }

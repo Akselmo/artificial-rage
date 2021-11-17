@@ -224,7 +224,7 @@ bool WeaponHasAmmo()
     }
 }
 
-float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
+float FireWeapon(Camera* camera, float nextFire)
 {
     if (WeaponHasAmmo())
     {
@@ -234,21 +234,15 @@ float FireWeapon(Vector3 playerPosition, Vector3 target, float nextFire)
         }
         else
         {
-            Ray rayCast;
-
-            Vector3 v = Vector3Normalize(Vector3Subtract(playerPosition, target));
-            rayCast.direction = (Vector3){-1*v.x, -1*v.y, -1*v.z};
-            //TODO: Set raycasting from middle of screen instead of player position
-            rayCast.position = (Vector3){playerPosition.x, 0.5f, playerPosition.z};
-
+            Ray rayCast = GetMouseRay(GetScreenCenter(), *camera);
             int id = TestEntityHit(rayCast);
             printf("Id hit: %i \n", id);
             if (id != 0 && id != PLAYER_ID)
             {
                 TakeDamage(&GetEnemies()[id], weaponDamage);
                 printf("Enemy id %d takes %d damage\n", id, weaponDamage);
-                nextFire = weaponFireRate;
             }
+            nextFire = weaponFireRate;
         }
     }
     return nextFire;

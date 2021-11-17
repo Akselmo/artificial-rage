@@ -159,7 +159,10 @@ void DrawLevel()
         if (e != NULL && e->id != 0)
         {
             //if enemies[i] has nothing dont do anything
-            UpdateEnemy(e);
+            if (!e->dead)
+            {
+                UpdateEnemy(e);
+            }
         }
     }
 
@@ -181,8 +184,6 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         //If enemy, avoid checking own position, use id's for this
         Vector3 enemyPos = enemies[i].position;
         Vector3 enemySize = enemies[i].size;
-        BoundingBox enemyBox = MakeBoundingBox(enemyPos, enemySize);
-
         if (CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
         {
             return true;
@@ -190,7 +191,7 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         //Enemies ignore themselves so they dont collide to themselves
         if (enemies[i].id != entityId)
         {
-            if (CheckCollisionBoxes(entityBox, enemyBox))
+            if (CheckCollisionBoxes(entityBox, enemies[i].boundingBox))
             {
                 return true;
             }
