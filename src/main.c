@@ -8,6 +8,7 @@
 #include "level/level.h"
 #include "enemy/enemy.h"
 #include "item/item.h"
+#include "utilities/utilities.h"
 #include "main.h"
 
 //Global variables
@@ -41,7 +42,6 @@ void GameUpdate()
     UpdateFPSCamera(&playerCamera);
     PlayerFire(&playerCamera);
     DrawLevel();
-
     EndMode3D();
 
     DrawFPS(10, 10);
