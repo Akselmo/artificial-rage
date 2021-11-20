@@ -1,9 +1,9 @@
-#include "../../include/raylib.h"
-#include "../../include/raymath.h"
-#include "../settings/settings.h"
-#include "../main.h"
+#include "include/raylib.h"
+#include "include/raymath.h"
+#include "settings.h"
+#include "main.h"
 #include "player_weapon.h"
-#include "../level/level.h"
+#include "level.h"
 #include "player.h"
 #include <math.h>
 

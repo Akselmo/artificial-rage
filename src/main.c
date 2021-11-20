@@ -2,13 +2,13 @@
 //Made by Akseli
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/raylib.h"
-#include "player/player.h"
-#include "settings/settings.h"
-#include "level/level.h"
-#include "enemy/enemy.h"
-#include "item/item.h"
-#include "utilities/utilities.h"
+#include "include/raylib.h"
+#include "player.h"
+#include "settings.h"
+#include "level.h"
+#include "enemy.h"
+#include "item.h"
+#include "utilities.h"
 #include "main.h"
 
 //Global variables

@@ -1,7 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 
-#include "../../include/raylib.h"
+#include "include/raylib.h"
 
 #define PLAYER_ID -1
 

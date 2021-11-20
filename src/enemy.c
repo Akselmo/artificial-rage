@@ -1,7 +1,7 @@
-#include "../../include/raylib.h"
-#include "../../include/raymath.h"
-#include"../level/level.h"
-#include"../player/player.h"
+#include "include/raylib.h"
+#include "include/raymath.h"
+#include "level.h"
+#include "player.h"
 #include "enemy.h"
 #include <stdio.h>
 #include <stdlib.h>

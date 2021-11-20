@@ -1,11 +1,11 @@
-#include "../../include/raylib.h"
-#include "../../include/raymath.h"
-#include "../settings/settings.h"
-#include "../level/level.h"
-#include "../enemy/enemy.h"
-#include "../utilities/utilities.h"
+#include "include/raylib.h"
+#include "include/raymath.h"
+#include "settings.h"
+#include "level.h"
+#include "enemy.h"
+#include "utilities.h"
 #include "player.h"
-#include "../main.h"
+#include "main.h"
 #include <stdio.h>
 #include <time.h>
 

@@ -1,7 +1,7 @@
 #ifndef PLAYER_WEAPON
 #define PLAYER_WEAPON
 
-#include "../../include/raylib.h"
+#include "include/raylib.h"
 
 void InitializeWeaponKeys();
 void ChangeWeapon();

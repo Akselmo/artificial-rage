@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "../../include/raylib.h"
-#include "../../include/raymath.h"
+#include "include/raylib.h"
+#include "include/raymath.h"
 #include "level.h"
-#include "../main.h"
-#include "../player/player.h"
-#include "../enemy/enemy.h"
-#include "../item/item.h"
+#include "main.h"
+#include "player.h"
+#include "enemy.h"
+#include "item.h"
 
 //Level has level data, enemies and items
 

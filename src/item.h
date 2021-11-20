@@ -1,7 +1,7 @@
 #ifndef ITEM
 #define ITEM
 
-#include "../../include/raylib.h"
+#include "include/raylib.h"
 
 typedef struct Item
 {

@@ -1,7 +1,7 @@
 #ifndef ENEMY
 #define ENEMY
 
-#include "../../include/raylib.h"
+#include "include/raylib.h"
 
 typedef struct Enemy
 {

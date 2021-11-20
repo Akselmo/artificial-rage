@@ -1,6 +1,6 @@
 #ifndef MAIN
 #define MAIN
 
-#include "../include/raylib.h"
+#include "include/raylib.h"
 
 #endif

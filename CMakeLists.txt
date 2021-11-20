@@ -1,6 +1,6 @@
 #Compiler used: GCC 10.3.0
 cmake_minimum_required(VERSION 3.0)
-project(scififps C)
+project(ArtificialRage C)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -22,4 +22,4 @@ ELSE() #mac, thanks TheGrand547!
 ENDIF()
 
 #Copy the level assets
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/level/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

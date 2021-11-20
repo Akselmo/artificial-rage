@@ -1,6 +1,6 @@
-#include "../../include/raylib.h"
-#include "../../include/raymath.h"
-#include "../utilities/utilities.h"
+#include "include/raylib.h"
+#include "include/raymath.h"
+#include "utilities.h"
 #include <stdio.h>
 
 

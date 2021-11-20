@@ -1,8 +1,8 @@
 #ifndef LEVEL
 #define LEVEL
 
-#include "../../include/raylib.h"
-#include "../enemy/enemy.h"
+#include "include/raylib.h"
+#include "enemy.h"
 
 #define MAX_LEVEL_SIZE 16384
 
