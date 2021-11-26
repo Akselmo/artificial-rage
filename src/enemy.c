@@ -1,5 +1,6 @@
 #include "include/raylib.h"
 #include "include/raymath.h"
+#include "utilities.h"
 #include "level.h"
 #include "player.h"
 #include "enemy.h"
@@ -121,7 +122,8 @@ void UpdateEnemyPosition(Enemy* enemy)
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if (TestPlayerHit(enemy))
     {
-        if (fabsf(DistanceFromPlayer.x) >= MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= MAX_DISTANCE_FROM_PLAYER)
+        if (fabsf(DistanceFromPlayer.x) >= MAX_DISTANCE_FROM_PLAYER ||
+            fabsf(DistanceFromPlayer.z) >= MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
             enemy->position = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);

@@ -5,6 +5,7 @@
 #include "player_weapon.h"
 #include "level.h"
 #include "player.h"
+#include "utilities.h"
 #include <math.h>
 
 //Took some parts of raylib camera.h and made my own camera based on that for full control

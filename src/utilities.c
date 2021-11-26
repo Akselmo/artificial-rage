@@ -10,3 +10,13 @@ Vector2 GetScreenCenter()
    return center;
 }
 
+BoundingBox MakeBoundingBox(Vector3 position, Vector3 size)
+{
+    BoundingBox bb = (BoundingBox){(Vector3){position.x - size.x / 2,
+                                             position.y - size.y / 2,
+                                             position.z - size.z / 2},
+                                   (Vector3){position.x + size.x / 2,
+                                             position.y + size.y / 2,
+                                             position.z + size.z / 2}};
+    return bb;
+}

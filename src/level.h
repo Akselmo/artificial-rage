@@ -29,8 +29,6 @@ LevelData *GetLevelData();
 
 Enemy *GetEnemies();
 
-BoundingBox MakeBoundingBox(Vector3 position, Vector3 size);
-
 int GetLevelBlockAmount();
 
 #endif

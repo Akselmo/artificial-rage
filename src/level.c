@@ -8,6 +8,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "item.h"
+#include "utilities.h"
 
 //Level has level data, enemies and items
 
@@ -200,16 +201,6 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
     return false;
 }
 
-BoundingBox MakeBoundingBox(Vector3 position, Vector3 size)
-{
-    BoundingBox bb = (BoundingBox){(Vector3){position.x - size.x / 2,
-                                                   position.y - size.y / 2,
-                                                   position.z - size.z / 2},
-                                          (Vector3){position.x + size.x / 2,
-                                                   position.y + size.y / 2,
-                                                   position.z + size.z / 2}};
-    return bb;
-}
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
