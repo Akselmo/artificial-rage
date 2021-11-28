@@ -14,6 +14,7 @@
 //Prototypes
 void UpdateEnemyPosition(Enemy* enemy);
 bool TestPlayerHit(Enemy* enemy);
+float FireAtPlayer(Enemy* enemy, float nextFire);
 
 //Since we use billboarding we dont have to know rotation
 
@@ -34,6 +35,8 @@ Enemy AddEnemy(float pos_x, float pos_y, int id)
         .tickRate = randomTickRate,
         .nextTick = -1.0f,
         .speed = 0.01,
+        .fireRate = 5.75f,
+        .nextFire = 0.0f,
     };
     return enemy;
 }
@@ -54,6 +57,8 @@ void UpdateEnemy(Enemy* enemy)
             enemy->nextTick = enemy->tickRate;
         }
         UpdateEnemyPosition(enemy);
+        enemy->nextFire -= GetFrameTime();
+        enemy->nextFire = FireAtPlayer(enemy, enemy->nextFire);
     }
 }
 
@@ -150,4 +155,27 @@ void TakeDamage(Enemy* enemy, int damageAmount)
             enemy->dead = true;
         }
     }
+}
+
+float FireAtPlayer(Enemy* enemy, float nextFire)
+{
+    if (TestPlayerHit(enemy))
+    {
+        if (nextFire > 0)
+        {
+            nextFire -= GetFrameTime();
+        }
+        else
+        {
+            //Fire animation should play anyway, we just hit player
+            //if the following random check goes through
+            if (GetRandomValue(0,10) >= 6)
+            {
+                printf(" Enemy %i Hit player\n", enemy->id);
+                PlayerSetHealth(enemy->damage);
+            }
+            nextFire = enemy->fireRate;
+        }
+    }
+    return nextFire;
 }

@@ -11,9 +11,9 @@ void UpdateFPSCamera(Camera *camera);
 
 bool CheckCollision(Camera camera, BoundingBox other);
 
-int GetHealth();
+int PlayerGetHealth();
 
-void SetHealth(int healthToAdd);
+void PlayerSetHealth(int healthToAdd);
 
 void PlayerFire(Camera *camera);
 

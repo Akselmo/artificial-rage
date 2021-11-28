@@ -198,7 +198,7 @@ void UpdateFPSCamera(Camera *camera)
     ChangeWeapon();
 }
 
-int GetHealth()
+int PlayerGetHealth()
 {
     return playerHealth;
 }
@@ -214,7 +214,7 @@ Vector3 GetPlayerPosition()
 }
 
 //Use minus for removing health
-void SetHealth(int healthToAdd)
+void PlayerSetHealth(int healthToAdd)
 {
     playerHealth += healthToAdd;
     if (playerHealth > MAX_HEALTH)
