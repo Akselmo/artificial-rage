@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "include/raylib.h"
 #include "player.h"
+#include "player_hud.h"
 #include "settings.h"
 #include "level.h"
 #include "enemy.h"
@@ -43,9 +44,7 @@ void GameUpdate()
     PlayerFire(&playerCamera);
     DrawLevel();
     EndMode3D();
-
-    DrawFPS(10, 10);
-
+    DrawPlayerHud(PLAYERDATA.playerHealth,0,0);
     EndDrawing();
 }
 

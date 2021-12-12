@@ -171,8 +171,9 @@ float FireAtPlayer(Enemy* enemy, float nextFire)
             //if the following random check goes through
             if (GetRandomValue(0,10) >= 6)
             {
-                printf(" Enemy %i Hit player\n", enemy->id);
-                PlayerSetHealth(enemy->damage);
+                int dmg = enemy->damage * -1;
+                printf(" Enemy %i Hit player for %i dmg\n", enemy->id, dmg);
+                PlayerSetHealth(dmg);
             }
             nextFire = enemy->fireRate;
         }
