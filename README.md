@@ -1,11 +1,9 @@
+[![aksdev-blog](https://img.shields.io/badge/blog-akselmo.dev-blue?style=flat-square)](https://akselmo.dev)
+[![mastodon](https://img.shields.io/mastodon/follow/106864208846697693?color=%233088D4&domain=https%3A%2F%2Fmastodon.technology&logo=mastodon&style=flat-square&logoColor=white)](https://mastodon.technology/@huntra)
+[![itchio](https://img.shields.io/badge/itch.io-akselmo-%23FA5C5C?style=flat-square&logo=itch.io&logoColor=white)](https://akselmo.itch.io/)
+[![ko-fi](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/L4L57FOPF)
+[![discord](https://img.shields.io/discord/475097536160595979?color=%235865F2&label=aks_dev%20discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/PZkYZRx)
 # Artificial Rage - a Scifi FPS
-
-<p>
-    <a href="https://discord.gg/PZkYZRx">
-    <img src="https://img.shields.io/discord/475097536160595979?label=Skale%20Games%20Discord"></a>
-    <a href="https://matrix.to/#/#skalegames:matrix.org">
-    <img src="https://img.shields.io/matrix/skalegames:matrix.org?label=Skale%20Games%20Matrix"></a>
-</p>
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
 
@@ -15,7 +13,6 @@ and I want people to tinker with the source code, create mods, maps etc..
 I also want this project to be a starting point for some who want to make their own simple FPS,
 or they could use this as a learning tool.
 
-If you want to play my "bigger" games: https://akselmo.itch.io/
 
 ## Howto compile for different platforms
 
