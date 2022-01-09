@@ -4,7 +4,7 @@
 #include "include/raylib.h"
 
 #define PLAYER_ID -1
-#define MAX_HEALTH 100
+#define MAX_HEALTH 20
 
 //Struct for all the camera data
 typedef struct
@@ -59,5 +59,7 @@ void PlayerFire(Camera *camera);
 BoundingBox GetPlayerBoundingBox();
 
 Vector3 GetPlayerPosition();
+
+PlayerData GetPlayerData();
 
 #endif

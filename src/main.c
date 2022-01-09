@@ -17,7 +17,10 @@
 Camera playerCamera;
 Vector2 levelSize;
 Model *levelModel;
-//Should be enough room for entities, such as clutter, weapon pickups, etc...
+
+//Prototypes
+void HudUpdate();
+void MenuUpdate();
 
 //Initialization
 void Initialize(void)
@@ -36,16 +39,30 @@ void GameUpdate()
 {
     BeginDrawing();
 
-    ClearBackground(BLACK);
+        ClearBackground(BLACK);
 
-    BeginMode3D(playerCamera);
+        BeginMode3D(playerCamera);
 
-    UpdateFPSCamera(&playerCamera);
-    PlayerFire(&playerCamera);
-    DrawLevel();
-    EndMode3D();
-    DrawPlayerHud(PLAYERDATA.playerHealth,0,0);
+            UpdateFPSCamera(&playerCamera);
+            PlayerFire(&playerCamera);
+            DrawLevel();
+
+        EndMode3D();
+
+        HudUpdate();
+        MenuUpdate();
+
     EndDrawing();
+}
+
+void HudUpdate()
+{
+    DrawPlayerHud(GetPlayerData().playerHealth,0,0);
+}
+
+void MenuUpdate()
+{
+//menu presses etc come here
 }
 
 //Main loop

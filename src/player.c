@@ -205,3 +205,8 @@ void PlayerFire(Camera *camera)
         nextFire = FireWeapon(camera, nextFire);
     }
 }
+
+PlayerData GetPlayerData()
+{
+    return PLAYERDATA;
+}
