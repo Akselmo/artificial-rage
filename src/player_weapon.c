@@ -1,5 +1,6 @@
 #include "include/raylib.h"
 #include "include/raymath.h"
+#include "player_weapon.h"
 #include "settings.h"
 #include "level.h"
 #include "enemy.h"
@@ -16,68 +17,6 @@
 #define SHOTGUN_AMMO_MAX 50
 #define RAILGUN_AMMO_MAX 25
 
-int weaponEquipped;
-float weaponFireRate;
-int weaponDamage;
-
-typedef struct
-{
-    int fistKey;
-    float fistFirerate;
-    int fistDamage;
-
-    int pistolKey;
-    int pistolAmmo;
-    float pistolFirerate;
-    int pistolDamage;
-
-    int rifleKey;
-    int rifleAmmo;
-    float rifleFirerate;
-    int rifleDamage;
-
-    int shotgunKey;
-    int shotgunAmmo;
-    float shotgunFirerate;
-    int shotgunDamage;
-
-    int railgunKey;
-    int railgunAmmo;
-    float railgunFirerate;
-    int railgunDamage;
-} WeaponData;
-
-static WeaponData WEAPONDATA =
-{
-    .fistKey = KEY_ONE,
-    .fistFirerate = 0.9f,
-    .fistDamage = 5,
-    .pistolKey = KEY_TWO,
-    .pistolAmmo = 0,
-    .pistolFirerate = 0.4f,
-    .pistolDamage = 3,
-    .rifleKey = KEY_THREE,
-    .rifleAmmo = 0,
-    .rifleFirerate = 0.25f,
-    .rifleDamage = 3,
-    .shotgunKey = KEY_FOUR,
-    .shotgunAmmo = 0,
-    .shotgunFirerate = 0.75,
-    .shotgunDamage = 7,
-    .railgunKey = KEY_FIVE,
-    .railgunAmmo = 0,
-    .railgunFirerate = 1.0f,
-    .railgunDamage = 30
-};
-
-typedef enum
-{
-    FIST = 1,
-    PISTOL = 2,
-    RIFLE = 3,
-    SHOTGUN = 4,
-    RAILGUN = 5
-} Weapons;
 
 void InitializeWeaponKeys()
 {
@@ -90,9 +29,10 @@ void InitializeWeaponKeys()
 
 void SelectDefaultWeapon()
 {
-    weaponEquipped = FIST;
-    weaponFireRate = WEAPONDATA.fistFirerate;
-    weaponDamage = WEAPONDATA.fistDamage;
+    WEAPONDATA.weaponEquipped = FIST;
+    WEAPONDATA.weaponFireRate = WEAPONDATA.fistFirerate;
+    WEAPONDATA.weaponDamage = WEAPONDATA.fistDamage;
+
 }
 
 void ChangeWeapon()
@@ -101,34 +41,35 @@ void ChangeWeapon()
     key = GetKeyPressed();
     if (key == WEAPONDATA.fistKey)
     {
-        weaponEquipped = FIST;
-        weaponFireRate = WEAPONDATA.fistFirerate;
-        weaponDamage = WEAPONDATA.fistDamage;
+        WEAPONDATA.weaponEquipped = FIST;
+        WEAPONDATA.weaponFireRate = WEAPONDATA.fistFirerate;
+        WEAPONDATA.weaponDamage = WEAPONDATA.fistDamage;
         printf("Fist equipped\n");
     }
     else if (key == WEAPONDATA.pistolKey)
     {
-        weaponEquipped = PISTOL;
-        weaponFireRate = WEAPONDATA.pistolFirerate;
-        weaponDamage = WEAPONDATA.pistolDamage;
+        WEAPONDATA.weaponEquipped = PISTOL;
+        WEAPONDATA.weaponFireRate = WEAPONDATA.pistolFirerate;
+        WEAPONDATA.weaponDamage = WEAPONDATA.pistolDamage;
+        printf("Pistol equipped\n");
     }
     else if (key == WEAPONDATA.rifleKey)
     {
-        weaponEquipped = RIFLE;
-        weaponFireRate = WEAPONDATA.rifleFirerate;
-        weaponDamage = WEAPONDATA.rifleDamage;
+        WEAPONDATA.weaponEquipped = RIFLE;
+        WEAPONDATA.weaponFireRate = WEAPONDATA.rifleFirerate;
+        WEAPONDATA.weaponDamage = WEAPONDATA.rifleDamage;
     }
     else if (key == WEAPONDATA.shotgunKey)
     {
-        weaponEquipped = SHOTGUN;
-        weaponFireRate = WEAPONDATA.shotgunFirerate;
-        weaponDamage = WEAPONDATA.shotgunDamage;
+        WEAPONDATA.weaponEquipped = SHOTGUN;
+        WEAPONDATA.weaponFireRate = WEAPONDATA.shotgunFirerate;
+        WEAPONDATA.weaponDamage = WEAPONDATA.shotgunDamage;
     }
     else if (key == WEAPONDATA.railgunKey)
     {
-        weaponEquipped = RAILGUN;
-        weaponFireRate = WEAPONDATA.railgunFirerate;
-        weaponDamage = WEAPONDATA.railgunDamage;
+        WEAPONDATA.weaponEquipped = RAILGUN;
+        WEAPONDATA.weaponFireRate = WEAPONDATA.railgunFirerate;
+        WEAPONDATA.weaponDamage = WEAPONDATA.railgunDamage;
     }
     //Weapon switching animation goes here
 }
@@ -189,12 +130,12 @@ int TestEntityHit(Ray rayCast)
 bool WeaponHasAmmo()
 {
     int ammo;
-    if (weaponEquipped == FIST)
+    if (WEAPONDATA.weaponEquipped == FIST)
     {
         return true;
     }
 
-    switch (weaponEquipped)
+    switch (WEAPONDATA.weaponEquipped)
     {
     case PISTOL:
         ammo = WEAPONDATA.pistolAmmo;
@@ -212,7 +153,7 @@ bool WeaponHasAmmo()
         ammo = WEAPONDATA.railgunAmmo;
         break;
     }
-
+    printf("Ammo: %d \n", ammo);
     if (ammo > 0)
     {
         ammo--;
@@ -226,24 +167,24 @@ bool WeaponHasAmmo()
 
 float FireWeapon(Camera* camera, float nextFire)
 {
-    if (WeaponHasAmmo())
+    if (nextFire > 0)
     {
-        if (nextFire > 0)
-        {
-            nextFire -= GetFrameTime();
-        }
-        else
+        nextFire -= GetFrameTime();
+    }
+    else
+    {
+        if (WeaponHasAmmo())
         {
             Ray rayCast = GetMouseRay(GetScreenCenter(), *camera);
             int id = TestEntityHit(rayCast);
             printf("Id hit: %i \n", id);
             if (id != 0 && id != PLAYER_ID)
             {
-                TakeDamage(&GetEnemies()[id], weaponDamage);
-                printf("Enemy id %d takes %d damage\n", id, weaponDamage);
+                TakeDamage(&GetEnemies()[id], WEAPONDATA.weaponDamage);
+                printf("Enemy id %d takes %d damage\n", id, WEAPONDATA.weaponDamage);
             }
-            nextFire = weaponFireRate;
         }
+        nextFire = WEAPONDATA.weaponFireRate;
     }
     return nextFire;
 }
