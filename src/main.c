@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "include/raylib.h"
 #include "player.h"
+#include "player_weapon.h"
 #include "player_hud.h"
 #include "settings.h"
 #include "level.h"
@@ -57,7 +58,8 @@ void GameUpdate()
 
 void HudUpdate()
 {
-    DrawPlayerHud(GetPlayerData().playerHealth,0,0);
+//TODO: Get current weapon and its ammo instead of whatever mess this is
+    DrawPlayerHud(GetPlayerData().playerHealth,GetWeaponData().currentWeaponAmmo,0);
 }
 
 void MenuUpdate()

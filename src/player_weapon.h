@@ -9,6 +9,7 @@ typedef struct
     int weaponEquipped;
     float weaponFireRate;
     int weaponDamage;
+    int currentWeaponAmmo;
 
     int fistKey;
     float fistFirerate;
@@ -40,12 +41,13 @@ static WeaponData WEAPONDATA =
     .weaponEquipped = 0,
     .weaponFireRate = 0.0f,
     .weaponDamage = 0,
+    .currentWeaponAmmo = 0,
 
     .fistKey = KEY_ONE,
     .fistFirerate = 1.25f,
     .fistDamage = 5,
     .pistolKey = KEY_TWO,
-    .pistolAmmo = 0,
+    .pistolAmmo = 30,
     .pistolFirerate = 1.0f,
     .pistolDamage = 3,
     .rifleKey = KEY_THREE,
@@ -77,7 +79,7 @@ void ChangeWeapon();
 void SelectDefaultWeapon();
 float FireWeapon(Camera* camera, float nextFire);
 float TestLevelHit(Ray rayCast);
-
+WeaponData GetWeaponData();
 
 
 #endif

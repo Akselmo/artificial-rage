@@ -44,6 +44,7 @@ void ChangeWeapon()
         WEAPONDATA.weaponEquipped = FIST;
         WEAPONDATA.weaponFireRate = WEAPONDATA.fistFirerate;
         WEAPONDATA.weaponDamage = WEAPONDATA.fistDamage;
+        WEAPONDATA.currentWeaponAmmo = 0;
         printf("Fist equipped\n");
     }
     else if (key == WEAPONDATA.pistolKey)
@@ -51,6 +52,7 @@ void ChangeWeapon()
         WEAPONDATA.weaponEquipped = PISTOL;
         WEAPONDATA.weaponFireRate = WEAPONDATA.pistolFirerate;
         WEAPONDATA.weaponDamage = WEAPONDATA.pistolDamage;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.pistolAmmo;
         printf("Pistol equipped\n");
     }
     else if (key == WEAPONDATA.rifleKey)
@@ -58,18 +60,21 @@ void ChangeWeapon()
         WEAPONDATA.weaponEquipped = RIFLE;
         WEAPONDATA.weaponFireRate = WEAPONDATA.rifleFirerate;
         WEAPONDATA.weaponDamage = WEAPONDATA.rifleDamage;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.rifleAmmo;
     }
     else if (key == WEAPONDATA.shotgunKey)
     {
         WEAPONDATA.weaponEquipped = SHOTGUN;
         WEAPONDATA.weaponFireRate = WEAPONDATA.shotgunFirerate;
         WEAPONDATA.weaponDamage = WEAPONDATA.shotgunDamage;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.shotgunAmmo;
     }
     else if (key == WEAPONDATA.railgunKey)
     {
         WEAPONDATA.weaponEquipped = RAILGUN;
         WEAPONDATA.weaponFireRate = WEAPONDATA.railgunFirerate;
         WEAPONDATA.weaponDamage = WEAPONDATA.railgunDamage;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.railgunAmmo;
     }
     //Weapon switching animation goes here
 }
@@ -129,7 +134,7 @@ int TestEntityHit(Ray rayCast)
 
 bool WeaponHasAmmo()
 {
-    int ammo;
+
     if (WEAPONDATA.weaponEquipped == FIST)
     {
         return true;
@@ -138,25 +143,45 @@ bool WeaponHasAmmo()
     switch (WEAPONDATA.weaponEquipped)
     {
     case PISTOL:
-        ammo = WEAPONDATA.pistolAmmo;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.pistolAmmo;
         break;
 
     case RIFLE:
-        ammo = WEAPONDATA.rifleAmmo;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.rifleAmmo;
         break;
 
     case SHOTGUN:
-        ammo = WEAPONDATA.shotgunAmmo;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.shotgunAmmo;
         break;
 
     case RAILGUN:
-        ammo = WEAPONDATA.railgunAmmo;
+        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.railgunAmmo;
         break;
     }
-    printf("Ammo: %d \n", ammo);
-    if (ammo > 0)
+
+    printf("Ammo: %d \n", WEAPONDATA.currentWeaponAmmo);
+//TODO: Is there a better way to do this without so much repetition?
+    if (WEAPONDATA.currentWeaponAmmo > 0)
     {
-        ammo--;
+        WEAPONDATA.currentWeaponAmmo--;
+        switch (WEAPONDATA.weaponEquipped)
+        {
+            case PISTOL:
+                WEAPONDATA.pistolAmmo--;
+                break;
+
+            case RIFLE:
+                WEAPONDATA.rifleAmmo--;
+                break;
+
+            case SHOTGUN:
+                WEAPONDATA.shotgunAmmo--;
+                break;
+
+            case RAILGUN:
+                WEAPONDATA.railgunAmmo--;
+                break;
+        }
         return true;
     }
     else
@@ -187,4 +212,9 @@ float FireWeapon(Camera* camera, float nextFire)
         nextFire = WEAPONDATA.weaponFireRate;
     }
     return nextFire;
+}
+
+WeaponData GetWeaponData()
+{
+    return WEAPONDATA;
 }
