@@ -20,10 +20,9 @@ float FireAtPlayer(Enemy* enemy, float nextFire);
 
 Enemy AddEnemy(float pos_x, float pos_y, int id)
 {
-    Vector3 enemyPosition = (Vector3){pos_x, ENEMY_START_POSITION_Y, pos_y};
-    Vector3 enemySize = (Vector3){0.25f, 0.8f, 0.25f};
-    float randomTickRate = ((float)rand()/(float)(RAND_MAX))*2;
-
+    Vector3 enemyPosition = (Vector3){ pos_x, ENEMY_START_POSITION_Y, pos_y };
+    Vector3 enemySize = (Vector3){ 0.25f, 0.8f, 0.25f };
+    float randomTickRate = ((float)rand() / (float)(RAND_MAX)) * 2;
     Enemy enemy = {
         .position = enemyPosition,
         .size = enemySize,
@@ -40,8 +39,6 @@ Enemy AddEnemy(float pos_x, float pos_y, int id)
     };
     return enemy;
 }
-
-
 
 void UpdateEnemy(Enemy* enemy)
 {
@@ -74,7 +71,7 @@ bool TestPlayerHit(Enemy* enemy)
     BoundingBox playerBb = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
     Vector3 v = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
-    rayCast.direction = (Vector3){-1.0f*v.x, -1.0f*v.y, -1.0f*v.z};
+    rayCast.direction = (Vector3){ -1.0f * v.x, -1.0f * v.y, -1.0f * v.z };
     rayCast.position = enemy->position;
 
     bool hitPlayer = false;
@@ -82,7 +79,7 @@ bool TestPlayerHit(Enemy* enemy)
     float levelDistance = INFINITY;
     float playerDistance = INFINITY;
     int entitiesAmount = GetLevelBlockAmount();
-    LevelData *levelData = GetLevelData();
+    LevelData* levelData = GetLevelData();
     LevelData levelDataHit;
 
     for (int i = 0; i < entitiesAmount; i++)
@@ -90,7 +87,9 @@ bool TestPlayerHit(Enemy* enemy)
         if (levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast,
+                levelData[i].levelBlockModel.meshes[0],
+                MatrixTranslate(pos.x, pos.y, pos.z));
             if (hitLevel.hit)
             {
                 if (hitLevel.distance < levelDistance)
@@ -132,14 +131,14 @@ void UpdateEnemyPosition(Enemy* enemy)
         {
             Vector3 enemyOldPosition = enemy->position;
             enemy->position = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
-            if (CheckLevelCollision(enemy->position,enemy->size, enemy->id))
+            if (CheckLevelCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
             }
         }
     }
     enemy->boundingBox = MakeBoundingBox(enemy->position, enemy->size);
- }
+}
 
 void TakeDamage(Enemy* enemy, int damageAmount)
 {
@@ -150,7 +149,7 @@ void TakeDamage(Enemy* enemy, int damageAmount)
         {
             //Dirty hack to move bounding box outside of map so it cant be collided to.
             //We want to keep enemy in the memory so we can use its position to display the corpse/death anim
-            Vector3 deadBoxPos = (Vector3){999.0f, 999.0f, 999.0f};
+            Vector3 deadBoxPos = (Vector3){ 999.0f, 999.0f, 999.0f };
             enemy->boundingBox = MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead = true;
         }
@@ -169,7 +168,7 @@ float FireAtPlayer(Enemy* enemy, float nextFire)
         {
             //Fire animation should play anyway, we just hit player
             //if the following random check goes through
-            if (GetRandomValue(0,10) >= 6)
+            if (GetRandomValue(0, 10) >= 6)
             {
                 int dmg = enemy->damage * -1;
                 printf(" Enemy %i Hit player for %i dmg\n", enemy->id, dmg);

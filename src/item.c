@@ -10,8 +10,8 @@ Vector3 itemSize;
 
 Item AddItem(float pos_x, float pos_y)
 {
-    itemPosition = (Vector3){pos_x, ITEM_START_POSITION_Y, pos_y};
-    itemSize = (Vector3){0.25f, 0.25f, 0.25f};
+    itemPosition = (Vector3){ pos_x, ITEM_START_POSITION_Y, pos_y };
+    itemSize = (Vector3){ 0.25f, 0.25f, 0.25f };
     Item item = {
         .position = itemPosition,
         .size = itemSize,

@@ -17,8 +17,7 @@
 
 Camera playerCamera;
 Vector2 levelSize;
-Model *levelModel;
-
+Model* levelModel;
 //Prototypes
 void HudUpdate();
 void MenuUpdate();
@@ -40,18 +39,18 @@ void GameUpdate()
 {
     BeginDrawing();
 
-        ClearBackground(BLACK);
+    ClearBackground(BLACK);
 
-        BeginMode3D(playerCamera);
+    BeginMode3D(playerCamera);
 
-            UpdateFPSCamera(&playerCamera);
-            PlayerFire(&playerCamera);
-            DrawLevel();
+    UpdateFPSCamera(&playerCamera);
+    PlayerFire(&playerCamera);
+    DrawLevel();
 
-        EndMode3D();
+    EndMode3D();
 
-        HudUpdate();
-        MenuUpdate();
+    HudUpdate();
+    MenuUpdate();
 
     EndDrawing();
 }
@@ -59,7 +58,7 @@ void GameUpdate()
 void HudUpdate()
 {
 //TODO: Get current weapon and its ammo instead of whatever mess this is
-    DrawPlayerHud(GetPlayerData().playerHealth,GetWeaponData().currentWeaponAmmo,0);
+    DrawPlayerHud(GetPlayerData().playerHealth, GetWeaponData().currentWeaponAmmo, 0);
 }
 
 void MenuUpdate()

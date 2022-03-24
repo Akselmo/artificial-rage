@@ -14,17 +14,17 @@ void DrawPlayerHud(int health, int weaponAmmo, int weapon)
 {
     DrawFPS(10, 10);
     sprintf(healthText, "%d", health);
-    sprintf(weaponAmmoText,"%d",weaponAmmo);
+    sprintf(weaponAmmoText, "%d", weaponAmmo);
     if (health <= 0)
     {
-        strcpy(healthText,dedText);
+        strcpy(healthText, dedText);
     }
     if (weaponAmmo)
     {
-        strcpy(weaponAmmoText,emptyAmmoText);
+        strcpy(weaponAmmoText, emptyAmmoText);
     }
-    DrawText(healthText,50,GetScreenHeight()-20, 20, RED);
-    DrawText(weaponAmmoText, GetScreenWidth()-50, GetScreenHeight()-20, 20, RED);
+    DrawText(healthText, 50, GetScreenHeight() - 20, 20, RED);
+    DrawText(weaponAmmoText, GetScreenWidth() - 50, GetScreenHeight() - 20, 20, RED);
 
 }
 

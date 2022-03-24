@@ -9,11 +9,11 @@
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
 
-This project is a learning platform for me to learn C. I also hope one day this game will be fun to play,
-and I want people to tinker with the source code, create mods, maps etc..
+This project is a learning platform for me to learn C. I also hope one day this game will be fun to play, and I want
+people to tinker with the source code, create mods, maps etc..
 
-I also want this project to be a starting point for some who want to make their own simple FPS,
-or they could use this as a learning tool.
+I also want this project to be a starting point for some who want to make their own simple FPS, or they could use this
+as a learning tool.
 
 If you want to play my "bigger" games: https://akselmo.itch.io/
 
@@ -26,16 +26,18 @@ WIP. These notes are just for myself for now.
 * Copy your built libraylib.a into lib
 
 * Copy the following to include:
-  * raylib.h
-  * raymath.h
+    * raylib.h
+    * raymath.h
 
-**Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new files.**
+**Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new
+files.**
 
 ## TODO:
 
 A very quick and dirty TODO list
 
 MVP features:
+
 - [x] custom player camera
 - [x] level generation
 - [x] collisions for enemy/player/wall
@@ -91,7 +93,6 @@ Sound/Music:
 - [ ] weapon sounds
 - [ ] player sounds
 - [ ] enemy sounds
-
 
 ## Entity RGB Values
 

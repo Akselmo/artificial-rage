@@ -14,33 +14,28 @@
 
 //Level
 int mapSize = 0;
-
-LevelData *levelData = NULL;
-Color *levelMapPixels = NULL;
+LevelData* levelData = NULL;
+Color* levelMapPixels = NULL;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
 Image levelImageMap;
-Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
+Vector3 ceilingRotation = { -1.0f, 0.0f, 0.0f };
 Model planeFloor;
-Material *floorMaterial = NULL;
+Material* floorMaterial = NULL;
 Model planeCeiling;
-Material *ceilingMaterial= NULL;
-char *wallTextures[2];
+Material* ceilingMaterial = NULL;
+char* wallTextures[2];
 Vector3 levelStartPosition;
 Vector3 levelEndPosition;
-
 //Enemies
-Enemy *enemies = NULL;
-
-
+Enemy* enemies = NULL;
 //Items (contains interactable and non-interactable items)
-Item *items = NULL;
+Item* items = NULL;
 
 //Prototypes
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b);
 void PlaceLevelBlocks();
-void AllocateMeshData(Mesh *mesh, int triangleCount);
-
+void AllocateMeshData(Mesh* mesh, int triangleCount);
 
 //TODO: Add integer so you can select which level to load
 //      Load textures from file, instead of being built into EXE
@@ -69,7 +64,6 @@ void PlaceLevelBlocks()
 
     float mapPosZ = (float)levelCubicMap.height;
     float mapPosX = (float)levelCubicMap.width;
-
     Texture2D ceilingTexture = LoadTexture("./assets/ceiling.png");
     Texture2D floorTexture = LoadTexture("./assets/floor.png");
     planeCeiling = LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
@@ -83,7 +77,7 @@ void PlaceLevelBlocks()
     wallTextures[0] = "./assets/wall1.png";
     wallTextures[1] = "./assets/wall2.png";
 
-    levelMapPosition = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
+    levelMapPosition = (Vector3){ -mapPosX / 2, 0.5f, -mapPosZ / 2 };
     mapSize = levelCubicMap.height * levelCubicMap.width;
 
     levelData = calloc(mapSize, sizeof(LevelData));
@@ -97,8 +91,7 @@ void PlaceLevelBlocks()
             float mx = levelMapPosition.x - 0.5f + x * 1.0f;
             float my = levelMapPosition.z - 0.5f + y * 1.0f;
             int i = y * levelCubicMap.width + x;
-
-            Rectangle rect = (Rectangle){mx, my, 1.0f, 1.0f};
+            Rectangle rect = (Rectangle){ mx, my, 1.0f, 1.0f };
 
             //Find walls, which is white (255,255,255)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 255, 255))
@@ -111,20 +104,20 @@ void PlaceLevelBlocks()
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 levelData[i].levelBlockModel = cubeModel;
-                levelData[i].levelBlockPosition = (Vector3){mx, levelMapPosition.y, my};
+                levelData[i].levelBlockPosition = (Vector3){ mx, levelMapPosition.y, my };
                 levelData[i].modelId = i;
             }
 
             //Find start, which is green (0,255,0)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
             {
-                levelStartPosition = (Vector3){mx, 0.0f, my};
+                levelStartPosition = (Vector3){ mx, 0.0f, my };
             }
 
             //Find end, which is blue (0,0,255)
             if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 0, 255))
             {
-                levelEndPosition = (Vector3){mx, 0.0f, my};
+                levelEndPosition = (Vector3){ mx, 0.0f, my };
             }
 
             //Find enemy, which is red (255,0,0)
@@ -144,14 +137,18 @@ void PlaceLevelBlocks()
 void DrawLevel()
 {
 
-    DrawModel(planeFloor, (Vector3){levelMapPosition.x, 0.0f, levelMapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(planeCeiling, (Vector3){levelMapPosition.x, 1.0f, -levelMapPosition.z}, ceilingRotation, 180.0f, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
-
+    DrawModel(planeFloor, (Vector3){ levelMapPosition.x, 0.0f, levelMapPosition.z }, 1.0f, WHITE);
+    DrawModelEx(planeCeiling,
+        (Vector3){ levelMapPosition.x, 1.0f, -levelMapPosition.z },
+        ceilingRotation,
+        180.0f,
+        (Vector3){ 1.0f, 1.0f, 1.0f },
+        WHITE);
 
     for (int i = 0; i < mapSize; i++)
     {
-        LevelData *ld = &levelData[i];
-        Enemy *e = &enemies[i];
+        LevelData* ld = &levelData[i];
+        Enemy* e = &enemies[i];
         if (ld != NULL && ld->modelId != 0)
         {
             DrawModel(ld->levelBlockModel, ld->levelBlockPosition, 1.0f, WHITE);
@@ -178,7 +175,7 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
     {
         //Level blocks
         Vector3 wallPos = levelData[i].levelBlockPosition;
-        Vector3 wallSize = {1.0f, 1.0f, 1.0f};
+        Vector3 wallSize = { 1.0f, 1.0f, 1.0f };
         BoundingBox levelBox = MakeBoundingBox(wallPos, wallSize);
 
         //Enemies
@@ -201,11 +198,10 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
     return false;
 }
 
-
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
     //X width, Z height
-    Mesh mesh = {0};
+    Mesh mesh = { 0 };
     AllocateMeshData(&mesh, 2);
 
     //First triangle
@@ -269,14 +265,14 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     return mesh;
 }
 
-void AllocateMeshData(Mesh *mesh, int triangleCount)
+void AllocateMeshData(Mesh* mesh, int triangleCount)
 {
     mesh->vertexCount = triangleCount * 3;
     mesh->triangleCount = triangleCount;
 
-    mesh->vertices = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
-    mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
-    mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->vertices = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+    mesh->texcoords = (float*)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
+    mesh->normals = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
@@ -294,7 +290,7 @@ bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
 }
 
 //Gets/Sets
-LevelData *GetLevelData()
+LevelData* GetLevelData()
 {
     return levelData;
 }

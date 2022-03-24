@@ -21,14 +21,11 @@ Model playerHitboxModel;
 Vector3 playerSize;
 Vector3 playerPosition;
 BoundingBox playerBoundingBox;
-
 float nextFire = 0.0f;
-
-
 
 Camera CustomFPSCamera(float pos_x, float pos_z)
 {
-    Camera camera = {0};
+    Camera camera = { 0 };
 
     //Get Settings
     float fov = GetFOV();
@@ -40,9 +37,9 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     int fireGun = MOUSE_LEFT_BUTTON;
 
     //Place camera and apply settings
-    camera.position = (Vector3){pos_x, PLAYER_START_POSITION_Y, pos_z};
-    camera.target = (Vector3){0.0f, 0.5f, 0.0f};
-    camera.up = (Vector3){0.0f, 1.0f, 0.0f};
+    camera.position = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
+    camera.target = (Vector3){ 0.0f, 0.5f, 0.0f };
+    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
     camera.fovy = fov; //get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
@@ -77,7 +74,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     InitializeWeaponKeys();
 
     //Create player hitbox
-    playerSize = (Vector3){0.1f, 0.1f, 0.1f};
+    playerSize = (Vector3){ 0.1f, 0.1f, 0.1f };
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x, playerSize.y, playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
     SelectDefaultWeapon();
@@ -85,16 +82,14 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     return camera;
 }
 
-void UpdateFPSCamera(Camera *camera)
+void UpdateFPSCamera(Camera* camera)
 {
     Vector3 oldPlayerPos = camera->position;
 
     playerBoundingBox = MakeBoundingBox(camera->position, playerSize);
 
-
-    static Vector2 previousMousePosition = {0.0f, 0.0f};
-
-    Vector2 mousePositionDelta = {0.0f, 0.0f};
+    static Vector2 previousMousePosition = { 0.0f, 0.0f };
+    Vector2 mousePositionDelta = { 0.0f, 0.0f };
     Vector2 mousePosition = GetMousePosition();
     float mouseWheelMove = GetMouseWheelMove();
 
@@ -108,7 +103,8 @@ void UpdateFPSCamera(Camera *camera)
             IsKeyDown(CAMERA.moveFront),
             IsKeyDown(CAMERA.moveBack),
             IsKeyDown(CAMERA.moveRight),
-            IsKeyDown(CAMERA.moveLeft)};
+            IsKeyDown(CAMERA.moveLeft)
+        };
 
     //Move camera around X pos
     camera->position.x +=
@@ -148,7 +144,7 @@ void UpdateFPSCamera(Camera *camera)
 
     // Recalculate camera target considering translation and rotation
     Matrix translation = MatrixTranslate(0, 0, (CAMERA.targetDistance / CAMERA_PANNING_DIVIDER));
-    Matrix rotation = MatrixRotateXYZ((Vector3){PI * 2 - CAMERA.angle.y, PI * 2 - CAMERA.angle.x, 0});
+    Matrix rotation = MatrixRotateXYZ((Vector3){ PI * 2 - CAMERA.angle.y, PI * 2 - CAMERA.angle.x, 0 });
     Matrix transform = MatrixMultiply(translation, rotation);
 
     //Move camera according to matrix position (where camera looks at)
@@ -158,7 +154,6 @@ void UpdateFPSCamera(Camera *camera)
 
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
-
 
     if (CheckLevelCollision(camera->position, playerSize, PLAYER_ID))
     {
@@ -195,8 +190,7 @@ void PlayerSetHealth(int healthToAdd)
     }
 }
 
-
-void PlayerFire(Camera *camera)
+void PlayerFire(Camera* camera)
 {
     //Calculate fire rate countdown here
     nextFire -= GetFrameTime();

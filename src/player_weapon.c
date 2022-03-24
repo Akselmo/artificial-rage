@@ -17,64 +17,64 @@
 #define SHOTGUN_AMMO_MAX 50
 #define RAILGUN_AMMO_MAX 25
 
-
 void InitializeWeaponKeys()
 {
-    WEAPONDATA.fistKey = GetCustomInput(KEY_ONE);
-    WEAPONDATA.pistolKey = GetCustomInput(KEY_TWO);
-    WEAPONDATA.rifleKey = GetCustomInput(KEY_THREE);
-    WEAPONDATA.shotgunKey = GetCustomInput(KEY_FOUR);
-    WEAPONDATA.railgunKey = GetCustomInput(KEY_FIVE);
+    PLAYER_WEAPON_HOLDER.FIST.inputKey = GetCustomInput(KEY_ONE);
+    PLAYER_WEAPON_HOLDER.PISTOL.inputKey = GetCustomInput(KEY_TWO);
+    PLAYER_WEAPON_HOLDER.RIFLE.inputKey = GetCustomInput(KEY_THREE);
+    PLAYER_WEAPON_HOLDER.SHOTGUN.inputKey = GetCustomInput(KEY_FOUR);
+    PLAYER_WEAPON_HOLDER.RAILGUN.inputKey = GetCustomInput(KEY_FIVE);
 }
 
 void SelectDefaultWeapon()
 {
-    WEAPONDATA.weaponEquipped = FIST;
-    WEAPONDATA.weaponFireRate = WEAPONDATA.fistFirerate;
-    WEAPONDATA.weaponDamage = WEAPONDATA.fistDamage;
+    PLAYER_WEAPON_HOLDER.currentWeapon = FIST;
+    PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.FIST.fireRate;
+    PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.FIST.damage;
 
 }
 
+//TODO: Check if weapon is equipped
 void ChangeWeapon()
 {
     int key = 0;
     key = GetKeyPressed();
-    if (key == WEAPONDATA.fistKey)
+    if (key == PLAYER_WEAPON_HOLDER.FIST.inputKey)
     {
-        WEAPONDATA.weaponEquipped = FIST;
-        WEAPONDATA.weaponFireRate = WEAPONDATA.fistFirerate;
-        WEAPONDATA.weaponDamage = WEAPONDATA.fistDamage;
-        WEAPONDATA.currentWeaponAmmo = 0;
+        PLAYER_WEAPON_HOLDER.currentWeapon = FIST;
+        PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.FIST.fireRate;
+        PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.FIST.damage;
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo = 9999;
         printf("Fist equipped\n");
     }
-    else if (key == WEAPONDATA.pistolKey)
+    else if (key == PLAYER_WEAPON_HOLDER.PISTOL.inputKey)
     {
-        WEAPONDATA.weaponEquipped = PISTOL;
-        WEAPONDATA.weaponFireRate = WEAPONDATA.pistolFirerate;
-        WEAPONDATA.weaponDamage = WEAPONDATA.pistolDamage;
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.pistolAmmo;
+        PLAYER_WEAPON_HOLDER.currentWeapon = PISTOL;
+        PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.PISTOL.fireRate;
+        PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.PISTOL.damage;
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.PISTOL.ammo;
         printf("Pistol equipped\n");
     }
-    else if (key == WEAPONDATA.rifleKey)
+    else if (key == PLAYER_WEAPON_HOLDER.RIFLE.inputKey)
     {
-        WEAPONDATA.weaponEquipped = RIFLE;
-        WEAPONDATA.weaponFireRate = WEAPONDATA.rifleFirerate;
-        WEAPONDATA.weaponDamage = WEAPONDATA.rifleDamage;
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.rifleAmmo;
+        PLAYER_WEAPON_HOLDER.currentWeapon = RIFLE;
+        PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.RIFLE.fireRate;
+        PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.RIFLE.damage;
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RIFLE.ammo;
     }
-    else if (key == WEAPONDATA.shotgunKey)
+    else if (key == PLAYER_WEAPON_HOLDER.SHOTGUN.inputKey)
     {
-        WEAPONDATA.weaponEquipped = SHOTGUN;
-        WEAPONDATA.weaponFireRate = WEAPONDATA.shotgunFirerate;
-        WEAPONDATA.weaponDamage = WEAPONDATA.shotgunDamage;
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.shotgunAmmo;
+        PLAYER_WEAPON_HOLDER.currentWeapon = SHOTGUN;
+        PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.SHOTGUN.fireRate;
+        PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.SHOTGUN.damage;
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.SHOTGUN.ammo;
     }
-    else if (key == WEAPONDATA.railgunKey)
+    else if (key == PLAYER_WEAPON_HOLDER.RAILGUN.inputKey)
     {
-        WEAPONDATA.weaponEquipped = RAILGUN;
-        WEAPONDATA.weaponFireRate = WEAPONDATA.railgunFirerate;
-        WEAPONDATA.weaponDamage = WEAPONDATA.railgunDamage;
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.railgunAmmo;
+        PLAYER_WEAPON_HOLDER.currentWeapon = RAILGUN;
+        PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.RAILGUN.fireRate;
+        PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.RAILGUN.damage;
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RAILGUN.ammo;
     }
     //Weapon switching animation goes here
 }
@@ -86,8 +86,8 @@ int TestEntityHit(Ray rayCast)
     float levelDistance = INFINITY;
     float enemyDistance = INFINITY;
     int entitiesAmount = GetLevelBlockAmount();
-    LevelData *levelData = GetLevelData();
-    Enemy *enemies = GetEnemies();
+    LevelData* levelData = GetLevelData();
+    Enemy* enemies = GetEnemies();
     Enemy enemyDataHit;
     LevelData levelDataHit;
 
@@ -96,7 +96,9 @@ int TestEntityHit(Ray rayCast)
         if (levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].levelBlockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast,
+                levelData[i].levelBlockModel.meshes[0],
+                MatrixTranslate(pos.x, pos.y, pos.z));
             if (hitLevel.hit)
             {
                 if (hitLevel.distance < levelDistance)
@@ -131,55 +133,54 @@ int TestEntityHit(Ray rayCast)
     return id;
 }
 
-
 bool WeaponHasAmmo()
 {
 
-    if (WEAPONDATA.weaponEquipped == FIST)
+    if (PLAYER_WEAPON_HOLDER.currentWeapon == FIST)
     {
         return true;
     }
 
-    switch (WEAPONDATA.weaponEquipped)
+    switch (PLAYER_WEAPON_HOLDER.currentWeapon)
     {
-    case PISTOL:
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.pistolAmmo;
-        break;
+        case PISTOL:
+            PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.PISTOL.ammo;
+            break;
 
-    case RIFLE:
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.rifleAmmo;
-        break;
+        case RIFLE:
+            PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RIFLE.ammo;
+            break;
 
-    case SHOTGUN:
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.shotgunAmmo;
-        break;
+        case SHOTGUN:
+            PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.SHOTGUN.ammo;
+            break;
 
-    case RAILGUN:
-        WEAPONDATA.currentWeaponAmmo = WEAPONDATA.railgunAmmo;
-        break;
+        case RAILGUN:
+            PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RAILGUN.ammo;
+            break;
     }
 
-    printf("Ammo: %d \n", WEAPONDATA.currentWeaponAmmo);
+    printf("Ammo: %d \n", PLAYER_WEAPON_HOLDER.currentWeaponAmmo);
 //TODO: Is there a better way to do this without so much repetition?
-    if (WEAPONDATA.currentWeaponAmmo > 0)
+    if (PLAYER_WEAPON_HOLDER.currentWeaponAmmo > 0)
     {
-        WEAPONDATA.currentWeaponAmmo--;
-        switch (WEAPONDATA.weaponEquipped)
+        PLAYER_WEAPON_HOLDER.currentWeaponAmmo--;
+        switch (PLAYER_WEAPON_HOLDER.currentWeapon)
         {
             case PISTOL:
-                WEAPONDATA.pistolAmmo--;
+                PLAYER_WEAPON_HOLDER.PISTOL.ammo--;
                 break;
 
             case RIFLE:
-                WEAPONDATA.rifleAmmo--;
+                PLAYER_WEAPON_HOLDER.RIFLE.ammo--;
                 break;
 
             case SHOTGUN:
-                WEAPONDATA.shotgunAmmo--;
+                PLAYER_WEAPON_HOLDER.SHOTGUN.ammo--;
                 break;
 
             case RAILGUN:
-                WEAPONDATA.railgunAmmo--;
+                PLAYER_WEAPON_HOLDER.RAILGUN.ammo--;
                 break;
         }
         return true;
@@ -205,16 +206,16 @@ float FireWeapon(Camera* camera, float nextFire)
             printf("Id hit: %i \n", id);
             if (id != 0 && id != PLAYER_ID)
             {
-                TakeDamage(&GetEnemies()[id], WEAPONDATA.weaponDamage);
-                printf("Enemy id %d takes %d damage\n", id, WEAPONDATA.weaponDamage);
+                TakeDamage(&GetEnemies()[id], PLAYER_WEAPON_HOLDER.currentWeaponDamage);
+                printf("Enemy id %d takes %d damage\n", id, PLAYER_WEAPON_HOLDER.currentWeaponDamage);
             }
         }
-        nextFire = WEAPONDATA.weaponFireRate;
+        nextFire = PLAYER_WEAPON_HOLDER.currentWeaponFirerate;
     }
     return nextFire;
 }
 
-WeaponData GetWeaponData()
+PlayerWeaponHolder GetWeaponData()
 {
-    return WEAPONDATA;
+    return PLAYER_WEAPON_HOLDER;
 }

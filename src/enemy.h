@@ -18,7 +18,6 @@ typedef struct Enemy
     float fireRate;
     float nextFire;
 } Enemy;
-
 Enemy AddEnemy(float pos_x, float pos_y, int id);
 void UpdateEnemy(Enemy* enemy);
 void DrawEnemy(Enemy enemy);
