@@ -1,22 +1,22 @@
+#include "player.h"
 #include "include/raylib.h"
 #include "include/raymath.h"
-#include "settings.h"
-#include "main.h"
-#include "player_weapon.h"
-#include "player_hud.h"
 #include "level.h"
-#include "player.h"
+#include "main.h"
+#include "player_hud.h"
+#include "player_weapon.h"
+#include "settings.h"
 #include "utilities.h"
 #include <math.h>
 #include <stdio.h>
-//Took some parts of raylib camera.h and made my own camera based on that for full control
+// Took some parts of raylib camera.h and made my own camera based on that for full control
 
 #define CAMERA_MIN_CLAMP 89.0f
 #define CAMERA_MAX_CLAMP -89.0f
 #define CAMERA_PANNING_DIVIDER 5.1f
 #define PLAYER_START_POSITION_Y 0.4f
 
-//Globals
+// Globals
 Model playerHitboxModel;
 Vector3 playerSize;
 Vector3 playerPosition;
@@ -25,9 +25,9 @@ float nextFire = 0.0f;
 
 Camera CustomFPSCamera(float pos_x, float pos_z)
 {
-    Camera camera = { 0 };
+    Camera camera = {0};
 
-    //Get Settings
+    // Get Settings
     float fov = GetFOV();
     float mouseSensitivity = GetSensitivity();
     int moveFront = GetCustomInput(KEY_W);
@@ -36,14 +36,14 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     int moveLeft = GetCustomInput(KEY_A);
     int fireGun = MOUSE_LEFT_BUTTON;
 
-    //Place camera and apply settings
-    camera.position = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
-    camera.target = (Vector3){ 0.0f, 0.5f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = fov; //get fov from settings file
+    // Place camera and apply settings
+    camera.position = (Vector3) {pos_x, PLAYER_START_POSITION_Y, pos_z};
+    camera.target = (Vector3) {0.0f, 0.5f, 0.0f};
+    camera.up = (Vector3) {0.0f, 1.0f, 0.0f};
+    camera.fovy = fov;  // get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
-    //Distances
+    // Distances
     Vector3 v1 = camera.position;
     Vector3 v2 = camera.target;
     float dx = v2.x - v1.x;
@@ -62,7 +62,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     // Init player eyes position to camera Y position
     CAMERA.playerEyesPosition = camera.position.y;
 
-    //Setup custom movement keys
+    // Setup custom movement keys
     DisableCursor();
     CAMERA.moveFront = moveFront;
     CAMERA.moveBack = moveBack;
@@ -70,11 +70,11 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     CAMERA.moveLeft = moveLeft;
     CAMERA.mouseSensitivity = mouseSensitivity;
 
-    //Initialize weapon stuff
+    // Initialize weapon stuff
     InitializeWeaponKeys();
 
-    //Create player hitbox
-    playerSize = (Vector3){ 0.1f, 0.1f, 0.1f };
+    // Create player hitbox
+    playerSize = (Vector3) {0.1f, 0.1f, 0.1f};
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x, playerSize.y, playerSize.z);
     playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
     SelectDefaultWeapon();
@@ -88,8 +88,8 @@ void UpdateFPSCamera(Camera* camera)
 
     playerBoundingBox = MakeBoundingBox(camera->position, playerSize);
 
-    static Vector2 previousMousePosition = { 0.0f, 0.0f };
-    Vector2 mousePositionDelta = { 0.0f, 0.0f };
+    static Vector2 previousMousePosition = {0.0f, 0.0f};
+    Vector2 mousePositionDelta = {0.0f, 0.0f};
     Vector2 mousePosition = GetMousePosition();
     float mouseWheelMove = GetMouseWheelMove();
 
@@ -98,56 +98,51 @@ void UpdateFPSCamera(Camera* camera)
 
     previousMousePosition = mousePosition;
 
-    bool direction[4] =
-        {
-            IsKeyDown(CAMERA.moveFront),
-            IsKeyDown(CAMERA.moveBack),
-            IsKeyDown(CAMERA.moveRight),
-            IsKeyDown(CAMERA.moveLeft)
-        };
+    bool direction[4] = {IsKeyDown(CAMERA.moveFront),
+                         IsKeyDown(CAMERA.moveBack),
+                         IsKeyDown(CAMERA.moveRight),
+                         IsKeyDown(CAMERA.moveLeft)};
 
-    //Move camera around X pos
-    camera->position.x +=
-        (sinf(CAMERA.angle.x) * direction[MOVE_BACK] -
-         sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
-         cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
-         cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-        CAMERA.playerSpeed;
+    // Move camera around X pos
+    camera->position.x += (sinf(CAMERA.angle.x) * direction[MOVE_BACK] -
+                           sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
+                           cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
+                           cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
+                          CAMERA.playerSpeed;
 
-    //Move camera around Y pos
-    camera->position.y +=
-        (sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
-         sinf(CAMERA.angle.y) * direction[MOVE_BACK]) /
-        CAMERA.playerSpeed;
+    // Move camera around Y pos
+    camera->position.y += (sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
+                           sinf(CAMERA.angle.y) * direction[MOVE_BACK]) /
+                          CAMERA.playerSpeed;
 
-    //Move camera around Z pos
-    camera->position.z +=
-        (cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
-         cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
-         sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
-         sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-        CAMERA.playerSpeed;
+    // Move camera around Z pos
+    camera->position.z += (cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
+                           cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
+                           sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
+                           sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
+                          CAMERA.playerSpeed;
 
     // Camera orientation calculation
     CAMERA.angle.x += (mousePositionDelta.x * -CAMERA.mouseSensitivity);
     CAMERA.angle.y += (mousePositionDelta.y * -CAMERA.mouseSensitivity);
 
     // Angle clamp
-    if (CAMERA.angle.y > CAMERA_MIN_CLAMP * DEG2RAD)
+    if(CAMERA.angle.y > CAMERA_MIN_CLAMP * DEG2RAD)
     {
         CAMERA.angle.y = CAMERA_MIN_CLAMP * DEG2RAD;
     }
-    else if (CAMERA.angle.y < CAMERA_MAX_CLAMP * DEG2RAD)
+    else if(CAMERA.angle.y < CAMERA_MAX_CLAMP * DEG2RAD)
     {
         CAMERA.angle.y = CAMERA_MAX_CLAMP * DEG2RAD;
     }
 
     // Recalculate camera target considering translation and rotation
     Matrix translation = MatrixTranslate(0, 0, (CAMERA.targetDistance / CAMERA_PANNING_DIVIDER));
-    Matrix rotation = MatrixRotateXYZ((Vector3){ PI * 2 - CAMERA.angle.y, PI * 2 - CAMERA.angle.x, 0 });
+    Matrix rotation =
+        MatrixRotateXYZ((Vector3) {PI * 2 - CAMERA.angle.y, PI * 2 - CAMERA.angle.x, 0});
     Matrix transform = MatrixMultiply(translation, rotation);
 
-    //Move camera according to matrix position (where camera looks at)
+    // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;
     camera->target.y = camera->position.y - transform.m13;
     camera->target.z = camera->position.z - transform.m14;
@@ -155,14 +150,14 @@ void UpdateFPSCamera(Camera* camera)
     // Camera position update
     camera->position.y = CAMERA.playerEyesPosition;
 
-    if (CheckLevelCollision(camera->position, playerSize, PLAYER_ID))
+    if(CheckLevelCollision(camera->position, playerSize, PLAYER_ID))
     {
         camera->position = oldPlayerPos;
     }
 
     playerPosition = camera->position;
 
-    //Check if we need to switch weapon
+    // Check if we need to switch weapon
     ChangeWeapon();
 }
 
@@ -176,15 +171,15 @@ Vector3 GetPlayerPosition()
     return playerPosition;
 }
 
-//Use minus for removing health
+// Use minus for removing health
 void PlayerSetHealth(int healthToAdd)
 {
     PLAYERDATA.playerHealth += healthToAdd;
-    if (PLAYERDATA.playerHealth > MAX_HEALTH)
+    if(PLAYERDATA.playerHealth > MAX_HEALTH)
     {
         PLAYERDATA.playerHealth = MAX_HEALTH;
     }
-    else if (PLAYERDATA.playerHealth <= 0)
+    else if(PLAYERDATA.playerHealth <= 0)
     {
         PLAYERDATA.playerDead = true;
     }
@@ -192,9 +187,9 @@ void PlayerSetHealth(int healthToAdd)
 
 void PlayerFire(Camera* camera)
 {
-    //Calculate fire rate countdown here
+    // Calculate fire rate countdown here
     nextFire -= GetFrameTime();
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+    if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
     {
         nextFire = FireWeapon(camera, nextFire);
     }

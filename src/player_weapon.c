@@ -1,16 +1,16 @@
+#include "player_weapon.h"
+#include "enemy.h"
 #include "include/raylib.h"
 #include "include/raymath.h"
-#include "player_weapon.h"
-#include "settings.h"
 #include "level.h"
-#include "enemy.h"
-#include "utilities.h"
-#include "player.h"
 #include "main.h"
+#include "player.h"
+#include "settings.h"
+#include "utilities.h"
 #include <stdio.h>
 #include <time.h>
 
-//Fist has always ammo! :)
+// Fist has always ammo! :)
 #define FIST_AMMO 1
 #define PISTOL_AMMO_MAX 100
 #define RIFLE_AMMO_MAX 200
@@ -31,15 +31,14 @@ void SelectDefaultWeapon()
     PLAYER_WEAPON_HOLDER.currentWeapon = FIST;
     PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.FIST.fireRate;
     PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.FIST.damage;
-
 }
 
-//TODO: Check if weapon is equipped
+// TODO: Check if weapon is equipped
 void ChangeWeapon()
 {
     int key = 0;
     key = GetKeyPressed();
-    if (key == PLAYER_WEAPON_HOLDER.FIST.inputKey)
+    if(key == PLAYER_WEAPON_HOLDER.FIST.inputKey)
     {
         PLAYER_WEAPON_HOLDER.currentWeapon = FIST;
         PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.FIST.fireRate;
@@ -47,7 +46,7 @@ void ChangeWeapon()
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo = 9999;
         printf("Fist equipped\n");
     }
-    else if (key == PLAYER_WEAPON_HOLDER.PISTOL.inputKey)
+    else if(key == PLAYER_WEAPON_HOLDER.PISTOL.inputKey)
     {
         PLAYER_WEAPON_HOLDER.currentWeapon = PISTOL;
         PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.PISTOL.fireRate;
@@ -55,28 +54,28 @@ void ChangeWeapon()
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.PISTOL.ammo;
         printf("Pistol equipped\n");
     }
-    else if (key == PLAYER_WEAPON_HOLDER.RIFLE.inputKey)
+    else if(key == PLAYER_WEAPON_HOLDER.RIFLE.inputKey)
     {
         PLAYER_WEAPON_HOLDER.currentWeapon = RIFLE;
         PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.RIFLE.fireRate;
         PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.RIFLE.damage;
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RIFLE.ammo;
     }
-    else if (key == PLAYER_WEAPON_HOLDER.SHOTGUN.inputKey)
+    else if(key == PLAYER_WEAPON_HOLDER.SHOTGUN.inputKey)
     {
         PLAYER_WEAPON_HOLDER.currentWeapon = SHOTGUN;
         PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.SHOTGUN.fireRate;
         PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.SHOTGUN.damage;
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.SHOTGUN.ammo;
     }
-    else if (key == PLAYER_WEAPON_HOLDER.RAILGUN.inputKey)
+    else if(key == PLAYER_WEAPON_HOLDER.RAILGUN.inputKey)
     {
         PLAYER_WEAPON_HOLDER.currentWeapon = RAILGUN;
         PLAYER_WEAPON_HOLDER.currentWeaponFirerate = PLAYER_WEAPON_HOLDER.RAILGUN.fireRate;
         PLAYER_WEAPON_HOLDER.currentWeaponDamage = PLAYER_WEAPON_HOLDER.RAILGUN.damage;
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.RAILGUN.ammo;
     }
-    //Weapon switching animation goes here
+    // Weapon switching animation goes here
 }
 
 int TestEntityHit(Ray rayCast)
@@ -91,17 +90,17 @@ int TestEntityHit(Ray rayCast)
     Enemy enemyDataHit;
     LevelData levelDataHit;
 
-    for (int i = 0; i < entitiesAmount; i++)
+    for(int i = 0; i < entitiesAmount; i++)
     {
-        if (levelData[i].modelId != 0)
+        if(levelData[i].modelId != 0)
         {
             Vector3 pos = levelData[i].levelBlockPosition;
             RayCollision hitLevel = GetRayCollisionMesh(rayCast,
-                levelData[i].levelBlockModel.meshes[0],
-                MatrixTranslate(pos.x, pos.y, pos.z));
-            if (hitLevel.hit)
+                                                        levelData[i].levelBlockModel.meshes[0],
+                                                        MatrixTranslate(pos.x, pos.y, pos.z));
+            if(hitLevel.hit)
             {
-                if (hitLevel.distance < levelDistance)
+                if(hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
                     levelDataHit = levelData[i];
@@ -109,20 +108,21 @@ int TestEntityHit(Ray rayCast)
             }
         }
         RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
-        if (enemyHit.hit)
+        if(enemyHit.hit)
         {
-            if (!enemies[i].dead)
+            if(!enemies[i].dead)
             {
-                if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+                if(Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) <
+                   enemyDistance)
                 {
-                    enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
+                    enemyDistance =
+                        Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
                     enemyDataHit = enemies[i];
                 }
             }
         }
-
     }
-    if (enemyDistance < levelDistance)
+    if(enemyDistance < levelDistance)
     {
         id = enemyDataHit.id;
     }
@@ -136,12 +136,12 @@ int TestEntityHit(Ray rayCast)
 bool WeaponHasAmmo()
 {
 
-    if (PLAYER_WEAPON_HOLDER.currentWeapon == FIST)
+    if(PLAYER_WEAPON_HOLDER.currentWeapon == FIST)
     {
         return true;
     }
 
-    switch (PLAYER_WEAPON_HOLDER.currentWeapon)
+    switch(PLAYER_WEAPON_HOLDER.currentWeapon)
     {
         case PISTOL:
             PLAYER_WEAPON_HOLDER.currentWeaponAmmo = PLAYER_WEAPON_HOLDER.PISTOL.ammo;
@@ -161,11 +161,11 @@ bool WeaponHasAmmo()
     }
 
     printf("Ammo: %d \n", PLAYER_WEAPON_HOLDER.currentWeaponAmmo);
-//TODO: Is there a better way to do this without so much repetition?
-    if (PLAYER_WEAPON_HOLDER.currentWeaponAmmo > 0)
+    // TODO: Is there a better way to do this without so much repetition?
+    if(PLAYER_WEAPON_HOLDER.currentWeaponAmmo > 0)
     {
         PLAYER_WEAPON_HOLDER.currentWeaponAmmo--;
-        switch (PLAYER_WEAPON_HOLDER.currentWeapon)
+        switch(PLAYER_WEAPON_HOLDER.currentWeapon)
         {
             case PISTOL:
                 PLAYER_WEAPON_HOLDER.PISTOL.ammo--;
@@ -193,21 +193,22 @@ bool WeaponHasAmmo()
 
 float FireWeapon(Camera* camera, float nextFire)
 {
-    if (nextFire > 0)
+    if(nextFire > 0)
     {
         nextFire -= GetFrameTime();
     }
     else
     {
-        if (WeaponHasAmmo())
+        if(WeaponHasAmmo())
         {
             Ray rayCast = GetMouseRay(GetScreenCenter(), *camera);
             int id = TestEntityHit(rayCast);
             printf("Id hit: %i \n", id);
-            if (id != 0 && id != PLAYER_ID)
+            if(id != 0 && id != PLAYER_ID)
             {
                 TakeDamage(&GetEnemies()[id], PLAYER_WEAPON_HOLDER.currentWeaponDamage);
-                printf("Enemy id %d takes %d damage\n", id, PLAYER_WEAPON_HOLDER.currentWeaponDamage);
+                printf(
+                    "Enemy id %d takes %d damage\n", id, PLAYER_WEAPON_HOLDER.currentWeaponDamage);
             }
         }
         nextFire = PLAYER_WEAPON_HOLDER.currentWeaponFirerate;

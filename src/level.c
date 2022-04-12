@@ -1,25 +1,25 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include "level.h"
+#include "enemy.h"
 #include "include/raylib.h"
 #include "include/raymath.h"
-#include "level.h"
+#include "item.h"
 #include "main.h"
 #include "player.h"
-#include "enemy.h"
-#include "item.h"
 #include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-//Level has level data, enemies and items
+// Level has level data, enemies and items
 
-//Level
+// Level
 int mapSize = 0;
 LevelData* levelData = NULL;
 Color* levelMapPixels = NULL;
 Vector3 levelMapPosition;
 Texture2D levelCubicMap;
 Image levelImageMap;
-Vector3 ceilingRotation = { -1.0f, 0.0f, 0.0f };
+Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
 Model planeFloor;
 Material* floorMaterial = NULL;
 Model planeCeiling;
@@ -27,18 +27,18 @@ Material* ceilingMaterial = NULL;
 char* wallTextures[2];
 Vector3 levelStartPosition;
 Vector3 levelEndPosition;
-//Enemies
+// Enemies
 Enemy* enemies = NULL;
-//Items (contains interactable and non-interactable items)
+// Items (contains interactable and non-interactable items)
 Item* items = NULL;
 
-//Prototypes
+// Prototypes
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b);
 void PlaceLevelBlocks();
 void AllocateMeshData(Mesh* mesh, int triangleCount);
 
-//TODO: Add integer so you can select which level to load
-//      Load textures from file, instead of being built into EXE
+// TODO: Add integer so you can select which level to load
+//       Load textures from file, instead of being built into EXE
 //
 void BuildLevel()
 {
@@ -55,9 +55,10 @@ void BuildLevel()
     UnloadImage(levelImageMap);
 }
 
-//TODO: Entities can be moved here! Map file can be one png.
-//      Move everything in this method, and change it's name
-// should first calculate the needed size of items, then redo it and add the items = more memory efficient
+// TODO: Entities can be moved here! Map file can be one png.
+//       Move everything in this method, and change it's name
+//  should first calculate the needed size of items, then redo it and add the items = more memory
+//  efficient
 void PlaceLevelBlocks()
 {
     // Place all items based on their colors
@@ -77,24 +78,24 @@ void PlaceLevelBlocks()
     wallTextures[0] = "./assets/wall1.png";
     wallTextures[1] = "./assets/wall2.png";
 
-    levelMapPosition = (Vector3){ -mapPosX / 2, 0.5f, -mapPosZ / 2 };
+    levelMapPosition = (Vector3) {-mapPosX / 2, 0.5f, -mapPosZ / 2};
     mapSize = levelCubicMap.height * levelCubicMap.width;
 
     levelData = calloc(mapSize, sizeof(LevelData));
     enemies = calloc(mapSize, sizeof(Enemy));
 
-    for (int y = 0; y < levelCubicMap.height; y++)
+    for(int y = 0; y < levelCubicMap.height; y++)
     {
-        for (int x = 0; x < levelCubicMap.width; x++)
+        for(int x = 0; x < levelCubicMap.width; x++)
         {
 
             float mx = levelMapPosition.x - 0.5f + x * 1.0f;
             float my = levelMapPosition.z - 0.5f + y * 1.0f;
             int i = y * levelCubicMap.width + x;
-            Rectangle rect = (Rectangle){ mx, my, 1.0f, 1.0f };
+            Rectangle rect = (Rectangle) {mx, my, 1.0f, 1.0f};
 
-            //Find walls, which is white (255,255,255)
-            if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 255, 255))
+            // Find walls, which is white (255,255,255)
+            if(CheckPixelForColor(x, levelCubicMap.width, y, 255, 255, 255))
             {
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
@@ -104,30 +105,29 @@ void PlaceLevelBlocks()
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 levelData[i].levelBlockModel = cubeModel;
-                levelData[i].levelBlockPosition = (Vector3){ mx, levelMapPosition.y, my };
+                levelData[i].levelBlockPosition = (Vector3) {mx, levelMapPosition.y, my};
                 levelData[i].modelId = i;
             }
 
-            //Find start, which is green (0,255,0)
-            if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
+            // Find start, which is green (0,255,0)
+            if(CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
             {
-                levelStartPosition = (Vector3){ mx, 0.0f, my };
+                levelStartPosition = (Vector3) {mx, 0.0f, my};
             }
 
-            //Find end, which is blue (0,0,255)
-            if (CheckPixelForColor(x, levelCubicMap.width, y, 0, 0, 255))
+            // Find end, which is blue (0,0,255)
+            if(CheckPixelForColor(x, levelCubicMap.width, y, 0, 0, 255))
             {
-                levelEndPosition = (Vector3){ mx, 0.0f, my };
+                levelEndPosition = (Vector3) {mx, 0.0f, my};
             }
 
-            //Find enemy, which is red (255,0,0)
-            if (CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
+            // Find enemy, which is red (255,0,0)
+            if(CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
             {
                 enemies[i] = AddEnemy(mx, my, i);
             }
-            //TODO:
-            //For entities and their RGB values: check README.md
-
+            // TODO:
+            // For entities and their RGB values: check README.md
         }
     }
 
@@ -137,33 +137,32 @@ void PlaceLevelBlocks()
 void DrawLevel()
 {
 
-    DrawModel(planeFloor, (Vector3){ levelMapPosition.x, 0.0f, levelMapPosition.z }, 1.0f, WHITE);
+    DrawModel(planeFloor, (Vector3) {levelMapPosition.x, 0.0f, levelMapPosition.z}, 1.0f, WHITE);
     DrawModelEx(planeCeiling,
-        (Vector3){ levelMapPosition.x, 1.0f, -levelMapPosition.z },
-        ceilingRotation,
-        180.0f,
-        (Vector3){ 1.0f, 1.0f, 1.0f },
-        WHITE);
+                (Vector3) {levelMapPosition.x, 1.0f, -levelMapPosition.z},
+                ceilingRotation,
+                180.0f,
+                (Vector3) {1.0f, 1.0f, 1.0f},
+                WHITE);
 
-    for (int i = 0; i < mapSize; i++)
+    for(int i = 0; i < mapSize; i++)
     {
         LevelData* ld = &levelData[i];
         Enemy* e = &enemies[i];
-        if (ld != NULL && ld->modelId != 0)
+        if(ld != NULL && ld->modelId != 0)
         {
             DrawModel(ld->levelBlockModel, ld->levelBlockPosition, 1.0f, WHITE);
         }
 
-        if (e != NULL && e->id != 0)
+        if(e != NULL && e->id != 0)
         {
-            //if enemies[i] has nothing dont do anything
-            if (!e->dead)
+            // if enemies[i] has nothing dont do anything
+            if(!e->dead)
             {
                 UpdateEnemy(e);
             }
         }
     }
-
 }
 
 bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
@@ -171,25 +170,25 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 
     BoundingBox entityBox = MakeBoundingBox(entityPos, entitySize);
 
-    for (int i = 0; i < mapSize; i++)
+    for(int i = 0; i < mapSize; i++)
     {
-        //Level blocks
+        // Level blocks
         Vector3 wallPos = levelData[i].levelBlockPosition;
-        Vector3 wallSize = { 1.0f, 1.0f, 1.0f };
+        Vector3 wallSize = {1.0f, 1.0f, 1.0f};
         BoundingBox levelBox = MakeBoundingBox(wallPos, wallSize);
 
-        //Enemies
-        //If enemy, avoid checking own position, use id's for this
+        // Enemies
+        // If enemy, avoid checking own position, use id's for this
         Vector3 enemyPos = enemies[i].position;
         Vector3 enemySize = enemies[i].size;
-        if (CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
+        if(CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
         {
             return true;
         }
-        //Enemies ignore themselves so they dont collide to themselves
-        if (enemies[i].id != entityId)
+        // Enemies ignore themselves so they dont collide to themselves
+        if(enemies[i].id != entityId)
         {
-            if (CheckCollisionBoxes(entityBox, enemies[i].boundingBox))
+            if(CheckCollisionBoxes(entityBox, enemies[i].boundingBox))
             {
                 return true;
             }
@@ -200,11 +199,11 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
-    //X width, Z height
-    Mesh mesh = { 0 };
+    // X width, Z height
+    Mesh mesh = {0};
     AllocateMeshData(&mesh, 2);
 
-    //First triangle
+    // First triangle
     mesh.vertices[0] = 0;
     mesh.vertices[1] = 0;
     mesh.vertices[2] = 0;
@@ -223,7 +222,7 @@ Mesh MakeCustomPlaneMesh(float height, float width, float textureSize)
     mesh.texcoords[2] = width / textureSize;
     mesh.texcoords[3] = height / textureSize;
 
-    //Second triangle
+    // Second triangle
     mesh.vertices[6] = width;
     mesh.vertices[7] = 0;
     mesh.vertices[8] = 0;
@@ -277,9 +276,8 @@ void AllocateMeshData(Mesh* mesh, int triangleCount)
 
 bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
 {
-    if (levelMapPixels[y * width + x].r == r &&
-        levelMapPixels[y * width + x].g == g &&
-        levelMapPixels[y * width + x].b == b)
+    if(levelMapPixels[y * width + x].r == r && levelMapPixels[y * width + x].g == g &&
+       levelMapPixels[y * width + x].b == b)
     {
         return true;
     }
@@ -289,7 +287,7 @@ bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
     }
 }
 
-//Gets/Sets
+// Gets/Sets
 LevelData* GetLevelData()
 {
     return levelData;

@@ -6,7 +6,7 @@
 #define PLAYER_ID -1
 #define MAX_HEALTH 20
 
-//Struct for all the camera data
+// Struct for all the camera data
 typedef struct
 {
     float targetDistance;
@@ -24,7 +24,7 @@ typedef struct
 static CameraData CAMERA = {
     .targetDistance = 0,
     .playerEyesPosition = 1.85f,
-    .angle = { 0 },
+    .angle = {0},
     .mouseSensitivity = 0.003f,
     .playerSpeed = 30.0f,
 };
@@ -32,7 +32,7 @@ static PlayerData PLAYERDATA = {
     .playerHealth = MAX_HEALTH,
     .playerDead = false,
 };
-//Movement keys enum for directions
+// Movement keys enum for directions
 typedef enum
 {
     MOVE_FRONT = 0,

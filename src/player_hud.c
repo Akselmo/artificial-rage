@@ -1,6 +1,6 @@
-#include "player.h"
 #include "include/raylib.h"
 #include "include/raymath.h"
+#include "player.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -15,16 +15,14 @@ void DrawPlayerHud(int health, int weaponAmmo, int weapon)
     DrawFPS(10, 10);
     sprintf(healthText, "%d", health);
     sprintf(weaponAmmoText, "%d", weaponAmmo);
-    if (health <= 0)
+    if(health <= 0)
     {
         strcpy(healthText, dedText);
     }
-    if (weaponAmmo)
+    if(weaponAmmo)
     {
         strcpy(weaponAmmoText, emptyAmmoText);
     }
     DrawText(healthText, 50, GetScreenHeight() - 20, 20, RED);
     DrawText(weaponAmmoText, GetScreenWidth() - 50, GetScreenHeight() - 20, 20, RED);
-
 }
-
