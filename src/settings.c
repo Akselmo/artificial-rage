@@ -1,5 +1,5 @@
-#include "include/raylib.h"
 #include "settings.h"
+#include "include/raylib.h"
 
 void InitializeGame(void)
 {
@@ -11,19 +11,19 @@ void InitializeGame(void)
 
 float GetSensitivity(void)
 {
-    //Get sensitivity from config file
-    //0.003f is default
+    // Get sensitivity from config file
+    // 0.003f is default
     return 0.003f;
 }
 
 float GetFOV(void)
 {
-    //Get FOV from config file
+    // Get FOV from config file
     return 60.0f;
 }
 
-//TODO: instead of reading keys from initialization, read a file instead
-//Then we dont have to feed parameters
+// TODO: instead of reading keys from initialization, read a file instead
+// Then we dont have to feed parameters
 int GetCustomInput(int key)
 {
     return key;

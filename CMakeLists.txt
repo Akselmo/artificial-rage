@@ -10,16 +10,16 @@ add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
 #Raylib version used: 3.7.0
 IF (NOT WIN32)
-	find_library(RAYLIB raylib REQUIRED)
-ENDIF()
+    find_library(RAYLIB raylib REQUIRED)
+ENDIF ()
 
 IF (WIN32) #windows
     target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a opengl32 gdi32 winmm)
 ELSEIF (UNIX AND NOT APPLE) #linux
     target_link_libraries(${PROJECT_NAME} PRIVATE ${RAYLIB} GL m pthread dl rt X11)
-ELSE() #mac, thanks TheGrand547!
+ELSE () #mac, thanks TheGrand547!
     target_link_libraries(${PROJECT_NAME} PRIVATE ${RAYLIB} "-framework OpenGL" "-framework IOKit" "-framework Cocoa")
-ENDIF()
+ENDIF ()
 
 #Copy the level assets
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

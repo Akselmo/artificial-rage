@@ -1,36 +1,40 @@
-//Scifi FPS, uses RayLib library
-//Made by Akseli
+// Scifi FPS, uses RayLib library
+// Made by Akseli
+#include "main.h"
+#include "enemy.h"
+#include "include/raylib.h"
+#include "item.h"
+#include "level.h"
+#include "player.h"
+#include "player_hud.h"
+#include "player_weapon.h"
+#include "settings.h"
+#include "utilities.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/raylib.h"
-#include "player.h"
-#include "settings.h"
-#include "level.h"
-#include "enemy.h"
-#include "item.h"
-#include "utilities.h"
-#include "main.h"
 
-//Global variables
+// Global variables
 
 Camera playerCamera;
 Vector2 levelSize;
-Model *levelModel;
-//Should be enough room for entities, such as clutter, weapon pickups, etc...
+Model* levelModel;
+// Prototypes
+void HudUpdate();
+void MenuUpdate();
 
-//Initialization
+// Initialization
 void Initialize(void)
 {
-    //Initialize game
+    // Initialize game
     InitializeGame();
 
     BuildLevel();
-    //Add player camera
+    // Add player camera
     Vector3 startPos = GetLevelStartPosition();
     playerCamera = CustomFPSCamera(startPos.x, startPos.z);
 }
 
-//Main game loop
+// Main game loop
 void GameUpdate()
 {
     BeginDrawing();
@@ -42,22 +46,35 @@ void GameUpdate()
     UpdateFPSCamera(&playerCamera);
     PlayerFire(&playerCamera);
     DrawLevel();
+
     EndMode3D();
 
-    DrawFPS(10, 10);
+    HudUpdate();
+    MenuUpdate();
 
     EndDrawing();
 }
 
-//Main loop
+void HudUpdate()
+{
+    // TODO: Get current weapon and its ammo instead of whatever mess this is
+    DrawPlayerHud(GetPlayerData().playerHealth, GetWeaponData().currentWeaponAmmo, 0);
+}
+
+void MenuUpdate()
+{
+    // menu presses etc come here
+}
+
+// Main loop
 int main()
 {
 
-    //Initialize game
+    // Initialize game
     Initialize();
 
     // Main game loop
-    while (!WindowShouldClose())
+    while(!WindowShouldClose())
     {
         GameUpdate();
     }
