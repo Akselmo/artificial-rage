@@ -1,4 +1,4 @@
-#include "player_weapon.h"
+#include "weapon.h"
 #include "enemy.h"
 #include "include/raylib.h"
 #include "include/raymath.h"

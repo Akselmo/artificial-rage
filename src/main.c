@@ -6,8 +6,8 @@
 #include "item.h"
 #include "level.h"
 #include "player.h"
-#include "player_hud.h"
-#include "player_weapon.h"
+#include "hud.h"
+#include "weapon.h"
 #include "settings.h"
 #include "utilities.h"
 #include <stdio.h>

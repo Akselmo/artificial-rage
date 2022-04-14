@@ -3,8 +3,8 @@
 #include "include/raymath.h"
 #include "level.h"
 #include "main.h"
-#include "player_hud.h"
-#include "player_weapon.h"
+#include "hud.h"
+#include "weapon.h"
 #include "settings.h"
 #include "utilities.h"
 #include <math.h>
