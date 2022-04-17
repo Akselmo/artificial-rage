@@ -2,14 +2,14 @@
 // Made by Akseli
 #include "main.h"
 #include "enemy.h"
+#include "hud.h"
 #include "include/raylib.h"
 #include "item.h"
 #include "level.h"
 #include "player.h"
-#include "hud.h"
-#include "weapon.h"
 #include "settings.h"
 #include "utilities.h"
+#include "weapon.h"
 #include <stdio.h>
 #include <stdlib.h>
 

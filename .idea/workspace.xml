@@ -15,8 +15,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d84d97e-0304-4834-b164-0855b3cdcdd2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/level.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/level.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/player.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/weapon.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +30,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -67,7 +76,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="structure.view.defaults.are.configured" value="true" />
   </component>
   <component name="ReaderModeSettings">
@@ -98,6 +107,9 @@
       <workItem from="1648080256847" duration="129000" />
       <workItem from="1648080412877" duration="4292000" />
       <workItem from="1648171019339" duration="54000" />
+      <workItem from="1650145613359" duration="3507000" />
+      <workItem from="1650153631872" duration="502000" />
+      <workItem from="1650155136357" duration="1226000" />
     </task>
     <servers />
   </component>
@@ -145,14 +157,14 @@
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/level.c</url>
-          <line>185</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <watches-manager>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/src/level.c" line="95">
+        <watch expression="pixelColor" language="ObjectiveC" />
+      </inline-watch>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

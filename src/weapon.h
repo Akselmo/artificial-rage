@@ -3,8 +3,6 @@
 
 #include "include/raylib.h"
 
-// TODO: Add weapon ranges!
-
 typedef struct
 {
     char* name;

@@ -12,6 +12,22 @@ typedef struct
     Model levelBlockModel;
     int modelId;
 } LevelData;
+
+typedef struct
+{
+    Color NONE;
+    Color startColor;
+    Color endColor;
+    Color wallColor;
+    Color enemyColor;
+} LevelBlockType;
+
+static LevelBlockType LEVEL_BLOCKS = {.startColor = {0, 255, 0},
+                                      .endColor = {0, 0, 255},
+                                      .wallColor = {255, 255, 255},
+                                      .enemyColor = {255, 0, 0},
+                                      .NONE = {0, 0, 0}};
+
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize);
 void BuildLevel();
 void DrawLevel();

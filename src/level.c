@@ -33,7 +33,6 @@ Enemy* enemies = NULL;
 Item* items = NULL;
 
 // Prototypes
-bool CheckPixelForColor(int x, int width, int y, int r, int g, int b);
 void PlaceLevelBlocks();
 void AllocateMeshData(Mesh* mesh, int triangleCount);
 
@@ -92,10 +91,12 @@ void PlaceLevelBlocks()
             float mx = levelMapPosition.x - 0.5f + x * 1.0f;
             float my = levelMapPosition.z - 0.5f + y * 1.0f;
             int i = y * levelCubicMap.width + x;
-            Rectangle rect = (Rectangle) {mx, my, 1.0f, 1.0f};
+
+            Color pixelColor = {0, 0, 0};
+            pixelColor = GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
-            if(CheckPixelForColor(x, levelCubicMap.width, y, 255, 255, 255))
+            if(CompareColors(pixelColor, LEVEL_BLOCKS.wallColor))
             {
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
@@ -110,22 +111,23 @@ void PlaceLevelBlocks()
             }
 
             // Find start, which is green (0,255,0)
-            if(CheckPixelForColor(x, levelCubicMap.width, y, 0, 255, 0))
+            else if(CompareColors(pixelColor, LEVEL_BLOCKS.startColor))
             {
                 levelStartPosition = (Vector3) {mx, 0.0f, my};
             }
 
             // Find end, which is blue (0,0,255)
-            if(CheckPixelForColor(x, levelCubicMap.width, y, 0, 0, 255))
+            else if(CompareColors(pixelColor, LEVEL_BLOCKS.endColor))
             {
                 levelEndPosition = (Vector3) {mx, 0.0f, my};
             }
 
             // Find enemy, which is red (255,0,0)
-            if(CheckPixelForColor(x, levelCubicMap.width, y, 255, 0, 0))
+            else if(CompareColors(pixelColor, LEVEL_BLOCKS.enemyColor))
             {
                 enemies[i] = AddEnemy(mx, my, i);
             }
+
             // TODO:
             // For entities and their RGB values: check README.md
         }
@@ -272,19 +274,6 @@ void AllocateMeshData(Mesh* mesh, int triangleCount)
     mesh->vertices = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
     mesh->texcoords = (float*)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
     mesh->normals = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
-}
-
-bool CheckPixelForColor(int x, int width, int y, int r, int g, int b)
-{
-    if(levelMapPixels[y * width + x].r == r && levelMapPixels[y * width + x].g == g &&
-       levelMapPixels[y * width + x].b == b)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 // Gets/Sets

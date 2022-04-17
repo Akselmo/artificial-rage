@@ -1,12 +1,12 @@
 #include "player.h"
+#include "hud.h"
 #include "include/raylib.h"
 #include "include/raymath.h"
 #include "level.h"
 #include "main.h"
-#include "hud.h"
-#include "weapon.h"
 #include "settings.h"
 #include "utilities.h"
+#include "weapon.h"
 #include <math.h>
 #include <stdio.h>
 // Took some parts of raylib camera.h and made my own camera based on that for full control
