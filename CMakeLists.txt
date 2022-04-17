@@ -4,6 +4,8 @@ project(ArtificialRage C)
 
 set(CMAKE_C_STANDARD 99)
 
+set (CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
