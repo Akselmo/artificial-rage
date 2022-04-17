@@ -26,6 +26,11 @@ WIP. These notes are just for myself for now.
     * raylib.h
     * raymath.h
 
+* Run the following commands in project root to build the binary
+    * `mkdir build && cd build`
+    * `cmake ../`
+    * `make`
+
 **Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new
 files.**
 
