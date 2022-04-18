@@ -108,23 +108,20 @@ void UpdateFPSCamera(Camera* camera)
     camera->position.x += ((sinf(CAMERA.angle.x) * direction[MOVE_BACK] -
                             sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
                             cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
-                            cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-                           CAMERA.playerSpeed) *
-                          GetFrameTime();
+                            cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) *
+                           CAMERA.playerSpeed) * GetFrameTime();
 
     // Move camera around Y pos
     camera->position.y += ((sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
-                            sinf(CAMERA.angle.y) * direction[MOVE_BACK]) /
-                           CAMERA.playerSpeed) *
-                          GetFrameTime();
+                            sinf(CAMERA.angle.y) * direction[MOVE_BACK]) *
+                           CAMERA.playerSpeed) * GetFrameTime();
 
     // Move camera around Z pos
     camera->position.z += ((cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
                             cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
                             sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
-                            sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-                           CAMERA.playerSpeed) *
-                          GetFrameTime();
+                            sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) *
+                           CAMERA.playerSpeed) * GetFrameTime();
     // Camera orientation calculation
     CAMERA.angle.x += (mousePositionDelta.x * -CAMERA.mouseSensitivity);
     CAMERA.angle.y += (mousePositionDelta.y * -CAMERA.mouseSensitivity);
