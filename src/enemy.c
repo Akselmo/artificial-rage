@@ -33,7 +33,7 @@ Enemy AddEnemy(float pos_x, float pos_y, int id)
         .id = id,
         .tickRate = randomTickRate,
         .nextTick = -1.0f,
-        .speed = 0.01,
+        .speed = 0.01f,
         .fireRate = 5.75f,
         .nextFire = 0.0f,
     };
@@ -123,6 +123,7 @@ void UpdateEnemyPosition(Enemy* enemy)
     //- If in certain range from player, stop
     //- If cant see player, stop
     //- When stopped, fire
+    enemy->speed = ENEMY_DEFAULT_SPEED * GetFrameTime();
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if(TestPlayerHit(enemy))
     {

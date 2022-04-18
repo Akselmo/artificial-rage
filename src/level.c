@@ -128,8 +128,7 @@ void PlaceLevelBlocks()
                 enemies[i] = AddEnemy(mx, my, i);
             }
 
-            // TODO:
-            // For entities and their RGB values: check README.md
+            // TODO: More entities. For entities and their RGB values: check README.md
         }
     }
 
@@ -181,8 +180,6 @@ bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 
         // Enemies
         // If enemy, avoid checking own position, use id's for this
-        Vector3 enemyPos = enemies[i].position;
-        Vector3 enemySize = enemies[i].size;
         if(CheckCollisionBoxes(entityBox, levelBox) && levelData[i].modelId != 0)
         {
             return true;

@@ -26,9 +26,9 @@ static CameraData CAMERA = {
     .playerEyesPosition = 1.85f,
     .angle = {0},
     .mouseSensitivity = 0.003f,
-    .playerSpeed = 30.0f,
+    .playerSpeed = 0.50f,  // Why does lower value make speed go higher?
 };
-static PlayerData PLAYERDATA = {
+static PlayerData PLAYER_DATA = {
     .playerHealth = MAX_HEALTH,
     .playerDead = false,
 };

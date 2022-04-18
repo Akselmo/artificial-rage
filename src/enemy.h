@@ -3,6 +3,8 @@
 
 #include "include/raylib.h"
 
+#define ENEMY_DEFAULT_SPEED 0.45f  // Lower values result to lower speed
+
 typedef struct Enemy
 {
     int health;

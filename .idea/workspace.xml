@@ -16,13 +16,12 @@
   <component name="ChangeListManager">
     <list default="true" id="2d84d97e-0304-4834-b164-0855b3cdcdd2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enemy.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/enemy.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/enemy.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/level.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/player.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/weapon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/player.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/settings.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +75,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
     <property name="structure.view.defaults.are.configured" value="true" />
   </component>
   <component name="ReaderModeSettings">
@@ -110,6 +109,9 @@
       <workItem from="1650145613359" duration="3507000" />
       <workItem from="1650153631872" duration="502000" />
       <workItem from="1650155136357" duration="1226000" />
+      <workItem from="1650221109200" duration="1802000" />
+      <workItem from="1650236897401" duration="114000" />
+      <workItem from="1650237092571" duration="2996000" />
     </task>
     <servers />
   </component>

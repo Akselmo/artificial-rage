@@ -84,6 +84,7 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
 void UpdateFPSCamera(Camera* camera)
 {
+
     Vector3 oldPlayerPos = camera->position;
 
     playerBoundingBox = MakeBoundingBox(camera->position, playerSize);
@@ -104,24 +105,26 @@ void UpdateFPSCamera(Camera* camera)
                          IsKeyDown(CAMERA.moveLeft)};
 
     // Move camera around X pos
-    camera->position.x += (sinf(CAMERA.angle.x) * direction[MOVE_BACK] -
-                           sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
-                           cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
-                           cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-                          CAMERA.playerSpeed;
+    camera->position.x += ((sinf(CAMERA.angle.x) * direction[MOVE_BACK] -
+                            sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
+                            cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
+                            cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
 
     // Move camera around Y pos
-    camera->position.y += (sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
-                           sinf(CAMERA.angle.y) * direction[MOVE_BACK]) /
-                          CAMERA.playerSpeed;
+    camera->position.y += ((sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
+                            sinf(CAMERA.angle.y) * direction[MOVE_BACK]) /
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
 
     // Move camera around Z pos
-    camera->position.z += (cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
-                           cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
-                           sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
-                           sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
-                          CAMERA.playerSpeed;
-
+    camera->position.z += ((cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
+                            cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
+                            sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
+                            sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) /
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
     // Camera orientation calculation
     CAMERA.angle.x += (mousePositionDelta.x * -CAMERA.mouseSensitivity);
     CAMERA.angle.y += (mousePositionDelta.y * -CAMERA.mouseSensitivity);
@@ -174,14 +177,14 @@ Vector3 GetPlayerPosition()
 // Use minus for removing health
 void PlayerSetHealth(int healthToAdd)
 {
-    PLAYERDATA.playerHealth += healthToAdd;
-    if(PLAYERDATA.playerHealth > MAX_HEALTH)
+    PLAYER_DATA.playerHealth += healthToAdd;
+    if(PLAYER_DATA.playerHealth > MAX_HEALTH)
     {
-        PLAYERDATA.playerHealth = MAX_HEALTH;
+        PLAYER_DATA.playerHealth = MAX_HEALTH;
     }
-    else if(PLAYERDATA.playerHealth <= 0)
+    else if(PLAYER_DATA.playerHealth <= 0)
     {
-        PLAYERDATA.playerDead = true;
+        PLAYER_DATA.playerDead = true;
     }
 }
 
@@ -197,5 +200,5 @@ void PlayerFire(Camera* camera)
 
 PlayerData GetPlayerData()
 {
-    return PLAYERDATA;
+    return PLAYER_DATA;
 }
