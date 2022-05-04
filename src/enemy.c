@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #define ENEMY_START_POSITION_Y 0.4f
-#define ENEMY_GRAVEYARD_POSITION_Y 32.0f
+#define ENEMY_GRAVEYARD_POSITION 999.0f
 #define MAX_DISTANCE_FROM_PLAYER 1.25f
 
 // Prototypes
@@ -151,7 +151,8 @@ void TakeDamage(Enemy* enemy, int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
-            Vector3 deadBoxPos = (Vector3) {999.0f, 999.0f, 999.0f};
+            Vector3 deadBoxPos = (Vector3) {
+                ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
             enemy->boundingBox = MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead = true;
         }
