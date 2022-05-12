@@ -1,6 +1,10 @@
 ﻿---
 BasedOnStyle: LLVM
 AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveMacros: 'true'
+AlignConsecutiveAssignments: 'true'
+AlignConsecutiveDeclarations: 'false'
+AlignEscapedNewlines: Right
 AlignTrailingComments: 'true'
 AlignAfterOpenBracket: 'true'
 AllowShortBlocksOnASingleLine: 'false'
@@ -11,6 +15,7 @@ AllowShortLambdasOnASingleLine: Empty
 AllowShortLoopsOnASingleLine: 'false'
 BinPackArguments: 'false'
 BinPackParameters: 'false'
+AlwaysBreakBeforeMultilineStrings: 'true'
 BreakBeforeBraces: Allman
 ContinuationIndentWidth: '4'
 ColumnLimit: '100'
@@ -18,6 +23,8 @@ IndentCaseLabels: 'true'
 IndentPPDirectives: BeforeHash
 IndentWidth: '4'
 NamespaceIndentation: Inner
+KeepEmptyLinesAtTheStartOfBlocks: 'true'
+MaxEmptyLinesToKeep: '1'
 PointerAlignment: Left
 ReflowComments: 'true'
 SortIncludes: 'true'
