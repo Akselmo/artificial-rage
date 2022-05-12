@@ -336,7 +336,7 @@ RMAPI Vector2 Vector2Divide(Vector2 v1, Vector2 v2)
 RMAPI Vector2 Vector2Normalize(Vector2 v)
 {
     Vector2 result = {0};
-    float length = sqrtf((v.x * v.x) + (v.y * v.y));
+    float length   = sqrtf((v.x * v.x) + (v.y * v.y));
 
     if(length > 0)
     {
@@ -387,8 +387,8 @@ RMAPI Vector2 Vector2MoveTowards(Vector2 v, Vector2 target, float maxDistance)
 {
     Vector2 result = {0};
 
-    float dx = target.x - v.x;
-    float dy = target.y - v.y;
+    float dx    = target.x - v.x;
+    float dy    = target.y - v.y;
     float value = (dx * dx) + (dy * dy);
 
     if((value == 0) || ((maxDistance >= 0) && (value <= maxDistance * maxDistance)))
@@ -484,19 +484,19 @@ RMAPI Vector3 Vector3Perpendicular(Vector3 v)
 {
     Vector3 result = {0};
 
-    float min = (float)fabs(v.x);
+    float min            = (float)fabs(v.x);
     Vector3 cardinalAxis = {1.0f, 0.0f, 0.0f};
 
     if(fabs(v.y) < min)
     {
-        min = (float)fabs(v.y);
-        Vector3 tmp = {0.0f, 1.0f, 0.0f};
+        min          = (float)fabs(v.y);
+        Vector3 tmp  = {0.0f, 1.0f, 0.0f};
         cardinalAxis = tmp;
     }
 
     if(fabs(v.z) < min)
     {
-        Vector3 tmp = {0.0f, 0.0f, 1.0f};
+        Vector3 tmp  = {0.0f, 0.0f, 1.0f};
         cardinalAxis = tmp;
     }
 
@@ -540,7 +540,7 @@ RMAPI float Vector3Distance(Vector3 v1, Vector3 v2)
     float dx = v2.x - v1.x;
     float dy = v2.y - v1.y;
     float dz = v2.z - v1.z;
-    result = sqrtf(dx * dx + dy * dy + dz * dz);
+    result   = sqrtf(dx * dx + dy * dy + dz * dz);
 
     return result;
 }
@@ -598,12 +598,12 @@ RMAPI Vector3 Vector3Normalize(Vector3 v)
 // Gram-Schmidt function implementation
 RMAPI void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
 {
-    float length = 0.0f;
+    float length  = 0.0f;
     float ilength = 0.0f;
 
     // Vector3Normalize(*v1);
     Vector3 v = *v1;
-    length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+    length    = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
     if(length == 0.0f)
         length = 1.0f;
     ilength = 1.0f / length;
@@ -617,7 +617,7 @@ RMAPI void Vector3OrthoNormalize(Vector3* v1, Vector3* v2)
                    v1->x * v2->y - v1->y * v2->x};
 
     // Vector3Normalize(vn1);
-    v = vn1;
+    v      = vn1;
     length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
     if(length == 0.0f)
         length = 1.0f;
@@ -726,14 +726,14 @@ RMAPI Vector3 Vector3Barycenter(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
 {
     Vector3 result = {0};
 
-    Vector3 v0 = {b.x - a.x, b.y - a.y, b.z - a.z};         // Vector3Subtract(b, a)
-    Vector3 v1 = {c.x - a.x, c.y - a.y, c.z - a.z};         // Vector3Subtract(c, a)
-    Vector3 v2 = {p.x - a.x, p.y - a.y, p.z - a.z};         // Vector3Subtract(p, a)
-    float d00 = (v0.x * v0.x + v0.y * v0.y + v0.z * v0.z);  // Vector3DotProduct(v0, v0)
-    float d01 = (v0.x * v1.x + v0.y * v1.y + v0.z * v1.z);  // Vector3DotProduct(v0, v1)
-    float d11 = (v1.x * v1.x + v1.y * v1.y + v1.z * v1.z);  // Vector3DotProduct(v1, v1)
-    float d20 = (v2.x * v0.x + v2.y * v0.y + v2.z * v0.z);  // Vector3DotProduct(v2, v0)
-    float d21 = (v2.x * v1.x + v2.y * v1.y + v2.z * v1.z);  // Vector3DotProduct(v2, v1)
+    Vector3 v0 = {b.x - a.x, b.y - a.y, b.z - a.z};          // Vector3Subtract(b, a)
+    Vector3 v1 = {c.x - a.x, c.y - a.y, c.z - a.z};          // Vector3Subtract(c, a)
+    Vector3 v2 = {p.x - a.x, p.y - a.y, p.z - a.z};          // Vector3Subtract(p, a)
+    float d00  = (v0.x * v0.x + v0.y * v0.y + v0.z * v0.z);  // Vector3DotProduct(v0, v0)
+    float d01  = (v0.x * v1.x + v0.y * v1.y + v0.z * v1.z);  // Vector3DotProduct(v0, v1)
+    float d11  = (v1.x * v1.x + v1.y * v1.y + v1.z * v1.z);  // Vector3DotProduct(v1, v1)
+    float d20  = (v2.x * v0.x + v2.y * v0.y + v2.z * v0.z);  // Vector3DotProduct(v2, v0)
+    float d21  = (v2.x * v1.x + v2.y * v1.y + v2.z * v1.z);  // Vector3DotProduct(v2, v1)
 
     float denom = d00 * d11 - d01 * d01;
 
@@ -900,16 +900,16 @@ RMAPI Matrix MatrixTranspose(Matrix mat)
 {
     Matrix result = {0};
 
-    result.m0 = mat.m0;
-    result.m1 = mat.m4;
-    result.m2 = mat.m8;
-    result.m3 = mat.m12;
-    result.m4 = mat.m1;
-    result.m5 = mat.m5;
-    result.m6 = mat.m9;
-    result.m7 = mat.m13;
-    result.m8 = mat.m2;
-    result.m9 = mat.m6;
+    result.m0  = mat.m0;
+    result.m1  = mat.m4;
+    result.m2  = mat.m8;
+    result.m3  = mat.m12;
+    result.m4  = mat.m1;
+    result.m5  = mat.m5;
+    result.m6  = mat.m9;
+    result.m7  = mat.m13;
+    result.m8  = mat.m2;
+    result.m9  = mat.m6;
     result.m10 = mat.m10;
     result.m11 = mat.m14;
     result.m12 = mat.m3;
@@ -947,16 +947,16 @@ RMAPI Matrix MatrixInvert(Matrix mat)
     // Calculate the invert determinant (inlined to avoid double-caching)
     float invDet = 1.0f / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
 
-    result.m0 = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
-    result.m1 = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
-    result.m2 = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
-    result.m3 = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
-    result.m4 = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
-    result.m5 = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
-    result.m6 = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
-    result.m7 = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
-    result.m8 = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
-    result.m9 = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
+    result.m0  = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
+    result.m1  = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
+    result.m2  = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
+    result.m3  = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
+    result.m4  = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
+    result.m5  = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
+    result.m6  = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
+    result.m7  = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
+    result.m8  = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
+    result.m9  = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
     result.m10 = (a30 * b04 - a31 * b02 + a33 * b00) * invDet;
     result.m11 = (-a20 * b04 + a21 * b02 - a23 * b00) * invDet;
     result.m12 = (-a10 * b09 + a11 * b07 - a12 * b06) * invDet;
@@ -988,16 +988,16 @@ RMAPI Matrix MatrixNormalize(Matrix mat)
                 a20 * a11 * a02 * a33 + a10 * a21 * a02 * a33 + a20 * a01 * a12 * a33 -
                 a00 * a21 * a12 * a33 - a10 * a01 * a22 * a33 + a00 * a11 * a22 * a33;
 
-    result.m0 = mat.m0 / det;
-    result.m1 = mat.m1 / det;
-    result.m2 = mat.m2 / det;
-    result.m3 = mat.m3 / det;
-    result.m4 = mat.m4 / det;
-    result.m5 = mat.m5 / det;
-    result.m6 = mat.m6 / det;
-    result.m7 = mat.m7 / det;
-    result.m8 = mat.m8 / det;
-    result.m9 = mat.m9 / det;
+    result.m0  = mat.m0 / det;
+    result.m1  = mat.m1 / det;
+    result.m2  = mat.m2 / det;
+    result.m3  = mat.m3 / det;
+    result.m4  = mat.m4 / det;
+    result.m5  = mat.m5 / det;
+    result.m6  = mat.m6 / det;
+    result.m7  = mat.m7 / det;
+    result.m8  = mat.m8 / det;
+    result.m9  = mat.m9 / det;
     result.m10 = mat.m10 / det;
     result.m11 = mat.m11 / det;
     result.m12 = mat.m12 / det;
@@ -1036,16 +1036,16 @@ RMAPI Matrix MatrixAdd(Matrix left, Matrix right)
 {
     Matrix result = {0};
 
-    result.m0 = left.m0 + right.m0;
-    result.m1 = left.m1 + right.m1;
-    result.m2 = left.m2 + right.m2;
-    result.m3 = left.m3 + right.m3;
-    result.m4 = left.m4 + right.m4;
-    result.m5 = left.m5 + right.m5;
-    result.m6 = left.m6 + right.m6;
-    result.m7 = left.m7 + right.m7;
-    result.m8 = left.m8 + right.m8;
-    result.m9 = left.m9 + right.m9;
+    result.m0  = left.m0 + right.m0;
+    result.m1  = left.m1 + right.m1;
+    result.m2  = left.m2 + right.m2;
+    result.m3  = left.m3 + right.m3;
+    result.m4  = left.m4 + right.m4;
+    result.m5  = left.m5 + right.m5;
+    result.m6  = left.m6 + right.m6;
+    result.m7  = left.m7 + right.m7;
+    result.m8  = left.m8 + right.m8;
+    result.m9  = left.m9 + right.m9;
     result.m10 = left.m10 + right.m10;
     result.m11 = left.m11 + right.m11;
     result.m12 = left.m12 + right.m12;
@@ -1061,16 +1061,16 @@ RMAPI Matrix MatrixSubtract(Matrix left, Matrix right)
 {
     Matrix result = {0};
 
-    result.m0 = left.m0 - right.m0;
-    result.m1 = left.m1 - right.m1;
-    result.m2 = left.m2 - right.m2;
-    result.m3 = left.m3 - right.m3;
-    result.m4 = left.m4 - right.m4;
-    result.m5 = left.m5 - right.m5;
-    result.m6 = left.m6 - right.m6;
-    result.m7 = left.m7 - right.m7;
-    result.m8 = left.m8 - right.m8;
-    result.m9 = left.m9 - right.m9;
+    result.m0  = left.m0 - right.m0;
+    result.m1  = left.m1 - right.m1;
+    result.m2  = left.m2 - right.m2;
+    result.m3  = left.m3 - right.m3;
+    result.m4  = left.m4 - right.m4;
+    result.m5  = left.m5 - right.m5;
+    result.m6  = left.m6 - right.m6;
+    result.m7  = left.m7 - right.m7;
+    result.m8  = left.m8 - right.m8;
+    result.m9  = left.m9 - right.m9;
     result.m10 = left.m10 - right.m10;
     result.m11 = left.m11 - right.m11;
     result.m12 = left.m12 - right.m12;
@@ -1144,7 +1144,7 @@ RMAPI Matrix MatrixRotate(Vector3 axis, float angle)
 
     float sinres = sinf(angle);
     float cosres = cosf(angle);
-    float t = 1.0f - cosres;
+    float t      = 1.0f - cosres;
 
     result.m0 = x * x * t + cosres;
     result.m1 = y * x * t + z * sinres;
@@ -1156,8 +1156,8 @@ RMAPI Matrix MatrixRotate(Vector3 axis, float angle)
     result.m6 = z * y * t + x * sinres;
     result.m7 = 0.0f;
 
-    result.m8 = x * z * t + y * sinres;
-    result.m9 = y * z * t - x * sinres;
+    result.m8  = x * z * t + y * sinres;
+    result.m9  = y * z * t - x * sinres;
     result.m10 = z * z * t + cosres;
     result.m11 = 0.0f;
 
@@ -1192,9 +1192,9 @@ RMAPI Matrix MatrixRotateX(float angle)
     float cosres = cosf(angle);
     float sinres = sinf(angle);
 
-    result.m5 = cosres;
-    result.m6 = -sinres;
-    result.m9 = sinres;
+    result.m5  = cosres;
+    result.m6  = -sinres;
+    result.m9  = sinres;
     result.m10 = cosres;
 
     return result;
@@ -1223,9 +1223,9 @@ RMAPI Matrix MatrixRotateY(float angle)
     float cosres = cosf(angle);
     float sinres = sinf(angle);
 
-    result.m0 = cosres;
-    result.m2 = sinres;
-    result.m8 = -sinres;
+    result.m0  = cosres;
+    result.m2  = sinres;
+    result.m8  = -sinres;
     result.m10 = cosres;
 
     return result;
@@ -1297,8 +1297,8 @@ RMAPI Matrix MatrixRotateXYZ(Vector3 ang)
     result.m5 = (sinz * siny * sinx) + (cosz * cosx);
     result.m9 = (sinz * siny * cosx) - (cosz * sinx);
 
-    result.m2 = -siny;
-    result.m6 = cosy * sinx;
+    result.m2  = -siny;
+    result.m6  = cosy * sinx;
     result.m10 = cosy * cosx;
 
     return result;
@@ -1326,8 +1326,8 @@ RMAPI Matrix MatrixRotateZYX(Vector3 ang)
     result.m6 = cx * sz * sy - cz * sx;
     result.m7 = 0;
 
-    result.m8 = -sy;
-    result.m9 = cy * sx;
+    result.m8  = -sy;
+    result.m9  = cy * sx;
     result.m10 = cy * cx;
     result.m11 = 0;
 
@@ -1368,8 +1368,8 @@ MatrixFrustum(double left, double right, double bottom, double top, double near,
     result.m6 = 0.0f;
     result.m7 = 0.0f;
 
-    result.m8 = ((float)right + (float)left) / rl;
-    result.m9 = ((float)top + (float)bottom) / tb;
+    result.m8  = ((float)right + (float)left) / rl;
+    result.m9  = ((float)top + (float)bottom) / tb;
     result.m10 = -((float)far + (float)near) / fn;
     result.m11 = -1.0f;
 
@@ -1387,20 +1387,20 @@ RMAPI Matrix MatrixPerspective(double fovy, double aspect, double near, double f
 {
     Matrix result = {0};
 
-    double top = near * tan(fovy * 0.5);
+    double top    = near * tan(fovy * 0.5);
     double bottom = -top;
-    double right = top * aspect;
-    double left = -right;
+    double right  = top * aspect;
+    double left   = -right;
 
     // MatrixFrustum(-right, right, -top, top, near, far);
     float rl = (float)(right - left);
     float tb = (float)(top - bottom);
     float fn = (float)(far - near);
 
-    result.m0 = ((float)near * 2.0f) / rl;
-    result.m5 = ((float)near * 2.0f) / tb;
-    result.m8 = ((float)right + (float)left) / rl;
-    result.m9 = ((float)top + (float)bottom) / tb;
+    result.m0  = ((float)near * 2.0f) / rl;
+    result.m5  = ((float)near * 2.0f) / tb;
+    result.m8  = ((float)right + (float)left) / rl;
+    result.m9  = ((float)top + (float)bottom) / tb;
     result.m10 = -((float)far + (float)near) / fn;
     result.m11 = -1.0f;
     result.m14 = -((float)far * (float)near * 2.0f) / fn;
@@ -1418,16 +1418,16 @@ MatrixOrtho(double left, double right, double bottom, double top, double near, d
     float tb = (float)(top - bottom);
     float fn = (float)(far - near);
 
-    result.m0 = 2.0f / rl;
-    result.m1 = 0.0f;
-    result.m2 = 0.0f;
-    result.m3 = 0.0f;
-    result.m4 = 0.0f;
-    result.m5 = 2.0f / tb;
-    result.m6 = 0.0f;
-    result.m7 = 0.0f;
-    result.m8 = 0.0f;
-    result.m9 = 0.0f;
+    result.m0  = 2.0f / rl;
+    result.m1  = 0.0f;
+    result.m2  = 0.0f;
+    result.m3  = 0.0f;
+    result.m4  = 0.0f;
+    result.m5  = 2.0f / tb;
+    result.m6  = 0.0f;
+    result.m7  = 0.0f;
+    result.m8  = 0.0f;
+    result.m9  = 0.0f;
     result.m10 = -2.0f / fn;
     result.m11 = 0.0f;
     result.m12 = -((float)left + (float)right) / rl;
@@ -1443,7 +1443,7 @@ RMAPI Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
 {
     Matrix result = {0};
 
-    float length = 0.0f;
+    float length  = 0.0f;
     float ilength = 0.0f;
 
     // Vector3Subtract(eye, target)
@@ -1451,7 +1451,7 @@ RMAPI Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
 
     // Vector3Normalize(vz)
     Vector3 v = vz;
-    length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+    length    = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
     if(length == 0.0f)
         length = 1.0f;
     ilength = 1.0f / length;
@@ -1463,7 +1463,7 @@ RMAPI Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
     Vector3 vx = {up.y * vz.z - up.z * vz.y, up.z * vz.x - up.x * vz.z, up.x * vz.y - up.y * vz.x};
 
     // Vector3Normalize(x)
-    v = vx;
+    v      = vx;
     length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
     if(length == 0.0f)
         length = 1.0f;
@@ -1475,16 +1475,16 @@ RMAPI Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up)
     // Vector3CrossProduct(vz, vx)
     Vector3 vy = {vz.y * vx.z - vz.z * vx.y, vz.z * vx.x - vz.x * vx.z, vz.x * vx.y - vz.y * vx.x};
 
-    result.m0 = vx.x;
-    result.m1 = vy.x;
-    result.m2 = vz.x;
-    result.m3 = 0.0f;
-    result.m4 = vx.y;
-    result.m5 = vy.y;
-    result.m6 = vz.y;
-    result.m7 = 0.0f;
-    result.m8 = vx.z;
-    result.m9 = vy.z;
+    result.m0  = vx.x;
+    result.m1  = vy.x;
+    result.m2  = vz.x;
+    result.m3  = 0.0f;
+    result.m4  = vx.y;
+    result.m5  = vy.y;
+    result.m6  = vz.y;
+    result.m7  = 0.0f;
+    result.m8  = vx.z;
+    result.m9  = vy.z;
     result.m10 = vz.z;
     result.m11 = 0.0f;
     result.m12 = -(vx.x * eye.x + vx.y * eye.y + vx.z * eye.z);  // Vector3DotProduct(vx, eye)
@@ -1500,16 +1500,16 @@ RMAPI float16 MatrixToFloatV(Matrix mat)
 {
     float16 result = {0};
 
-    result.v[0] = mat.m0;
-    result.v[1] = mat.m1;
-    result.v[2] = mat.m2;
-    result.v[3] = mat.m3;
-    result.v[4] = mat.m4;
-    result.v[5] = mat.m5;
-    result.v[6] = mat.m6;
-    result.v[7] = mat.m7;
-    result.v[8] = mat.m8;
-    result.v[9] = mat.m9;
+    result.v[0]  = mat.m0;
+    result.v[1]  = mat.m1;
+    result.v[2]  = mat.m2;
+    result.v[3]  = mat.m3;
+    result.v[4]  = mat.m4;
+    result.v[5]  = mat.m5;
+    result.v[6]  = mat.m6;
+    result.v[7]  = mat.m7;
+    result.v[8]  = mat.m8;
+    result.v[9]  = mat.m9;
     result.v[10] = mat.m10;
     result.v[11] = mat.m11;
     result.v[12] = mat.m12;
@@ -1595,7 +1595,7 @@ RMAPI Quaternion QuaternionInvert(Quaternion q)
 {
     Quaternion result = q;
 
-    float length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+    float length   = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
     float lengthSq = length * length;
 
     if(lengthSq != 0.0)
@@ -1698,10 +1698,10 @@ RMAPI Quaternion QuaternionSlerp(Quaternion q1, Quaternion q2, float amount)
 
     if(cosHalfTheta < 0)
     {
-        q2.x = -q2.x;
-        q2.y = -q2.y;
-        q2.z = -q2.z;
-        q2.w = -q2.w;
+        q2.x         = -q2.x;
+        q2.y         = -q2.y;
+        q2.z         = -q2.z;
+        q2.w         = -q2.w;
         cosHalfTheta = -cosHalfTheta;
     }
 
@@ -1711,7 +1711,7 @@ RMAPI Quaternion QuaternionSlerp(Quaternion q1, Quaternion q2, float amount)
         result = QuaternionNlerp(q1, q2, amount);
     else
     {
-        float halfTheta = acosf(cosHalfTheta);
+        float halfTheta    = acosf(cosHalfTheta);
         float sinHalfTheta = sqrtf(1.0f - cosHalfTheta * cosHalfTheta);
 
         if(fabs(sinHalfTheta) < 0.001f)
@@ -1784,7 +1784,7 @@ RMAPI Quaternion QuaternionFromMatrix(Matrix mat)
     }
     else if(mat.m5 > mat.m10)
     {
-        float s = sqrtf(1.0f + mat.m5 - mat.m0 - mat.m10) * 2;
+        float s  = sqrtf(1.0f + mat.m5 - mat.m0 - mat.m10) * 2;
         result.x = (mat.m4 + mat.m1) / s;
         result.y = 0.25f * s;
         result.z = (mat.m9 + mat.m6) / s;
@@ -1792,7 +1792,7 @@ RMAPI Quaternion QuaternionFromMatrix(Matrix mat)
     }
     else
     {
-        float s = sqrtf(1.0f + mat.m10 - mat.m0 - mat.m5) * 2;
+        float s  = sqrtf(1.0f + mat.m10 - mat.m0 - mat.m5) * 2;
         result.x = (mat.m2 + mat.m8) / s;
         result.y = (mat.m9 + mat.m6) / s;
         result.z = 0.25f * s;
@@ -1840,8 +1840,8 @@ RMAPI Matrix QuaternionToMatrix(Quaternion q)
     result.m5 = 1 - 2 * (a2 + c2);
     result.m6 = 2 * (bc + ad);
 
-    result.m8 = 2 * (ac + bd);
-    result.m9 = 2 * (bc - ad);
+    result.m8  = 2 * (ac + bd);
+    result.m9  = 2 * (bc - ad);
     result.m10 = 1 - 2 * (a2 + b2);
 
     return result;
@@ -1859,12 +1859,12 @@ RMAPI Quaternion QuaternionFromAxisAngle(Vector3 axis, float angle)
     {
         angle *= 0.5f;
 
-        float length = 0.0f;
+        float length  = 0.0f;
         float ilength = 0.0f;
 
         // Vector3Normalize(axis)
         Vector3 v = axis;
-        length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+        length    = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
         if(length == 0.0f)
             length = 1.0f;
         ilength = 1.0f / length;
@@ -1882,10 +1882,10 @@ RMAPI Quaternion QuaternionFromAxisAngle(Vector3 axis, float angle)
 
         // QuaternionNormalize(q);
         Quaternion q = result;
-        length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+        length       = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
         if(length == 0.0f)
             length = 1.0f;
-        ilength = 1.0f / length;
+        ilength  = 1.0f / length;
         result.x = q.x * ilength;
         result.y = q.y * ilength;
         result.z = q.z * ilength;
@@ -1913,8 +1913,8 @@ RMAPI void QuaternionToAxisAngle(Quaternion q, Vector3* outAxis, float* outAngle
     }
 
     Vector3 resAxis = {0.0f, 0.0f, 0.0f};
-    float resAngle = 2.0f * acosf(q.w);
-    float den = sqrtf(1.0f - q.w * q.w);
+    float resAngle  = 2.0f * acosf(q.w);
+    float den       = sqrtf(1.0f - q.w * q.w);
 
     if(den > 0.0001f)
     {
@@ -1929,7 +1929,7 @@ RMAPI void QuaternionToAxisAngle(Quaternion q, Vector3* outAxis, float* outAngle
         resAxis.x = 1.0f;
     }
 
-    *outAxis = resAxis;
+    *outAxis  = resAxis;
     *outAngle = resAngle;
 }
 
@@ -1967,8 +1967,8 @@ RMAPI Vector3 QuaternionToEuler(Quaternion q)
 
     // Pitch (y-axis rotation)
     float y0 = 2.0f * (q.w * q.y - q.z * q.x);
-    y0 = y0 > 1.0f ? 1.0f : y0;
-    y0 = y0 < -1.0f ? -1.0f : y0;
+    y0       = y0 > 1.0f ? 1.0f : y0;
+    y0       = y0 < -1.0f ? -1.0f : y0;
     result.y = asinf(y0);
 
     // Yaw (z-axis rotation)

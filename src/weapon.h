@@ -38,62 +38,62 @@ typedef struct
 // Keeps code cleaner and easier to add/remove weapons
 static PlayerWeaponHolder PLAYER_WEAPON_HOLDER = {
     // Current weapon data
-    .currentWeapon = 0,
+    .currentWeapon         = 0,
     .currentWeaponFirerate = 0.0f,
-    .currentWeaponDamage = 0,
-    .currentWeaponAmmo = 0,
+    .currentWeaponDamage   = 0,
+    .currentWeaponAmmo     = 0,
 
     // Weapons are declared here
     // Fist
-    .FIST.name = "Fists",
+    .FIST.name     = "Fists",
     .FIST.inputKey = KEY_ONE,
-    .FIST.damage = 5,
-    .FIST.ammo = 9999,  // Unlimited ammo for your fists!
+    .FIST.damage   = 5,
+    .FIST.ammo     = 9999,  // Unlimited ammo for your fists!
     .FIST.fireRate = 1.25f,
-    .FIST.range = 2.0f,
+    .FIST.range    = 2.0f,
     .FIST.pickedUp = true,  // You always have your fists with you
 
     // Pistol
-    .PISTOL.name = "Pistol",
+    .PISTOL.name     = "Pistol",
     .PISTOL.inputKey = KEY_TWO,
-    .PISTOL.damage = 3,
-    .PISTOL.ammo = 30,
+    .PISTOL.damage   = 3,
+    .PISTOL.ammo     = 30,
     .PISTOL.fireRate = 1.0f,
-    .PISTOL.range = 8.0f,
+    .PISTOL.range    = 8.0f,
     .PISTOL.pickedUp = true,  // You also always have your trusty pistol with you
 
     // Rifle
-    .RIFLE.name = "Rifle",
+    .RIFLE.name     = "Rifle",
     .RIFLE.inputKey = KEY_THREE,
-    .RIFLE.damage = 3,
-    .RIFLE.ammo = 0,
+    .RIFLE.damage   = 3,
+    .RIFLE.ammo     = 0,
     .RIFLE.fireRate = 0.9f,
-    .RIFLE.range = 20.0f,
+    .RIFLE.range    = 20.0f,
     .RIFLE.pickedUp = false,
 
     // Shotgun
-    .SHOTGUN.name = "Shotgun",
+    .SHOTGUN.name     = "Shotgun",
     .SHOTGUN.inputKey = KEY_FOUR,
-    .SHOTGUN.damage = 7,
-    .SHOTGUN.ammo = 0,
+    .SHOTGUN.damage   = 7,
+    .SHOTGUN.ammo     = 0,
     .SHOTGUN.fireRate = 1.5f,
-    .SHOTGUN.range = 6.0f,
+    .SHOTGUN.range    = 6.0f,
     .SHOTGUN.pickedUp = false,
 
     // Railgun
-    .RAILGUN.name = "Railgun",
+    .RAILGUN.name     = "Railgun",
     .RAILGUN.inputKey = KEY_FIVE,
-    .RAILGUN.damage = 30,
-    .RAILGUN.ammo = 0,
+    .RAILGUN.damage   = 30,
+    .RAILGUN.ammo     = 0,
     .RAILGUN.fireRate = 2.6f,
-    .RAILGUN.range = 69.0f,
+    .RAILGUN.range    = 69.0f,
     .RAILGUN.pickedUp = false};
 
 typedef enum
 {
-    FIST = 1,
-    PISTOL = 2,
-    RIFLE = 3,
+    FIST    = 1,
+    PISTOL  = 2,
+    RIFLE   = 3,
     SHOTGUN = 4,
     RAILGUN = 5
 } Weapons;

@@ -31,7 +31,7 @@ void Initialize(void)
     BuildLevel();
     // Add player camera
     Vector3 startPos = GetLevelStartPosition();
-    playerCamera = CustomFPSCamera(startPos.x, startPos.z);
+    playerCamera     = CustomFPSCamera(startPos.x, startPos.z);
 }
 
 // Main game loop

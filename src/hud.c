@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
-char dedText[5] = "DEAD";
-char emptyAmmoText[2] = "-";
-char healthText[5] = "100";
-char weaponAmmoText[5] = "123";
+char dedText[5]         = "DEAD";
+char emptyAmmoText[2]   = "-";
+char healthText[5]      = "100";
+char weaponAmmoText[5]  = "123";
 char weaponNameText[15] = "WeaponName";
 
 void DrawPlayerHud(int health, int weaponAmmo, int weapon)

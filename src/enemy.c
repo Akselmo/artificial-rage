@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ENEMY_START_POSITION_Y 0.4f
+#define ENEMY_START_POSITION_Y   0.4f
 #define ENEMY_GRAVEYARD_POSITION 999.0f
 #define MAX_DISTANCE_FROM_PLAYER 1.25f
 
@@ -21,21 +21,21 @@ float FireAtPlayer(Enemy* enemy, float nextFire);
 Enemy AddEnemy(float pos_x, float pos_y, int id)
 {
     Vector3 enemyPosition = (Vector3) {pos_x, ENEMY_START_POSITION_Y, pos_y};
-    Vector3 enemySize = (Vector3) {0.25f, 0.8f, 0.25f};
-    float randomTickRate = ((float)rand() / (float)(RAND_MAX)) * 2;
-    Enemy enemy = {
-        .position = enemyPosition,
-        .size = enemySize,
-        .dead = false,
-        .damage = 5,
-        .health = 50,
-        .boundingBox = MakeBoundingBox(enemyPosition, enemySize),
-        .id = id,
-        .tickRate = randomTickRate,
-        .nextTick = -1.0f,
-        .speed = 0.01f,
-        .fireRate = 5.75f,
-        .nextFire = 0.0f,
+    Vector3 enemySize     = (Vector3) {0.25f, 0.8f, 0.25f};
+    float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
+    Enemy enemy           = {
+                  .position    = enemyPosition,
+                  .size        = enemySize,
+                  .dead        = false,
+                  .damage      = 5,
+                  .health      = 50,
+                  .boundingBox = MakeBoundingBox(enemyPosition, enemySize),
+                  .id          = id,
+                  .tickRate    = randomTickRate,
+                  .nextTick    = -1.0f,
+                  .speed       = 0.01f,
+                  .fireRate    = 5.75f,
+                  .nextFire    = 0.0f,
     };
     return enemy;
 }
@@ -68,17 +68,17 @@ bool TestPlayerHit(Enemy* enemy)
 {
 
     Ray rayCast;
-    BoundingBox playerBb = GetPlayerBoundingBox();
+    BoundingBox playerBb   = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
-    Vector3 v = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
-    rayCast.direction = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
-    rayCast.position = enemy->position;
+    Vector3 v              = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
+    rayCast.direction      = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
+    rayCast.position       = enemy->position;
 
-    bool hitPlayer = false;
-    float distance = 0.0f;
-    float levelDistance = INFINITY;
+    bool hitPlayer       = false;
+    float distance       = 0.0f;
+    float levelDistance  = INFINITY;
     float playerDistance = INFINITY;
-    int entitiesAmount = GetLevelBlockAmount();
+    int entitiesAmount   = GetLevelBlockAmount();
     LevelData* levelData = GetLevelData();
     LevelData levelDataHit;
 
@@ -86,7 +86,7 @@ bool TestPlayerHit(Enemy* enemy)
     {
         if(levelData[i].modelId != 0)
         {
-            Vector3 pos = levelData[i].levelBlockPosition;
+            Vector3 pos           = levelData[i].levelBlockPosition;
             RayCollision hitLevel = GetRayCollisionMesh(rayCast,
                                                         levelData[i].levelBlockModel.meshes[0],
                                                         MatrixTranslate(pos.x, pos.y, pos.z));
@@ -95,7 +95,7 @@ bool TestPlayerHit(Enemy* enemy)
                 if(hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
-                    levelDataHit = levelData[i];
+                    levelDataHit  = levelData[i];
                 }
             }
         }
@@ -123,7 +123,7 @@ void UpdateEnemyPosition(Enemy* enemy)
     //- If in certain range from player, stop
     //- If cant see player, stop
     //- When stopped, fire
-    enemy->speed = ENEMY_DEFAULT_SPEED * GetFrameTime();
+    enemy->speed               = ENEMY_DEFAULT_SPEED * GetFrameTime();
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if(TestPlayerHit(enemy))
     {
@@ -152,9 +152,12 @@ void TakeDamage(Enemy* enemy, int damageAmount)
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
             Vector3 deadBoxPos = (Vector3) {
-                ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
+                ENEMY_GRAVEYARD_POSITION,
+                ENEMY_GRAVEYARD_POSITION,
+                ENEMY_GRAVEYARD_POSITION
+            };
             enemy->boundingBox = MakeBoundingBox(deadBoxPos, Vector3Zero());
-            enemy->dead = true;
+            enemy->dead        = true;
         }
     }
 }

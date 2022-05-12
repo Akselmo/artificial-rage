@@ -23,10 +23,10 @@ typedef struct
 } LevelBlockType;
 
 static LevelBlockType LEVEL_BLOCKS = {.startColor = {0, 255, 0},
-                                      .endColor = {0, 0, 255},
-                                      .wallColor = {255, 255, 255},
+                                      .endColor   = {0, 0, 255},
+                                      .wallColor  = {255, 255, 255},
                                       .enemyColor = {255, 0, 0},
-                                      .NONE = {0, 0, 0}};
+                                      .NONE       = {0, 0, 0}};
 
 Mesh MakeCustomPlaneMesh(float height, float width, float textureSize);
 void BuildLevel();

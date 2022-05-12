@@ -11,9 +11,9 @@
 #include <stdio.h>
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
-#define CAMERA_MIN_CLAMP 89.0f
-#define CAMERA_MAX_CLAMP -89.0f
-#define CAMERA_PANNING_DIVIDER 5.1f
+#define CAMERA_MIN_CLAMP        89.0f
+#define CAMERA_MAX_CLAMP        -89.0f
+#define CAMERA_PANNING_DIVIDER  5.1f
 #define PLAYER_START_POSITION_Y 0.4f
 
 // Globals
@@ -28,27 +28,27 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
     Camera camera = {0};
 
     // Get Settings
-    float fov = GetFOV();
+    float fov              = GetFOV();
     float mouseSensitivity = GetSensitivity();
-    int moveFront = GetCustomInput(KEY_W);
-    int moveBack = GetCustomInput(KEY_S);
-    int moveRight = GetCustomInput(KEY_D);
-    int moveLeft = GetCustomInput(KEY_A);
-    int fireGun = MOUSE_LEFT_BUTTON;
+    int moveFront          = GetCustomInput(KEY_W);
+    int moveBack           = GetCustomInput(KEY_S);
+    int moveRight          = GetCustomInput(KEY_D);
+    int moveLeft           = GetCustomInput(KEY_A);
+    int fireGun            = MOUSE_LEFT_BUTTON;
 
     // Place camera and apply settings
-    camera.position = (Vector3) {pos_x, PLAYER_START_POSITION_Y, pos_z};
-    camera.target = (Vector3) {0.0f, 0.5f, 0.0f};
-    camera.up = (Vector3) {0.0f, 1.0f, 0.0f};
-    camera.fovy = fov;  // get fov from settings file
+    camera.position   = (Vector3) {pos_x, PLAYER_START_POSITION_Y, pos_z};
+    camera.target     = (Vector3) {0.0f, 0.5f, 0.0f};
+    camera.up         = (Vector3) {0.0f, 1.0f, 0.0f};
+    camera.fovy       = fov;  // get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
     // Distances
     Vector3 v1 = camera.position;
     Vector3 v2 = camera.target;
-    float dx = v2.x - v1.x;
-    float dy = v2.y - v1.y;
-    float dz = v2.z - v1.z;
+    float dx   = v2.x - v1.x;
+    float dy   = v2.y - v1.y;
+    float dz   = v2.z - v1.z;
 
     // Distance to target
     CAMERA.targetDistance = sqrtf(dx * dx + dy * dy + dz * dz);
@@ -64,19 +64,19 @@ Camera CustomFPSCamera(float pos_x, float pos_z)
 
     // Setup custom movement keys
     DisableCursor();
-    CAMERA.moveFront = moveFront;
-    CAMERA.moveBack = moveBack;
-    CAMERA.moveRight = moveRight;
-    CAMERA.moveLeft = moveLeft;
+    CAMERA.moveFront        = moveFront;
+    CAMERA.moveBack         = moveBack;
+    CAMERA.moveRight        = moveRight;
+    CAMERA.moveLeft         = moveLeft;
     CAMERA.mouseSensitivity = mouseSensitivity;
 
     // Initialize weapon stuff
     InitializeWeaponKeys();
 
     // Create player hitbox
-    playerSize = (Vector3) {0.1f, 0.1f, 0.1f};
+    playerSize            = (Vector3) {0.1f, 0.1f, 0.1f};
     Mesh playerHitboxMesh = GenMeshCube(playerSize.x, playerSize.y, playerSize.z);
-    playerHitboxModel = LoadModelFromMesh(playerHitboxMesh);
+    playerHitboxModel     = LoadModelFromMesh(playerHitboxMesh);
     SelectDefaultWeapon();
 
     return camera;
@@ -90,9 +90,9 @@ void UpdateFPSCamera(Camera* camera)
     playerBoundingBox = MakeBoundingBox(camera->position, playerSize);
 
     static Vector2 previousMousePosition = {0.0f, 0.0f};
-    Vector2 mousePositionDelta = {0.0f, 0.0f};
-    Vector2 mousePosition = GetMousePosition();
-    float mouseWheelMove = GetMouseWheelMove();
+    Vector2 mousePositionDelta           = {0.0f, 0.0f};
+    Vector2 mousePosition                = GetMousePosition();
+    float mouseWheelMove                 = GetMouseWheelMove();
 
     mousePositionDelta.x = mousePosition.x - previousMousePosition.x;
     mousePositionDelta.y = mousePosition.y - previousMousePosition.y;
@@ -109,19 +109,22 @@ void UpdateFPSCamera(Camera* camera)
                             sinf(CAMERA.angle.x) * direction[MOVE_FRONT] -
                             cosf(CAMERA.angle.x) * direction[MOVE_LEFT] +
                             cosf(CAMERA.angle.x) * direction[MOVE_RIGHT]) *
-                           CAMERA.playerSpeed) * GetFrameTime();
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
 
     // Move camera around Y pos
     camera->position.y += ((sinf(CAMERA.angle.y) * direction[MOVE_FRONT] -
                             sinf(CAMERA.angle.y) * direction[MOVE_BACK]) *
-                           CAMERA.playerSpeed) * GetFrameTime();
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
 
     // Move camera around Z pos
     camera->position.z += ((cosf(CAMERA.angle.x) * direction[MOVE_BACK] -
                             cosf(CAMERA.angle.x) * direction[MOVE_FRONT] +
                             sinf(CAMERA.angle.x) * direction[MOVE_LEFT] -
                             sinf(CAMERA.angle.x) * direction[MOVE_RIGHT]) *
-                           CAMERA.playerSpeed) * GetFrameTime();
+                           CAMERA.playerSpeed) *
+                          GetFrameTime();
     // Camera orientation calculation
     CAMERA.angle.x += (mousePositionDelta.x * -CAMERA.mouseSensitivity);
     CAMERA.angle.y += (mousePositionDelta.y * -CAMERA.mouseSensitivity);

@@ -3,7 +3,7 @@
 
 #include "include/raylib.h"
 
-#define PLAYER_ID -1
+#define PLAYER_ID  -1
 #define MAX_HEALTH 20
 
 // Struct for all the camera data
@@ -22,23 +22,23 @@ typedef struct
     bool playerDead;
 } PlayerData;
 static CameraData CAMERA = {
-    .targetDistance = 0,
+    .targetDistance     = 0,
     .playerEyesPosition = 1.85f,
-    .angle = {0},
-    .mouseSensitivity = 0.003f,
-    .playerSpeed = 1.75f,
+    .angle              = {0},
+    .mouseSensitivity   = 0.003f,
+    .playerSpeed        = 1.75f,
 };
 static PlayerData PLAYER_DATA = {
     .playerHealth = MAX_HEALTH,
-    .playerDead = false,
+    .playerDead   = false,
 };
 // Movement keys enum for directions
 typedef enum
 {
     MOVE_FRONT = 0,
-    MOVE_BACK = 1,
+    MOVE_BACK  = 1,
     MOVE_RIGHT = 2,
-    MOVE_LEFT = 3
+    MOVE_LEFT  = 3
 } CameraMove;
 Camera CustomFPSCamera(float pos_x, float pos_z);
 void UpdateFPSCamera(Camera* camera);
