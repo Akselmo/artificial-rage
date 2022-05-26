@@ -38,12 +38,3 @@ files.**
 Check this project for TODO list: https://github.com/users/Akselmo/projects/1/views/1
 
 
-## Entity RGB Values
-
-| Entity Name        | RGB Value   |
-|--------------------|-------------|
-| NONE               | 0,0,0       |
-| wall               | 255,255,255 |
-| levelStartPosition | 0,255,0     |
-| levelEndPosition   | 0,0,255     |
-| enemy              | 255,0,0     |
