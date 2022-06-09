@@ -5,9 +5,6 @@
 [![discord](https://img.shields.io/discord/475097536160595979?color=%235865F2&label=aks_dev%20discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/PZkYZRx)
 # Artificial Rage - a Scifi FPS
 
-### Note: Currently refactoring the project from C to C++.
-Branch here: https://github.com/Akselmo/artificial-rage/tree/cpp-refactor
-
 -------
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
