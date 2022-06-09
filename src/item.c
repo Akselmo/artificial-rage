@@ -1,5 +1,5 @@
 #include "item.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define ITEM_START_POSITION_Y 0.4f
 

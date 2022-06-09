@@ -2,7 +2,7 @@
 #define LEVEL
 
 #include "enemy.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define MAX_LEVEL_SIZE 16384
 

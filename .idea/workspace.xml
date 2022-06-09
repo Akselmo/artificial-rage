@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
   </component>
   <component name="CMakeRunConfigurationManager">
-    <generated />
+    <generated>
+      <config projectName="ArtificialRage" targetName="glfw" />
+      <config projectName="ArtificialRage" targetName="raylib" />
+      <config projectName="ArtificialRage" targetName="ArtificialRage" />
+    </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
@@ -12,21 +16,28 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d84d97e-0304-4834-b164-0855b3cdcdd2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+    <list default="true" id="b59a0e6d-74fa-4269-a265-f82e5126861d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/enemy.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/enemy.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/enemy.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hud.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/hud.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/include/raylib.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/raylib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/include/raymath.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/raymath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hud.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/hud.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/include/raylib.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/include/raymath.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/item.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/item.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/item.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/item.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/level.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/level.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/player.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/player.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/settings.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/weapon.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/weapon.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/weapon.h" afterDir="false" />
     </list>
@@ -35,85 +46,74 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="true" />
-  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="NamedScopeManager">
-    <scope name="source" pattern="(file[artificial-rage]:*||file[artificial-rage]:src/*)&amp;&amp;!file[artificial-rage]:src/include/*&amp;&amp;!file:.gitignore&amp;&amp;!file:.vimspector.json" />
-  </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
-    <option name="majorVersion" value="2021" />
-    <option name="minorVersion" value="3.3" />
+    <option name="majorVersion" value="2022" />
+    <option name="minorVersion" value="1.2" />
   </component>
-  <component name="ProjectId" id="2566ZdWcHnAa0E3kMcTSyjRyoeF" />
+  <component name="ProjectId" id="2AKToQ9yh6wz9BVWEvEYR0DdZmw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.advertisement.text.overridden&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;cmake.loaded.for.project&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
-    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.advertisement.text.overridden": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
+  <component name="RunManager" selected="CMake Application.ArtificialRage">
+    <configuration name="ArtificialRage" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ArtificialRage" TARGET_NAME="ArtificialRage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ArtificialRage" RUN_TARGET_NAME="ArtificialRage">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ArtificialRage" TARGET_NAME="glfw" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="raylib" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ArtificialRage" TARGET_NAME="raylib" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.ArtificialRage" />
+      <item itemvalue="CMake Application.raylib" />
+      <item itemvalue="CMake Application.glfw" />
+    </list>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2d84d97e-0304-4834-b164-0855b3cdcdd2" name="Changes" comment="" />
-      <created>1644835248129</created>
+      <changelist id="b59a0e6d-74fa-4269-a265-f82e5126861d" name="Changes" comment="" />
+      <created>1654757453354</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1644835248129</updated>
-      <workItem from="1644835252786" duration="1189000" />
-      <workItem from="1644837482447" duration="61000" />
-      <workItem from="1644837635484" duration="24000" />
-      <workItem from="1644845867020" duration="1278000" />
-      <workItem from="1644927093523" duration="275000" />
-      <workItem from="1645088072062" duration="71000" />
-      <workItem from="1647906123726" duration="469000" />
-      <workItem from="1648080256847" duration="129000" />
-      <workItem from="1648080412877" duration="4292000" />
-      <workItem from="1648171019339" duration="54000" />
-      <workItem from="1650145613359" duration="3507000" />
-      <workItem from="1650153631872" duration="502000" />
-      <workItem from="1650155136357" duration="1226000" />
-      <workItem from="1650221109200" duration="1802000" />
-      <workItem from="1650236897401" duration="114000" />
-      <workItem from="1650237092571" duration="2996000" />
-      <workItem from="1650241717860" duration="172000" />
-      <workItem from="1651928286402" duration="78000" />
-      <workItem from="1651950348658" duration="6000" />
-      <workItem from="1651960308095" duration="436000" />
-      <workItem from="1652388209869" duration="91000" />
+      <updated>1654757453354</updated>
+      <workItem from="1654757455739" duration="69000" />
+      <workItem from="1654757532608" duration="157000" />
     </task>
     <servers />
   </component>
@@ -123,52 +123,12 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
-        <entry key="7b1d3784-d48c-4e35-8808-f316115e5fa7">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/src/level.c" line="95">
-        <watch expression="pixelColor" language="ObjectiveC" />
-      </inline-watch>
-    </watches-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

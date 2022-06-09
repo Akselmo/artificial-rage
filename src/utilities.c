@@ -1,6 +1,6 @@
 #include "utilities.h"
-#include "include/raylib.h"
-#include "include/raymath.h"
+#include "raylib.h"
+#include "raymath.h"
 #include <stdio.h>
 
 Vector2 GetScreenCenter()

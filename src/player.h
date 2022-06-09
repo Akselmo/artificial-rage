@@ -1,7 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define PLAYER_ID  -1
 #define MAX_HEALTH 20

@@ -1,7 +1,7 @@
 #ifndef ENEMY
 #define ENEMY
 
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define ENEMY_DEFAULT_SPEED 0.45f  // Lower values result to lower speed
 

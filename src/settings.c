@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 void InitializeGame(void)
 {

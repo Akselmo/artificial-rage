@@ -3,7 +3,7 @@
 #include "main.h"
 #include "enemy.h"
 #include "hud.h"
-#include "include/raylib.h"
+#include "raylib.h"
 #include "item.h"
 #include "level.h"
 #include "player.h"
