@@ -5,6 +5,7 @@
 [![discord](https://img.shields.io/discord/475097536160595979?color=%235865F2&label=aks_dev%20discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/PZkYZRx)
 # Artificial Rage - a Scifi FPS
 
+[![Screenshot of Artificial Rage](./screenshot.png)]
 -------
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
