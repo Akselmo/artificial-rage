@@ -1,37 +1,33 @@
 #include "item.h"
-#include "raylib.h"
 
-#define ITEM_START_POSITION_Y 0.4f
-
-Vector3 itemPosition;
-Vector3 itemSize;
+Vector3 Item_position;
+Vector3 Item_size;
 
 // Since we use billboarding we dont have to know rotation
-
-Item AddItem(float pos_x, float pos_y)
+Item_Data Item_Add(float pos_x, float pos_y)
 {
-    itemPosition = (Vector3) {pos_x, ITEM_START_POSITION_Y, pos_y};
-    itemSize     = (Vector3) {0.25f, 0.25f, 0.25f};
-    Item item    = {
-           .position  = itemPosition,
-           .size      = itemSize,
+    Item_position     = (Vector3) {pos_x, ITEM_START_POSITION_Y, pos_y};
+    Item_size         = (Vector3) {0.25f, 0.25f, 0.25f};
+    Item_Data item    = {
+           .position  = Item_position,
+           .size      = Item_size,
            .destroyed = false,
     };
     return item;
 }
 
-void UpdateItem(Item item)
+void Item_Update(Item_Data item)
 {
-    DrawItem(item);
-    UpdateItemCollision(item);
+    Item_Draw(item);
+    Item_UpdateCollision(item);
 }
 
-void DrawItem(Item item)
+void Item_Draw(Item_Data item)
 {
     DrawCubeV(item.position, item.size, BLUE);
 }
 
-void UpdateItemCollision(Item item)
+void Item_UpdateCollision(Item_Data item)
 {
     // Update bounding box positions
 }
