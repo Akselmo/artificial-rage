@@ -3,11 +3,11 @@
 
 #include "raylib.h"
 
-//Public variables
+// Public variables
 extern float Settings_MouseSensitivity;
 extern float Settings_CameraFov;
 
-//Public functions
+// Public functions
 void Settings_Initialize();
 int Settings_GetCustomInput(int key);
 

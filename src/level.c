@@ -2,18 +2,16 @@
 
 // Level has level data, Level_enemies and Level_items
 
-
 // Public variables
-Level_Data* Level_data = NULL;
-Enemy_Data* Level_enemies  = NULL;
-Item_Data* Level_items     = NULL; //Contains interactable and non-interactable Level_items
+Level_Data* Level_data    = NULL;
+Enemy_Data* Level_enemies = NULL;
+Item_Data* Level_items    = NULL;  // Contains interactable and non-interactable Level_items
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
 int Level_mapSize = 0;
 
-
-//Private variables
+// Private variables
 Level_BlockType Level_BlockTypes;
 Color* levelMapPixels = NULL;
 Texture2D levelCubicMap;
@@ -35,7 +33,7 @@ void Level_SetBlockTypes();
 //
 void Level_Build()
 {
-    //Initialize block types
+    // Initialize block types
     Level_SetBlockTypes();
 
     // Load level cubicmap image (RAM)
@@ -53,8 +51,8 @@ void Level_Build()
 
 // TODO: Entities can be moved here! Map file can be one png.
 //       Move everything in this method, and change it's name
-//  should first calculate the needed size of Level_items, then redo it and add the Level_items = more memory
-//  efficient
+//  should first calculate the needed size of Level_items, then redo it and add the Level_items =
+//  more memory efficient
 void Level_PlaceBlocks()
 {
     // Place all Level_items based on their colors
@@ -77,7 +75,7 @@ void Level_PlaceBlocks()
     Level_mapPosition = (Vector3) {-mapPosX / 2, 0.5f, -mapPosZ / 2};
     Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
 
-    Level_data = calloc(Level_mapSize, sizeof(Level_Data));
+    Level_data    = calloc(Level_mapSize, sizeof(Level_Data));
     Level_enemies = calloc(Level_mapSize, sizeof(Enemy_Data));
 
     for(int y = 0; y < levelCubicMap.height; y++)
@@ -90,7 +88,7 @@ void Level_PlaceBlocks()
             int i    = y * levelCubicMap.width + x;
 
             Color pixelColor = {0, 0, 0};
-            pixelColor       = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -102,9 +100,9 @@ void Level_PlaceBlocks()
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-                Level_data[i].blockModel         = cubeModel;
-                Level_data[i].blockPosition      = (Vector3) {mx, Level_mapPosition.y, my};
-                Level_data[i].modelId            = i;
+                Level_data[i].blockModel    = cubeModel;
+                Level_data[i].blockPosition = (Vector3) {mx, Level_mapPosition.y, my};
+                Level_data[i].modelId       = i;
             }
 
             // Find start, which is green (0,255,0)
@@ -146,7 +144,7 @@ void Level_Draw()
     for(int i = 0; i < Level_mapSize; i++)
     {
         Level_Data* ld = &Level_data[i];
-        Enemy_Data* e      = &Level_enemies[i];
+        Enemy_Data* e  = &Level_enemies[i];
         if(ld != NULL && ld->modelId != 0)
         {
             DrawModel(ld->blockModel, ld->blockPosition, 1.0f, WHITE);
@@ -272,9 +270,9 @@ void Level_AllocateMeshData(Mesh* mesh, int triangleCount)
 
 void Level_SetBlockTypes()
 {
-    Level_BlockTypes.startColor = (Color){0, 255, 0};
-    Level_BlockTypes.endColor   = (Color){0, 0, 255};
-    Level_BlockTypes.wallColor  = (Color){255, 255, 255};
-    Level_BlockTypes.enemyColor = (Color){255, 0, 0};
-    Level_BlockTypes.NONE       = (Color){0, 0, 0};
+    Level_BlockTypes.startColor = (Color) {0, 255, 0};
+    Level_BlockTypes.endColor   = (Color) {0, 0, 255};
+    Level_BlockTypes.wallColor  = (Color) {255, 255, 255};
+    Level_BlockTypes.enemyColor = (Color) {255, 0, 0};
+    Level_BlockTypes.NONE       = (Color) {0, 0, 0};
 }

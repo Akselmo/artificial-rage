@@ -2,20 +2,20 @@
 #define _WEAPON_H_
 
 #include "enemy.h"
-#include "raylib.h"
-#include "raymath.h"
 #include "level.h"
 #include "main.h"
 #include "player.h"
+#include "raylib.h"
+#include "raymath.h"
 #include "settings.h"
 #include "utilities.h"
 #include <stdio.h>
 #include <time.h>
 
 // Fist has always ammo! :)
-#define WEAPON_FIST_AMMO_MAX 9999
-#define WEAPON_PISTOL_AMMO_MAX 100
-#define WEAPON_RIFLE_AMMO_MAX  200
+#define WEAPON_FIST_AMMO_MAX    9999
+#define WEAPON_PISTOL_AMMO_MAX  100
+#define WEAPON_RIFLE_AMMO_MAX   200
 #define WEAPON_SHOTGUN_AMMO_MAX 50
 #define WEAPON_RAILGUN_AMMO_MAX 25
 

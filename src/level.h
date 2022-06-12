@@ -2,11 +2,11 @@
 #define _LEVEL_H_
 
 #include "enemy.h"
-#include "raylib.h"
-#include "raymath.h"
 #include "item.h"
 #include "main.h"
 #include "player.h"
+#include "raylib.h"
+#include "raymath.h"
 #include "utilities.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 
 #define MAX_LEVEL_SIZE 16384
 
-//Structs
+// Structs
 
 typedef struct Level_Data
 {
@@ -32,7 +32,7 @@ typedef struct Level_BlockType
     Color enemyColor;
 } Level_BlockType;
 
-//Variables
+// Variables
 extern struct Level_Data* Level_data;
 extern struct Enemy_Data* Level_enemies;
 extern struct Item_Data* Level_items;
@@ -41,7 +41,7 @@ extern Vector3 Level_startPosition;
 extern Vector3 Level_endPosition;
 extern int Level_mapSize;
 
-//Functions
+// Functions
 Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize);
 void Level_Build();
 void Level_Draw();

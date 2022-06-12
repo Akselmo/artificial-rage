@@ -1,13 +1,12 @@
 #include "settings.h"
 
-
 float Settings_MouseSensitivity;
 float Settings_CameraFov;
 
-//TODO: List all input keys
-//c: int Settings_KeyForward
-//h: extern int Settings_KeyForward
-//And so on
+// TODO: List all input keys
+// c: int Settings_KeyForward
+// h: extern int Settings_KeyForward
+// And so on
 
 float GetSensitivity();
 float GetFOV();
@@ -19,7 +18,7 @@ void Settings_Initialize()
     InitWindow(screenWidth, screenHeight, "Artificial Rage");
 
     Settings_MouseSensitivity = GetSensitivity();
-    Settings_CameraFov = GetFOV();
+    Settings_CameraFov        = GetFOV();
     // SetTargetFPS(60);
 }
 

@@ -4,7 +4,7 @@
 
 #include "game.h"
 
-//Shared variables
+// Shared variables
 Camera playerCamera;
 
 // Prototypes
@@ -44,10 +44,13 @@ void Game_Update()
     EndDrawing();
 }
 
-//TODO: Move these to their own files
+// TODO: Move these to their own files
 void Game_HudUpdate()
 {
-    Hud_Draw(Player.health, WeaponHolder.currentWeaponAmmo, WeaponHolder.currentWeaponMaxAmmo, WeaponHolder.currentWeapon);
+    Hud_Draw(Player.health,
+             WeaponHolder.currentWeaponAmmo,
+             WeaponHolder.currentWeaponMaxAmmo,
+             WeaponHolder.currentWeapon);
 }
 
 void Game_MenuUpdate()

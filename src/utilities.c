@@ -1,6 +1,5 @@
 #include "utilities.h"
 
-
 Vector2 Utilities_GetScreenCenter()
 {
     Vector2 center = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};

@@ -19,7 +19,7 @@ Weapon_Holder WeaponHolder = {
     .FIST.fireRate = 1.25f,
     .FIST.range    = 2.0f,
     .FIST.pickedUp = true,  // You always have your fists with you
-    .FIST.maxAmmo = WEAPON_FIST_AMMO_MAX,
+    .FIST.maxAmmo  = WEAPON_FIST_AMMO_MAX,
 
     // Pistol
     .PISTOL.name     = "Pistol",
@@ -29,7 +29,7 @@ Weapon_Holder WeaponHolder = {
     .PISTOL.fireRate = 1.0f,
     .PISTOL.range    = 8.0f,
     .PISTOL.pickedUp = true,  // You also always have your trusty pistol with you
-    .PISTOL.maxAmmo = WEAPON_PISTOL_AMMO_MAX,
+    .PISTOL.maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
 
     // Rifle
     .RIFLE.name     = "Rifle",
@@ -39,7 +39,7 @@ Weapon_Holder WeaponHolder = {
     .RIFLE.fireRate = 0.9f,
     .RIFLE.range    = 20.0f,
     .RIFLE.pickedUp = false,
-    .RIFLE.maxAmmo = WEAPON_RIFLE_AMMO_MAX,
+    .RIFLE.maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
 
     // Shotgun
     .SHOTGUN.name     = "Shotgun",
@@ -49,7 +49,7 @@ Weapon_Holder WeaponHolder = {
     .SHOTGUN.fireRate = 1.5f,
     .SHOTGUN.range    = 6.0f,
     .SHOTGUN.pickedUp = false,
-    .SHOTGUN.maxAmmo = WEAPON_SHOTGUN_AMMO_MAX,
+    .SHOTGUN.maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
 
     // Railgun
     .RAILGUN.name     = "Railgun",
@@ -59,7 +59,7 @@ Weapon_Holder WeaponHolder = {
     .RAILGUN.fireRate = 2.6f,
     .RAILGUN.range    = 69.0f,
     .RAILGUN.pickedUp = false,
-    .RAILGUN.maxAmmo = WEAPON_RAILGUN_AMMO_MAX,
+    .RAILGUN.maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
 };
 
 void Weapon_InitializeKeys()
@@ -76,11 +76,11 @@ void Weapon_SelectDefault()
     WeaponHolder.currentWeapon         = FIST;
     WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
     WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
-    WeaponHolder.currentWeaponMaxAmmo =  WeaponHolder.FIST.maxAmmo;
+    WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.FIST.maxAmmo;
 }
 
 // TODO: Check if weapon is equipped
-//Is there more sane way to do this?
+// Is there more sane way to do this?
 void Weapon_Change()
 {
     int key = 0;
@@ -91,7 +91,7 @@ void Weapon_Change()
         WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
         WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
         WeaponHolder.currentWeaponAmmo     = WEAPON_FIST_AMMO_MAX;
-        WeaponHolder.currentWeaponMaxAmmo = WEAPON_FIST_AMMO_MAX;
+        WeaponHolder.currentWeaponMaxAmmo  = WEAPON_FIST_AMMO_MAX;
         printf("Fist equipped\n");
     }
     else if(key == WeaponHolder.PISTOL.inputKey)
@@ -100,7 +100,7 @@ void Weapon_Change()
         WeaponHolder.currentWeaponFirerate = WeaponHolder.PISTOL.fireRate;
         WeaponHolder.currentWeaponDamage   = WeaponHolder.PISTOL.damage;
         WeaponHolder.currentWeaponAmmo     = WeaponHolder.PISTOL.ammo;
-        WeaponHolder.currentWeaponMaxAmmo = WeaponHolder.PISTOL.maxAmmo;
+        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.PISTOL.maxAmmo;
         printf("Pistol equipped\n");
     }
     else if(key == WeaponHolder.RIFLE.inputKey)
@@ -109,7 +109,7 @@ void Weapon_Change()
         WeaponHolder.currentWeaponFirerate = WeaponHolder.RIFLE.fireRate;
         WeaponHolder.currentWeaponDamage   = WeaponHolder.RIFLE.damage;
         WeaponHolder.currentWeaponAmmo     = WeaponHolder.RIFLE.ammo;
-        WeaponHolder.currentWeaponMaxAmmo = WeaponHolder.RIFLE.maxAmmo;
+        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RIFLE.maxAmmo;
     }
     else if(key == WeaponHolder.SHOTGUN.inputKey)
     {
@@ -117,7 +117,7 @@ void Weapon_Change()
         WeaponHolder.currentWeaponFirerate = WeaponHolder.SHOTGUN.fireRate;
         WeaponHolder.currentWeaponDamage   = WeaponHolder.SHOTGUN.damage;
         WeaponHolder.currentWeaponAmmo     = WeaponHolder.SHOTGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo = WeaponHolder.SHOTGUN.maxAmmo;
+        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.SHOTGUN.maxAmmo;
     }
     else if(key == WeaponHolder.RAILGUN.inputKey)
     {
@@ -125,20 +125,20 @@ void Weapon_Change()
         WeaponHolder.currentWeaponFirerate = WeaponHolder.RAILGUN.fireRate;
         WeaponHolder.currentWeaponDamage   = WeaponHolder.RAILGUN.damage;
         WeaponHolder.currentWeaponAmmo     = WeaponHolder.RAILGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo = WeaponHolder.RAILGUN.maxAmmo;
+        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RAILGUN.maxAmmo;
     }
     // Weapon switching animation goes here
 }
 
 int TestEntityHit(Ray rayCast)
 {
-    int id               = 0;
-    float distance       = 0.0f;
-    float levelDistance  = INFINITY;
-    float enemyDistance  = INFINITY;
-    int entitiesAmount   = Level_mapSize;
+    int id                = 0;
+    float distance        = 0.0f;
+    float levelDistance   = INFINITY;
+    float enemyDistance   = INFINITY;
+    int entitiesAmount    = Level_mapSize;
     Level_Data* levelData = Level_data;
-    Enemy_Data* enemies       = Level_enemies;
+    Enemy_Data* enemies   = Level_enemies;
     Enemy_Data enemyDataHit;
     Level_Data levelDataHit;
 
@@ -147,9 +147,8 @@ int TestEntityHit(Ray rayCast)
         if(levelData[i].modelId != 0)
         {
             Vector3 pos           = levelData[i].blockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(rayCast,
-                                                        levelData[i].blockModel.meshes[0],
-                                                        MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(
+                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -259,8 +258,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
             if(id != 0 && id != PLAYER_ID)
             {
                 Enemy_TakeDamage(&Level_enemies[id], WeaponHolder.currentWeaponDamage);
-                printf(
-                    "Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
+                printf("Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
             }
         }
         nextFire = WeaponHolder.currentWeaponFirerate;

@@ -1,18 +1,18 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "raylib.h"
-#include "raymath.h"
 #include "level.h"
 #include "player.h"
+#include "raylib.h"
+#include "raymath.h"
 #include "utilities.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ENEMY_START_POSITION_Y   0.4f
-#define ENEMY_GRAVEYARD_POSITION 999.0f
+#define ENEMY_START_POSITION_Y         0.4f
+#define ENEMY_GRAVEYARD_POSITION       999.0f
 #define ENEMY_MAX_DISTANCE_FROM_PLAYER 1.25f
-#define ENEMY_DEFAULT_SPEED 0.45f  // Lower values result to lower speed
+#define ENEMY_DEFAULT_SPEED            0.45f  // Lower values result to lower speed
 
 typedef struct Enemy_Data
 {

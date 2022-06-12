@@ -2,22 +2,22 @@
 #define _PLAYER_H_
 
 #include "hud.h"
-#include "raylib.h"
-#include "raymath.h"
 #include "level.h"
 #include "main.h"
+#include "raylib.h"
+#include "raymath.h"
 #include "settings.h"
 #include "utilities.h"
 #include "weapon.h"
 #include <math.h>
 #include <stdio.h>
 
-#define PLAYER_ID  -1
-#define PLAYER_MAX_HEALTH       20
-#define PLAYER_CAMERA_MIN_CLAMP 89.0f
-#define PLAYER_CAMERA_MAX_CLAMP -89.0f
+#define PLAYER_ID                     -1
+#define PLAYER_MAX_HEALTH             20
+#define PLAYER_CAMERA_MIN_CLAMP       89.0f
+#define PLAYER_CAMERA_MAX_CLAMP       -89.0f
 #define PLAYER_CAMERA_PANNING_DIVIDER 5.1f
-#define PLAYER_START_POSITION_Y 0.4f
+#define PLAYER_START_POSITION_Y       0.4f
 
 // Struct for all the camera data
 typedef struct Player_CustomCameraData
@@ -36,10 +36,10 @@ typedef struct Player_Data
     bool dead;
 } Player_Data;
 
-//Public variables
+// Public variables
 extern struct Player_Data Player;
 
-//Public functions
+// Public functions
 Camera Player_InitializeCamera(float pos_x, float pos_z);
 void Player_Update(Camera* camera);
 bool Player_CheckCollision(Camera camera, BoundingBox other);

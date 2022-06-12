@@ -3,10 +3,10 @@
 
 #include "enemy.h"
 #include "hud.h"
-#include "raylib.h"
 #include "item.h"
 #include "level.h"
 #include "player.h"
+#include "raylib.h"
 #include "settings.h"
 #include "utilities.h"
 #include "weapon.h"
@@ -15,6 +15,5 @@
 
 void Game_Initialize();
 void Game_Update();
-
 
 #endif

@@ -2,7 +2,7 @@
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
-//Initialize Custom Camera
+// Initialize Custom Camera
 static Player_CustomCameraData Player_CustomCamera = {
     .targetDistance     = 0,
     .playerEyesPosition = 1.85f,
@@ -11,13 +11,13 @@ static Player_CustomCameraData Player_CustomCamera = {
     .playerSpeed        = 1.75f,
 };
 
-//Initialize player
+// Initialize player
 Player_Data Player = {
-    .health     = PLAYER_MAX_HEALTH,
+    .health = PLAYER_MAX_HEALTH,
     .dead   = false,
 };
 
-//Private functions
+// Private functions
 Vector3 Player_size;
 Vector3 Player_position;
 BoundingBox Player_boundingBox;
@@ -138,9 +138,10 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation =
-        MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
+    Matrix translation =
+        MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
+    Matrix rotation = MatrixRotateXYZ(
+        (Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
     Matrix transform = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)

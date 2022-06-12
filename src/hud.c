@@ -3,7 +3,7 @@
 char Hud_dedText[5]         = "DEAD";
 char Hud_emptyAmmoText[2]   = "-";
 char Hud_healthText[5]      = "100";
-char Hud_weaponAmmoText[10]  = "100";
+char Hud_weaponAmmoText[10] = "100";
 
 char Hud_weaponNameText[15] = "WeaponName";
 
@@ -20,8 +20,8 @@ void Hud_Draw(int health, int weaponAmmo, int weaponMaxAmmo, int weapon)
     sprintf(maxAmmo, "%d", weaponMaxAmmo);
 
     strcpy(Hud_weaponAmmoText, ammo);
-    strcat(Hud_weaponAmmoText,"/");
-    strcat(Hud_weaponAmmoText,maxAmmo);
+    strcat(Hud_weaponAmmoText, "/");
+    strcat(Hud_weaponAmmoText, maxAmmo);
 
     if(health <= 0)
     {
@@ -29,7 +29,7 @@ void Hud_Draw(int health, int weaponAmmo, int weaponMaxAmmo, int weapon)
     }
     if(weaponAmmo)
     {
-        if (weapon == (Weapon_ID)FIST)
+        if(weapon == (Weapon_ID)FIST)
         {
             strcpy(Hud_weaponAmmoText, Hud_emptyAmmoText);
         }

@@ -5,7 +5,6 @@
 
 #define ITEM_START_POSITION_Y 0.4f
 
-
 typedef struct Item_Data
 {
     int itemtype;
