@@ -19,15 +19,8 @@ as a learning tool.
 
 ## Howto compile for different platforms
 
-WIP. These notes are just for myself for now.
 
-* Compile raylib for your platform from source
-
-* Copy your built libraylib.a into lib
-
-* Copy the following to include:
-    * raylib.h
-    * raymath.h
+* IF the CMake file doesn't do this for you, compile raylib for your platform from source
 
 * Run the following commands in project root to build the binary
     * `mkdir build && cd build`
