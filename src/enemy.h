@@ -1,11 +1,20 @@
-#ifndef ENEMY
-#define ENEMY
+#ifndef _ENEMY_H_
+#define _ENEMY_H_
 
 #include "raylib.h"
+#include "raymath.h"
+#include "level.h"
+#include "player.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
 
+#define ENEMY_START_POSITION_Y   0.4f
+#define ENEMY_GRAVEYARD_POSITION 999.0f
+#define ENEMY_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ENEMY_DEFAULT_SPEED 0.45f  // Lower values result to lower speed
 
-typedef struct Enemy
+typedef struct Enemy_Data
 {
     int health;
     int damage;
@@ -19,10 +28,11 @@ typedef struct Enemy
     float speed;
     float fireRate;
     float nextFire;
-} Enemy;
-Enemy AddEnemy(float pos_x, float pos_y, int id);
-void UpdateEnemy(Enemy* enemy);
-void DrawEnemy(Enemy enemy);
-void TakeDamage(Enemy* enemy, int damageAmount);
+} Enemy_Data;
+
+Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
+void Enemy_Update(Enemy_Data* enemy);
+void Enemy_Draw(Enemy_Data enemy);
+void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);
 
 #endif

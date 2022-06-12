@@ -1,41 +1,50 @@
-#ifndef LEVEL
-#define LEVEL
+#ifndef _LEVEL_H_
+#define _LEVEL_H_
 
 #include "enemy.h"
 #include "raylib.h"
+#include "raymath.h"
+#include "item.h"
+#include "main.h"
+#include "player.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_LEVEL_SIZE 16384
 
-typedef struct
-{
-    Vector3 levelBlockPosition;
-    Model levelBlockModel;
-    int modelId;
-} LevelData;
+//Structs
 
-typedef struct
+typedef struct Level_Data
+{
+    Vector3 blockPosition;
+    Model blockModel;
+    int modelId;
+} Level_Data;
+
+typedef struct Level_BlockType
 {
     Color NONE;
     Color startColor;
     Color endColor;
     Color wallColor;
     Color enemyColor;
-} LevelBlockType;
+} Level_BlockType;
 
-static LevelBlockType LEVEL_BLOCKS = {.startColor = {0, 255, 0},
-                                      .endColor   = {0, 0, 255},
-                                      .wallColor  = {255, 255, 255},
-                                      .enemyColor = {255, 0, 0},
-                                      .NONE       = {0, 0, 0}};
+//Variables
+extern struct Level_Data* Level_data;
+extern struct Enemy_Data* Level_enemies;
+extern struct Item_Data* Level_items;
+extern Vector3 Level_mapPosition;
+extern Vector3 Level_startPosition;
+extern Vector3 Level_endPosition;
+extern int Level_mapSize;
 
-Mesh MakeCustomPlaneMesh(float height, float width, float textureSize);
-void BuildLevel();
-void DrawLevel();
-bool CheckLevelCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
-Vector3 GetMapPosition();
-Vector3 GetLevelStartPosition();
-LevelData* GetLevelData();
-Enemy* GetEnemies();
-int GetLevelBlockAmount();
+//Functions
+Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize);
+void Level_Build();
+void Level_Draw();
+bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
 
 #endif

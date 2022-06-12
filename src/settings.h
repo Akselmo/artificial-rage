@@ -1,9 +1,14 @@
-#ifndef SETTINGS
-#define SETTINGS
+#ifndef _SETTINGS_H_
+#define _SETTINGS_H_
 
-void InitializeGame(void);
-float GetSensitivity(void);
-float GetFOV(void);
-int GetCustomInput(int key);
+#include "raylib.h"
+
+//Public variables
+extern float Settings_MouseSensitivity;
+extern float Settings_CameraFov;
+
+//Public functions
+void Settings_Initialize();
+int Settings_GetCustomInput(int key);
 
 #endif
