@@ -17,6 +17,7 @@ people to tinker with the source code, create mods, maps etc..
 I also want this project to be a starting point for some who want to make their own simple FPS, or they could use this
 as a learning tool.
 
+<a href="https://codeberg.org/akselmo/artificial-rage"><img src="https://akselmo.dev/assets/images/getitoncodeberg.svg" width="200"></a>
 
 ## Howto compile for different platforms
 
