@@ -33,6 +33,6 @@ as a learning tool.
 files.**
 
 ## TODO:
-Check this project for TODO list: https://github.com/users/Akselmo/projects/1/views/1
+Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
 
 
