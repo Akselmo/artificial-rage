@@ -1,4 +1,5 @@
 #pragma once
+#include "projectile.h"
 #ifndef _LEVEL_H_
 #define _LEVEL_H_
 
@@ -14,6 +15,7 @@
 #include <string.h>
 
 #define MAX_LEVEL_SIZE 16384
+#define MAX_PROJECTILE_AMOUNT 1000
 
 // Structs
 
@@ -37,6 +39,7 @@ typedef struct Level_BlockType
 extern struct Level_Data* Level_data;
 extern struct Enemy_Data* Level_enemies;
 extern struct Item_Data* Level_items;
+extern struct Projectile_Data* Level_projectiles;
 extern Vector3 Level_mapPosition;
 extern Vector3 Level_startPosition;
 extern Vector3 Level_endPosition;

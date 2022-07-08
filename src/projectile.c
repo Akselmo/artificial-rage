@@ -1,6 +1,6 @@
 #include "projectile.h"
 
-void Projectile_Launch(Vector3 startPosition, Vector3 endPosition)
+Projectile_Data Projectile_Launch(Vector3 startPosition, Vector3 endPosition)
 {
     //TODO: Lerp between start and end position
     //Projectile does not need to know if it hits or not, that is calculated from

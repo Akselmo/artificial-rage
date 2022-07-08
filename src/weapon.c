@@ -20,6 +20,7 @@ Weapon_Holder WeaponHolder = {
     .FIST.range    = 2.0f,
     .FIST.pickedUp = true,  // You always have your fists with you
     .FIST.maxAmmo  = WEAPON_FIST_AMMO_MAX,
+    .FIST.hitscan  = true,
 
     // Pistol
     .PISTOL.name     = "Pistol",
@@ -252,6 +253,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
     {
         if(WeaponHasAmmo())
         {
+            //TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             int id      = TestEntityHit(rayCast);
             printf("Id hit: %i \n", id);

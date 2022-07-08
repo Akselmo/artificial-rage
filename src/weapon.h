@@ -30,6 +30,7 @@ typedef struct Weapon_Data
     float fireRate;
     float range;
     bool pickedUp;
+    bool hitscan;
 
 } Weapon_Data;
 

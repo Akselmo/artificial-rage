@@ -6,6 +6,7 @@
 Level_Data* Level_data    = NULL;
 Enemy_Data* Level_enemies = NULL;
 Item_Data* Level_items    = NULL;  // Contains interactable and non-interactable Level_items
+Projectile_Data* Level_projectiles = NULL;
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -27,7 +28,7 @@ char* wallTextures[2];
 void Level_PlaceBlocks();
 void Level_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Level_SetBlockTypes();
-
+void Level_DrawProjectiles();
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -143,20 +144,33 @@ void Level_Draw()
 
     for(int i = 0; i < Level_mapSize; i++)
     {
-        Level_Data* ld = &Level_data[i];
-        Enemy_Data* e  = &Level_enemies[i];
-        if(ld != NULL && ld->modelId != 0)
+        Level_Data* data = &Level_data[i];
+        Enemy_Data* enemy  = &Level_enemies[i];
+        if(data != NULL && data->modelId != 0)
         {
-            DrawModel(ld->blockModel, ld->blockPosition, 1.0f, WHITE);
+            DrawModel(data->blockModel, data->blockPosition, 1.0f, WHITE);
         }
 
-        if(e != NULL && e->id != 0)
+        if(enemy != NULL && enemy->id != 0)
         {
             // if Level_enemies[i] has nothing dont do anything
-            if(!e->dead)
+            if(!enemy->dead)
             {
-                Enemy_Update(e);
+                Enemy_Update(enemy);
             }
+        }
+    }
+}
+
+void Level_DrawProjectiles()
+{
+    for (int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
+    {
+        Projectile_Data* projectile = &Level_projectiles[i];
+
+        if (projectile != NULL && projectile->id != 0)
+        {
+            //TODO: Draw projectile model
         }
     }
 }
