@@ -36,7 +36,9 @@ as a learning tool.
 * Run the following commands in project root to build the binary
     * `mkdir build && cd build`
     * `cmake ../`
-    * `make`
+    * `make` OR `cmake --build .`
+        * Plain `make` may have problems when it comes to debugging.
+
 
 **Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new
 files.**
