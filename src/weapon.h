@@ -2,6 +2,8 @@
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
+#define WEAPON_AMOUNT            5
+
 #include "enemy.h"
 #include "level.h"
 #include "main.h"
@@ -23,6 +25,7 @@
 typedef struct Weapon_Data
 {
     char* name;
+    int weaponId;
     int inputKey;
     int damage;
     int ammo;
@@ -42,7 +45,7 @@ typedef struct Weapon_Holder
     int currentWeaponDamage;
     int currentWeaponAmmo;
     int currentWeaponMaxAmmo;
-
+    bool currentWeaponHitscan;
     // Usable weapons
     // We could also use arrays but this way it is easier
     // to be able to remap weapon keys
@@ -64,9 +67,10 @@ typedef enum Weapon_ID
 } Weapon_ID;
 
 extern struct Weapon_Holder WeaponHolder;
+extern struct Weapon_Data Weapon_PlayerWeapons[WEAPON_AMOUNT];
 
 void Weapon_InitializeKeys();
-void Weapon_Change();
+void Weapon_GetSwitchInput();
 void Weapon_SelectDefault();
 float Weapon_Fire(Camera* camera, float nextFire);
 float Weapon_TestLevelHit(Ray rayCast);

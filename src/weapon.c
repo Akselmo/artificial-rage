@@ -1,4 +1,9 @@
 #include "weapon.h"
+#include "player.h"
+
+//Prototypes
+
+void Weapon_Change(Weapon_Data weapon);
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
@@ -9,11 +14,13 @@ Weapon_Holder WeaponHolder = {
     .currentWeaponDamage   = 0,
     .currentWeaponAmmo     = 0,
     .currentWeaponMaxAmmo  = 1,
+    .currentWeaponHitscan  = false,
 
     // Weapon_ID are declared here
     // Fist
     .FIST.name     = "Fists",
     .FIST.inputKey = KEY_ONE,
+    .FIST.weaponId = FIST,
     .FIST.damage   = 5,
     .FIST.ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
     .FIST.fireRate = 1.25f,
@@ -25,43 +32,53 @@ Weapon_Holder WeaponHolder = {
     // Pistol
     .PISTOL.name     = "Pistol",
     .PISTOL.inputKey = KEY_TWO,
+    .PISTOL.weaponId = PISTOL,
     .PISTOL.damage   = 3,
     .PISTOL.ammo     = 30,
     .PISTOL.fireRate = 1.0f,
     .PISTOL.range    = 8.0f,
     .PISTOL.pickedUp = true,  // You also always have your trusty pistol with you
     .PISTOL.maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
+    .PISTOL.hitscan  = false,
 
     // Rifle
     .RIFLE.name     = "Rifle",
     .RIFLE.inputKey = KEY_THREE,
+    .RIFLE.weaponId = RIFLE,
     .RIFLE.damage   = 3,
     .RIFLE.ammo     = 0,
     .RIFLE.fireRate = 0.9f,
     .RIFLE.range    = 20.0f,
     .RIFLE.pickedUp = false,
     .RIFLE.maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
+    .RIFLE.hitscan  = false,
 
     // Shotgun
     .SHOTGUN.name     = "Shotgun",
     .SHOTGUN.inputKey = KEY_FOUR,
+    .SHOTGUN.weaponId = SHOTGUN,
     .SHOTGUN.damage   = 7,
     .SHOTGUN.ammo     = 0,
     .SHOTGUN.fireRate = 1.5f,
     .SHOTGUN.range    = 6.0f,
     .SHOTGUN.pickedUp = false,
     .SHOTGUN.maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
+    .SHOTGUN.hitscan  = false,
 
     // Railgun
     .RAILGUN.name     = "Railgun",
     .RAILGUN.inputKey = KEY_FIVE,
+    .RAILGUN.weaponId = RAILGUN,
     .RAILGUN.damage   = 30,
     .RAILGUN.ammo     = 0,
     .RAILGUN.fireRate = 2.6f,
     .RAILGUN.range    = 69.0f,
     .RAILGUN.pickedUp = false,
     .RAILGUN.maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
+    .RAILGUN.hitscan  = false,
 };
+
+Weapon_Data Weapon_PlayerWeapons[WEAPON_AMOUNT];
 
 void Weapon_InitializeKeys()
 {
@@ -78,58 +95,36 @@ void Weapon_SelectDefault()
     WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
     WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
     WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.FIST.maxAmmo;
+    WeaponHolder.currentWeaponHitscan  = WeaponHolder.FIST.hitscan;
+}
+
+void Weapon_GetSwitchInput()
+{
+    int key = 0;
+    key     = GetKeyPressed();
+
+    for (int i = 0; i < WEAPON_AMOUNT; i++)
+    {
+        if (key == Weapon_PlayerWeapons[i].inputKey)
+        {
+            Weapon_Change(Weapon_PlayerWeapons[i]);
+        }
+
+    }
 }
 
 // TODO: Check if weapon is equipped
 // Is there more sane way to do this?
-void Weapon_Change()
+void Weapon_Change(Weapon_Data weapon)
 {
-    int key = 0;
-    key     = GetKeyPressed();
-    if(key == WeaponHolder.FIST.inputKey)
-    {
-        WeaponHolder.currentWeapon         = FIST;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
-        WeaponHolder.currentWeaponAmmo     = WEAPON_FIST_AMMO_MAX;
-        WeaponHolder.currentWeaponMaxAmmo  = WEAPON_FIST_AMMO_MAX;
-        printf("Fist equipped\n");
-    }
-    else if(key == WeaponHolder.PISTOL.inputKey)
-    {
-        WeaponHolder.currentWeapon         = PISTOL;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.PISTOL.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.PISTOL.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.PISTOL.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.PISTOL.maxAmmo;
-        printf("Pistol equipped\n");
-    }
-    else if(key == WeaponHolder.RIFLE.inputKey)
-    {
-        WeaponHolder.currentWeapon         = RIFLE;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.RIFLE.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.RIFLE.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.RIFLE.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RIFLE.maxAmmo;
-    }
-    else if(key == WeaponHolder.SHOTGUN.inputKey)
-    {
-        WeaponHolder.currentWeapon         = SHOTGUN;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.SHOTGUN.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.SHOTGUN.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.SHOTGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.SHOTGUN.maxAmmo;
-    }
-    else if(key == WeaponHolder.RAILGUN.inputKey)
-    {
-        WeaponHolder.currentWeapon         = RAILGUN;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.RAILGUN.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.RAILGUN.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.RAILGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RAILGUN.maxAmmo;
-    }
-    // Weapon switching animation goes here
-}
+    WeaponHolder.currentWeapon         = weapon.weaponId;
+    WeaponHolder.currentWeaponFirerate = weapon.fireRate;
+    WeaponHolder.currentWeaponDamage   = weapon.damage;
+    WeaponHolder.currentWeaponAmmo     = weapon.ammo;
+    WeaponHolder.currentWeaponMaxAmmo  = weapon.maxAmmo;
+    WeaponHolder.currentWeaponHitscan  = weapon.hitscan;
+    printf("%d equipped \n", weapon.weaponId);
+ }
 
 int TestEntityHit(Ray rayCast)
 {

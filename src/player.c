@@ -1,4 +1,5 @@
 #include "player.h"
+#include "weapon.h"
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
@@ -71,6 +72,12 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.mouseSensitivity = mouseSensitivity;
 
     // Initialize weapon stuff
+    Weapon_PlayerWeapons[0] = WeaponHolder.FIST;
+    Weapon_PlayerWeapons[1] = WeaponHolder.PISTOL;
+    Weapon_PlayerWeapons[2] = WeaponHolder.RIFLE;
+    Weapon_PlayerWeapons[3] = WeaponHolder.SHOTGUN;
+    Weapon_PlayerWeapons[4] = WeaponHolder.RAILGUN;
+
     Weapon_InitializeKeys();
 
     // Set player size for bounding box
@@ -160,7 +167,7 @@ void Player_Update(Camera* camera)
     Player_position = camera->position;
 
     // Check if we need to switch weapon
-    Weapon_Change();
+    Weapon_GetSwitchInput();
 }
 
 BoundingBox GetPlayerBoundingBox()
