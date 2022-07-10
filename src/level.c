@@ -6,7 +6,7 @@
 Level_Data* Level_data    = NULL;
 Enemy_Data* Level_enemies = NULL;
 Item_Data* Level_items    = NULL;  // Contains interactable and non-interactable Level_items
-Projectile_Data* Level_projectiles = NULL;
+Projectile_Data* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0}; //We can allocate projectiles here already
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -166,9 +166,7 @@ void Level_DrawProjectiles()
 {
     for (int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        Projectile_Data* projectile = &Level_projectiles[i];
-
-        if (projectile != NULL && projectile->id != 0)
+        if (Level_projectiles[i] != NULL && Level_projectiles[i]->id != 0)
         {
             //TODO: Draw projectile model
         }

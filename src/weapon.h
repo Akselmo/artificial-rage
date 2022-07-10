@@ -12,6 +12,7 @@
 #include "raymath.h"
 #include "settings.h"
 #include "utilities.h"
+#include "projectile.h"
 #include <stdio.h>
 #include <time.h>
 

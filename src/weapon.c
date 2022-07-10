@@ -1,5 +1,8 @@
 #include "weapon.h"
+#include "level.h"
 #include "player.h"
+#include "projectile.h"
+#include "raymath.h"
 
 //Prototypes
 
@@ -251,11 +254,18 @@ float Weapon_Fire(Camera* camera, float nextFire)
             //TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             int id      = TestEntityHit(rayCast);
-            printf("Id hit: %i \n", id);
-            if(id != 0 && id != PLAYER_ID)
+            if (WeaponHolder.currentWeaponHitscan)
             {
-                Enemy_TakeDamage(&Level_enemies[id], WeaponHolder.currentWeaponDamage);
-                printf("Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
+                printf("Id hit: %i \n", id);
+                if(id != 0 && id != PLAYER_ID)
+                {
+                    Enemy_TakeDamage(&Level_enemies[id], WeaponHolder.currentWeaponDamage);
+                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
+                }
+            }
+            else
+            {
+                Projectile_Launch(Vector3Zero(), Vector3Zero());
             }
         }
         nextFire = WeaponHolder.currentWeaponFirerate;

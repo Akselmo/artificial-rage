@@ -3,6 +3,7 @@
 #define _PROJECTILE_H_
 
 #include "raylib.h"
+#include "level.h"
 
 typedef struct Projectile_Data
 {
@@ -16,7 +17,7 @@ typedef struct Projectile_Data
     bool destroyed;
 } Projectile_Data;
 
-Projectile_Data Projectile_Launch(Vector3 startPosition, Vector3  endPosition);
+void Projectile_Launch(Vector3 startPosition, Vector3  endPosition);
 void Projectile_Destroy(Projectile_Data *projectile);
 
 #endif
