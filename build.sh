@@ -5,5 +5,5 @@ echo "Going to build dir"
 cd build
 echo "Running cmake"
 cmake ../
-echo "Running make"
-make
+echo "Building with cmake"
+cmake --build .
