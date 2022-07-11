@@ -38,7 +38,7 @@ typedef struct Weapon_Data
 
 } Weapon_Data;
 
-typedef struct Weapon_Holder
+typedef struct Weapon_DataHolder
 {
     // Current Weapon Data
     int currentWeapon;
@@ -56,7 +56,7 @@ typedef struct Weapon_Holder
     Weapon_Data SHOTGUN;
     Weapon_Data RAILGUN;
 
-} Weapon_Holder;
+} Weapon_DataHolder;
 
 typedef enum Weapon_ID
 {
@@ -67,7 +67,7 @@ typedef enum Weapon_ID
     RAILGUN = 5
 } Weapon_ID;
 
-extern struct Weapon_Holder WeaponHolder;
+extern struct Weapon_DataHolder WeaponDataHolder;
 extern struct Weapon_Data Weapon_PlayerWeapons[WEAPON_AMOUNT];
 
 void Weapon_InitializeKeys();

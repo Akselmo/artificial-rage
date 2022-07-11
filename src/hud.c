@@ -17,8 +17,8 @@ void Hud_Draw()
     char divider[2];
     char maxAmmo[3];
 
-    sprintf(ammo, "%d", WeaponHolder.currentWeaponAmmo);
-    sprintf(maxAmmo, "%d", WeaponHolder.currentWeaponMaxAmmo);
+    sprintf(ammo, "%d", WeaponDataHolder.currentWeaponAmmo);
+    sprintf(maxAmmo, "%d", WeaponDataHolder.currentWeaponMaxAmmo);
 
     strcpy(Hud_weaponAmmoText, ammo);
     strcat(Hud_weaponAmmoText, "/");
@@ -28,9 +28,9 @@ void Hud_Draw()
     {
         strcpy(Hud_healthText, Hud_dedText);
     }
-    if(WeaponHolder.currentWeaponAmmo)
+    if(WeaponDataHolder.currentWeaponAmmo)
     {
-        if(WeaponHolder.currentWeapon == (Weapon_ID)FIST)
+        if(WeaponDataHolder.currentWeapon == (Weapon_ID)FIST)
         {
             strcpy(Hud_weaponAmmoText, Hud_emptyAmmoText);
         }

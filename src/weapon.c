@@ -10,7 +10,7 @@ void Weapon_Change(Weapon_Data weapon);
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
-Weapon_Holder WeaponHolder = {
+Weapon_DataHolder WeaponDataHolder = {
     // Current weapon data
     .currentWeapon         = 0,
     .currentWeaponFirerate = 0.0f,
@@ -85,21 +85,21 @@ Weapon_Data Weapon_PlayerWeapons[WEAPON_AMOUNT];
 
 void Weapon_InitializeKeys()
 {
-    WeaponHolder.FIST.inputKey    = Settings_GetCustomInput(KEY_ONE);
-    WeaponHolder.PISTOL.inputKey  = Settings_GetCustomInput(KEY_TWO);
-    WeaponHolder.RIFLE.inputKey   = Settings_GetCustomInput(KEY_THREE);
-    WeaponHolder.SHOTGUN.inputKey = Settings_GetCustomInput(KEY_FOUR);
-    WeaponHolder.RAILGUN.inputKey = Settings_GetCustomInput(KEY_FIVE);
+    WeaponDataHolder.FIST.inputKey    = Settings_GetCustomInput(KEY_ONE);
+    WeaponDataHolder.PISTOL.inputKey  = Settings_GetCustomInput(KEY_TWO);
+    WeaponDataHolder.RIFLE.inputKey   = Settings_GetCustomInput(KEY_THREE);
+    WeaponDataHolder.SHOTGUN.inputKey = Settings_GetCustomInput(KEY_FOUR);
+    WeaponDataHolder.RAILGUN.inputKey = Settings_GetCustomInput(KEY_FIVE);
 }
 
 void Weapon_SelectDefault()
 {
-    WeaponHolder.currentWeapon         = FIST;
-    WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
-    WeaponHolder.currentWeaponAmmo     = WeaponHolder.FIST.ammo;
-    WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
-    WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.FIST.maxAmmo;
-    WeaponHolder.currentWeaponHitscan  = WeaponHolder.FIST.hitscan;
+    WeaponDataHolder.currentWeapon         = FIST;
+    WeaponDataHolder.currentWeaponFirerate = WeaponDataHolder.FIST.fireRate;
+    WeaponDataHolder.currentWeaponAmmo     = WeaponDataHolder.FIST.ammo;
+    WeaponDataHolder.currentWeaponDamage   = WeaponDataHolder.FIST.damage;
+    WeaponDataHolder.currentWeaponMaxAmmo  = WeaponDataHolder.FIST.maxAmmo;
+    WeaponDataHolder.currentWeaponHitscan  = WeaponDataHolder.FIST.hitscan;
 
 }
 
@@ -120,12 +120,12 @@ void Weapon_GetSwitchInput()
 // Check if weapon is equipped
 void Weapon_Change(Weapon_Data weapon)
 {
-    WeaponHolder.currentWeapon         = weapon.weaponId;
-    WeaponHolder.currentWeaponFirerate = weapon.fireRate;
-    WeaponHolder.currentWeaponDamage   = weapon.damage;
-    WeaponHolder.currentWeaponAmmo     = weapon.ammo;
-    WeaponHolder.currentWeaponMaxAmmo  = weapon.maxAmmo;
-    WeaponHolder.currentWeaponHitscan  = weapon.hitscan;
+    WeaponDataHolder.currentWeapon         = weapon.weaponId;
+    WeaponDataHolder.currentWeaponFirerate = weapon.fireRate;
+    WeaponDataHolder.currentWeaponDamage   = weapon.damage;
+    WeaponDataHolder.currentWeaponAmmo     = weapon.ammo;
+    WeaponDataHolder.currentWeaponMaxAmmo  = weapon.maxAmmo;
+    WeaponDataHolder.currentWeaponHitscan  = weapon.hitscan;
  }
 
 int TestEntityHit(Ray rayCast)
@@ -185,51 +185,51 @@ int TestEntityHit(Ray rayCast)
 bool WeaponHasAmmo()
 {
 
-    if(WeaponHolder.currentWeapon == FIST)
+    if(WeaponDataHolder.currentWeapon == FIST)
     {
         return true;
     }
 
-    switch(WeaponHolder.currentWeapon)
+    switch(WeaponDataHolder.currentWeapon)
     {
         case PISTOL:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.PISTOL.ammo;
+            WeaponDataHolder.currentWeaponAmmo = WeaponDataHolder.PISTOL.ammo;
             break;
 
         case RIFLE:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.RIFLE.ammo;
+            WeaponDataHolder.currentWeaponAmmo = WeaponDataHolder.RIFLE.ammo;
             break;
 
         case SHOTGUN:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.SHOTGUN.ammo;
+            WeaponDataHolder.currentWeaponAmmo = WeaponDataHolder.SHOTGUN.ammo;
             break;
 
         case RAILGUN:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.RAILGUN.ammo;
+            WeaponDataHolder.currentWeaponAmmo = WeaponDataHolder.RAILGUN.ammo;
             break;
     }
 
-    printf("Ammo: %d \n", WeaponHolder.currentWeaponAmmo);
+    printf("Ammo: %d \n", WeaponDataHolder.currentWeaponAmmo);
     // TODO: Is there a better way to do this without so much repetition?
-    if(WeaponHolder.currentWeaponAmmo > 0)
+    if(WeaponDataHolder.currentWeaponAmmo > 0)
     {
-        WeaponHolder.currentWeaponAmmo--;
-        switch(WeaponHolder.currentWeapon)
+        WeaponDataHolder.currentWeaponAmmo--;
+        switch(WeaponDataHolder.currentWeapon)
         {
             case PISTOL:
-                WeaponHolder.PISTOL.ammo--;
+                WeaponDataHolder.PISTOL.ammo--;
                 break;
 
             case RIFLE:
-                WeaponHolder.RIFLE.ammo--;
+                WeaponDataHolder.RIFLE.ammo--;
                 break;
 
             case SHOTGUN:
-                WeaponHolder.SHOTGUN.ammo--;
+                WeaponDataHolder.SHOTGUN.ammo--;
                 break;
 
             case RAILGUN:
-                WeaponHolder.RAILGUN.ammo--;
+                WeaponDataHolder.RAILGUN.ammo--;
                 break;
         }
         return true;
@@ -253,13 +253,13 @@ float Weapon_Fire(Camera* camera, float nextFire)
             //TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             int id      = TestEntityHit(rayCast);
-            if (WeaponHolder.currentWeaponHitscan)
+            if (WeaponDataHolder.currentWeaponHitscan)
             {
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Enemy_TakeDamage(&Level_enemies[id], WeaponHolder.currentWeaponDamage);
-                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
+                    Enemy_TakeDamage(&Level_enemies[id], WeaponDataHolder.currentWeaponDamage);
+                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponDataHolder.currentWeaponDamage);
                 }
             }
             else
@@ -267,7 +267,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
                 Projectile_Launch(Vector3Zero(), Vector3Zero());
             }
         }
-        nextFire = WeaponHolder.currentWeaponFirerate;
+        nextFire = WeaponDataHolder.currentWeaponFirerate;
     }
     return nextFire;
 }

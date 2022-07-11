@@ -172,11 +172,11 @@ void Player_Update(Camera* camera)
 void Player_UpdateWeapons()
 {
     // Update player weapons
-    Weapon_PlayerWeapons[0] = WeaponHolder.FIST;
-    Weapon_PlayerWeapons[1] = WeaponHolder.PISTOL;
-    Weapon_PlayerWeapons[2] = WeaponHolder.RIFLE;
-    Weapon_PlayerWeapons[3] = WeaponHolder.SHOTGUN;
-    Weapon_PlayerWeapons[4] = WeaponHolder.RAILGUN;
+    Weapon_PlayerWeapons[0] = WeaponDataHolder.FIST;
+    Weapon_PlayerWeapons[1] = WeaponDataHolder.PISTOL;
+    Weapon_PlayerWeapons[2] = WeaponDataHolder.RIFLE;
+    Weapon_PlayerWeapons[3] = WeaponDataHolder.SHOTGUN;
+    Weapon_PlayerWeapons[4] = WeaponDataHolder.RAILGUN;
 }
 
 BoundingBox GetPlayerBoundingBox()
