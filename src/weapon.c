@@ -96,9 +96,11 @@ void Weapon_SelectDefault()
 {
     WeaponHolder.currentWeapon         = FIST;
     WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
+    WeaponHolder.currentWeaponAmmo     = WeaponHolder.FIST.ammo;
     WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
     WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.FIST.maxAmmo;
     WeaponHolder.currentWeaponHitscan  = WeaponHolder.FIST.hitscan;
+
 }
 
 void Weapon_GetSwitchInput()
@@ -112,12 +114,10 @@ void Weapon_GetSwitchInput()
         {
             Weapon_Change(Weapon_PlayerWeapons[i]);
         }
-
     }
 }
 
-// TODO: Check if weapon is equipped
-// Is there more sane way to do this?
+// Check if weapon is equipped
 void Weapon_Change(Weapon_Data weapon)
 {
     WeaponHolder.currentWeapon         = weapon.weaponId;
@@ -126,7 +126,6 @@ void Weapon_Change(Weapon_Data weapon)
     WeaponHolder.currentWeaponAmmo     = weapon.ammo;
     WeaponHolder.currentWeaponMaxAmmo  = weapon.maxAmmo;
     WeaponHolder.currentWeaponHitscan  = weapon.hitscan;
-    printf("%d equipped \n", weapon.weaponId);
  }
 
 int TestEntityHit(Ray rayCast)
