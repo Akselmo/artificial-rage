@@ -12,13 +12,13 @@ void Hud_Draw()
 {
     DrawFPS(10, 10);
     sprintf(Hud_healthText, "%d", Player.health);
-
+   
     char ammo[3];
     char divider[2];
     char maxAmmo[3];
 
-    sprintf(ammo, "%d", WeaponDataHolder.currentWeaponAmmo);
-    sprintf(maxAmmo, "%d", WeaponDataHolder.currentWeaponMaxAmmo);
+    sprintf(ammo, "%d", WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->ammo);
+    sprintf(maxAmmo, "%d", WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->maxAmmo);
 
     strcpy(Hud_weaponAmmoText, ammo);
     strcat(Hud_weaponAmmoText, "/");
@@ -28,7 +28,7 @@ void Hud_Draw()
     {
         strcpy(Hud_healthText, Hud_dedText);
     }
-    if(WeaponDataHolder.currentWeaponAmmo)
+    if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->ammo)
     {
         if(WeaponDataHolder.currentWeapon == (Weapon_ID)FIST)
         {

@@ -42,33 +42,24 @@ typedef struct Weapon_DataHolder
 {
     // Current Weapon Data
     int currentWeapon;
-    float currentWeaponFirerate;
-    int currentWeaponDamage;
-    int currentWeaponAmmo;
-    int currentWeaponMaxAmmo;
-    bool currentWeaponHitscan;
+
     // Usable weapons
     // We could also use arrays but this way it is easier
     // to be able to remap weapon keys
-    Weapon_Data FIST;
-    Weapon_Data PISTOL;
-    Weapon_Data RIFLE;
-    Weapon_Data SHOTGUN;
-    Weapon_Data RAILGUN;
-
+    Weapon_Data *Weapons[WEAPON_AMOUNT];
 } Weapon_DataHolder;
+
 
 typedef enum Weapon_ID
 {
-    FIST    = 1,
-    PISTOL  = 2,
-    RIFLE   = 3,
-    SHOTGUN = 4,
-    RAILGUN = 5
+    FIST    = 0,
+    PISTOL  = 1,
+    RIFLE   = 2,
+    SHOTGUN = 3,
+    RAILGUN = 4
 } Weapon_ID;
 
 extern struct Weapon_DataHolder WeaponDataHolder;
-extern struct Weapon_Data Weapon_PlayerWeapons[WEAPON_AMOUNT];
 
 void Weapon_InitializeKeys();
 void Weapon_GetSwitchInput();

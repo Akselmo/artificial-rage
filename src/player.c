@@ -19,9 +19,6 @@ Player_Data Player = {
     .dead   = false,
 };
 
-//Prototypes
-void Player_UpdateWeapons();
-
 // Private functions
 Vector3 Player_size;
 Vector3 Player_position;
@@ -68,14 +65,12 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.playerEyesPosition = camera.position.y;
 
     // Setup custom movement keys
-    DisableCursor();
     Player_CustomCamera.moveFront        = moveFront;
     Player_CustomCamera.moveBack         = moveBack;
     Player_CustomCamera.moveRight        = moveRight;
     Player_CustomCamera.moveLeft         = moveLeft;
     Player_CustomCamera.mouseSensitivity = mouseSensitivity;
 
-    Player_UpdateWeapons();
     Weapon_InitializeKeys();
 
     // Set player size for bounding box
@@ -165,18 +160,7 @@ void Player_Update(Camera* camera)
     Player_position = camera->position;
 
     // Check if we need to switch weapon
-    Player_UpdateWeapons();
     Weapon_GetSwitchInput();
-}
-
-void Player_UpdateWeapons()
-{
-    // Update player weapons
-    Weapon_PlayerWeapons[0] = WeaponDataHolder.FIST;
-    Weapon_PlayerWeapons[1] = WeaponDataHolder.PISTOL;
-    Weapon_PlayerWeapons[2] = WeaponDataHolder.RIFLE;
-    Weapon_PlayerWeapons[3] = WeaponDataHolder.SHOTGUN;
-    Weapon_PlayerWeapons[4] = WeaponDataHolder.RAILGUN;
 }
 
 BoundingBox GetPlayerBoundingBox()

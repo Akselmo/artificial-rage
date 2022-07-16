@@ -53,5 +53,7 @@ void Game_HudUpdate()
 
 void Game_MenuUpdate()
 {
+    DisableCursor();
     // menu presses etc come here
+    //Enable and disable cursor based on if menu is on or off
 }
