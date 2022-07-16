@@ -47,7 +47,7 @@ void Game_Update()
 
 // TODO: Move these to their own files
 void Game_HudUpdate()
-{   
+{
     Hud_Draw();
 }
 
@@ -55,5 +55,5 @@ void Game_MenuUpdate()
 {
     DisableCursor();
     // menu presses etc come here
-    //Enable and disable cursor based on if menu is on or off
+    // Enable and disable cursor based on if menu is on or off
 }

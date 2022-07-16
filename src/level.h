@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LEVEL_SIZE 16384
+#define MAX_LEVEL_SIZE        16384
 #define MAX_PROJECTILE_AMOUNT 1000
 
 // Structs

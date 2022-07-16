@@ -2,17 +2,17 @@
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
-#define WEAPON_AMOUNT            5
+#define WEAPON_AMOUNT 5
 
 #include "enemy.h"
 #include "level.h"
 #include "main.h"
 #include "player.h"
+#include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "settings.h"
 #include "utilities.h"
-#include "projectile.h"
 #include <stdio.h>
 #include <time.h>
 
@@ -46,9 +46,8 @@ typedef struct Weapon_DataHolder
     // Usable weapons
     // We could also use arrays but this way it is easier
     // to be able to remap weapon keys
-    Weapon_Data *Weapons[WEAPON_AMOUNT];
+    Weapon_Data* Weapons[WEAPON_AMOUNT];
 } Weapon_DataHolder;
-
 
 typedef enum Weapon_ID
 {

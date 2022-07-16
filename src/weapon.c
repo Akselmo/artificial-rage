@@ -4,92 +4,91 @@
 #include "projectile.h"
 #include "raymath.h"
 
-//Prototypes
+// Prototypes
 
 void Weapon_Change(int weaponId);
 bool WeaponHasAmmo(int currentWeapon);
 
 Weapon_Data Weapon_Fists = {
-        .name     = "Fists",
-        .inputKey = KEY_ONE,
-        .weaponId = FIST,
-        .damage   = 5,
-        .ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
-        .fireRate = 1.25f,
-        .range    = 2.0f,
-        .pickedUp = true,  // You always have your fists with you
-        .maxAmmo  = WEAPON_FIST_AMMO_MAX,
-        .hitscan  = true,
+    .name     = "Fists",
+    .inputKey = KEY_ONE,
+    .weaponId = FIST,
+    .damage   = 5,
+    .ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
+    .fireRate = 1.25f,
+    .range    = 2.0f,
+    .pickedUp = true,  // You always have your fists with you
+    .maxAmmo  = WEAPON_FIST_AMMO_MAX,
+    .hitscan  = true,
 };
 
 Weapon_Data Weapon_Pistol = {
-        .name     = "Pistol",
-        .inputKey = KEY_TWO,
-        .weaponId = PISTOL,
-        .damage   = 3,
-        .ammo     = 30,
-        .fireRate = 1.0f,
-        .range    = 8.0f,
-        .pickedUp = true,  // You also always have your trusty pistol with you
-        .maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
-        .hitscan  = false,
+    .name     = "Pistol",
+    .inputKey = KEY_TWO,
+    .weaponId = PISTOL,
+    .damage   = 3,
+    .ammo     = 30,
+    .fireRate = 1.0f,
+    .range    = 8.0f,
+    .pickedUp = true,  // You also always have your trusty pistol with you
+    .maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
+    .hitscan  = false,
 };
 
 Weapon_Data Weapon_Rifle = {
-        .name     = "Rifle",
-        .inputKey = KEY_THREE,
-        .weaponId = RIFLE,
-        .damage   = 3,
-        .ammo     = 0,
-        .fireRate = 0.9f,
-        .range    = 20.0f,
-        .pickedUp = false,
-        .maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
-        .hitscan  = false,
+    .name     = "Rifle",
+    .inputKey = KEY_THREE,
+    .weaponId = RIFLE,
+    .damage   = 3,
+    .ammo     = 0,
+    .fireRate = 0.9f,
+    .range    = 20.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
+    .hitscan  = false,
 };
 
 Weapon_Data Weapon_Shotgun = {
-        .name     = "Shotgun",
-        .inputKey = KEY_FOUR,
-        .weaponId = SHOTGUN,
-        .damage   = 7,
-        .ammo     = 0,
-        .fireRate = 1.5f,
-        .range    = 6.0f,
-        .pickedUp = false,
-        .maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
-        .hitscan  = false,
+    .name     = "Shotgun",
+    .inputKey = KEY_FOUR,
+    .weaponId = SHOTGUN,
+    .damage   = 7,
+    .ammo     = 0,
+    .fireRate = 1.5f,
+    .range    = 6.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
+    .hitscan  = false,
 };
 
 Weapon_Data Weapon_Railgun = {
-        .name     = "Railgun",
-        .inputKey = KEY_FIVE,
-        .weaponId = RAILGUN,
-        .damage   = 30,
-        .ammo     = 0,
-        .fireRate = 2.6f,
-        .range    = 69.0f,
-        .pickedUp = false,
-        .maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
-        .hitscan  = false,
+    .name     = "Railgun",
+    .inputKey = KEY_FIVE,
+    .weaponId = RAILGUN,
+    .damage   = 30,
+    .ammo     = 0,
+    .fireRate = 2.6f,
+    .range    = 69.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
+    .hitscan  = false,
 };
-
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
 struct Weapon_DataHolder WeaponDataHolder = {
     // Current weapon data
-    .currentWeapon = 0,
-    .Weapons[FIST] = &Weapon_Fists,
-    .Weapons[PISTOL] = &Weapon_Pistol,
-    .Weapons[RIFLE] = &Weapon_Rifle,
+    .currentWeapon    = 0,
+    .Weapons[FIST]    = &Weapon_Fists,
+    .Weapons[PISTOL]  = &Weapon_Pistol,
+    .Weapons[RIFLE]   = &Weapon_Rifle,
     .Weapons[SHOTGUN] = &Weapon_Shotgun,
     .Weapons[RAILGUN] = &Weapon_Railgun,
 };
 
 void Weapon_InitializeKeys()
 {
-    WeaponDataHolder.Weapons[FIST]->inputKey = Settings_GetCustomInput(KEY_ONE);
+    WeaponDataHolder.Weapons[FIST]->inputKey    = Settings_GetCustomInput(KEY_ONE);
     WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings_GetCustomInput(KEY_TWO);
     WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings_GetCustomInput(KEY_THREE);
     WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings_GetCustomInput(KEY_FOUR);
@@ -99,7 +98,6 @@ void Weapon_InitializeKeys()
 void Weapon_SelectDefault()
 {
     WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[FIST]->weaponId;
-
 }
 
 void Weapon_GetSwitchInput()
@@ -107,9 +105,9 @@ void Weapon_GetSwitchInput()
     int key = 0;
     key     = GetKeyPressed();
 
-    for (int i = 0; i < WEAPON_AMOUNT; i++)
+    for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
-        if (key == WeaponDataHolder.Weapons[i]->inputKey)
+        if(key == WeaponDataHolder.Weapons[i]->inputKey)
         {
             Weapon_Change(WeaponDataHolder.Weapons[i]->weaponId);
         }
@@ -185,9 +183,9 @@ bool WeaponHasAmmo(int currentWeapon)
     }
     printf("Ammo: %d \n", WeaponDataHolder.Weapons[currentWeapon]->ammo);
     // TODO: Is there a better way to do this without so much repetition?
-    if( WeaponDataHolder.Weapons[currentWeapon]->ammo > 0)
+    if(WeaponDataHolder.Weapons[currentWeapon]->ammo > 0)
     {
-         WeaponDataHolder.Weapons[currentWeapon]->ammo--;
+        WeaponDataHolder.Weapons[currentWeapon]->ammo--;
         return true;
     }
     else
@@ -206,16 +204,20 @@ float Weapon_Fire(Camera* camera, float nextFire)
     {
         if(WeaponHasAmmo(WeaponDataHolder.currentWeapon))
         {
-            //TODO: Raycast or not? If projectile, add projectile to Level_projectiles
+            // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             int id      = TestEntityHit(rayCast);
-            if (WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
+            if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
             {
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Enemy_TakeDamage(&Level_enemies[id], WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
-                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    Enemy_TakeDamage(
+                        &Level_enemies[id],
+                        WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    printf("Enemy_Data id %d takes %d damage\n",
+                           id,
+                           WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
                 }
             }
             else

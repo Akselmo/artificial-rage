@@ -5,8 +5,10 @@
 // Public variables
 Level_Data* Level_data    = NULL;
 Enemy_Data* Level_enemies = NULL;
-Item_Data* Level_items    = NULL;  // Contains interactable and non-interactable Level_items
-Projectile_Data* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0}; //We can allocate projectiles here already
+// Contains interactable and non-interactable Level_items
+Item_Data* Level_items = NULL;
+// We can allocate projectiles here already
+Projectile_Data* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0};
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -144,8 +146,8 @@ void Level_Draw()
 
     for(int i = 0; i < Level_mapSize; i++)
     {
-        Level_Data* data = &Level_data[i];
-        Enemy_Data* enemy  = &Level_enemies[i];
+        Level_Data* data  = &Level_data[i];
+        Enemy_Data* enemy = &Level_enemies[i];
         if(data != NULL && data->modelId != 0)
         {
             DrawModel(data->blockModel, data->blockPosition, 1.0f, WHITE);
@@ -164,11 +166,11 @@ void Level_Draw()
 
 void Level_DrawProjectiles()
 {
-    for (int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
+    for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if (Level_projectiles[i] != NULL && Level_projectiles[i]->id != 0)
+        if(Level_projectiles[i] != NULL && Level_projectiles[i]->id != 0)
         {
-            //TODO: Draw projectile model
+            // TODO: Draw projectile model
         }
     }
 }
