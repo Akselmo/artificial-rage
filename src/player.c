@@ -163,11 +163,13 @@ void Player_Update(Camera* camera)
     Weapon_GetSwitchInput();
 }
 
+//TODO: Use externs instead
 BoundingBox GetPlayerBoundingBox()
 {
     return Player_boundingBox;
 }
 
+//TODO: Use externs instead
 Vector3 GetPlayerPosition()
 {
     return Player_position;
