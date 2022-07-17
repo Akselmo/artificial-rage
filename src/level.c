@@ -8,7 +8,7 @@ Enemy_Data* Level_enemies = NULL;
 // Contains interactable and non-interactable Level_items
 Item_Data* Level_items = NULL;
 // We can allocate projectiles here already
-Projectile_Data* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0};
+Projectile* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0};
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;

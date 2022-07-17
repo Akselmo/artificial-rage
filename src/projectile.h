@@ -5,7 +5,10 @@
 #include "level.h"
 #include "raylib.h"
 
-typedef struct Projectile_Data
+#define PROJECTILE_TRAVEL_DISTANCE 100
+#define PROJECTILE_DESTROY_AFTER_SECONDS 10
+
+typedef struct Projectile
 {
     Vector3 startPosition;
     Vector3 endPosition;
@@ -15,9 +18,9 @@ typedef struct Projectile_Data
     int id;
     int damage;
     bool destroyed;
-} Projectile_Data;
+} Projectile;
 
-void Projectile_Launch(Vector3 startPosition, Vector3 endPosition);
-void Projectile_Destroy(Projectile_Data* projectile);
+void Projectile_Create(Ray rayCast, Vector3 size, int damage);
+void Projectile_Destroy(Projectile* projectile);
 
 #endif
