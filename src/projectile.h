@@ -5,7 +5,7 @@
 #include "level.h"
 #include "raylib.h"
 
-#define PROJECTILE_TRAVEL_DISTANCE 100
+#define PROJECTILE_TRAVEL_DISTANCE       100
 #define PROJECTILE_DESTROY_AFTER_SECONDS 10
 
 typedef struct Projectile

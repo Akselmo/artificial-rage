@@ -138,10 +138,9 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    Matrix translation =
-        MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation = MatrixRotateXYZ(
-        (Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
+    Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
+    Matrix rotation =
+        MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
     Matrix transform = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
@@ -163,13 +162,13 @@ void Player_Update(Camera* camera)
     Weapon_GetSwitchInput();
 }
 
-//TODO: Use externs instead
+// TODO: Use externs instead
 BoundingBox GetPlayerBoundingBox()
 {
     return Player_boundingBox;
 }
 
-//TODO: Use externs instead
+// TODO: Use externs instead
 Vector3 GetPlayerPosition()
 {
     return Player_position;

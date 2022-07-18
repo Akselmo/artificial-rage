@@ -91,7 +91,7 @@ void Level_PlaceBlocks()
             int i    = y * levelCubicMap.width + x;
 
             Color pixelColor = {0, 0, 0};
-            pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            pixelColor       = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -99,8 +99,8 @@ void Level_PlaceBlocks()
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
-                Model cubeModel = LoadModelFromMesh(cube);
+                Mesh cube                                                 = GenMeshCube(1.0f, 1.0f, 1.0f);
+                Model cubeModel                                           = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 Level_data[i].blockModel    = cubeModel;
