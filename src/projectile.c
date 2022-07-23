@@ -15,15 +15,15 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
             Projectile projectile = {
                 .startPosition = rayCast.position,
                 .endPosition   = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
-                .position      = projectile.startPosition,                                                                             
+                .position      = projectile.startPosition,
                 .id            = i,
-                .size          = size,                                                                                                 
-                .boundingBox   = Utilities_MakeBoundingBox(rayCast.position, projectile.size),                                         
-                .damage        = damage,                                                                                               
-                .color         = BLUE,                                                                                                 
-                .speed         = 0.12f*GetFrameTime(),                                                                                 
-                .destroyed     = false,                                                                                                
-            }; 
+                .size          = size,
+                .boundingBox   = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
+                .damage        = damage,
+                .color         = BLUE,
+                .speed         = 0.12f * GetFrameTime(),
+                .destroyed     = false,
+            };
             Level_projectiles[i] = projectile;
             break;
         }
@@ -32,7 +32,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
 
 void Projectile_Update(Projectile* projectile)
 {
-    if (!projectile->destroyed)
+    if(!projectile->destroyed)
     {
         DrawCubeV(projectile->position, projectile->size, projectile->color);
         // Lerp projectile here (both model and boundingbox)

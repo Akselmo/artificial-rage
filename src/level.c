@@ -78,8 +78,8 @@ void Level_PlaceBlocks()
     Level_mapPosition = (Vector3) {-mapPosX / 2, 0.5f, -mapPosZ / 2};
     Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
 
-    Level_data    = calloc(Level_mapSize, sizeof(Level_Data));
-    Level_enemies = calloc(Level_mapSize, sizeof(Enemy_Data));
+    Level_data        = calloc(Level_mapSize, sizeof(Level_Data));
+    Level_enemies     = calloc(Level_mapSize, sizeof(Enemy_Data));
     Level_projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < levelCubicMap.height; y++)
@@ -138,7 +138,8 @@ void Level_Draw()
 {
 
     DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
+    DrawModelEx(
+        planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
