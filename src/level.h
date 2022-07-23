@@ -39,7 +39,7 @@ typedef struct Level_BlockType
 extern struct Level_Data* Level_data;
 extern struct Enemy_Data* Level_enemies;
 extern struct Item_Data* Level_items;
-extern struct Projectile* Level_projectiles[MAX_PROJECTILE_AMOUNT];
+extern struct Projectile* Level_projectiles;
 extern Vector3 Level_mapPosition;
 extern Vector3 Level_startPosition;
 extern Vector3 Level_endPosition;

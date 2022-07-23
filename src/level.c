@@ -8,7 +8,7 @@ Enemy_Data* Level_enemies = NULL;
 // Contains interactable and non-interactable Level_items
 Item_Data* Level_items = NULL;
 // We can allocate projectiles here already
-Projectile* Level_projectiles[MAX_PROJECTILE_AMOUNT] = {0};
+Projectile* Level_projectiles = NULL;
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -80,6 +80,7 @@ void Level_PlaceBlocks()
 
     Level_data    = calloc(Level_mapSize, sizeof(Level_Data));
     Level_enemies = calloc(Level_mapSize, sizeof(Enemy_Data));
+    Level_projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < levelCubicMap.height; y++)
     {
@@ -137,8 +138,7 @@ void Level_Draw()
 {
 
     DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(
-        planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
+    DrawModelEx(planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
@@ -158,15 +158,17 @@ void Level_Draw()
             }
         }
     }
+    Level_DrawProjectiles();
 }
 
 void Level_DrawProjectiles()
 {
     for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Level_projectiles[i] != NULL && Level_projectiles[i]->id != 0)
+        Projectile* projectile = &Level_projectiles[i];
+        if(projectile != NULL)
         {
-            // TODO: Draw projectile model
+            Projectile_Update(projectile);
         }
     }
 }

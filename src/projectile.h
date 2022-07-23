@@ -13,14 +13,18 @@ typedef struct Projectile
     Vector3 startPosition;
     Vector3 endPosition;
     Vector3 position;
+    Vector3 size;
+    Color color;
     Model model;
     BoundingBox boundingBox;
     int id;
     int damage;
     bool destroyed;
+    float speed;
 } Projectile;
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage);
+void Projectile_Update(Projectile* projectile);
 void Projectile_Destroy(Projectile* projectile);
 
 #endif

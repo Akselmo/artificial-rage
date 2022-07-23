@@ -8,27 +8,36 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
     // TODO: Lerp between start and end position
     // Projectile does not need to know if it hits or not, that is calculated from
     // entities themselves.
-    for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
+    for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Level_projectiles[i] == NULL)
+        if(Level_projectiles[i].id != i)
         {
-            Projectile projectile;
-
-            printf("Creating new projectile with id %d\n", i);
-            projectile.startPosition = rayCast.position;
-            projectile.endPosition   = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE));
-            projectile.id            = i;
-            projectile.boundingBox   = Utilities_MakeBoundingBox(rayCast.position, size);
-            projectile.damage        = damage;
-
-            Level_projectiles[i] = &projectile;
+            Projectile projectile = {
+                .startPosition = rayCast.position,
+                .endPosition   = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
+                .position      = projectile.startPosition,                                                                             
+                .id            = i,
+                .size          = size,                                                                                                 
+                .boundingBox   = Utilities_MakeBoundingBox(rayCast.position, projectile.size),                                         
+                .damage        = damage,                                                                                               
+                .color         = BLUE,                                                                                                 
+                .speed         = 0.12f*GetFrameTime(),                                                                                 
+                .destroyed     = false,                                                                                                
+            }; 
+            Level_projectiles[i] = projectile;
+            break;
         }
     }
 }
 
 void Projectile_Update(Projectile* projectile)
 {
-    // Lerp projectile here (both model and boundingbox)
+    if (!projectile->destroyed)
+    {
+        DrawCubeV(projectile->position, projectile->size, projectile->color);
+        // Lerp projectile here (both model and boundingbox)
+        projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
+    }
 }
 
 void Projectile_Destroy(Projectile* projectile)
