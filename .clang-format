@@ -18,7 +18,7 @@ BinPackParameters: 'false'
 AlwaysBreakBeforeMultilineStrings: 'true'
 BreakBeforeBraces: Allman
 ContinuationIndentWidth: '4'
-ColumnLimit: '120'
+ColumnLimit: '150'
 IndentCaseLabels: 'true'
 IndentPPDirectives: None
 IndentWidth: '4'
