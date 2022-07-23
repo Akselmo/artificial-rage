@@ -16,11 +16,10 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
 
             printf("Creating new projectile with id %d\n", i);
             projectile.startPosition = rayCast.position;
-            projectile.endPosition =
-                Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE));
-            projectile.id          = i;
-            projectile.boundingBox = Utilities_MakeBoundingBox(rayCast.position, size);
-            projectile.damage      = damage;
+            projectile.endPosition   = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE));
+            projectile.id            = i;
+            projectile.boundingBox   = Utilities_MakeBoundingBox(rayCast.position, size);
+            projectile.damage        = damage;
 
             Level_projectiles[i] = &projectile;
         }

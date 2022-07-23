@@ -137,12 +137,8 @@ void Level_Draw()
 {
 
     DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(planeCeiling,
-                (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z},
-                ceilingRotation,
-                180.0f,
-                (Vector3) {1.0f, 1.0f, 1.0f},
-                WHITE);
+    DrawModelEx(
+        planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
 
     for(int i = 0; i < Level_mapSize; i++)
     {

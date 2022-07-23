@@ -8,16 +8,14 @@ Vector2 Utilities_GetScreenCenter()
 
 BoundingBox Utilities_MakeBoundingBox(Vector3 position, Vector3 size)
 {
-    BoundingBox bb =
-        (BoundingBox) {(Vector3) {position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2},
-                       (Vector3) {position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}};
+    BoundingBox bb = (BoundingBox) {(Vector3) {position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2},
+                                    (Vector3) {position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}};
     return bb;
 }
 
 Color Utilities_GetLevelPixelColor(Color* levelMapPixels, int x, int width, int y)
 {
-    Color pixelColor = {
-        levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b};
+    Color pixelColor = {levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b};
 
     return pixelColor;
 }

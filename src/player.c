@@ -103,24 +103,19 @@ void Player_Update(Camera* camera)
                          IsKeyDown(Player_CustomCamera.moveLeft)};
 
     // Move camera around X pos
-    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
+                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] + cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Y pos
-    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
-                            sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
+    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] - sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Z pos
-    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
+                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
     // Camera orientation calculation
@@ -139,9 +134,8 @@ void Player_Update(Camera* camera)
 
     // Recalculate camera target considering translation and rotation
     Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation =
-        MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
-    Matrix transform = MatrixMultiply(translation, rotation);
+    Matrix rotation    = MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
+    Matrix transform   = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;

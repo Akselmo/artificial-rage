@@ -74,9 +74,8 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
     {
         if(levelData[i].modelId != 0)
         {
-            Vector3 pos = levelData[i].blockPosition;
-            RayCollision hitLevel =
-                GetRayCollisionMesh(rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            Vector3 pos           = levelData[i].blockPosition;
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -114,8 +113,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if(Enemy_TestPlayerHit(enemy))
     {
-        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER ||
-           fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
+        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
             enemy->position          = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
@@ -138,8 +136,7 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
-            Vector3 deadBoxPos =
-                (Vector3) {ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
+            Vector3 deadBoxPos = (Vector3) {ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
             enemy->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead        = true;
         }
