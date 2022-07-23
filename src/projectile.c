@@ -1,6 +1,7 @@
 #include "projectile.h"
 #include "level.h"
 #include "raylib.h"
+#include "raymath.h"
 #include "utilities.h"
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage)
@@ -10,7 +11,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
     // entities themselves.
     for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Level_projectiles[i].id != i)
+        if(Level_projectiles[i].id != i || Level_projectiles[i].destroyed == true)
         {
             Projectile projectile = {
                 .startPosition = rayCast.position,
@@ -32,12 +33,14 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
 
 void Projectile_Update(Projectile* projectile)
 {
-    if(!projectile->destroyed)
+    if(!projectile->destroyed && projectile->id != 0)
     {
         DrawCubeV(projectile->position, projectile->size, projectile->color);
         // Lerp projectile here (both model and boundingbox)
         projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
+        Projectile_Destroy(projectile);
     }
+
 }
 
 void Projectile_Destroy(Projectile* projectile)
@@ -45,4 +48,9 @@ void Projectile_Destroy(Projectile* projectile)
     // TODO: Destroy the projectile, free it from memory.
     // Could also do object pooling if feeling creative but that's more a "nice-to-have"
     //  Destroy after either collide or after 20 seconds
+    Vector3 distanceFromEnd = Vector3Subtract(projectile->position, projectile->endPosition);
+    if (fabsf(distanceFromEnd.x) <= 0.01f || fabsf(distanceFromEnd.y) <= 0.01f || fabsf(distanceFromEnd.z) <= 0.01f)
+    {
+        projectile->destroyed = true;
+    }
 }

@@ -4,8 +4,10 @@
 
 #include "level.h"
 #include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-#define PROJECTILE_TRAVEL_DISTANCE       100
+#define PROJECTILE_TRAVEL_DISTANCE       100 //TODO: Why does lover travel distance make lerp slower?
 #define PROJECTILE_DESTROY_AFTER_SECONDS 10
 
 typedef struct Projectile

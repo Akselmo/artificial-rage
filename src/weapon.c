@@ -215,7 +215,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
             }
             else
             {
-                Projectile_Create(rayCast, Vector3One(), WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                Projectile_Create(rayCast, (Vector3){0.2f,0.2f,0.2f}, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
             }
         }
         nextFire = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->fireRate;
