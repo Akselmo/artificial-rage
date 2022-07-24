@@ -25,6 +25,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
                 .speed         = 0.12f * GetFrameTime(),
                 .destroyed     = false,
             };
+            printf("Projectile id created %d\n", projectile.id);
             Level_projectiles[i] = projectile;
             break;
         }
@@ -40,7 +41,6 @@ void Projectile_Update(Projectile* projectile)
         projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
         Projectile_Destroy(projectile);
     }
-
 }
 
 void Projectile_Destroy(Projectile* projectile)
@@ -49,8 +49,10 @@ void Projectile_Destroy(Projectile* projectile)
     // Could also do object pooling if feeling creative but that's more a "nice-to-have"
     //  Destroy after either collide or after 20 seconds
     Vector3 distanceFromEnd = Vector3Subtract(projectile->position, projectile->endPosition);
-    if (fabsf(distanceFromEnd.x) <= 0.01f || fabsf(distanceFromEnd.y) <= 0.01f || fabsf(distanceFromEnd.z) <= 0.01f)
+    if(fabsf(distanceFromEnd.x) <= 0.01f || fabsf(distanceFromEnd.y) <= 0.01f || fabsf(distanceFromEnd.z) <= 0.01f)
     {
+        printf("Projectile id %d destroyed\n", projectile->id);
         projectile->destroyed = true;
+        projectile            = NULL;
     }
 }
