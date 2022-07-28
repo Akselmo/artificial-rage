@@ -1,5 +1,6 @@
 #Compiler used: GCC 10.3.0
 cmake_minimum_required(VERSION 3.0)
+set(OpenGL_GL_PREFERENCE LEGACY)
 project(ArtificialRage)
 
 #Raylib version used: 4.0.0
