@@ -16,7 +16,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .size        = enemySize,
              .dead        = false,
              .damage      = 5,
-             .health      = 50,
+             .health      = 15, //Check enemy health balance later
              .boundingBox = Utilities_MakeBoundingBox(enemyPosition, enemySize),
              .id          = id,
              .tickRate    = randomTickRate,
