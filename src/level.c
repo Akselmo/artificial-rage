@@ -1,4 +1,5 @@
 #include "level.h"
+#include "raylib.h"
 
 // Level has level data, Level_enemies and Level_items
 
@@ -106,7 +107,9 @@ void Level_PlaceBlocks()
 
                 Level_data[i].blockModel    = cubeModel;
                 Level_data[i].blockPosition = (Vector3) {mx, Level_mapPosition.y, my};
-                Level_data[i].modelId       = i;
+                Level_data[i].modelId       = WALL_MODEL_ID;
+                Level_data[i].blockSize     = (Vector3){1.0f, 1.0f, 1.0f};
+                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox((Vector3){mx, Level_mapPosition.y, my},(Vector3){1.0f, 1.0f, 1.0f});
             }
 
             // Find start, which is green (0,255,0)
@@ -176,29 +179,22 @@ void Level_DrawProjectiles()
 
 bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
-
     BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
         // Level blocks
-        Vector3 wallPos      = Level_data[i].blockPosition;
-        Vector3 wallSize     = {1.0f, 1.0f, 1.0f};
-        BoundingBox levelBox = Utilities_MakeBoundingBox(wallPos, wallSize);
-
-        // Enemies
-        // If enemy, avoid checking own position, use id's for this
-        if(CheckCollisionBoxes(entityBox, levelBox) && Level_data[i].modelId != 0)
+        
+        // Player and walls/enemies
+        if(CheckCollisionBoxes(entityBox, Level_data[i].blockBoundingBox))
         {
             return true;
         }
-        // Enemies ignore themselves so they dont collide to themselves
-        if(Level_enemies[i].id != entityId)
+        // Enemy and wall/other enemies
+        // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their own projectiles
+        else if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox) && Level_enemies[i].id != entityId)
         {
-            if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox))
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;

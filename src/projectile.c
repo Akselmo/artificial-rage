@@ -1,10 +1,15 @@
 #include "projectile.h"
+#include "enemy.h"
 #include "level.h"
+#include "player.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "utilities.h"
 
-void Projectile_Create(Ray rayCast, Vector3 size, int damage)
+//Prototypes
+void Projectile_DestroyOverTime(Projectile* projectile);
+
+void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
 {
     // TODO: Lerp between start and end position
     // Projectile does not need to know if it hits or not, that is calculated from
@@ -18,6 +23,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage)
                 .endPosition   = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
                 .position      = projectile.startPosition,
                 .id            = i,
+                .ownerId       = ownerId,
                 .size          = size,
                 .boundingBox   = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
                 .damage        = damage,
@@ -39,11 +45,45 @@ void Projectile_Update(Projectile* projectile)
         DrawCubeV(projectile->position, projectile->size, projectile->color);
         // Lerp projectile here (both model and boundingbox)
         projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
-        Projectile_Destroy(projectile);
+        Projectile_DestroyOverTime(projectile);
+        Projectile_CheckCollision(projectile);
     }
 }
 
-void Projectile_Destroy(Projectile* projectile)
+void Projectile_CheckCollision(Projectile* projectile)
+{
+    //Check against the owner of the projectile and the entity id. if theres a match, ignore it, unless its a wall
+    // Otherwise tell the entity they've been hit and give them damage
+    BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
+    for (int i = 0; i < Level_mapSize; i++)
+    {
+        
+        //Test hitting against wall
+        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox))
+        {
+           Projectile_Destroy(projectile);
+           return;
+        }
+        //Against enemy except if owned by enemy
+        else if(CheckCollisionBoxes(projectileBox, Level_enemies[i].boundingBox) && Level_enemies[i].id != projectile->ownerId)
+        {
+            Enemy_TakeDamage(&Level_enemies[i], projectile->damage);
+            Projectile_Destroy(projectile);
+            return;
+        }
+        //Against player except if owned by player
+        else if (CheckCollisionBoxes(projectileBox, GetPlayerBoundingBox()) && PLAYER_ID != projectile->ownerId)
+        {
+            Player_SetHealth(projectile->damage);
+            Projectile_Destroy(projectile);
+            return;
+        }
+    }
+
+}
+
+//Rename to projectile_DestroyOverTime
+void Projectile_DestroyOverTime(Projectile* projectile)
 {
     // TODO: Destroy the projectile, free it from memory.
     // Could also do object pooling if feeling creative but that's more a "nice-to-have"
@@ -51,8 +91,16 @@ void Projectile_Destroy(Projectile* projectile)
     Vector3 distanceFromEnd = Vector3Subtract(projectile->position, projectile->endPosition);
     if(fabsf(distanceFromEnd.x) <= 0.01f || fabsf(distanceFromEnd.y) <= 0.01f || fabsf(distanceFromEnd.z) <= 0.01f)
     {
-        printf("Projectile id %d destroyed\n", projectile->id);
-        projectile->destroyed = true;
-        projectile            = NULL;
+        Projectile_Destroy(projectile);
+        return;
     }
+}
+
+//Rename to projectile_destroy
+void Projectile_Destroy(Projectile* projectile)
+{
+    printf("Projectile id %d destroyed\n", projectile->id);
+    projectile->destroyed = true;
+    projectile            = NULL;
+    free(projectile);
 }

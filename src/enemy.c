@@ -131,6 +131,7 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
+        printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
             // Dirty hack to move bounding box outside of map so it cant be collided to.

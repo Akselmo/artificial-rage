@@ -16,12 +16,15 @@
 
 #define MAX_LEVEL_SIZE        16384
 #define MAX_PROJECTILE_AMOUNT 254
+#define WALL_MODEL_ID         -2
 
 // Structs
 
 typedef struct Level_Data
 {
     Vector3 blockPosition;
+    Vector3 blockSize;
+    BoundingBox blockBoundingBox;
     Model blockModel;
     int modelId;
 } Level_Data;

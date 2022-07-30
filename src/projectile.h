@@ -20,13 +20,15 @@ typedef struct Projectile
     Model model;
     BoundingBox boundingBox;
     int id;
+    int ownerId;
     int damage;
     bool destroyed;
     float speed;
 } Projectile;
 
-void Projectile_Create(Ray rayCast, Vector3 size, int damage);
-void Projectile_Update(Projectile* projectile);
+void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId);
+void Projectile_CheckCollision(Projectile* projectile);
 void Projectile_Destroy(Projectile* projectile);
+void Projectile_Update(Projectile* projectile);
 
 #endif
