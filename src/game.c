@@ -3,6 +3,7 @@
 //
 
 #include "game.h"
+#include "weapon.h"
 
 // Shared variables
 Camera playerCamera;
@@ -47,13 +48,12 @@ void Game_Update()
 // TODO: Move these to their own files
 void Game_HudUpdate()
 {
-    Hud_Draw(Player.health,
-             WeaponHolder.currentWeaponAmmo,
-             WeaponHolder.currentWeaponMaxAmmo,
-             WeaponHolder.currentWeapon);
+    Hud_Draw();
 }
 
 void Game_MenuUpdate()
 {
+    DisableCursor();
     // menu presses etc come here
+    // Enable and disable cursor based on if menu is on or off
 }

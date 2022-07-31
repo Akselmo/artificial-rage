@@ -1,4 +1,6 @@
 #include "player.h"
+#include "hud.h"
+#include "weapon.h"
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
@@ -63,14 +65,12 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.playerEyesPosition = camera.position.y;
 
     // Setup custom movement keys
-    DisableCursor();
     Player_CustomCamera.moveFront        = moveFront;
     Player_CustomCamera.moveBack         = moveBack;
     Player_CustomCamera.moveRight        = moveRight;
     Player_CustomCamera.moveLeft         = moveLeft;
     Player_CustomCamera.mouseSensitivity = mouseSensitivity;
 
-    // Initialize weapon stuff
     Weapon_InitializeKeys();
 
     // Set player size for bounding box
@@ -103,24 +103,19 @@ void Player_Update(Camera* camera)
                          IsKeyDown(Player_CustomCamera.moveLeft)};
 
     // Move camera around X pos
-    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
+                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] + cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Y pos
-    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
-                            sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
+    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] - sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Z pos
-    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
+                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
     // Camera orientation calculation
@@ -138,11 +133,9 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    Matrix translation =
-        MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation = MatrixRotateXYZ(
-        (Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
-    Matrix transform = MatrixMultiply(translation, rotation);
+    Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
+    Matrix rotation    = MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0});
+    Matrix transform   = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;
@@ -160,14 +153,16 @@ void Player_Update(Camera* camera)
     Player_position = camera->position;
 
     // Check if we need to switch weapon
-    Weapon_Change();
+    Weapon_GetSwitchInput();
 }
 
+// TODO: Use externs instead
 BoundingBox GetPlayerBoundingBox()
 {
     return Player_boundingBox;
 }
 
+// TODO: Use externs instead
 Vector3 GetPlayerPosition()
 {
     return Player_position;

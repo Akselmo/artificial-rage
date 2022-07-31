@@ -1,10 +1,14 @@
+#pragma once
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
+
+#define WEAPON_AMOUNT 5
 
 #include "enemy.h"
 #include "level.h"
 #include "main.h"
 #include "player.h"
+#include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "settings.h"
@@ -22,6 +26,7 @@
 typedef struct Weapon_Data
 {
     char* name;
+    int weaponId;
     int inputKey;
     int damage;
     int ammo;
@@ -29,42 +34,34 @@ typedef struct Weapon_Data
     float fireRate;
     float range;
     bool pickedUp;
+    bool hitscan;
 
 } Weapon_Data;
 
-typedef struct Weapon_Holder
+typedef struct Weapon_DataHolder
 {
     // Current Weapon Data
     int currentWeapon;
-    float currentWeaponFirerate;
-    int currentWeaponDamage;
-    int currentWeaponAmmo;
-    int currentWeaponMaxAmmo;
 
     // Usable weapons
     // We could also use arrays but this way it is easier
     // to be able to remap weapon keys
-    Weapon_Data FIST;
-    Weapon_Data PISTOL;
-    Weapon_Data RIFLE;
-    Weapon_Data SHOTGUN;
-    Weapon_Data RAILGUN;
-
-} Weapon_Holder;
+    Weapon_Data* Weapons[WEAPON_AMOUNT];
+} Weapon_DataHolder;
 
 typedef enum Weapon_ID
 {
-    FIST    = 1,
-    PISTOL  = 2,
-    RIFLE   = 3,
-    SHOTGUN = 4,
-    RAILGUN = 5
+    FIST    = 0,
+    PISTOL  = 1,
+    RIFLE   = 2,
+    SHOTGUN = 3,
+    RAILGUN = 4
 } Weapon_ID;
 
-extern struct Weapon_Holder WeaponHolder;
+extern struct Weapon_DataHolder WeaponDataHolder;
 
 void Weapon_InitializeKeys();
-void Weapon_Change();
+void Weapon_GetSwitchInput();
 void Weapon_SelectDefault();
 float Weapon_Fire(Camera* camera, float nextFire);
 float Weapon_TestLevelHit(Ray rayCast);

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _HUD_H_
 #define _HUD_H_
 
@@ -7,6 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void Hud_Draw(int health, int weaponAmmo, int weaponMaxAmmo, int weapon);
+void Hud_Draw();
 
 #endif

@@ -1,11 +1,15 @@
 #include "level.h"
+#include "raylib.h"
 
 // Level has level data, Level_enemies and Level_items
 
 // Public variables
 Level_Data* Level_data    = NULL;
 Enemy_Data* Level_enemies = NULL;
-Item_Data* Level_items    = NULL;  // Contains interactable and non-interactable Level_items
+// Contains interactable and non-interactable Level_items
+Item_Data* Level_items = NULL;
+// We can allocate projectiles here already
+Projectile* Level_projectiles = NULL;
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -27,7 +31,7 @@ char* wallTextures[2];
 void Level_PlaceBlocks();
 void Level_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Level_SetBlockTypes();
-
+void Level_DrawProjectiles();
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -75,8 +79,9 @@ void Level_PlaceBlocks()
     Level_mapPosition = (Vector3) {-mapPosX / 2, 0.5f, -mapPosZ / 2};
     Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
 
-    Level_data    = calloc(Level_mapSize, sizeof(Level_Data));
-    Level_enemies = calloc(Level_mapSize, sizeof(Enemy_Data));
+    Level_data        = calloc(Level_mapSize, sizeof(Level_Data));
+    Level_enemies     = calloc(Level_mapSize, sizeof(Enemy_Data));
+    Level_projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < levelCubicMap.height; y++)
     {
@@ -88,7 +93,7 @@ void Level_PlaceBlocks()
             int i    = y * levelCubicMap.width + x;
 
             Color pixelColor = {0, 0, 0};
-            pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            pixelColor       = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -96,13 +101,15 @@ void Level_PlaceBlocks()
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
-                Model cubeModel = LoadModelFromMesh(cube);
+                Mesh cube                                                 = GenMeshCube(1.0f, 1.0f, 1.0f);
+                Model cubeModel                                           = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 Level_data[i].blockModel    = cubeModel;
                 Level_data[i].blockPosition = (Vector3) {mx, Level_mapPosition.y, my};
-                Level_data[i].modelId       = i;
+                Level_data[i].modelId       = WALL_MODEL_ID;
+                Level_data[i].blockSize     = (Vector3){1.0f, 1.0f, 1.0f};
+                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox((Vector3){mx, Level_mapPosition.y, my},(Vector3){1.0f, 1.0f, 1.0f});
             }
 
             // Find start, which is green (0,255,0)
@@ -134,58 +141,60 @@ void Level_Draw()
 {
 
     DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(planeCeiling,
-                (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z},
-                ceilingRotation,
-                180.0f,
-                (Vector3) {1.0f, 1.0f, 1.0f},
-                WHITE);
+    DrawModelEx(
+        planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
-        Level_Data* ld = &Level_data[i];
-        Enemy_Data* e  = &Level_enemies[i];
-        if(ld != NULL && ld->modelId != 0)
+        Level_Data* data  = &Level_data[i];
+        Enemy_Data* enemy = &Level_enemies[i];
+        if(data != NULL && data->modelId != 0)
         {
-            DrawModel(ld->blockModel, ld->blockPosition, 1.0f, WHITE);
+            DrawModel(data->blockModel, data->blockPosition, 1.0f, WHITE);
         }
 
-        if(e != NULL && e->id != 0)
+        if(enemy != NULL && enemy->id != 0)
         {
             // if Level_enemies[i] has nothing dont do anything
-            if(!e->dead)
+            if(!enemy->dead)
             {
-                Enemy_Update(e);
+                Enemy_Update(enemy);
             }
+        }
+    }
+    Level_DrawProjectiles();
+}
+
+void Level_DrawProjectiles()
+{
+    for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
+    {
+        Projectile* projectile = &Level_projectiles[i];
+        if(projectile != NULL)
+        {
+            Projectile_Update(projectile);
         }
     }
 }
 
 bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
-
     BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
         // Level blocks
-        Vector3 wallPos      = Level_data[i].blockPosition;
-        Vector3 wallSize     = {1.0f, 1.0f, 1.0f};
-        BoundingBox levelBox = Utilities_MakeBoundingBox(wallPos, wallSize);
-
-        // Enemies
-        // If enemy, avoid checking own position, use id's for this
-        if(CheckCollisionBoxes(entityBox, levelBox) && Level_data[i].modelId != 0)
+        
+        // Player and walls/enemies
+        if(CheckCollisionBoxes(entityBox, Level_data[i].blockBoundingBox))
         {
             return true;
         }
-        // Enemies ignore themselves so they dont collide to themselves
-        if(Level_enemies[i].id != entityId)
+        // Enemy and wall/other enemies
+        // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their own projectiles
+        else if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox) && Level_enemies[i].id != entityId)
         {
-            if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox))
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;

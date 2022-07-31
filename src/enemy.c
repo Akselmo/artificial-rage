@@ -1,9 +1,13 @@
 #include "enemy.h"
+#include "player.h"
+#include "projectile.h"
+#include "raylib.h"
 
 // Private functions
 void Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
+Ray Enemy_CreateRay(Enemy_Data* enemy);
 
 // Since we use billboarding we dont have to know rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
@@ -16,7 +20,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .size        = enemySize,
              .dead        = false,
              .damage      = 5,
-             .health      = 50,
+             .health      = 15, //Check enemy health balance later
              .boundingBox = Utilities_MakeBoundingBox(enemyPosition, enemySize),
              .id          = id,
              .tickRate    = randomTickRate,
@@ -52,15 +56,21 @@ void Enemy_Draw(Enemy_Data enemy)
     DrawCubeV(enemy.position, enemy.size, RED);
 }
 
-bool Enemy_TestPlayerHit(Enemy_Data* enemy)
+Ray Enemy_CreateRay(Enemy_Data* enemy)
 {
-
     Ray rayCast;
     BoundingBox playerBb   = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
     Vector3 v              = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
     rayCast.direction      = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
     rayCast.position       = enemy->position;
+    return rayCast;
+}
+
+bool Enemy_TestPlayerHit(Enemy_Data* enemy)
+{
+
+    Ray rayCast = Enemy_CreateRay(enemy);
 
     bool hitPlayer        = false;
     float distance        = 0.0f;
@@ -75,8 +85,7 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
         if(levelData[i].modelId != 0)
         {
             Vector3 pos           = levelData[i].blockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -88,7 +97,7 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
         }
     }
 
-    playerDistance = Vector3Length(Vector3Subtract(playerPosition, rayCast.position));
+    playerDistance = Vector3Length(Vector3Subtract(GetPlayerPosition(), rayCast.position));
 
     if(playerDistance < levelDistance)
     {
@@ -114,11 +123,10 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
     if(Enemy_TestPlayerHit(enemy))
     {
-        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER ||
-           fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
+        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
-            enemy->position = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
+            enemy->position          = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
@@ -133,13 +141,13 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
+        printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
-            Vector3 deadBoxPos = (Vector3) {
-                ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
+            Vector3 deadBoxPos = (Vector3) {ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
             enemy->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead        = true;
         }
@@ -158,12 +166,16 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play anyway, we just hit player
             // if the following random check goes through
+            /* //old hitscan thing
             if(GetRandomValue(0, 10) >= 6)
             {
                 int dmg = enemy->damage * -1;
                 printf(" Enemy_Data %i Hit player for %i dmg\n", enemy->id, dmg);
                 Player_SetHealth(dmg);
             }
+            */
+            
+            Projectile_Create(Enemy_CreateRay(enemy), (Vector3) {0.2f, 0.2f, 0.2f}, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
         }
     }

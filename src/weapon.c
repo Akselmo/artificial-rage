@@ -1,133 +1,123 @@
 #include "weapon.h"
+#include "level.h"
+#include "player.h"
+#include "projectile.h"
+#include "raymath.h"
+
+// Prototypes
+
+void Weapon_Change(int weaponId);
+bool WeaponHasAmmo(int currentWeapon);
+
+Weapon_Data Weapon_Fists = {
+    .name     = "Fists",
+    .inputKey = KEY_ONE,
+    .weaponId = FIST,
+    .damage   = 5,
+    .ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
+    .fireRate = 1.25f,
+    .range    = 2.0f,
+    .pickedUp = true,  // You always have your fists with you
+    .maxAmmo  = WEAPON_FIST_AMMO_MAX,
+    .hitscan  = true,
+};
+
+Weapon_Data Weapon_Pistol = {
+    .name     = "Pistol",
+    .inputKey = KEY_TWO,
+    .weaponId = PISTOL,
+    .damage   = 3,
+    .ammo     = 30,
+    .fireRate = 1.0f,
+    .range    = 8.0f,
+    .pickedUp = true,  // You also always have your trusty pistol with you
+    .maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
+    .hitscan  = false,
+};
+
+Weapon_Data Weapon_Rifle = {
+    .name     = "Rifle",
+    .inputKey = KEY_THREE,
+    .weaponId = RIFLE,
+    .damage   = 3,
+    .ammo     = 0,
+    .fireRate = 0.9f,
+    .range    = 20.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
+    .hitscan  = false,
+};
+
+Weapon_Data Weapon_Shotgun = {
+    .name     = "Shotgun",
+    .inputKey = KEY_FOUR,
+    .weaponId = SHOTGUN,
+    .damage   = 7,
+    .ammo     = 0,
+    .fireRate = 1.5f,
+    .range    = 6.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
+    .hitscan  = false,
+};
+
+Weapon_Data Weapon_Railgun = {
+    .name     = "Railgun",
+    .inputKey = KEY_FIVE,
+    .weaponId = RAILGUN,
+    .damage   = 30,
+    .ammo     = 0,
+    .fireRate = 2.6f,
+    .range    = 69.0f,
+    .pickedUp = false,
+    .maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
+    .hitscan  = false,
+};
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
-Weapon_Holder WeaponHolder = {
+struct Weapon_DataHolder WeaponDataHolder = {
     // Current weapon data
-    .currentWeapon         = 0,
-    .currentWeaponFirerate = 0.0f,
-    .currentWeaponDamage   = 0,
-    .currentWeaponAmmo     = 0,
-    .currentWeaponMaxAmmo  = 1,
-
-    // Weapon_ID are declared here
-    // Fist
-    .FIST.name     = "Fists",
-    .FIST.inputKey = KEY_ONE,
-    .FIST.damage   = 5,
-    .FIST.ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
-    .FIST.fireRate = 1.25f,
-    .FIST.range    = 2.0f,
-    .FIST.pickedUp = true,  // You always have your fists with you
-    .FIST.maxAmmo  = WEAPON_FIST_AMMO_MAX,
-
-    // Pistol
-    .PISTOL.name     = "Pistol",
-    .PISTOL.inputKey = KEY_TWO,
-    .PISTOL.damage   = 3,
-    .PISTOL.ammo     = 30,
-    .PISTOL.fireRate = 1.0f,
-    .PISTOL.range    = 8.0f,
-    .PISTOL.pickedUp = true,  // You also always have your trusty pistol with you
-    .PISTOL.maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
-
-    // Rifle
-    .RIFLE.name     = "Rifle",
-    .RIFLE.inputKey = KEY_THREE,
-    .RIFLE.damage   = 3,
-    .RIFLE.ammo     = 0,
-    .RIFLE.fireRate = 0.9f,
-    .RIFLE.range    = 20.0f,
-    .RIFLE.pickedUp = false,
-    .RIFLE.maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
-
-    // Shotgun
-    .SHOTGUN.name     = "Shotgun",
-    .SHOTGUN.inputKey = KEY_FOUR,
-    .SHOTGUN.damage   = 7,
-    .SHOTGUN.ammo     = 0,
-    .SHOTGUN.fireRate = 1.5f,
-    .SHOTGUN.range    = 6.0f,
-    .SHOTGUN.pickedUp = false,
-    .SHOTGUN.maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
-
-    // Railgun
-    .RAILGUN.name     = "Railgun",
-    .RAILGUN.inputKey = KEY_FIVE,
-    .RAILGUN.damage   = 30,
-    .RAILGUN.ammo     = 0,
-    .RAILGUN.fireRate = 2.6f,
-    .RAILGUN.range    = 69.0f,
-    .RAILGUN.pickedUp = false,
-    .RAILGUN.maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
+    .currentWeapon    = 0,
+    .Weapons[FIST]    = &Weapon_Fists,
+    .Weapons[PISTOL]  = &Weapon_Pistol,
+    .Weapons[RIFLE]   = &Weapon_Rifle,
+    .Weapons[SHOTGUN] = &Weapon_Shotgun,
+    .Weapons[RAILGUN] = &Weapon_Railgun,
 };
 
 void Weapon_InitializeKeys()
 {
-    WeaponHolder.FIST.inputKey    = Settings_GetCustomInput(KEY_ONE);
-    WeaponHolder.PISTOL.inputKey  = Settings_GetCustomInput(KEY_TWO);
-    WeaponHolder.RIFLE.inputKey   = Settings_GetCustomInput(KEY_THREE);
-    WeaponHolder.SHOTGUN.inputKey = Settings_GetCustomInput(KEY_FOUR);
-    WeaponHolder.RAILGUN.inputKey = Settings_GetCustomInput(KEY_FIVE);
+    WeaponDataHolder.Weapons[FIST]->inputKey    = Settings_GetCustomInput(KEY_ONE);
+    WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings_GetCustomInput(KEY_TWO);
+    WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings_GetCustomInput(KEY_THREE);
+    WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings_GetCustomInput(KEY_FOUR);
+    WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings_GetCustomInput(KEY_FIVE);
 }
 
 void Weapon_SelectDefault()
 {
-    WeaponHolder.currentWeapon         = FIST;
-    WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
-    WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
-    WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.FIST.maxAmmo;
+    WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[FIST]->weaponId;
 }
 
-// TODO: Check if weapon is equipped
-// Is there more sane way to do this?
-void Weapon_Change()
+void Weapon_GetSwitchInput()
 {
     int key = 0;
     key     = GetKeyPressed();
-    if(key == WeaponHolder.FIST.inputKey)
+
+    for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
-        WeaponHolder.currentWeapon         = FIST;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.FIST.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.FIST.damage;
-        WeaponHolder.currentWeaponAmmo     = WEAPON_FIST_AMMO_MAX;
-        WeaponHolder.currentWeaponMaxAmmo  = WEAPON_FIST_AMMO_MAX;
-        printf("Fist equipped\n");
+        if(key == WeaponDataHolder.Weapons[i]->inputKey)
+        {
+            Weapon_Change(WeaponDataHolder.Weapons[i]->weaponId);
+        }
     }
-    else if(key == WeaponHolder.PISTOL.inputKey)
-    {
-        WeaponHolder.currentWeapon         = PISTOL;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.PISTOL.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.PISTOL.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.PISTOL.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.PISTOL.maxAmmo;
-        printf("Pistol equipped\n");
-    }
-    else if(key == WeaponHolder.RIFLE.inputKey)
-    {
-        WeaponHolder.currentWeapon         = RIFLE;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.RIFLE.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.RIFLE.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.RIFLE.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RIFLE.maxAmmo;
-    }
-    else if(key == WeaponHolder.SHOTGUN.inputKey)
-    {
-        WeaponHolder.currentWeapon         = SHOTGUN;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.SHOTGUN.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.SHOTGUN.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.SHOTGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.SHOTGUN.maxAmmo;
-    }
-    else if(key == WeaponHolder.RAILGUN.inputKey)
-    {
-        WeaponHolder.currentWeapon         = RAILGUN;
-        WeaponHolder.currentWeaponFirerate = WeaponHolder.RAILGUN.fireRate;
-        WeaponHolder.currentWeaponDamage   = WeaponHolder.RAILGUN.damage;
-        WeaponHolder.currentWeaponAmmo     = WeaponHolder.RAILGUN.ammo;
-        WeaponHolder.currentWeaponMaxAmmo  = WeaponHolder.RAILGUN.maxAmmo;
-    }
-    // Weapon switching animation goes here
+}
+
+// Check if weapon is equipped
+void Weapon_Change(int weaponId)
+{
+    WeaponDataHolder.currentWeapon = weaponId;
 }
 
 int TestEntityHit(Ray rayCast)
@@ -147,8 +137,7 @@ int TestEntityHit(Ray rayCast)
         if(levelData[i].modelId != 0)
         {
             Vector3 pos           = levelData[i].blockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -163,12 +152,10 @@ int TestEntityHit(Ray rayCast)
         {
             if(!enemies[i].dead)
             {
-                if(Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) <
-                   enemyDistance)
+                if(Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
                 {
-                    enemyDistance =
-                        Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
-                    enemyDataHit = enemies[i];
+                    enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
+                    enemyDataHit  = enemies[i];
                 }
             }
         }
@@ -184,56 +171,18 @@ int TestEntityHit(Ray rayCast)
     return id;
 }
 
-bool WeaponHasAmmo()
+bool WeaponHasAmmo(int currentWeapon)
 {
 
-    if(WeaponHolder.currentWeapon == FIST)
+    if(currentWeapon == FIST)
     {
         return true;
     }
-
-    switch(WeaponHolder.currentWeapon)
-    {
-        case PISTOL:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.PISTOL.ammo;
-            break;
-
-        case RIFLE:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.RIFLE.ammo;
-            break;
-
-        case SHOTGUN:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.SHOTGUN.ammo;
-            break;
-
-        case RAILGUN:
-            WeaponHolder.currentWeaponAmmo = WeaponHolder.RAILGUN.ammo;
-            break;
-    }
-
-    printf("Ammo: %d \n", WeaponHolder.currentWeaponAmmo);
+    printf("Ammo: %d \n", WeaponDataHolder.Weapons[currentWeapon]->ammo);
     // TODO: Is there a better way to do this without so much repetition?
-    if(WeaponHolder.currentWeaponAmmo > 0)
+    if(WeaponDataHolder.Weapons[currentWeapon]->ammo > 0)
     {
-        WeaponHolder.currentWeaponAmmo--;
-        switch(WeaponHolder.currentWeapon)
-        {
-            case PISTOL:
-                WeaponHolder.PISTOL.ammo--;
-                break;
-
-            case RIFLE:
-                WeaponHolder.RIFLE.ammo--;
-                break;
-
-            case SHOTGUN:
-                WeaponHolder.SHOTGUN.ammo--;
-                break;
-
-            case RAILGUN:
-                WeaponHolder.RAILGUN.ammo--;
-                break;
-        }
+        WeaponDataHolder.Weapons[currentWeapon]->ammo--;
         return true;
     }
     else
@@ -250,18 +199,26 @@ float Weapon_Fire(Camera* camera, float nextFire)
     }
     else
     {
-        if(WeaponHasAmmo())
+        if(WeaponHasAmmo(WeaponDataHolder.currentWeapon))
         {
+            // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             int id      = TestEntityHit(rayCast);
-            printf("Id hit: %i \n", id);
-            if(id != 0 && id != PLAYER_ID)
+            if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
             {
-                Enemy_TakeDamage(&Level_enemies[id], WeaponHolder.currentWeaponDamage);
-                printf("Enemy_Data id %d takes %d damage\n", id, WeaponHolder.currentWeaponDamage);
+                printf("Id hit: %i \n", id);
+                if(id != 0 && id != PLAYER_ID)
+                {
+                    Enemy_TakeDamage(&Level_enemies[id], WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                }
+            }
+            else
+            {
+                Projectile_Create(rayCast, (Vector3) {0.2f, 0.2f, 0.2f}, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage, PLAYER_ID);
             }
         }
-        nextFire = WeaponHolder.currentWeaponFirerate;
+        nextFire = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->fireRate;
     }
     return nextFire;
 }

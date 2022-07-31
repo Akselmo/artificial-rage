@@ -4,9 +4,18 @@
 [![ko-fi](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/L4L57FOPF)
 [![discord](https://img.shields.io/discord/475097536160595979?color=%235865F2&label=aks_dev%20discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/PZkYZRx)
 [![Matrix](https://img.shields.io/matrix/aksdev-space:matrix.akselmo.dev?color=0dbd8b&label=aks_dev%20matrix&logo=matrix&logoColor=ffffff&server_fqdn=matrix.org&style=flat-square)](https://matrix.to/#/#aksdev-space:matrix.akselmo.dev)
-# Artificial Rage - a Scifi FPS
 
-![Screenshot of Artificial Rage](./screenshot.png)
+-------
+
+<p align="center">
+  <h1> Artificial Rage - a Scifi FPS </h1>
+  <br>
+  <img src="./other_assets/ar_2.png" width="100"/>
+  <br>
+  <img alt="Screenshot of Artificial Rage" src="./screenshot.png" />
+  <br>
+</p>
+
 -------
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
@@ -27,7 +36,9 @@ as a learning tool.
 * Run the following commands in project root to build the binary
     * `mkdir build && cd build`
     * `cmake ../`
-    * `make`
+    * `make` OR `cmake --build .`
+        * Plain `make` may have problems when it comes to debugging.
+
 
 **Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new
 files.**

@@ -14,3 +14,4 @@ I try to keep this list as up to date as possible. If you feel like your name is
 * [goshhhy (linear)](https://github.com/goshhhy): Helped me understand memory allocation problems and fixed the cmake
   file
 * [Flusaka](https://github.com/flusaka): Helped me with memory problems :D 
+* [Tecsiederp](https://twitter.com/tecsiederp): Created the ar_1 and ar_2 logos!
