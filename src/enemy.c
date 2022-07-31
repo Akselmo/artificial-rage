@@ -27,7 +27,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .nextTick    = -1.0f,
              .speed       = 0.01f,
              .fireRate    = 5.75f,
-             .nextFire    = 0.0f,
+             .nextFire    = 10.0f, //TODO: add loading time to nextFire to prevent enemies shooting before level is done?
     };
     return enemy;
 }
@@ -164,17 +164,8 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         }
         else
         {
-            // Fire animation should play anyway, we just hit player
-            // if the following random check goes through
-            /* //old hitscan thing
-            if(GetRandomValue(0, 10) >= 6)
-            {
-                int dmg = enemy->damage * -1;
-                printf(" Enemy_Data %i Hit player for %i dmg\n", enemy->id, dmg);
-                Player_SetHealth(dmg);
-            }
-            */
-            
+            // Fire animation should play before we shoot projectile
+            // TODO: dont shoot before level is loaded!!
             Projectile_Create(Enemy_CreateRay(enemy), (Vector3) {0.2f, 0.2f, 0.2f}, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
         }
