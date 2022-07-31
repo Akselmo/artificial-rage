@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ArtificialRage",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ArtificialRage",
+            "cwd": "${workspaceFolder}/build/"
+        }
+    ]
+}
