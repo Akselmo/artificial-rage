@@ -1,9 +1,13 @@
 #include "enemy.h"
+#include "player.h"
+#include "projectile.h"
+#include "raylib.h"
 
 // Private functions
 void Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
+Ray Enemy_CreateRay(Enemy_Data* enemy);
 
 // Since we use billboarding we dont have to know rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
@@ -52,15 +56,21 @@ void Enemy_Draw(Enemy_Data enemy)
     DrawCubeV(enemy.position, enemy.size, RED);
 }
 
-bool Enemy_TestPlayerHit(Enemy_Data* enemy)
+Ray Enemy_CreateRay(Enemy_Data* enemy)
 {
-
     Ray rayCast;
     BoundingBox playerBb   = GetPlayerBoundingBox();
     Vector3 playerPosition = GetPlayerPosition();
     Vector3 v              = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
     rayCast.direction      = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
     rayCast.position       = enemy->position;
+    return rayCast;
+}
+
+bool Enemy_TestPlayerHit(Enemy_Data* enemy)
+{
+
+    Ray rayCast = Enemy_CreateRay(enemy);
 
     bool hitPlayer        = false;
     float distance        = 0.0f;
@@ -87,7 +97,7 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
         }
     }
 
-    playerDistance = Vector3Length(Vector3Subtract(playerPosition, rayCast.position));
+    playerDistance = Vector3Length(Vector3Subtract(GetPlayerPosition(), rayCast.position));
 
     if(playerDistance < levelDistance)
     {
@@ -156,12 +166,16 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play anyway, we just hit player
             // if the following random check goes through
+            /* //old hitscan thing
             if(GetRandomValue(0, 10) >= 6)
             {
                 int dmg = enemy->damage * -1;
                 printf(" Enemy_Data %i Hit player for %i dmg\n", enemy->id, dmg);
                 Player_SetHealth(dmg);
             }
+            */
+            
+            Projectile_Create(Enemy_CreateRay(enemy), (Vector3) {0.2f, 0.2f, 0.2f}, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
         }
     }

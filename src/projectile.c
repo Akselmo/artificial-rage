@@ -59,7 +59,7 @@ void Projectile_CheckCollision(Projectile* projectile)
     {
         
         //Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox))
+        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox) && Level_data[i].modelId != projectile->ownerId)
         {
            Projectile_Destroy(projectile);
            return;
@@ -74,7 +74,7 @@ void Projectile_CheckCollision(Projectile* projectile)
         //Against player except if owned by player
         else if (CheckCollisionBoxes(projectileBox, GetPlayerBoundingBox()) && PLAYER_ID != projectile->ownerId)
         {
-            Player_SetHealth(projectile->damage);
+            Player_SetHealth(-1*projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
@@ -85,15 +85,7 @@ void Projectile_CheckCollision(Projectile* projectile)
 //Rename to projectile_DestroyOverTime
 void Projectile_DestroyOverTime(Projectile* projectile)
 {
-    // TODO: Destroy the projectile, free it from memory.
-    // Could also do object pooling if feeling creative but that's more a "nice-to-have"
-    //  Destroy after either collide or after 20 seconds
-    Vector3 distanceFromEnd = Vector3Subtract(projectile->position, projectile->endPosition);
-    if(fabsf(distanceFromEnd.x) <= 0.01f || fabsf(distanceFromEnd.y) <= 0.01f || fabsf(distanceFromEnd.z) <= 0.01f)
-    {
-        Projectile_Destroy(projectile);
-        return;
-    }
+    // TODO: Destroy after 20 seconds
 }
 
 //Rename to projectile_destroy
