@@ -105,11 +105,11 @@ void Level_PlaceBlocks()
                 Model cubeModel                                           = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-                Level_data[i].blockModel    = cubeModel;
-                Level_data[i].blockPosition = (Vector3) {mx, Level_mapPosition.y, my};
-                Level_data[i].modelId       = WALL_MODEL_ID;
-                Level_data[i].blockSize     = (Vector3){1.0f, 1.0f, 1.0f};
-                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox((Vector3){mx, Level_mapPosition.y, my},(Vector3){1.0f, 1.0f, 1.0f});
+                Level_data[i].blockModel       = cubeModel;
+                Level_data[i].blockPosition    = (Vector3) {mx, Level_mapPosition.y, my};
+                Level_data[i].modelId          = WALL_MODEL_ID;
+                Level_data[i].blockSize        = (Vector3) {1.0f, 1.0f, 1.0f};
+                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox((Vector3) {mx, Level_mapPosition.y, my}, (Vector3) {1.0f, 1.0f, 1.0f});
             }
 
             // Find start, which is green (0,255,0)
@@ -184,7 +184,7 @@ bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
     for(int i = 0; i < Level_mapSize; i++)
     {
         // Level blocks
-        
+
         // Player and walls/enemies
         if(CheckCollisionBoxes(entityBox, Level_data[i].blockBoundingBox))
         {

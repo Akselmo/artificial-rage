@@ -6,7 +6,7 @@
 #include "raymath.h"
 #include "utilities.h"
 
-//Prototypes
+// Prototypes
 void Projectile_DestroyOverTime(Projectile* projectile);
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
@@ -52,43 +52,42 @@ void Projectile_Update(Projectile* projectile)
 
 void Projectile_CheckCollision(Projectile* projectile)
 {
-    //Check against the owner of the projectile and the entity id. if theres a match, ignore it, unless its a wall
-    // Otherwise tell the entity they've been hit and give them damage
+    // Check against the owner of the projectile and the entity id. if theres a match, ignore it, unless its a wall
+    //  Otherwise tell the entity they've been hit and give them damage
     BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for (int i = 0; i < Level_mapSize; i++)
+    for(int i = 0; i < Level_mapSize; i++)
     {
-        
-        //Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox) && Level_data[i].modelId != projectile->ownerId)
+
+        // Test hitting against wall
+        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox))
         {
-           Projectile_Destroy(projectile);
-           return;
+            Projectile_Destroy(projectile);
+            return;
         }
-        //Against enemy except if owned by enemy
+        // Against enemy except if owned by enemy
         else if(CheckCollisionBoxes(projectileBox, Level_enemies[i].boundingBox) && Level_enemies[i].id != projectile->ownerId)
         {
             Enemy_TakeDamage(&Level_enemies[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
-        //Against player except if owned by player
-        else if (CheckCollisionBoxes(projectileBox, GetPlayerBoundingBox()) && PLAYER_ID != projectile->ownerId)
+        // Against player except if owned by player
+        else if(CheckCollisionBoxes(projectileBox, GetPlayerBoundingBox()) && PLAYER_ID != projectile->ownerId)
         {
-            Player_SetHealth(-1*projectile->damage);
+            Player_SetHealth(-1 * projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
     }
-
 }
 
-//Rename to projectile_DestroyOverTime
+// Rename to projectile_DestroyOverTime
 void Projectile_DestroyOverTime(Projectile* projectile)
 {
     // TODO: Destroy after 20 seconds
 }
 
-//Rename to projectile_destroy
+// Rename to projectile_destroy
 void Projectile_Destroy(Projectile* projectile)
 {
     printf("Projectile id %d destroyed\n", projectile->id);

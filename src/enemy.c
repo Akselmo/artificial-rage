@@ -20,14 +20,14 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .size        = enemySize,
              .dead        = false,
              .damage      = 5,
-             .health      = 15, //Check enemy health balance later
+             .health      = 15,  // Check enemy health balance later
              .boundingBox = Utilities_MakeBoundingBox(enemyPosition, enemySize),
              .id          = id,
              .tickRate    = randomTickRate,
              .nextTick    = -1.0f,
              .speed       = 0.01f,
              .fireRate    = 5.75f,
-             .nextFire    = 10.0f, //TODO: add loading time to nextFire to prevent enemies shooting before level is done?
+             .nextFire    = 10.0f,  // TODO: add loading time to nextFire to prevent enemies shooting before level is done?
     };
     return enemy;
 }
