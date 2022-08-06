@@ -35,10 +35,14 @@ typedef struct Player_Data
 {
     int health;
     bool dead;
+    Vector3 position;
+    Vector3 size;
+    BoundingBox boundingBox;
+    float nextFire;
 } Player_Data;
 
 // Public variables
-extern struct Player_Data Player;
+extern struct Player_Data *Player;
 
 // Public functions
 Camera Player_InitializeCamera(float pos_x, float pos_z);
@@ -46,8 +50,6 @@ void Player_Update(Camera* camera);
 bool Player_CheckCollision(Camera camera, BoundingBox other);
 void Player_SetHealth(int healthToAdd);
 void Player_FireWeapon(Camera* camera);
-BoundingBox GetPlayerBoundingBox();
-Vector3 GetPlayerPosition();
 
 // Movement keys enum for directions
 typedef enum Player_CameraMoveKeys

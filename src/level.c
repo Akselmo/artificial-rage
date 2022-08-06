@@ -31,7 +31,7 @@ char* wallTextures[2];
 void Level_PlaceBlocks();
 void Level_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Level_SetBlockTypes();
-void Level_DrawProjectiles();
+void Level_UpdateProjectiles();
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -137,7 +137,7 @@ void Level_PlaceBlocks()
     printf("Level has total %d blocks \n", Level_mapSize);
 }
 
-void Level_Draw()
+void Level_Update()
 {
 
     DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
@@ -162,10 +162,10 @@ void Level_Draw()
             }
         }
     }
-    Level_DrawProjectiles();
+    Level_UpdateProjectiles();
 }
 
-void Level_DrawProjectiles()
+void Level_UpdateProjectiles()
 {
     for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {

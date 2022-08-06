@@ -51,7 +51,7 @@ extern int Level_mapSize;
 // Functions
 Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize);
 void Level_Build();
-void Level_Draw();
+void Level_Update();
 bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
 
 #endif
