@@ -1,6 +1,8 @@
 #include "player.h"
 #include "hud.h"
+#include "raylib.h"
 #include "weapon.h"
+#include <stdlib.h>
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
@@ -13,17 +15,9 @@ static Player_CustomCameraData Player_CustomCamera = {
     .playerSpeed        = 1.75f,
 };
 
-// Initialize player
-Player_Data Player = {
-    .health = PLAYER_MAX_HEALTH,
-    .dead   = false,
-};
+Player_Data *Player = NULL;
 
 // Private functions
-Vector3 Player_size;
-Vector3 Player_position;
-BoundingBox Player_boundingBox;
-float Player_nextFire = 0.0f;
 
 Camera Player_InitializeCamera(float pos_x, float pos_z)
 {
@@ -71,10 +65,17 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.moveLeft         = moveLeft;
     Player_CustomCamera.mouseSensitivity = mouseSensitivity;
 
+    //Initialize player data
+    Player = calloc(1, sizeof(Player_Data));
+    Player->health = PLAYER_MAX_HEALTH;
+    Player->dead   = false;
+    Player->size   = (Vector3){0.1f, 0.1f, 0.1f};
+    Player->position = (Vector3){0.0f,0.0f,0.0f};
+    Player->boundingBox = Utilities_MakeBoundingBox(Player->size, Player->position);
+    Player->nextFire = 0.0f;
+
     Weapon_InitializeKeys();
 
-    // Set player size for bounding box
-    Player_size = (Vector3) {0.1f, 0.1f, 0.1f};
     Weapon_SelectDefault();
 
     return camera;
@@ -85,7 +86,7 @@ void Player_Update(Camera* camera)
 
     Vector3 oldPlayerPos = camera->position;
 
-    Player_boundingBox = Utilities_MakeBoundingBox(camera->position, Player_size);
+    Player->boundingBox = Utilities_MakeBoundingBox(camera->position, Player->size);
 
     static Vector2 previousMousePosition = {0.0f, 0.0f};
     Vector2 mousePositionDelta           = {0.0f, 0.0f};
@@ -145,49 +146,37 @@ void Player_Update(Camera* camera)
     // Camera position update
     camera->position.y = Player_CustomCamera.playerEyesPosition;
 
-    if(Level_CheckCollision(camera->position, Player_size, PLAYER_ID))
+    if(Level_CheckCollision(camera->position, Player->size, PLAYER_ID))
     {
         camera->position = oldPlayerPos;
     }
 
-    Player_position = camera->position;
-
+    Player->position = camera->position;
+    Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
     // Check if we need to switch weapon
     Weapon_GetSwitchInput();
-}
-
-// TODO: Use externs instead
-BoundingBox GetPlayerBoundingBox()
-{
-    return Player_boundingBox;
-}
-
-// TODO: Use externs instead
-Vector3 GetPlayerPosition()
-{
-    return Player_position;
 }
 
 // Use minus for removing health
 void Player_SetHealth(int healthToAdd)
 {
-    Player.health += healthToAdd;
-    if(Player.health > PLAYER_MAX_HEALTH)
+    Player->health += healthToAdd;
+    if(Player->health > PLAYER_MAX_HEALTH)
     {
-        Player.health = PLAYER_MAX_HEALTH;
+        Player->health = PLAYER_MAX_HEALTH;
     }
-    else if(Player.health <= 0)
+    else if(Player->health <= 0)
     {
-        Player.dead = true;
+        Player->dead = true;
     }
 }
 
 void Player_FireWeapon(Camera* camera)
 {
     // Calculate fire rate countdown here
-    Player_nextFire -= GetFrameTime();
+    Player->nextFire -= GetFrameTime();
     if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
     {
-        Player_nextFire = Weapon_Fire(camera, Player_nextFire);
+        Player->nextFire = Weapon_Fire(camera, Player->nextFire);
     }
 }

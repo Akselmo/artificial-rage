@@ -17,4 +17,6 @@
 void Game_Initialize();
 void Game_Update();
 
+extern bool Game_isStarted;
+
 #endif

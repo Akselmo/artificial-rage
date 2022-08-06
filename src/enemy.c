@@ -59,8 +59,8 @@ void Enemy_Draw(Enemy_Data enemy)
 Ray Enemy_CreateRay(Enemy_Data* enemy)
 {
     Ray rayCast;
-    BoundingBox playerBb   = GetPlayerBoundingBox();
-    Vector3 playerPosition = GetPlayerPosition();
+    BoundingBox playerBb   = Player->boundingBox;
+    Vector3 playerPosition = Player->position;
     Vector3 v              = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
     rayCast.direction      = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
     rayCast.position       = enemy->position;
@@ -97,7 +97,7 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
         }
     }
 
-    playerDistance = Vector3Length(Vector3Subtract(GetPlayerPosition(), rayCast.position));
+    playerDistance = Vector3Length(Vector3Subtract(Player->position, rayCast.position));
 
     if(playerDistance < levelDistance)
     {
@@ -120,13 +120,13 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
     //- If cant see player, stop
     //- When stopped, fire
     enemy->speed               = ENEMY_DEFAULT_SPEED * GetFrameTime();
-    Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, GetPlayerPosition());
+    Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
     if(Enemy_TestPlayerHit(enemy))
     {
         if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
-            enemy->position          = Vector3Lerp(enemy->position, GetPlayerPosition(), enemy->speed);
+            enemy->position          = Vector3Lerp(enemy->position, Player->position, enemy->speed);
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;

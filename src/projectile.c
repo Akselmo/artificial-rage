@@ -72,7 +72,7 @@ void Projectile_CheckCollision(Projectile* projectile)
             return;
         }
         // Against player except if owned by player
-        else if(CheckCollisionBoxes(projectileBox, GetPlayerBoundingBox()) && PLAYER_ID != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
         {
             Player_SetHealth(-1 * projectile->damage);
             Projectile_Destroy(projectile);

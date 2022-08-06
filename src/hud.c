@@ -11,7 +11,7 @@ char Hud_weaponNameText[15] = "WeaponName";
 void Hud_Draw()
 {
     DrawFPS(10, 10);
-    sprintf(Hud_healthText, "%d", Player.health);
+    sprintf(Hud_healthText, "%d", Player->health);
 
     char ammo[3];
     char divider[2];
@@ -24,7 +24,7 @@ void Hud_Draw()
     strcat(Hud_weaponAmmoText, "/");
     strcat(Hud_weaponAmmoText, maxAmmo);
 
-    if(Player.health <= 0)
+    if(Player->health <= 0)
     {
         strcpy(Hud_healthText, Hud_dedText);
     }
