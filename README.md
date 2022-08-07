@@ -29,8 +29,11 @@ as a learning tool.
 
 <a href="https://codeberg.org/akselmo/artificial-rage"><img src="https://akselmo.dev/assets/images/getitoncodeberg.svg" width="200"></a>
 
-## Howto compile for different platforms
+## Contributing
 
+Currently not looking for contributions for code, but any other creative assets such as art is welcome!
+
+## Howto compile for different platforms
 
 * IF the CMake file doesn't do this for you, compile raylib for your platform from source
 
