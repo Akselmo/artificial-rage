@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "Running git clang-format"
 if ! command -v clang-format &> /dev/null
 then
