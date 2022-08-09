@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.0)
 set(OpenGL_GL_PREFERENCE LEGACY)
 project(ArtificialRage)
 
+#Copy commit hook
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/)
+
 #Raylib version used: 4.0.0
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)

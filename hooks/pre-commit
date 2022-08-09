@@ -1,0 +1,12 @@
+echo "Running git clang-format"
+if ! command -v clang-format &> /dev/null
+then
+    echo "clang-format could not be found!"
+    exit 1
+fi
+readonly output=$(git clang-format --extensions 'cpp,h,hpp,c' -v --diff)
+if [[ "$output" == *"no modified files to format"* ]]; then echo "No files to format"; exit 0; fi
+if [[ "$output" == *"clang-format did not modify any files"* ]]; "No files to format"; then exit 0; fi
+echo "Formatting files with --force"
+git clang-format --extensions 'cpp,h,hpp,c' --force
+
