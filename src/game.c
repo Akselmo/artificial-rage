@@ -37,13 +37,12 @@ void Game_Update()
 
     BeginMode3D(playerCamera);
 
-    if (Game_initialized)
+    if(Game_initialized)
     {
         Player_Update(&playerCamera);
         Player_FireWeapon(&playerCamera);
         Level_Update();
     }
-
 
     EndMode3D();
 

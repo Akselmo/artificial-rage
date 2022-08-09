@@ -15,7 +15,7 @@ static Player_CustomCameraData Player_CustomCamera = {
     .playerSpeed        = 1.75f,
 };
 
-Player_Data *Player = NULL;
+Player_Data* Player = NULL;
 
 // Private functions
 
@@ -65,14 +65,14 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.moveLeft         = moveLeft;
     Player_CustomCamera.mouseSensitivity = mouseSensitivity;
 
-    //Initialize player data
-    Player = calloc(1, sizeof(Player_Data));
-    Player->health = PLAYER_MAX_HEALTH;
-    Player->dead   = false;
-    Player->size   = (Vector3){0.1f, 0.1f, 0.1f};
-    Player->position = (Vector3){0.0f,0.0f,0.0f};
+    // Initialize player data
+    Player              = calloc(1, sizeof(Player_Data));
+    Player->health      = PLAYER_MAX_HEALTH;
+    Player->dead        = false;
+    Player->size        = (Vector3) {0.1f, 0.1f, 0.1f};
+    Player->position    = (Vector3) {0.0f, 0.0f, 0.0f};
     Player->boundingBox = Utilities_MakeBoundingBox(Player->size, Player->position);
-    Player->nextFire = 0.0f;
+    Player->nextFire    = 0.0f;
 
     Weapon_InitializeKeys();
 
@@ -151,7 +151,7 @@ void Player_Update(Camera* camera)
         camera->position = oldPlayerPos;
     }
 
-    Player->position = camera->position;
+    Player->position    = camera->position;
     Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
     // Check if we need to switch weapon
     Weapon_GetSwitchInput();

@@ -42,7 +42,7 @@ typedef struct Player_Data
 } Player_Data;
 
 // Public variables
-extern struct Player_Data *Player;
+extern struct Player_Data* Player;
 
 // Public functions
 Camera Player_InitializeCamera(float pos_x, float pos_z);
