@@ -20,7 +20,7 @@ Level_BlockType Level_BlockTypes;
 Color* levelMapPixels = NULL;
 Texture2D levelCubicMap;
 Image levelImageMap;
-Vector3 ceilingRotation = {-1.0f, 0.0f, 0.0f};
+Vector3 ceilingRotation = { -1.0f, 0.0f, 0.0f };
 Model planeFloor;
 Material* floorMaterial = NULL;
 Model planeCeiling;
@@ -32,6 +32,7 @@ void Level_PlaceBlocks();
 void Level_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Level_SetBlockTypes();
 void Level_UpdateProjectiles();
+
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -76,7 +77,7 @@ void Level_PlaceBlocks()
     wallTextures[0] = "./assets/wall1.png";
     wallTextures[1] = "./assets/wall2.png";
 
-    Level_mapPosition = (Vector3) {-mapPosX / 2, 0.5f, -mapPosZ / 2};
+    Level_mapPosition = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
     Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
 
     Level_data        = calloc(Level_mapSize, sizeof(Level_Data));
@@ -92,8 +93,8 @@ void Level_PlaceBlocks()
             float my = Level_mapPosition.z - 0.5f + y * 1.0f;
             int i    = y * levelCubicMap.width + x;
 
-            Color pixelColor = {0, 0, 0};
-            pixelColor       = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            Color pixelColor = { 0, 0, 0 };
+            pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -101,27 +102,28 @@ void Level_PlaceBlocks()
 
                 Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                Mesh cube                                                 = GenMeshCube(1.0f, 1.0f, 1.0f);
-                Model cubeModel                                           = LoadModelFromMesh(cube);
+                Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
+                Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 Level_data[i].blockModel       = cubeModel;
-                Level_data[i].blockPosition    = (Vector3) {mx, Level_mapPosition.y, my};
+                Level_data[i].blockPosition    = (Vector3) { mx, Level_mapPosition.y, my };
                 Level_data[i].modelId          = WALL_MODEL_ID;
-                Level_data[i].blockSize        = (Vector3) {1.0f, 1.0f, 1.0f};
-                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox((Vector3) {mx, Level_mapPosition.y, my}, (Vector3) {1.0f, 1.0f, 1.0f});
+                Level_data[i].blockSize        = (Vector3) { 1.0f, 1.0f, 1.0f };
+                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox(
+                    (Vector3) { mx, Level_mapPosition.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
             }
 
             // Find start, which is green (0,255,0)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.startColor))
             {
-                Level_startPosition = (Vector3) {mx, 0.0f, my};
+                Level_startPosition = (Vector3) { mx, 0.0f, my };
             }
 
             // Find end, which is blue (0,0,255)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.endColor))
             {
-                Level_endPosition = (Vector3) {mx, 0.0f, my};
+                Level_endPosition = (Vector3) { mx, 0.0f, my };
             }
 
             // Find enemy, which is red (255,0,0)
@@ -140,9 +142,14 @@ void Level_PlaceBlocks()
 void Level_Update()
 {
 
-    DrawModel(planeFloor, (Vector3) {Level_mapPosition.x, 0.0f, Level_mapPosition.z}, 1.0f, WHITE);
-    DrawModelEx(
-        planeCeiling, (Vector3) {Level_mapPosition.x, 1.0f, -Level_mapPosition.z}, ceilingRotation, 180.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
+    DrawModel(
+        planeFloor, (Vector3) { Level_mapPosition.x, 0.0f, Level_mapPosition.z }, 1.0f, WHITE);
+    DrawModelEx(planeCeiling,
+                (Vector3) { Level_mapPosition.x, 1.0f, -Level_mapPosition.z },
+                ceilingRotation,
+                180.0f,
+                (Vector3) { 1.0f, 1.0f, 1.0f },
+                WHITE);
 
     for(int i = 0; i < Level_mapSize; i++)
     {
@@ -191,8 +198,10 @@ bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
             return true;
         }
         // Enemy and wall/other enemies
-        // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their own projectiles
-        else if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox) && Level_enemies[i].id != entityId)
+        // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their
+        // own projectiles
+        else if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox) &&
+                Level_enemies[i].id != entityId)
         {
             return true;
         }
@@ -203,7 +212,7 @@ bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
     // X width, Z height
-    Mesh mesh = {0};
+    Mesh mesh = { 0 };
     Level_AllocateMeshData(&mesh, 2);
 
     // First triangle
@@ -279,9 +288,9 @@ void Level_AllocateMeshData(Mesh* mesh, int triangleCount)
 
 void Level_SetBlockTypes()
 {
-    Level_BlockTypes.startColor = (Color) {0, 255, 0};
-    Level_BlockTypes.endColor   = (Color) {0, 0, 255};
-    Level_BlockTypes.wallColor  = (Color) {255, 255, 255};
-    Level_BlockTypes.enemyColor = (Color) {255, 0, 0};
-    Level_BlockTypes.NONE       = (Color) {0, 0, 0};
+    Level_BlockTypes.startColor = (Color) { 0, 255, 0 };
+    Level_BlockTypes.endColor   = (Color) { 0, 0, 255 };
+    Level_BlockTypes.wallColor  = (Color) { 255, 255, 255 };
+    Level_BlockTypes.enemyColor = (Color) { 255, 0, 0 };
+    Level_BlockTypes.NONE       = (Color) { 0, 0, 0 };
 }

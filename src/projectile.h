@@ -12,18 +12,18 @@
 
 typedef struct Projectile
 {
-    Vector3 startPosition;
-    Vector3 endPosition;
-    Vector3 position;
-    Vector3 size;
-    Color color;
-    Model model;
-    BoundingBox boundingBox;
-    int id;
-    int ownerId;
-    int damage;
-    bool destroyed;
-    float speed;
+        Vector3 startPosition;
+        Vector3 endPosition;
+        Vector3 position;
+        Vector3 size;
+        Color color;
+        Model model;
+        BoundingBox boundingBox;
+        int id;
+        int ownerId;
+        int damage;
+        bool destroyed;
+        float speed;
 } Projectile;
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId);

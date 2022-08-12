@@ -23,22 +23,22 @@
 // Struct for all the camera data
 typedef struct Player_CustomCameraData
 {
-    float targetDistance;
-    float playerEyesPosition;
-    Vector2 angle;
-    int moveFront, moveBack, moveRight, moveLeft;
-    float mouseSensitivity;
-    float playerSpeed;
+        float targetDistance;
+        float playerEyesPosition;
+        Vector2 angle;
+        int moveFront, moveBack, moveRight, moveLeft;
+        float mouseSensitivity;
+        float playerSpeed;
 } Player_CustomCameraData;
 
 typedef struct Player_Data
 {
-    int health;
-    bool dead;
-    Vector3 position;
-    Vector3 size;
-    BoundingBox boundingBox;
-    float nextFire;
+        int health;
+        bool dead;
+        Vector3 position;
+        Vector3 size;
+        BoundingBox boundingBox;
+        float nextFire;
 } Player_Data;
 
 // Public variables

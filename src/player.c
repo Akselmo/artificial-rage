@@ -10,7 +10,7 @@
 static Player_CustomCameraData Player_CustomCamera = {
     .targetDistance     = 0,
     .playerEyesPosition = 1.85f,
-    .angle              = {0},
+    .angle              = { 0 },
     .mouseSensitivity   = 0.003f,
     .playerSpeed        = 1.75f,
 };
@@ -21,7 +21,7 @@ Player_Data* Player = NULL;
 
 Camera Player_InitializeCamera(float pos_x, float pos_z)
 {
-    Camera camera = {0};
+    Camera camera = { 0 };
 
     // Get Settings
     float fov              = Settings_CameraFov;
@@ -33,9 +33,9 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     int fireGun            = MOUSE_LEFT_BUTTON;
 
     // Place camera and apply settings
-    camera.position   = (Vector3) {pos_x, PLAYER_START_POSITION_Y, pos_z};
-    camera.target     = (Vector3) {0.0f, 0.5f, 0.0f};
-    camera.up         = (Vector3) {0.0f, 1.0f, 0.0f};
+    camera.position   = (Vector3) { pos_x, PLAYER_START_POSITION_Y, pos_z };
+    camera.target     = (Vector3) { 0.0f, 0.5f, 0.0f };
+    camera.up         = (Vector3) { 0.0f, 1.0f, 0.0f };
     camera.fovy       = fov;  // get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
@@ -69,8 +69,8 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player              = calloc(1, sizeof(Player_Data));
     Player->health      = PLAYER_MAX_HEALTH;
     Player->dead        = false;
-    Player->size        = (Vector3) {0.1f, 0.1f, 0.1f};
-    Player->position    = (Vector3) {0.0f, 0.0f, 0.0f};
+    Player->size        = (Vector3) { 0.1f, 0.1f, 0.1f };
+    Player->position    = (Vector3) { 0.0f, 0.0f, 0.0f };
     Player->boundingBox = Utilities_MakeBoundingBox(Player->size, Player->position);
     Player->nextFire    = 0.0f;
 
@@ -88,34 +88,42 @@ void Player_Update(Camera* camera)
 
     Player->boundingBox = Utilities_MakeBoundingBox(camera->position, Player->size);
 
-    Vector2 mousePositionDelta           = GetMouseDelta();
-    Vector2 mousePosition                = GetMousePosition();
-    float mouseWheelMove                 = GetMouseWheelMove();
+    Vector2 mousePositionDelta = GetMouseDelta();
+    Vector2 mousePosition      = GetMousePosition();
+    float mouseWheelMove       = GetMouseWheelMove();
 
-    bool direction[4] = {IsKeyDown(Player_CustomCamera.moveFront),
-                         IsKeyDown(Player_CustomCamera.moveBack),
-                         IsKeyDown(Player_CustomCamera.moveRight),
-                         IsKeyDown(Player_CustomCamera.moveLeft)};
+    bool direction[4] = { IsKeyDown(Player_CustomCamera.moveFront),
+                          IsKeyDown(Player_CustomCamera.moveBack),
+                          IsKeyDown(Player_CustomCamera.moveRight),
+                          IsKeyDown(Player_CustomCamera.moveLeft) };
 
     // Move camera around X pos
-    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] + cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
+                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
+                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
+                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Y pos
-    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] - sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
+    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
+                            sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
     // Move camera around Z pos
-    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] - cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] - sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
+                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
+                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
+                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
+
     // Camera orientation calculation
-    Player_CustomCamera.angle.x -= mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();
-    Player_CustomCamera.angle.y -= mousePositionDelta.y * Player_CustomCamera.mouseSensitivity * GetFrameTime();
+    Player_CustomCamera.angle.x -=
+        mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();
+    Player_CustomCamera.angle.y -=
+        mousePositionDelta.y * Player_CustomCamera.mouseSensitivity * GetFrameTime();
 
     // Angle clamp
     if(Player_CustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP * DEG2RAD)
@@ -128,9 +136,11 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation    = MatrixInvert(MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0}));
-    Matrix transform   = MatrixMultiply(translation, rotation);
+    Matrix translation =
+        MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
+    Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3) {
+         PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
+    Matrix transform = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;
@@ -174,5 +184,3 @@ void Player_FireWeapon(Camera* camera)
         Player->nextFire = Weapon_Fire(camera, Player->nextFire);
     }
 }
-
-

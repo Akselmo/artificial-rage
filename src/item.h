@@ -8,11 +8,11 @@
 
 typedef struct Item_Data
 {
-    int itemtype;
-    Vector3 position;
-    Vector3 size;
-    BoundingBox boundingBox;
-    bool destroyed;
+        int itemtype;
+        Vector3 position;
+        Vector3 size;
+        BoundingBox boundingBox;
+        bool destroyed;
 } Item_Data;
 
 Item_Data Item_Add(float pos_x, float pos_y);

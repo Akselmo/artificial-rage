@@ -22,20 +22,20 @@
 
 typedef struct Level_Data
 {
-    Vector3 blockPosition;
-    Vector3 blockSize;
-    BoundingBox blockBoundingBox;
-    Model blockModel;
-    int modelId;
+        Vector3 blockPosition;
+        Vector3 blockSize;
+        BoundingBox blockBoundingBox;
+        Model blockModel;
+        int modelId;
 } Level_Data;
 
 typedef struct Level_BlockType
 {
-    Color NONE;
-    Color startColor;
-    Color endColor;
-    Color wallColor;
-    Color enemyColor;
+        Color NONE;
+        Color startColor;
+        Color endColor;
+        Color wallColor;
+        Color enemyColor;
 } Level_BlockType;
 
 // Variables

@@ -25,28 +25,28 @@
 
 typedef struct Weapon_Data
 {
-    char* name;
-    int weaponId;
-    int inputKey;
-    int damage;
-    int ammo;
-    int maxAmmo;
-    float fireRate;
-    float range;
-    bool pickedUp;
-    bool hitscan;
+        char* name;
+        int weaponId;
+        int inputKey;
+        int damage;
+        int ammo;
+        int maxAmmo;
+        float fireRate;
+        float range;
+        bool pickedUp;
+        bool hitscan;
 
 } Weapon_Data;
 
 typedef struct Weapon_DataHolder
 {
-    // Current Weapon Data
-    int currentWeapon;
+        // Current Weapon Data
+        int currentWeapon;
 
-    // Usable weapons
-    // We could also use arrays but this way it is easier
-    // to be able to remap weapon keys
-    Weapon_Data* Weapons[WEAPON_AMOUNT];
+        // Usable weapons
+        // We could also use arrays but this way it is easier
+        // to be able to remap weapon keys
+        Weapon_Data* Weapons[WEAPON_AMOUNT];
 } Weapon_DataHolder;
 
 typedef enum Weapon_ID

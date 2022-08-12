@@ -12,8 +12,8 @@ Ray Enemy_CreateRay(Enemy_Data* enemy);
 // Since we use billboarding we dont have to know rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
 {
-    Vector3 enemyPosition = (Vector3) {pos_x, ENEMY_START_POSITION_Y, pos_y};
-    Vector3 enemySize     = (Vector3) {0.25f, 0.8f, 0.25f};
+    Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
+    Vector3 enemySize     = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
     Enemy_Data enemy      = {
              .position    = enemyPosition,
@@ -27,7 +27,8 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .nextTick    = -1.0f,
              .speed       = 0.01f,
              .fireRate    = 5.75f,
-             .nextFire    = 10.0f,  // TODO: add loading time to nextFire to prevent enemies shooting before level is done?
+             .nextFire = 10.0f,  // TODO: add loading time to nextFire to prevent enemies shooting before
+                                 // level is done?
     };
     return enemy;
 }
@@ -62,7 +63,7 @@ Ray Enemy_CreateRay(Enemy_Data* enemy)
     BoundingBox playerBb   = Player->boundingBox;
     Vector3 playerPosition = Player->position;
     Vector3 v              = Vector3Normalize(Vector3Subtract(enemy->position, playerPosition));
-    rayCast.direction      = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z};
+    rayCast.direction      = (Vector3) { -1.0f * v.x, -1.0f * v.y, -1.0f * v.z };
     rayCast.position       = enemy->position;
     return rayCast;
 }
@@ -85,7 +86,8 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
         if(levelData[i].modelId != 0)
         {
             Vector3 pos           = levelData[i].blockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(
+                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -123,7 +125,8 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
     if(Enemy_TestPlayerHit(enemy))
     {
-        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
+        if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER ||
+           fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
             enemy->position          = Vector3Lerp(enemy->position, Player->position, enemy->speed);
@@ -147,7 +150,9 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
-            Vector3 deadBoxPos = (Vector3) {ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION, ENEMY_GRAVEYARD_POSITION};
+            Vector3 deadBoxPos = (Vector3) { ENEMY_GRAVEYARD_POSITION,
+                                             ENEMY_GRAVEYARD_POSITION,
+                                             ENEMY_GRAVEYARD_POSITION };
             enemy->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead        = true;
         }
@@ -166,7 +171,8 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play before we shoot projectile
             // TODO: dont shoot before level is loaded!!
-            Projectile_Create(Enemy_CreateRay(enemy), (Vector3) {0.2f, 0.2f, 0.2f}, enemy->damage, enemy->id);
+            Projectile_Create(
+                Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
         }
     }

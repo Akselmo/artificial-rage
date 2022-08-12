@@ -17,18 +17,18 @@
 
 typedef struct Enemy_Data
 {
-    int health;
-    int damage;
-    Vector3 position;
-    Vector3 size;
-    BoundingBox boundingBox;
-    bool dead;
-    int id;
-    float tickRate;
-    float nextTick;
-    float speed;
-    float fireRate;
-    float nextFire;
+        int health;
+        int damage;
+        Vector3 position;
+        Vector3 size;
+        BoundingBox boundingBox;
+        bool dead;
+        int id;
+        float tickRate;
+        float nextTick;
+        float speed;
+        float fireRate;
+        float nextFire;
 } Enemy_Data;
 
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
