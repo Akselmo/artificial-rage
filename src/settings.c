@@ -26,7 +26,7 @@ float GetSensitivity()
 {
     // Get Settings_MouseSensitivity from config file
     // 0.003f is default
-    return 0.003f;
+    return 0.3f;
 }
 
 float GetFOV()
