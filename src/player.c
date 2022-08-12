@@ -6,9 +6,6 @@
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 
-// Prototypes
-Matrix PlayerRotation();
-
 // Initialize Custom Camera
 static Player_CustomCameraData Player_CustomCamera = {
     .targetDistance     = 0,
@@ -132,7 +129,7 @@ void Player_Update(Camera* camera)
 
     // Recalculate camera target considering translation and rotation
     Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation    = PlayerRotation();
+    Matrix rotation    = MatrixInvert(MatrixRotateXYZ((Vector3) {PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0}));
     Matrix transform   = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
@@ -178,30 +175,4 @@ void Player_FireWeapon(Camera* camera)
     }
 }
 
-Matrix PlayerRotation()
-{
-    // This is the rotation part of the raylib camera code
-    // Due to 4.2.0 update for Raylib, we have to calculate this manually.
-    // This is due to changes in MatrixRotateXYZ function
 
-    Matrix rotation = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-
-    float cosz = cosf(0.0f);
-    float sinz = sinf(0.0f);
-    float cosy = cosf(-(PI * 2 - Player_CustomCamera.angle.x));
-    float siny = sinf(-(PI * 2 - Player_CustomCamera.angle.x));
-    float cosx = cosf(-(PI * 2 - Player_CustomCamera.angle.y));
-    float sinx = sinf(-(PI * 2 - Player_CustomCamera.angle.y));
-
-    rotation.m0  = cosz * cosy;
-    rotation.m4  = (cosz * siny * sinx) - (sinz * cosx);
-    rotation.m8  = (cosz * siny * cosx) + (sinz * sinx);
-    rotation.m1  = sinz * cosy;
-    rotation.m5  = (sinz * siny * sinx) + (cosz * cosx);
-    rotation.m9  = (sinz * siny * cosx) - (cosz * sinx);
-    rotation.m2  = -siny;
-    rotation.m6  = cosy * sinx;
-    rotation.m10 = cosy * cosx;
-
-    return rotation;
-}
