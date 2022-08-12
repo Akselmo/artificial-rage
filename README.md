@@ -35,9 +35,15 @@ Currently not looking for contributions for code, but any other creative assets 
 
 ## Howto compile for different platforms
 
-* IF the CMake file doesn't do this for you, compile raylib for your platform from source
+* Get same dependencies Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
+
+* If CMake cant compile Raylib for you, compile it manually
 
 * Run the following commands in project root to build the binary
+    * `sh ./build.sh`
+
+  or
+
     * `mkdir build && cd build`
     * `cmake ../`
     * `make` OR `cmake --build .`
