@@ -6,18 +6,12 @@
 [![discord](https://img.shields.io/discord/475097536160595979?color=%235865F2&label=aks_dev%20discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/PZkYZRx)
 [![Matrix](https://img.shields.io/matrix/aksdev-space:matrix.akselmo.dev?color=0dbd8b&label=aks_dev%20matrix&logo=matrix&logoColor=ffffff&server_fqdn=matrix.org&style=flat-square)](https://matrix.to/#/#aksdev-space:matrix.akselmo.dev)
 
--------
 
-<p align="center">
-  <h1> Artificial Rage - a Scifi FPS </h1>
-  <br>
-  <img src="./other_assets/ar_2.png" width="100"/>
-  <br>
-  <img alt="Screenshot of Artificial Rage" src="./screenshot.png" />
-  <br>
-</p>
+# Artificial Rage - a Scifi FPS 
 
--------
+<p align="center"><img src="./other_assets/ar_2.png" width="100"/> <a href="https://codeberg.org/akselmo/artificial-rage"><img src="https://akselmo.dev/assets/images/getitoncodeberg.svg" width="200"></a></p>
+<p align="center"><img alt="Screenshot of Artificial Rage" src="./screenshot.png" /></p>
+
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
 
@@ -27,7 +21,7 @@ people to tinker with the source code, create mods, maps etc..
 I also want this project to be a starting point for some who want to make their own simple FPS, or they could use this
 as a learning tool.
 
-<a href="https://codeberg.org/akselmo/artificial-rage"><img src="https://akselmo.dev/assets/images/getitoncodeberg.svg" width="200"></a>
+
 
 ## Contributing
 
@@ -55,5 +49,6 @@ files.**
 
 ## TODO:
 Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
+
 
 
