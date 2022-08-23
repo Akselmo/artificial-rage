@@ -31,9 +31,25 @@ typedef struct Enemy_Data
         float nextFire;
 } Enemy_Data;
 
+// Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
+typedef struct Enemy_Model
+{
+        Model model;                 // LoadModel
+        Texture2D texture;           // LoadTexture and SetMaterialTexture
+        ModelAnimation* animations;  // LoadAnimations
+};
+
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
 void Enemy_Update(Enemy_Data* enemy);
 void Enemy_Draw(Enemy_Data enemy);
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);
+
+typedef enum Enemy_AnimationID
+{
+    IDLE   = 0,
+    MOVE   = 1,
+    ATTACK = 2,
+    DEATH  = 3,
+};
 
 #endif
