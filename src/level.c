@@ -1,15 +1,15 @@
 #include "level.h"
 #include "raylib.h"
 
-// Level has level data, Level_enemies and Level_items
+// Level has level data, Level_enemies, Level_items and Level_Projectiles
+// Level is basically the "scene"
 
 // Public variables
-Level_Data* Level_data    = NULL;
-Enemy_Data* Level_enemies = NULL;
-// Contains interactable and non-interactable Level_items
-Item_Data* Level_items = NULL;
-// We can allocate projectiles here already
+Level_Data* Level_data        = NULL;
+Enemy_Data* Level_enemies     = NULL;
+Item_Data* Level_items        = NULL;  // Contains interactable and non-interactable Level_items
 Projectile* Level_projectiles = NULL;
+
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
