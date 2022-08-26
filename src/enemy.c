@@ -10,7 +10,7 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
 void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId);
 
-// Since we use billboarding we dont have to know rotation
+// TODO: Rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
 {
     Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
