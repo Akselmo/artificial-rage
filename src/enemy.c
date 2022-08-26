@@ -8,6 +8,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
+void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId);
 
 // Since we use billboarding we dont have to know rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
@@ -123,6 +124,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
     //- When stopped, fire
     enemy->speed               = ENEMY_DEFAULT_SPEED * GetFrameTime();
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
+    Enemy_PlayAnimation(enemy, IDLE);
     if(Enemy_TestPlayerHit(enemy))
     {
         if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER ||
@@ -133,7 +135,10 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
+                Enemy_PlayAnimation(enemy, IDLE);
+                return;
             }
+            Enemy_PlayAnimation(enemy, MOVE);
         }
     }
     enemy->boundingBox = Utilities_MakeBoundingBox(enemy->position, enemy->size);
@@ -144,9 +149,11 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
+        Enemy_PlayAnimation(enemy, HIT);
         printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
+            Enemy_PlayAnimation(enemy, DEATH);
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
@@ -171,10 +178,22 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play before we shoot projectile
             // TODO: dont shoot before level is loaded!!
+            Enemy_PlayAnimation(enemy, ATTACK);
             Projectile_Create(
                 Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
         }
     }
     return nextFire;
+}
+
+void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
+{
+    if(enemy->model.currentAnimation != animationId)
+    {
+        enemy->model.animationFrame = 0;
+    }
+    enemy->model.currentAnimation = animationId;
+    enemy->model.animationFrame   = Utilities_PlayAnimation(
+        enemy->model.model, &enemy->model.animations[animationId], enemy->model.animationFrame);
 }

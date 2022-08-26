@@ -15,6 +15,16 @@
 #define ENEMY_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ENEMY_DEFAULT_SPEED            0.45f  // Lower values result to lower speed
 
+// Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
+typedef struct Enemy_Model
+{
+        Model model;                 // LoadModel
+        Texture2D texture;           // LoadTexture and SetMaterialTexture
+        ModelAnimation* animations;  // LoadAnimations
+        int animationFrame;
+        int currentAnimation;
+};
+
 typedef struct Enemy_Data
 {
         int health;
@@ -22,6 +32,7 @@ typedef struct Enemy_Data
         Vector3 position;
         Vector3 size;
         BoundingBox boundingBox;
+        struct Enemy_Model model;
         bool dead;
         int id;
         float tickRate;
@@ -31,25 +42,9 @@ typedef struct Enemy_Data
         float nextFire;
 } Enemy_Data;
 
-// Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
-typedef struct Enemy_Model
-{
-        Model model;                 // LoadModel
-        Texture2D texture;           // LoadTexture and SetMaterialTexture
-        ModelAnimation* animations;  // LoadAnimations
-};
-
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
 void Enemy_Update(Enemy_Data* enemy);
 void Enemy_Draw(Enemy_Data enemy);
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);
-
-typedef enum Enemy_AnimationID
-{
-    IDLE   = 0,
-    MOVE   = 1,
-    ATTACK = 2,
-    DEATH  = 3,
-};
 
 #endif
