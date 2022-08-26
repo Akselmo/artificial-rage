@@ -35,3 +35,14 @@ bool Utilities_CompareColors(Color color1, Color color2)
         return false;
     }
 }
+
+int Utilities_PlayAnimation(Model model, ModelAnimation* animations, int frameCounter)
+{
+    frameCounter++;
+    UpdateModelAnimation(model, animations[0], frameCounter);
+    if(frameCounter >= animations[0].frameCount)
+    {
+        frameCounter = 0;
+    }
+    return frameCounter;
+}
