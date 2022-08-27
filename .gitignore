@@ -76,3 +76,4 @@ out/
 
 .idea
 .dap/**
+.xmake/linux/x86_64
