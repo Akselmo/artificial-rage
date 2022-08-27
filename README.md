@@ -37,6 +37,7 @@ work for anyone.
 * After installing xmake, just run `xmake` in the project root directory.
 * If you want to use xmake to run the project, just type `xmake run`.
 * For debugging with GDB for example, you can type `xmake run -d`.
+* If you need CMake files, for example for an IDE that doesn't work with xmake, run `xmake project -k cmake -y` to generate `CMakeLists.txt` file
 
 There are also extensions for various editors and IDE's for xmake.
 
