@@ -21,34 +21,28 @@ people to tinker with the source code, create mods, maps etc..
 I also want this project to be a starting point for some who want to make their own simple FPS, or they could use this
 as a learning tool.
 
-
-
 ## Contributing
 
 Currently not looking for contributions for code, but any other creative assets such as art is welcome!
 
+If you find glaring bugs or issues in the code, I welcome issues and critique so I can fix them!
+
 ## Howto compile for different platforms
 
-* Get same dependencies Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
+First, get same dependencies Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 
-* If CMake cant compile Raylib for you, compile it manually
+This project uses [https://xmake.io/](xmake) build system. It is quite simple to use and should 
+work for anyone.
 
-* Run the following commands in project root to build the binary
-    * `sh ./build.sh`
+* After installing xmake, just run `xmake` in the project root directory.
+* If you want to use xmake to run the project, just type `xmake run`.
+* For debugging with GDB for example, you can type `xmake run -d`.
 
-  or
+There are also extensions for various editors and IDE's for xmake.
 
-    * `mkdir build && cd build`
-    * `cmake ../`
-    * `make` OR `cmake --build .`
-        * Plain `make` may have problems when it comes to debugging.
-
-
-**Remember to run "cmake configure" in vscode (or equivalent in any other system) before building, when adding new
-files.**
+If you don't want to use xmake, the older commits should have cmake configs lying around.
+But xmake is highly recommended!
 
 ## TODO:
 Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
-
-
 
