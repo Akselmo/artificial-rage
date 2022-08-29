@@ -102,8 +102,8 @@ void Weapon_SelectDefault()
 
 void Weapon_GetSwitchInput()
 {
-    int key = 0;
-    key     = GetKeyPressed();
+
+    int key = GetKeyPressed();
 
     for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
@@ -122,15 +122,13 @@ void Weapon_Change(int weaponId)
 
 int TestEntityHit(Ray rayCast)
 {
-    int id                = 0;
-    float distance        = 0.0f;
+    int id;
     float levelDistance   = INFINITY;
     float enemyDistance   = INFINITY;
     int entitiesAmount    = Level_mapSize;
     Level_Data* levelData = Level_data;
     Enemy_Data* enemies   = Level_enemies;
     Enemy_Data enemyDataHit;
-    Level_Data levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
@@ -144,7 +142,6 @@ int TestEntityHit(Ray rayCast)
                 if(hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
-                    levelDataHit  = levelData[i];
                 }
             }
         }

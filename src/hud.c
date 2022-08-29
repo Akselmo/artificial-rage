@@ -1,15 +1,14 @@
 #include "hud.h"
 #include "weapon.h"
 
-char Hud_dedText[5]         = "DEAD";
-char Hud_emptyAmmoText[2]   = "-";
-char Hud_healthText[5]      = "100";
-char Hud_weaponAmmoText[10] = "100";
-
-char Hud_weaponNameText[15] = "WeaponName";
-
 void Hud_Draw()
 {
+    const char Hud_dedText[5]       = "DEAD";
+    const char Hud_emptyAmmoText[2] = "-";
+    char Hud_healthText[5]          = "";
+    char Hud_weaponAmmoText[10]     = "";
+    char Hud_weaponNameText[15]     = "WeaponName";  // TODO: add weapon name to hud
+
     DrawFPS(10, 10);
     sprintf(Hud_healthText, "%d", Player->health);
 

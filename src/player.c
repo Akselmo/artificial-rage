@@ -23,20 +23,11 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 {
     Camera camera = { 0 };
 
-    // Get Settings
-    float fov              = Settings_CameraFov;
-    float mouseSensitivity = Settings_MouseSensitivity;
-    int moveFront          = Settings_GetCustomInput(KEY_W);
-    int moveBack           = Settings_GetCustomInput(KEY_S);
-    int moveRight          = Settings_GetCustomInput(KEY_D);
-    int moveLeft           = Settings_GetCustomInput(KEY_A);
-    int fireGun            = MOUSE_LEFT_BUTTON;
-
     // Place camera and apply settings
     camera.position   = (Vector3) { pos_x, PLAYER_START_POSITION_Y, pos_z };
     camera.target     = (Vector3) { 0.0f, 0.5f, 0.0f };
     camera.up         = (Vector3) { 0.0f, 1.0f, 0.0f };
-    camera.fovy       = fov;  // get fov from settings file
+    camera.fovy       = Settings_CameraFov;  // get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
     // Distances
@@ -59,11 +50,14 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.playerEyesPosition = camera.position.y;
 
     // Setup custom movement keys
-    Player_CustomCamera.moveFront        = moveFront;
-    Player_CustomCamera.moveBack         = moveBack;
-    Player_CustomCamera.moveRight        = moveRight;
-    Player_CustomCamera.moveLeft         = moveLeft;
-    Player_CustomCamera.mouseSensitivity = mouseSensitivity;
+    Player_CustomCamera.moveForwardButton  = Settings_GetCustomInput(KEY_W);
+    Player_CustomCamera.moveBackwardButton = Settings_GetCustomInput(KEY_S);
+    Player_CustomCamera.moveRightButton    = Settings_GetCustomInput(KEY_D);
+    Player_CustomCamera.moveLeftButton     = Settings_GetCustomInput(KEY_A);
+    Player_CustomCamera.mouseSensitivity   = Settings_MouseSensitivity;
+    Player_CustomCamera.fireButton         = MOUSE_LEFT_BUTTON;
+    Player_CustomCamera.useButton          = Settings_GetCustomInput(KEY_E);
+    Player_CustomCamera.jumpButton         = Settings_GetCustomInput(KEY_SPACE);
 
     // Initialize player data
     Player              = calloc(1, sizeof(Player_Data));
@@ -89,13 +83,11 @@ void Player_Update(Camera* camera)
     Player->boundingBox = Utilities_MakeBoundingBox(camera->position, Player->size);
 
     Vector2 mousePositionDelta = GetMouseDelta();
-    Vector2 mousePosition      = GetMousePosition();
-    float mouseWheelMove       = GetMouseWheelMove();
 
-    bool direction[4] = { IsKeyDown(Player_CustomCamera.moveFront),
-                          IsKeyDown(Player_CustomCamera.moveBack),
-                          IsKeyDown(Player_CustomCamera.moveRight),
-                          IsKeyDown(Player_CustomCamera.moveLeft) };
+    bool direction[4] = { IsKeyDown(Player_CustomCamera.moveForwardButton),
+                          IsKeyDown(Player_CustomCamera.moveBackwardButton),
+                          IsKeyDown(Player_CustomCamera.moveRightButton),
+                          IsKeyDown(Player_CustomCamera.moveLeftButton) };
 
     // Move camera around X pos
     camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
@@ -159,6 +151,7 @@ void Player_Update(Camera* camera)
     Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
     // Check if we need to switch weapon
     Weapon_GetSwitchInput();
+    Player_FireWeapon(camera, &Player_CustomCamera);
 }
 
 // Use minus for removing health
@@ -175,11 +168,11 @@ void Player_SetHealth(int healthToAdd)
     }
 }
 
-void Player_FireWeapon(Camera* camera)
+void Player_FireWeapon(Camera* camera, Player_CustomCameraData* cameraData)
 {
     // Calculate fire rate countdown here
     Player->nextFire -= GetFrameTime();
-    if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+    if(IsMouseButtonDown(cameraData->fireButton))
     {
         Player->nextFire = Weapon_Fire(camera, Player->nextFire);
     }

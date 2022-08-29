@@ -26,7 +26,10 @@ typedef struct Player_CustomCameraData
         float targetDistance;
         float playerEyesPosition;
         Vector2 angle;
-        int moveFront, moveBack, moveRight, moveLeft;
+        int moveForwardButton, moveBackwardButton, moveRightButton, moveLeftButton;
+        int fireButton;
+        int useButton;
+        int jumpButton;
         float mouseSensitivity;
         float playerSpeed;
 } Player_CustomCameraData;
@@ -49,7 +52,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z);
 void Player_Update(Camera* camera);
 bool Player_CheckCollision(Camera camera, BoundingBox other);
 void Player_SetHealth(int healthToAdd);
-void Player_FireWeapon(Camera* camera);
+void Player_FireWeapon(Camera* camera, Player_CustomCameraData* cameraData);
 
 // Movement keys enum for directions
 typedef enum Player_CameraMoveKeys
