@@ -13,6 +13,7 @@ float GetFOV();
 
 void Settings_Initialize()
 {
+    // TODO: Allow customization of these
     const int screenWidth  = 800;
     const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "Artificial Rage");
@@ -24,14 +25,14 @@ void Settings_Initialize()
 
 float GetSensitivity()
 {
-    // Get Settings_MouseSensitivity from config file
+    // TODO: Get Settings_MouseSensitivity from config file
     // 0.003f is default
     return 0.3f;
 }
 
 float GetFOV()
 {
-    // Get FOV from config file
+    // TODO: Get FOV from config file
     return 60.0f;
 }
 

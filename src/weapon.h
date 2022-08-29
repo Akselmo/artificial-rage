@@ -17,7 +17,7 @@
 #include <time.h>
 
 // Fist has always ammo! :)
-#define WEAPON_FIST_AMMO_MAX    9999
+#define WEAPON_FIST_AMMO_MAX    10
 #define WEAPON_PISTOL_AMMO_MAX  100
 #define WEAPON_RIFLE_AMMO_MAX   200
 #define WEAPON_SHOTGUN_AMMO_MAX 50
@@ -64,6 +64,5 @@ void Weapon_InitializeKeys();
 void Weapon_GetSwitchInput();
 void Weapon_SelectDefault();
 float Weapon_Fire(Camera* camera, float nextFire);
-float Weapon_TestLevelHit(Ray rayCast);
 
 #endif

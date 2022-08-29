@@ -40,7 +40,6 @@ void Game_Update()
     if(Game_initialized)
     {
         Player_Update(&playerCamera);
-        Player_FireWeapon(&playerCamera);
         Level_Update();
     }
 
