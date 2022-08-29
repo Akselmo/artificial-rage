@@ -31,7 +31,7 @@ If you find glaring bugs or issues in the code, I welcome issues and critique so
 
 First, get same dependencies Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 
-This project uses [https://xmake.io/](xmake) build system. It is quite simple to use and should 
+This project uses [xmake](https://xmake.io/) build system. It is quite simple to use and should 
 work for anyone.
 
 * After installing xmake, just run `xmake` in the project root directory.
@@ -39,7 +39,7 @@ work for anyone.
 * For debugging with GDB for example, you can type `xmake run -d`.
 * If you need CMake files, for example for an IDE that doesn't work with xmake, run `xmake project -k cmake -y` to generate `CMakeLists.txt` file
 
-There are also extensions for various editors and IDE's for xmake.
+There are also extensions for various editors and IDEs for xmake.
 
 If you don't want to use xmake, the older commits should have cmake configs lying around.
 But xmake is highly recommended!
