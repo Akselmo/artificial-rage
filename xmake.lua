@@ -8,13 +8,8 @@ target("artificial-rage")
     add_files("src/*.c")
     add_packages("raylib")
     set_languages("c99", "c++11")
-    local modefolder = "debug"
-
-    if is_mode("release") then
-        modefolder = "release"
-    end
 
     after_build(function (target)
         print("Copying assets folder where build is...")
-        os.cp("$(projectdir)/src/assets/*.*", "$(buildir)/$(os)/".. os.arch() .. "/" .. modefolder .. "/assets/")
+        os.cp("$(projectdir)/src/assets/*.*", "$(buildir)/$(plat)/$(arch)/$(mode)/assets/")
     end)
