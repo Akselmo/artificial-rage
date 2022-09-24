@@ -77,3 +77,4 @@ out/
 .idea
 .dap/**
 .xmake/**
+*.blend1
