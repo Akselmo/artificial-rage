@@ -15,10 +15,10 @@
 
 A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
 
-This project is a learning platform for me to learn C. I also hope one day this game will be fun to play, and I want
+This project is a learning platform for me to learn C. I also hope that one day this game will be fun to play, and I want
 people to tinker with the source code, create mods, maps etc..
 
-I also want this project to be a starting point for some who want to make their own simple FPS, or they could use this
+I also want this project to be a starting point for those who want to make their own simple FPS, or to be used
 as a learning tool.
 
 ## Contributing
@@ -29,9 +29,9 @@ If you find glaring bugs or issues in the code, I welcome issues and critique so
 
 ## Howto compile for different platforms
 
-First, get same dependencies Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
+First, get the dependencies that Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 
-This project uses [xmake](https://xmake.io/) build system. It is quite simple to use and should 
+This project uses the [xmake](https://xmake.io/) build system. It is quite simple to use, and should
 work for anyone.
 
 * After installing xmake, just run `xmake` in the project root directory.
