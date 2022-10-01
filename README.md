@@ -27,7 +27,7 @@ Currently not looking for contributions for code, but any other creative assets 
 
 If you find glaring bugs or issues in the code, I welcome issues and critique so I can fix them!
 
-## Howto compile for different platforms
+## How to compile for different platforms
 
 First, get the dependencies that Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 
@@ -35,14 +35,14 @@ This project uses the [xmake](https://xmake.io/) build system. It is quite simpl
 work for anyone.
 
 * After installing xmake, just run `xmake` in the project root directory.
-* If you want to use xmake to run the project, just type `xmake run`.
-* For debugging with GDB for example, you can type `xmake run -d`.
-* If you need CMake files, for example for an IDE that doesn't work with xmake, run `xmake project -k cmake -y` to generate `CMakeLists.txt` file
+* If you want to use xmake to run the project, just execute `xmake run`.
+* For debugging with GDB for example, you can run `xmake run -d`.
+* If you need CMake files, for example for an IDE that doesn't work with xmake, run `xmake project -k cmake -y` to generate a `CMakeLists.txt` file
 
-There are also extensions for various editors and IDEs for xmake.
+There are also extensions for xmake for various editors and IDEs.
 
 If you don't want to use xmake, the older commits should have cmake configs lying around.
-But xmake is highly recommended!
+However, xmake is highly recommended!
 
 ## TODO:
 Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
