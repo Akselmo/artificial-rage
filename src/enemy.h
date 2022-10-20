@@ -23,7 +23,7 @@ typedef struct Enemy_Model
         ModelAnimation* animations;  // LoadAnimations
         int animationFrame;
         int currentAnimation;
-};
+} Enemy_Model;
 
 typedef struct Enemy_Data
 {

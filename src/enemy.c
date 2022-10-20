@@ -16,9 +16,11 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
     Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
     Vector3 enemySize     = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
+    Enemy_Model model = {};
     Enemy_Data enemy      = {
              .position    = enemyPosition,
              .size        = enemySize,
+             .model       = model,
              .dead        = false,
              .damage      = 5,
              .health      = 15,  // Check enemy health balance later
@@ -28,8 +30,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .nextTick    = -1.0f,
              .speed       = 0.01f,
              .fireRate    = 5.75f,
-             .nextFire = 10.0f,  // TODO: add loading time to nextFire to prevent enemies shooting before
-                                 // level is done?
+             .nextFire    = 10.0f,
     };
     return enemy;
 }
