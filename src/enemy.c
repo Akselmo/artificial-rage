@@ -16,7 +16,13 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
     Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
     Vector3 enemySize     = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
-    Enemy_Model model = {};
+    const char modelFileName[128] = "./assets/enemy.m3d";
+    Enemy_Model model = {
+        .model = LoadModel(modelFileName),
+        //.animations = LoadModelAnimations(modelFileName,
+        //                                                    (unsigned int*)ENEMY_ANIMATION_COUNT),
+        .currentAnimation = IDLE
+    };
     Enemy_Data enemy      = {
              .position    = enemyPosition,
              .size        = enemySize,
@@ -39,7 +45,7 @@ void Enemy_Update(Enemy_Data* enemy)
 {
     if(!enemy->dead)
     {
-        Enemy_Draw(*enemy);
+        Enemy_Draw(enemy);
         if(enemy->nextTick > 0)
         {
             enemy->nextTick -= GetFrameTime();
@@ -54,9 +60,9 @@ void Enemy_Update(Enemy_Data* enemy)
     }
 }
 
-void Enemy_Draw(Enemy_Data enemy)
+void Enemy_Draw(Enemy_Data* enemy)
 {
-    DrawCubeV(enemy.position, enemy.size, RED);
+    DrawModel(enemy->model.model, enemy->position, 0.5f, WHITE);
 }
 
 Ray Enemy_CreateRay(Enemy_Data* enemy)
@@ -150,7 +156,7 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
-        Enemy_PlayAnimation(enemy, HIT);
+        //Enemy_PlayAnimation(enemy, HIT); //No hit animation, make enemy flash red instead?
         printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
@@ -190,11 +196,12 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
 
 void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
 {
+    return;
     if(enemy->model.currentAnimation != animationId)
     {
         enemy->model.animationFrame = 0;
     }
     enemy->model.currentAnimation = animationId;
     enemy->model.animationFrame   = Utilities_PlayAnimation(
-        enemy->model.model, &enemy->model.animations[animationId], enemy->model.animationFrame);
+        enemy->model.model, &enemy->model.animations[animationId], enemy->model.animationFrame, animationId);
 }

@@ -14,15 +14,15 @@
 #define ENEMY_GRAVEYARD_POSITION       999.0f
 #define ENEMY_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ENEMY_DEFAULT_SPEED            0.45f  // Lower values result to lower speed
+#define ENEMY_ANIMATION_COUNT          4
 
 // Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
 typedef struct Enemy_Model
 {
         Model model;                 // LoadModel
-        Texture2D texture;           // LoadTexture and SetMaterialTexture
         ModelAnimation* animations;  // LoadAnimations
         int animationFrame;
-        int currentAnimation;
+        enum AnimationID currentAnimation;
 } Enemy_Model;
 
 typedef struct Enemy_Data
@@ -44,7 +44,7 @@ typedef struct Enemy_Data
 
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
 void Enemy_Update(Enemy_Data* enemy);
-void Enemy_Draw(Enemy_Data enemy);
+void Enemy_Draw(Enemy_Data* enemy);
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);
 
 #endif

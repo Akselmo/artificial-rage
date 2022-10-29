@@ -10,29 +10,35 @@ project(artificial-rage LANGUAGES C CXX)
 # target
 add_executable(artificial-rage "")
 set_target_properties(artificial-rage PROPERTIES OUTPUT_NAME "artificial-rage")
-set_target_properties(artificial-rage PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(artificial-rage PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
 target_include_directories(artificial-rage PRIVATE
-    /home/akseli/.xmake/packages/r/raylib/4.2.0/4e0143c97b65425b855ad5fd03038b6a/include
+    /home/akseli/.xmake/packages/r/raylib/master/4e0143c97b65425b855ad5fd03038b6a/include
     /usr/include/python3.10
 )
 target_compile_options(artificial-rage PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
+if(MSVC)
+    target_compile_options(artificial-rage PRIVATE -W4)
+    target_compile_options(artificial-rage PRIVATE nil)
+else()
+    target_compile_options(artificial-rage PRIVATE)
+    target_compile_options(artificial-rage PRIVATE nil)
+endif()
 set_target_properties(artificial-rage PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(artificial-rage PRIVATE c_std_99)
 set_target_properties(artificial-rage PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(artificial-rage PRIVATE cxx_std_11)
 if(MSVC)
-    target_compile_options(artificial-rage PRIVATE $<$<CONFIG:Release>:-Ox -fp:fast>)
+    target_compile_options(artificial-rage PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(artificial-rage PRIVATE -O3)
+    target_compile_options(artificial-rage PRIVATE -O0)
 endif()
 if(MSVC)
+    target_compile_options(artificial-rage PRIVATE -Zi)
 else()
-    target_compile_options(artificial-rage PRIVATE -fvisibility=hidden)
+    target_compile_options(artificial-rage PRIVATE -g)
 endif()
 if(MSVC)
     set_property(TARGET artificial-rage PROPERTY
@@ -60,7 +66,7 @@ target_link_libraries(artificial-rage PRIVATE
     m
 )
 target_link_directories(artificial-rage PRIVATE
-    /home/akseli/.xmake/packages/r/raylib/4.2.0/4e0143c97b65425b855ad5fd03038b6a/lib
+    /home/akseli/.xmake/packages/r/raylib/master/4e0143c97b65425b855ad5fd03038b6a/lib
     /usr/lib64
     /usr/lib64/../lib64
 )
@@ -68,16 +74,16 @@ target_link_options(artificial-rage PRIVATE
     -m64
 )
 target_sources(artificial-rage PRIVATE
-    src/main.c
-    src/hud.c
-    src/game.c
-    src/settings.c
     src/item.c
+    src/main.c
     src/projectile.c
-    src/weapon.c
-    src/enemy.c
-    src/level.c
+    src/hud.c
     src/player.c
+    src/settings.c
+    src/weapon.c
     src/utilities.c
+    src/game.c
+    src/level.c
+    src/enemy.c
 )
 

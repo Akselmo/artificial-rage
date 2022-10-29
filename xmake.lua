@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
-add_requires("raylib 4.2.0", {system = false})
+add_requires("raylib master", {system = false})
 set_defaultmode("debug")
-set_warnings("allextra", "conversion", "error")
+set_warnings("allextra", "conversion")
 
 target("artificial-rage")
 
