@@ -16,7 +16,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
     Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
     Vector3 enemySize     = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
-    const char modelFileName[128] = "./assets/enemy.m3d";
+    const char modelFileName[128] = "./assets/models/enemy.m3d";
     Enemy_Model model = {
         .model = LoadModel(modelFileName),
         //.animations = LoadModelAnimations(modelFileName,

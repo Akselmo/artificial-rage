@@ -13,5 +13,5 @@ target("artificial-rage")
 
     after_build(function (target)
         print("Copying assets folder where build is...")
-        os.cp("$(projectdir)/src/assets/*.*", "$(buildir)/$(plat)/$(arch)/$(mode)/assets/")
+        os.cp("$(projectdir)/src/assets/*", "$(buildir)/$(plat)/$(arch)/$(mode)/assets/")
     end)
