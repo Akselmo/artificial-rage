@@ -203,8 +203,8 @@ void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
     float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
     Vector3 newRotation = (Vector3) { 0, y_angle, 0 };
 
-    Quaternion start = QuaternionFromMatrix(MatrixRotateXYZ(enemy->rotation));
-    Quaternion end   = QuaternionFromMatrix(MatrixRotateXYZ(newRotation));
+    Quaternion start = QuaternionFromEuler(enemy->rotation.z, enemy->rotation.y, enemy->rotation.x);
+    Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
     Quaternion slerp = QuaternionSlerp(start, end, enemy->rotationSpeed * GetFrameTime());
 
     enemy->model.model.transform = QuaternionToMatrix(slerp);
