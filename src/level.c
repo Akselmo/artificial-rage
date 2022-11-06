@@ -93,7 +93,8 @@ void Level_PlaceBlocks()
             float my = Level_mapPosition.z - 0.5f + y * 1.0f;
             int i    = y * levelCubicMap.width + x;
 
-            const Color pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            const Color pixelColor =
+                Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))

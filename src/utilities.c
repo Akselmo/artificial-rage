@@ -36,10 +36,13 @@ bool Utilities_CompareColors(Color color1, Color color2)
     }
 }
 
-int Utilities_PlayAnimation(Model model, ModelAnimation* animations, int frameCounter, enum AnimationID animationId)
+int Utilities_PlayAnimation(Model model,
+                            ModelAnimation* animations,
+                            int frameCounter,
+                            enum AnimationID animationId)
 {
     frameCounter++;
-    if (frameCounter >= animations[animationId].frameCount)
+    if(frameCounter >= animations[animationId].frameCount)
     {
         frameCounter = 0;
     }

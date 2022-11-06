@@ -131,7 +131,7 @@ void Player_Update(Camera* camera)
     Matrix translation =
         MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
     Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3) {
-         PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
+        PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
     Matrix transform = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)

@@ -13,33 +13,33 @@ void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId);
 // TODO: Rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
 {
-    Vector3 enemyPosition = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
-    Vector3 enemyRotation = Vector3Zero();
-    Vector3 enemySize     = (Vector3) { 0.25f, 0.8f, 0.25f };
-    float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
+    Vector3 enemyPosition         = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
+    Vector3 enemyRotation         = Vector3Zero();
+    Vector3 enemySize             = (Vector3) { 0.25f, 0.8f, 0.25f };
+    float randomTickRate          = ((float)rand() / (float)(RAND_MAX)) * 2;
     const char modelFileName[128] = "./assets/models/enemy.m3d";
-    Enemy_Model model = {
-        .model = LoadModel(modelFileName),
+    Enemy_Model model             = {
+                    .model = LoadModel(modelFileName),
         //.animations = LoadModelAnimations(modelFileName,
         //                                                    (unsigned int*)ENEMY_ANIMATION_COUNT),
-        .currentAnimation = IDLE
+                    .currentAnimation = IDLE
     };
-    Enemy_Data enemy      = {
-             .position    = enemyPosition,
-             .rotation    = enemyRotation,
-             .size        = enemySize,
-             .model       = model,
-             .dead        = false,
-             .damage      = 5,
-             .health      = 15,  // Check enemy health balance later
-             .boundingBox = Utilities_MakeBoundingBox(enemyPosition, enemySize),
-             .id          = id,
-             .tickRate    = randomTickRate,
-             .nextTick    = -1.0f,
-             .movementSpeed = ENEMY_DEFAULT_MOVEMENT_SPEED,
-             .rotationSpeed = ENEMY_DEFAULT_ROTATION_SPEED,
-             .fireRate    = 5.75f,
-             .nextFire    = 10.0f,
+    Enemy_Data enemy = {
+        .position      = enemyPosition,
+        .rotation      = enemyRotation,
+        .size          = enemySize,
+        .model         = model,
+        .dead          = false,
+        .damage        = 5,
+        .health        = 15,  // Check enemy health balance later
+        .boundingBox   = Utilities_MakeBoundingBox(enemyPosition, enemySize),
+        .id            = id,
+        .tickRate      = randomTickRate,
+        .nextTick      = -1.0f,
+        .movementSpeed = ENEMY_DEFAULT_MOVEMENT_SPEED,
+        .rotationSpeed = ENEMY_DEFAULT_ROTATION_SPEED,
+        .fireRate      = 5.75f,
+        .nextFire      = 10.0f,
     };
     return enemy;
 }
@@ -138,7 +138,8 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
            fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
-            enemy->position          = Vector3Lerp(enemy->position, Player->position, enemy->movementSpeed * GetFrameTime());
+            enemy->position          = Vector3Lerp(
+                enemy->position, Player->position, enemy->movementSpeed * GetFrameTime());
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
@@ -156,7 +157,7 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
-        //Enemy_PlayAnimation(enemy, HIT); //No hit animation, make enemy flash red instead?
+        // Enemy_PlayAnimation(enemy, HIT); //No hit animation, make enemy flash red instead?
         printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
@@ -197,17 +198,17 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
 
 void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
 {
-    //Rotates the enemy around Y axis
-    Vector3 diff = Vector3Subtract(enemy->position, targetPosition);
-    float y_angle = -(atan2(diff.z, diff.x) + PI / 2.0);
-    Vector3 newRotation = (Vector3){0,y_angle,0};
+    // Rotates the enemy around Y axis
+    Vector3 diff        = Vector3Subtract(enemy->position, targetPosition);
+    float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
+    Vector3 newRotation = (Vector3) { 0, y_angle, 0 };
 
     Quaternion start = QuaternionFromMatrix(MatrixRotateXYZ(enemy->rotation));
-    Quaternion end = QuaternionFromMatrix(MatrixRotateXYZ(newRotation));
-    Quaternion slerp = QuaternionSlerp(start, end, enemy->rotationSpeed*GetFrameTime());
+    Quaternion end   = QuaternionFromMatrix(MatrixRotateXYZ(newRotation));
+    Quaternion slerp = QuaternionSlerp(start, end, enemy->rotationSpeed * GetFrameTime());
 
     enemy->model.model.transform = QuaternionToMatrix(slerp);
-    enemy->rotation = newRotation;
+    enemy->rotation              = newRotation;
 }
 
 void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
@@ -218,6 +219,8 @@ void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
         enemy->model.animationFrame = 0;
     }
     enemy->model.currentAnimation = animationId;
-    enemy->model.animationFrame   = Utilities_PlayAnimation(
-        enemy->model.model, &enemy->model.animations[animationId], enemy->model.animationFrame, animationId);
+    enemy->model.animationFrame   = Utilities_PlayAnimation(enemy->model.model,
+                                                          &enemy->model.animations[animationId],
+                                                          enemy->model.animationFrame,
+                                                          animationId);
 }
