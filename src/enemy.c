@@ -34,7 +34,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
              .id          = id,
              .tickRate    = randomTickRate,
              .nextTick    = -1.0f,
-             .speed       = 0.01f,
+             .movementSpeed = 0.01f,
              .fireRate    = 5.75f,
              .nextFire    = 10.0f,
     };
@@ -124,21 +124,19 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
 
 void Enemy_UpdatePosition(Enemy_Data* enemy)
 {
-    // Move enemy towards player:
-    //- Check if player can be seen (first raycast hit returns player)
-    //- If in certain range from player, stop
-    //- If cant see player, stop
-    //- When stopped, fire
-    enemy->speed               = ENEMY_DEFAULT_SPEED * GetFrameTime();
+    // Move enemy towards player
+    enemy->movementSpeed       = ENEMY_DEFAULT_SPEED * GetFrameTime();
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
     Enemy_PlayAnimation(enemy, IDLE);
+    //- Check if player can be seen (first raycast hit returns player)
     if(Enemy_TestPlayerHit(enemy))
     {
+        //- If in certain range from player, stop
         if(fabsf(DistanceFromPlayer.x) >= ENEMY_MAX_DISTANCE_FROM_PLAYER ||
            fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
-            enemy->position          = Vector3Lerp(enemy->position, Player->position, enemy->speed);
+            enemy->position          = Vector3Lerp(enemy->position, Player->position, enemy->movementSpeed);
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
@@ -177,6 +175,7 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
 {
     if(Enemy_TestPlayerHit(enemy))
     {
+        Enemy_RotateTowards(enemy, Player->position);
         if(nextFire > 0)
         {
             nextFire -= GetFrameTime();
@@ -193,6 +192,17 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
     }
     return nextFire;
 }
+
+void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
+{
+    //Rotates the enemy around Y axis
+
+    Vector3 diff = Vector3Subtract(enemy->position, targetPosition);
+    float y_angle = atan2(diff.z, diff.x) + PI / 2.0;
+
+    enemy->model.model.transform = MatrixRotateY(-y_angle);
+}
+
 
 void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
 {

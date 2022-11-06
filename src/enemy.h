@@ -37,7 +37,7 @@ typedef struct Enemy_Data
         int id;
         float tickRate;
         float nextTick;
-        float speed;
+        float movementSpeed;
         float fireRate;
         float nextFire;
 } Enemy_Data;
@@ -46,5 +46,6 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
 void Enemy_Update(Enemy_Data* enemy);
 void Enemy_Draw(Enemy_Data* enemy);
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);
+void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition);
 
 #endif
