@@ -10,20 +10,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ENEMY_START_POSITION_Y         0.4f
+#define ENEMY_POSITION_Y               0.0f
 #define ENEMY_GRAVEYARD_POSITION       999.0f
 #define ENEMY_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ENEMY_DEFAULT_MOVEMENT_SPEED   0.45f  // Lower values result to lower speed
 #define ENEMY_DEFAULT_ROTATION_SPEED   3.0f
-#define ENEMY_ANIMATION_COUNT          4
+
+enum AnimationID { DEATH = 0, ATTACK = 1, IDLE = 2, MOVE = 3};
 
 // Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
 typedef struct Enemy_Model
 {
         Model model;                 // LoadModel
         ModelAnimation* animations;  // LoadAnimations
+        bool animationPlaying;
+        unsigned int animationsCount;
         int animationFrame;
-        enum AnimationID currentAnimation;
+        int currentAnimation;
 } Enemy_Model;
 
 typedef struct Enemy_Data
@@ -45,7 +48,7 @@ typedef struct Enemy_Data
         float nextFire;
 } Enemy_Data;
 
-Enemy_Data Enemy_Add(float pos_x, float pos_y, int id);
+Enemy_Data Enemy_Add(float pos_x, float pos_z, int id);
 void Enemy_Update(Enemy_Data* enemy);
 void Enemy_Draw(Enemy_Data* enemy);
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount);

@@ -8,22 +8,28 @@ void Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
-void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId);
+void Enemy_PlayAnimation(Enemy_Data* enemy, int animationId, float animationSpeed);
 
 // TODO: Rotation
-Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
+Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
 {
-    Vector3 enemyPosition         = (Vector3) { pos_x, ENEMY_START_POSITION_Y, pos_y };
+    Vector3 enemyPosition         = (Vector3) { pos_x, ENEMY_POSITION_Y, pos_z };
     Vector3 enemyRotation         = Vector3Zero();
     Vector3 enemySize             = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate          = ((float)rand() / (float)(RAND_MAX)) * 2;
+
     const char modelFileName[128] = "./assets/models/enemy.m3d";
+    unsigned int animationsCount  = 0;
+    ModelAnimation *animations    =  LoadModelAnimations(modelFileName,&animationsCount);
+
     Enemy_Model model             = {
-                    .model = LoadModel(modelFileName),
-        //.animations = LoadModelAnimations(modelFileName,
-        //                                                    (unsigned int*)ENEMY_ANIMATION_COUNT),
-                    .currentAnimation = IDLE
+        .model = LoadModel(modelFileName),
+        .animations = animations,
+        .animationsCount = animationsCount,
+        .currentAnimation = IDLE,
+        .animationPlaying = false
     };
+
     Enemy_Data enemy = {
         .position      = enemyPosition,
         .rotation      = enemyRotation,
@@ -46,6 +52,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_y, int id)
 
 void Enemy_Update(Enemy_Data* enemy)
 {
+    Enemy_PlayAnimation(enemy, 3, 1.0f);
     if(!enemy->dead)
     {
         Enemy_Draw(enemy);
@@ -129,7 +136,6 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
 {
     // Move enemy towards player
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
-    Enemy_PlayAnimation(enemy, IDLE);
     //- Check if player can be seen (first raycast hit returns player)
     if(Enemy_TestPlayerHit(enemy))
     {
@@ -138,15 +144,13 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
            fabsf(DistanceFromPlayer.z) >= ENEMY_MAX_DISTANCE_FROM_PLAYER)
         {
             Vector3 enemyOldPosition = enemy->position;
-            enemy->position          = Vector3Lerp(
-                enemy->position, Player->position, enemy->movementSpeed * GetFrameTime());
+            Vector3 enemyNewPosition = (Vector3){Player->position.x, ENEMY_POSITION_Y,Player->position.z};
+            enemy->position = Vector3Lerp(enemy->position,enemyNewPosition,enemy->movementSpeed * GetFrameTime());
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
-                Enemy_PlayAnimation(enemy, IDLE);
                 return;
             }
-            Enemy_PlayAnimation(enemy, MOVE);
         }
     }
     enemy->boundingBox = Utilities_MakeBoundingBox(enemy->position, enemy->size);
@@ -157,11 +161,9 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
     if(!enemy->dead)
     {
         enemy->health -= damageAmount;
-        // Enemy_PlayAnimation(enemy, HIT); //No hit animation, make enemy flash red instead?
         printf("Enemy id %d took %d damage\n", enemy->id, damageAmount);
         if(enemy->health <= 0)
         {
-            Enemy_PlayAnimation(enemy, DEATH);
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep enemy in the memory so we can use its position to display the
             // corpse/death anim
@@ -187,7 +189,7 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play before we shoot projectile
             // TODO: dont shoot before level is loaded!!
-            Enemy_PlayAnimation(enemy, ATTACK);
+
             Projectile_Create(
                 Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
@@ -211,16 +213,25 @@ void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
     enemy->rotation              = newRotation;
 }
 
-void Enemy_PlayAnimation(Enemy_Data* enemy, enum AnimationID animationId)
+void Enemy_PlayAnimation(Enemy_Data* enemy, int animationId, float animationSpeed)
 {
-    return;
-    if(enemy->model.currentAnimation != animationId)
+    const int frameCount = enemy->model.animations[enemy->model.currentAnimation].frameCount;
+
+    if(enemy->model.currentAnimation != animationId && enemy->model.animationFrame >= frameCount)
+    {
+        enemy->model.currentAnimation = animationId;
+    }
+
+    enemy->model.animationFrame   = Utilities_PlayAnimation(enemy->model.model,
+                                                          &enemy->model.animations[enemy->model.currentAnimation],
+                                                          animationSpeed,
+                                                          enemy->model.animationFrame,
+                                                          animationId);
+
+    if(enemy->model.animationFrame > frameCount)
     {
         enemy->model.animationFrame = 0;
     }
-    enemy->model.currentAnimation = animationId;
-    enemy->model.animationFrame   = Utilities_PlayAnimation(enemy->model.model,
-                                                          &enemy->model.animations[animationId],
-                                                          enemy->model.animationFrame,
-                                                          animationId);
+    //printf("%d / %d\n",enemy->model.animationFrame, frameCount);
+
 }
