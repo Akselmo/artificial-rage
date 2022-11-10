@@ -8,7 +8,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
-void Enemy_PlayAnimation(Enemy_Data* enemy, int animationId, float animationSpeed);
+void Enemy_PlayAnimation(Enemy_Data* enemy, float animationSpeed);
 
 // TODO: Rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
@@ -27,7 +27,6 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
         .animations = animations,
         .animationsCount = animationsCount,
         .currentAnimation = IDLE,
-        .animationPlaying = false
     };
 
     Enemy_Data enemy = {
@@ -52,7 +51,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
 
 void Enemy_Update(Enemy_Data* enemy)
 {
-    Enemy_PlayAnimation(enemy, 3, 1.0f);
+
     if(!enemy->dead)
     {
         Enemy_Draw(enemy);
@@ -64,6 +63,7 @@ void Enemy_Update(Enemy_Data* enemy)
         {
             enemy->nextTick = enemy->tickRate;
         }
+        Enemy_PlayAnimation(enemy, 1.0f);
         Enemy_UpdatePosition(enemy);
         enemy->nextFire -= GetFrameTime();
         enemy->nextFire = Enemy_FireAtPlayer(enemy, enemy->nextFire);
@@ -146,11 +146,16 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
             Vector3 enemyOldPosition = enemy->position;
             Vector3 enemyNewPosition = (Vector3){Player->position.x, ENEMY_POSITION_Y,Player->position.z};
             enemy->position = Vector3Lerp(enemy->position,enemyNewPosition,enemy->movementSpeed * GetFrameTime());
+            enemy->model.currentAnimation = MOVE;
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
                 return;
             }
+        }
+        else
+        {
+            enemy->model.currentAnimation = IDLE;
         }
     }
     enemy->boundingBox = Utilities_MakeBoundingBox(enemy->position, enemy->size);
@@ -188,8 +193,8 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         else
         {
             // Fire animation should play before we shoot projectile
-            // TODO: dont shoot before level is loaded!!
-
+            //TODO: Need to create "oneshot" animation thing that blocks all other animations until its done playing
+            enemy->model.currentAnimation = ATTACK;
             Projectile_Create(
                 Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
@@ -213,25 +218,17 @@ void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
     enemy->rotation              = newRotation;
 }
 
-void Enemy_PlayAnimation(Enemy_Data* enemy, int animationId, float animationSpeed)
+void Enemy_PlayAnimation(Enemy_Data* enemy, float animationSpeed)
 {
-    const int frameCount = enemy->model.animations[enemy->model.currentAnimation].frameCount;
 
-    if(enemy->model.currentAnimation != animationId && enemy->model.animationFrame >= frameCount)
-    {
-        enemy->model.currentAnimation = animationId;
-    }
-
-    enemy->model.animationFrame   = Utilities_PlayAnimation(enemy->model.model,
-                                                          &enemy->model.animations[enemy->model.currentAnimation],
-                                                          animationSpeed,
-                                                          enemy->model.animationFrame,
-                                                          animationId);
-
-    if(enemy->model.animationFrame > frameCount)
+    enemy->model.animationFrame++;
+    if(enemy->model.animationFrame > enemy->model.animations[enemy->model.currentAnimation].frameCount)
     {
         enemy->model.animationFrame = 0;
     }
+
+    UpdateModelAnimation(enemy->model.model, enemy->model.animations[enemy->model.currentAnimation], enemy->model.animationFrame);
+
     //printf("%d / %d\n",enemy->model.animationFrame, frameCount);
 
 }

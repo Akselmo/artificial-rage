@@ -23,7 +23,6 @@ typedef struct Enemy_Model
 {
         Model model;                 // LoadModel
         ModelAnimation* animations;  // LoadAnimations
-        bool animationPlaying;
         unsigned int animationsCount;
         int animationFrame;
         int currentAnimation;

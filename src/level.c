@@ -141,6 +141,10 @@ void Level_PlaceBlocks()
 
 void Level_Update()
 {
+    if (!Game_isStarted)
+    {
+        return;
+    }
 
     DrawModel(
         planeFloor, (Vector3) { Level_mapPosition.x, 0.0f, Level_mapPosition.z }, 1.0f, WHITE);

@@ -35,14 +35,3 @@ bool Utilities_CompareColors(Color color1, Color color2)
         return false;
     }
 }
-
-int Utilities_PlayAnimation(Model model,
-                            ModelAnimation* animation,
-                            float speed,
-                            int frameCounter,
-                            int animationId)
-{
-    frameCounter++;
-    UpdateModelAnimation(model, animation[animationId], frameCounter);
-    return frameCounter;
-}
