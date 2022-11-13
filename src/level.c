@@ -1,15 +1,15 @@
 #include "level.h"
 #include "raylib.h"
 
-// Level has level data, Level_enemies and Level_items
+// Level has level data, Level_enemies, Level_items and Level_Projectiles
+// Level is basically the "scene"
 
 // Public variables
-Level_Data* Level_data    = NULL;
-Enemy_Data* Level_enemies = NULL;
-// Contains interactable and non-interactable Level_items
-Item_Data* Level_items = NULL;
-// We can allocate projectiles here already
+Level_Data* Level_data        = NULL;
+Enemy_Data* Level_enemies     = NULL;
+Item_Data* Level_items        = NULL;  // Contains interactable and non-interactable Level_items
 Projectile* Level_projectiles = NULL;
+
 Vector3 Level_mapPosition;
 Vector3 Level_startPosition;
 Vector3 Level_endPosition;
@@ -42,7 +42,7 @@ void Level_Build()
     Level_SetBlockTypes();
 
     // Load level cubicmap image (RAM)
-    levelImageMap = LoadImage("./assets/level.png");
+    levelImageMap = LoadImage("./assets/level1/level.png");
     levelCubicMap = LoadTextureFromImage(levelImageMap);
 
     // Get map image data to be used for collision detection
@@ -64,8 +64,8 @@ void Level_PlaceBlocks()
 
     float mapPosZ            = (float)levelCubicMap.height;
     float mapPosX            = (float)levelCubicMap.width;
-    Texture2D ceilingTexture = LoadTexture("./assets/ceiling.png");
-    Texture2D floorTexture   = LoadTexture("./assets/floor.png");
+    Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
+    Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
     planeCeiling             = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     planeFloor               = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
@@ -74,8 +74,8 @@ void Level_PlaceBlocks()
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     // Load map texture, hardcoded for now.
-    wallTextures[0] = "./assets/wall1.png";
-    wallTextures[1] = "./assets/wall2.png";
+    wallTextures[0] = "./assets/level1/wall1.png";
+    wallTextures[1] = "./assets/level1/wall2.png";
 
     Level_mapPosition = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
     Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
@@ -93,8 +93,8 @@ void Level_PlaceBlocks()
             float my = Level_mapPosition.z - 0.5f + y * 1.0f;
             int i    = y * levelCubicMap.width + x;
 
-            Color pixelColor = { 0, 0, 0 };
-            pixelColor = Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
+            const Color pixelColor =
+                Utilities_GetLevelPixelColor(levelMapPixels, x, levelCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -141,6 +141,10 @@ void Level_PlaceBlocks()
 
 void Level_Update()
 {
+    if (!Game_isStarted)
+    {
+        return;
+    }
 
     DrawModel(
         planeFloor, (Vector3) { Level_mapPosition.x, 0.0f, Level_mapPosition.z }, 1.0f, WHITE);

@@ -10,6 +10,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "utilities.h"
+#include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,6 +28,7 @@ typedef struct Level_Data
         BoundingBox blockBoundingBox;
         Model blockModel;
         int modelId;
+        bool loaded;
 } Level_Data;
 
 typedef struct Level_BlockType

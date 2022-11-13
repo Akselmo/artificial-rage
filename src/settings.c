@@ -20,7 +20,7 @@ void Settings_Initialize()
 
     Settings_MouseSensitivity = GetSensitivity();
     Settings_CameraFov        = GetFOV();
-    // SetTargetFPS(60);
+    SetTargetFPS(60);
 }
 
 float GetSensitivity()

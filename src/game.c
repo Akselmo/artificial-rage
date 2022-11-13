@@ -7,16 +7,15 @@
 
 // Shared variables
 Camera playerCamera;
-bool Game_initialized;
 
 // Prototypes
 void Game_HudUpdate();
 void Game_MenuUpdate();
-
+bool Game_isStarted = false;
 // Initialization
 void Game_Initialize()
 {
-    Game_initialized = false;
+    Game_isStarted = false;
     // Initialize game
     Settings_Initialize();
 
@@ -25,7 +24,7 @@ void Game_Initialize()
     Vector3 startPos = Level_startPosition;
     playerCamera     = Player_InitializeCamera(startPos.x, startPos.z);
 
-    Game_initialized = true;
+    Game_isStarted = true;
 }
 
 // Main game loop
@@ -37,7 +36,7 @@ void Game_Update()
 
     BeginMode3D(playerCamera);
 
-    if(Game_initialized)
+    if(Game_isStarted)
     {
         Player_Update(&playerCamera);
         Level_Update();
