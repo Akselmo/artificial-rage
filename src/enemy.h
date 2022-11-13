@@ -35,6 +35,8 @@ typedef struct Enemy_Data
         int currentAnimation;
         int animationFrame;
         bool dead;
+        bool moving;
+        bool attacking;
         int id;
         float tickRate;
         float nextTick;

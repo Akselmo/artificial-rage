@@ -4,7 +4,7 @@
 #include "raylib.h"
 
 // Private functions
-void Enemy_UpdatePosition(Enemy_Data* enemy);
+bool Enemy_UpdatePosition(Enemy_Data* enemy);
 bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
@@ -30,6 +30,8 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
         .animationsCount = animationsCount,
         .currentAnimation = IDLE,
         .dead          = false,
+        .moving        = false,
+        .attacking     = false,
         .damage        = 5,
         .health        = 15,  // Check enemy health balance later
         .boundingBox   = Utilities_MakeBoundingBox(enemyPosition, enemySize),
@@ -39,7 +41,7 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
         .movementSpeed = ENEMY_DEFAULT_MOVEMENT_SPEED,
         .rotationSpeed = ENEMY_DEFAULT_ROTATION_SPEED,
         .fireRate      = 5.75f,
-        .nextFire      = 10.0f,
+        .nextFire      = 5.75f,
     };
     return enemy;
 }
@@ -58,11 +60,33 @@ void Enemy_Update(Enemy_Data* enemy)
         {
             enemy->nextTick = enemy->tickRate;
         }
-        Enemy_PlayAnimation(enemy, 1.0f);
-        Enemy_UpdatePosition(enemy);
+
+        enemy->moving = Enemy_UpdatePosition(enemy);
+
+        if (enemy->attacking)
+        {
+            enemy->currentAnimation = ATTACK;
+        }
+        else
+        {
+            if (enemy->moving)
+            {
+                enemy->currentAnimation = MOVE;
+            }
+            else
+            {
+                enemy->currentAnimation = IDLE;
+            }
+        }
+        enemy->attacking = !enemy->moving;
+
         enemy->nextFire -= GetFrameTime();
         enemy->nextFire = Enemy_FireAtPlayer(enemy, enemy->nextFire);
+
     }
+
+    Enemy_PlayAnimation(enemy, 1.0f);
+
 }
 
 void Enemy_Draw(Enemy_Data* enemy)
@@ -127,8 +151,10 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
     return hitPlayer;
 }
 
-void Enemy_UpdatePosition(Enemy_Data* enemy)
+//Make this boolean: moving or not
+bool Enemy_UpdatePosition(Enemy_Data* enemy)
 {
+    bool moving = true;
     // Move enemy towards player
     Vector3 DistanceFromPlayer = Vector3Subtract(enemy->position, Player->position);
     //- Check if player can be seen (first raycast hit returns player)
@@ -141,19 +167,18 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
             Vector3 enemyOldPosition = enemy->position;
             Vector3 enemyNewPosition = (Vector3){Player->position.x, ENEMY_POSITION_Y,Player->position.z};
             enemy->position = Vector3Lerp(enemy->position,enemyNewPosition,enemy->movementSpeed * GetFrameTime());
-            enemy->currentAnimation = MOVE;
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
-                return;
             }
         }
         else
         {
-            enemy->currentAnimation = IDLE;
+            moving = false;
         }
     }
     enemy->boundingBox = Utilities_MakeBoundingBox(enemy->position, enemy->size);
+    return moving;
 }
 
 void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
@@ -189,7 +214,9 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play before we shoot projectile
             //TODO: Need to create "oneshot" animation thing that blocks all other animations until its done playing
+            enemy->attacking = true;
             enemy->currentAnimation = ATTACK;
+
             Projectile_Create(
                 Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
@@ -222,7 +249,7 @@ void Enemy_PlayAnimation(Enemy_Data* enemy, float animationSpeed)
 {
 
     enemy->animationFrame++;
-    if(enemy->animationFrame > enemy->animations[enemy->currentAnimation].frameCount)
+    if(enemy->animationFrame >= enemy->animations[enemy->currentAnimation].frameCount)
     {
         enemy->animationFrame = 0;
     }
