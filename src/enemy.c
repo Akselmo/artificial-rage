@@ -46,6 +46,11 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
     return enemy;
 }
 
+
+// TODO: The animations need to be tied completely to the
+// firing and moving.
+// First we start playing animation, then we start doing the action related to animation
+
 void Enemy_Update(Enemy_Data* enemy)
 {
 
