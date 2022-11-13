@@ -20,20 +20,15 @@ Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
 
     const char modelFileName[128] = "./assets/models/enemy.m3d";
     unsigned int animationsCount  = 0;
-    ModelAnimation *animations    =  LoadModelAnimations(modelFileName,&animationsCount);
-
-    Enemy_Model model             = {
-        .model = LoadModel(modelFileName),
-        .animations = animations,
-        .animationsCount = animationsCount,
-        .currentAnimation = IDLE,
-    };
 
     Enemy_Data enemy = {
         .position      = enemyPosition,
         .rotation      = enemyRotation,
         .size          = enemySize,
-        .model         = model,
+        .model         = LoadModel(modelFileName),
+        .animations =    LoadModelAnimations(modelFileName,&animationsCount),
+        .animationsCount = animationsCount,
+        .currentAnimation = IDLE,
         .dead          = false,
         .damage        = 5,
         .health        = 15,  // Check enemy health balance later
@@ -72,7 +67,7 @@ void Enemy_Update(Enemy_Data* enemy)
 
 void Enemy_Draw(Enemy_Data* enemy)
 {
-    DrawModel(enemy->model.model, enemy->position, 0.5f, WHITE);
+    DrawModel(enemy->model, enemy->position, 0.5f, WHITE);
 }
 
 Ray Enemy_CreateRay(Enemy_Data* enemy)
@@ -146,7 +141,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
             Vector3 enemyOldPosition = enemy->position;
             Vector3 enemyNewPosition = (Vector3){Player->position.x, ENEMY_POSITION_Y,Player->position.z};
             enemy->position = Vector3Lerp(enemy->position,enemyNewPosition,enemy->movementSpeed * GetFrameTime());
-            enemy->model.currentAnimation = MOVE;
+            enemy->currentAnimation = MOVE;
             if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
@@ -155,7 +150,7 @@ void Enemy_UpdatePosition(Enemy_Data* enemy)
         }
         else
         {
-            enemy->model.currentAnimation = IDLE;
+            enemy->currentAnimation = IDLE;
         }
     }
     enemy->boundingBox = Utilities_MakeBoundingBox(enemy->position, enemy->size);
@@ -194,7 +189,7 @@ float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire)
         {
             // Fire animation should play before we shoot projectile
             //TODO: Need to create "oneshot" animation thing that blocks all other animations until its done playing
-            enemy->model.currentAnimation = ATTACK;
+            enemy->currentAnimation = ATTACK;
             Projectile_Create(
                 Enemy_CreateRay(enemy), (Vector3) { 0.2f, 0.2f, 0.2f }, enemy->damage, enemy->id);
             nextFire = enemy->fireRate;
@@ -214,20 +209,25 @@ void Enemy_RotateTowards(Enemy_Data* enemy, Vector3 targetPosition)
     Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
     Quaternion slerp = QuaternionSlerp(start, end, enemy->rotationSpeed * GetFrameTime());
 
-    enemy->model.model.transform = QuaternionToMatrix(slerp);
+    enemy->model.transform = QuaternionToMatrix(slerp);
     enemy->rotation              = newRotation;
 }
+
+// TODO: Need somekind of set animation thing
+// Set animation and is it interruptable/loopable? If not, play animation once
+// blocking all the other set animations until this animation has played
+// If it's interruptable, just do it like below
 
 void Enemy_PlayAnimation(Enemy_Data* enemy, float animationSpeed)
 {
 
-    enemy->model.animationFrame++;
-    if(enemy->model.animationFrame > enemy->model.animations[enemy->model.currentAnimation].frameCount)
+    enemy->animationFrame++;
+    if(enemy->animationFrame > enemy->animations[enemy->currentAnimation].frameCount)
     {
-        enemy->model.animationFrame = 0;
+        enemy->animationFrame = 0;
     }
 
-    UpdateModelAnimation(enemy->model.model, enemy->model.animations[enemy->model.currentAnimation], enemy->model.animationFrame);
+    UpdateModelAnimation(enemy->model, enemy->animations[enemy->currentAnimation], enemy->animationFrame);
 
     //printf("%d / %d\n",enemy->model.animationFrame, frameCount);
 

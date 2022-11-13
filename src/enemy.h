@@ -1,3 +1,4 @@
+//TODO: Should enemy be renamed to something else?
 #pragma once
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
@@ -19,15 +20,7 @@
 enum AnimationID { DEATH = 0, ATTACK = 1, IDLE = 2, MOVE = 3};
 
 // Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
-typedef struct Enemy_Model
-{
-        Model model;                 // LoadModel
-        ModelAnimation* animations;  // LoadAnimations
-        unsigned int animationsCount;
-        int animationFrame;
-        int currentAnimation;
-} Enemy_Model;
-
+//TODO: Clean up structs, make them into smaller pieces?
 typedef struct Enemy_Data
 {
         int health;
@@ -36,7 +29,11 @@ typedef struct Enemy_Data
         Vector3 rotation;
         Vector3 size;
         BoundingBox boundingBox;
-        struct Enemy_Model model;
+        Model model;
+        ModelAnimation* animations;
+        unsigned int animationsCount;
+        int currentAnimation;
+        int animationFrame;
         bool dead;
         int id;
         float tickRate;
