@@ -9,6 +9,12 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy);
 float Enemy_FireAtPlayer(Enemy_Data* enemy, float nextFire);
 Ray Enemy_CreateRay(Enemy_Data* enemy);
 void Enemy_PlayAnimation(Enemy_Data* enemy, float animationSpeed);
+//TODO: move all the functions in the following four functions
+// If something is reused, make an utility function for it?
+void Enemy_Attack(Enemy_Data* enemy);
+void Enemy_Move(Enemy_Data* enemy);
+void Enemy_Idle(Enemy_Data* enemy);
+void Enemy_Die(Enemy_Data* enemy);
 
 // TODO: Rotation
 Enemy_Data Enemy_Add(float pos_x, float pos_z, int id)
@@ -202,6 +208,7 @@ void Enemy_TakeDamage(Enemy_Data* enemy, int damageAmount)
                                              ENEMY_GRAVEYARD_POSITION };
             enemy->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             enemy->dead        = true;
+            enemy->currentAnimation = DEATH;
         }
     }
 }
