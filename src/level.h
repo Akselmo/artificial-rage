@@ -20,8 +20,21 @@
 #define WALL_MODEL_ID         -2
 
 // Structs
-
 typedef struct Level_Data
+{
+        Model planeFloor;
+        Model planeCeiling;
+        struct Level_BlockData* blockData;
+        struct Enemy_Data* enemies;
+        struct Item_Data* items;
+        struct Projectile* projectiles;
+        Vector3 mapPosition;
+        Vector3 startPosition;
+        Vector3 endPosition;
+        int mapSize;
+} Level_Data;
+
+typedef struct Level_BlockData
 {
         Vector3 blockPosition;
         Vector3 blockSize;
@@ -29,7 +42,7 @@ typedef struct Level_Data
         Model blockModel;
         int modelId;
         bool loaded;
-} Level_Data;
+} Level_BlockData;
 
 typedef struct Level_BlockType
 {
@@ -41,16 +54,10 @@ typedef struct Level_BlockType
 } Level_BlockType;
 
 // Variables
-extern struct Level_Data* Level_data;
-extern struct Enemy_Data* Level_enemies;
-extern struct Item_Data* Level_items;
-extern struct Projectile* Level_projectiles;
-extern Vector3 Level_mapPosition;
-extern Vector3 Level_startPosition;
-extern Vector3 Level_endPosition;
-extern int Level_mapSize;
+extern struct Level_Data Level_data;
 
 // Functions
+Camera Level_Initialize();
 Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize);
 void Level_Build();
 void Level_Update();

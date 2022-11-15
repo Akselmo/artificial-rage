@@ -16,13 +16,12 @@ bool Game_isStarted = false;
 void Game_Initialize()
 {
     Game_isStarted = false;
+
     // Initialize game
     Settings_Initialize();
 
-    Level_Build();
     // Add player camera
-    Vector3 startPos = Level_startPosition;
-    playerCamera     = Player_InitializeCamera(startPos.x, startPos.z);
+    playerCamera = Level_Initialize();
 
     Game_isStarted = true;
 }

@@ -16,7 +16,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
     // entities themselves.
     for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Level_projectiles[i].id != i || Level_projectiles[i].destroyed == true)
+        if(Level_data.projectiles[i].id != i || Level_data.projectiles[i].destroyed == true)
         {
             Projectile projectile = {
                 .startPosition = rayCast.position,
@@ -33,7 +33,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
                 .destroyed   = false,
             };
             printf("Projectile id created %d\n", projectile.id);
-            Level_projectiles[i] = projectile;
+            Level_data.projectiles[i] = projectile;
             break;
         }
     }
@@ -58,20 +58,20 @@ void Projectile_CheckCollision(Projectile* projectile)
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
     BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for(int i = 0; i < Level_mapSize; i++)
+    for(int i = 0; i < Level_data.mapSize; i++)
     {
 
         // Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox))
+        if(CheckCollisionBoxes(projectileBox, Level_data.blockData[i].blockBoundingBox))
         {
             Projectile_Destroy(projectile);
             return;
         }
         // Against enemy except if owned by enemy
-        else if(CheckCollisionBoxes(projectileBox, Level_enemies[i].boundingBox) &&
-                Level_enemies[i].id != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Level_data.enemies[i].boundingBox) &&
+                Level_data.enemies[i].id != projectile->ownerId)
         {
-            Enemy_TakeDamage(&Level_enemies[i], projectile->damage);
+            Enemy_TakeDamage(&Level_data.enemies[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }

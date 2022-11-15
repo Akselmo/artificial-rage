@@ -5,34 +5,22 @@
 // Level is basically the "scene"
 
 // Public variables
-Level_Data* Level_data        = NULL;
-Enemy_Data* Level_enemies     = NULL;
-Item_Data* Level_items        = NULL;  // Contains interactable and non-interactable Level_items
-Projectile* Level_projectiles = NULL;
-
-Vector3 Level_mapPosition;
-Vector3 Level_startPosition;
-Vector3 Level_endPosition;
-int Level_mapSize = 0;
+Level_Data Level_data = {0};
 
 // Private variables
 Level_BlockType Level_BlockTypes;
-Color* levelMapPixels = NULL;
-Texture2D levelCubicMap;
-Image levelImageMap;
-Vector3 ceilingRotation = { -1.0f, 0.0f, 0.0f };
-Model planeFloor;
-Material* floorMaterial = NULL;
-Model planeCeiling;
-Material* ceilingMaterial = NULL;
-char* wallTextures[2];
 
 // Private functions
-void Level_PlaceBlocks();
+void Level_PlaceBlocks(Texture2D levelCubicMap, Color* levelMapPixels);
 void Level_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Level_SetBlockTypes();
 void Level_UpdateProjectiles();
 
+Camera Level_Initialize()
+{
+    Level_Build();
+    return Player_InitializeCamera(Level_data.startPosition.x, Level_data.startPosition.z);
+}
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -42,13 +30,13 @@ void Level_Build()
     Level_SetBlockTypes();
 
     // Load level cubicmap image (RAM)
-    levelImageMap = LoadImage("./assets/level1/level.png");
-    levelCubicMap = LoadTextureFromImage(levelImageMap);
+    Image levelImageMap = LoadImage("./assets/level1/level.png");
+    Texture2D levelCubicMap = LoadTextureFromImage(levelImageMap);
 
     // Get map image data to be used for collision detection
-    levelMapPixels = LoadImageColors(levelImageMap);
+    Color* levelMapPixels = LoadImageColors(levelImageMap);
 
-    Level_PlaceBlocks();
+    Level_PlaceBlocks(levelCubicMap, levelMapPixels);
 
     // Unload image from RAM
     UnloadImage(levelImageMap);
@@ -58,7 +46,7 @@ void Level_Build()
 //       Move everything in this method, and change it's name
 //  should first calculate the needed size of Level_items, then redo it and add the Level_items =
 //  more memory efficient
-void Level_PlaceBlocks()
+void Level_PlaceBlocks(Texture2D levelCubicMap, Color* levelMapPixels)
 {
     // Place all Level_items based on their colors
 
@@ -66,31 +54,30 @@ void Level_PlaceBlocks()
     float mapPosX            = (float)levelCubicMap.width;
     Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
     Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
-    planeCeiling             = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    planeFloor               = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Level_data.planeCeiling = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Level_data.planeFloor   = LoadModelFromMesh(Level_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
-    planeCeiling.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
-    planeFloor.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
+    Level_data.planeCeiling.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
+    Level_data.planeFloor.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     // Load map texture, hardcoded for now.
-    wallTextures[0] = "./assets/level1/wall1.png";
-    wallTextures[1] = "./assets/level1/wall2.png";
+    char* wallTextures[2] = {"./assets/level1/wall1.png", "./assets/level1/wall2.png"};
 
-    Level_mapPosition = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
-    Level_mapSize     = levelCubicMap.height * levelCubicMap.width;
+    Level_data.mapPosition = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
+    Level_data.mapSize     = levelCubicMap.height * levelCubicMap.width;
 
-    Level_data        = calloc(Level_mapSize, sizeof(Level_Data));
-    Level_enemies     = calloc(Level_mapSize, sizeof(Enemy_Data));
-    Level_projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
+    Level_data.blockData   = calloc(Level_data.mapSize, sizeof(Level_BlockData));
+    Level_data.enemies     = calloc(Level_data.mapSize, sizeof(Enemy_Data));
+    Level_data.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < levelCubicMap.height; y++)
     {
         for(int x = 0; x < levelCubicMap.width; x++)
         {
 
-            float mx = Level_mapPosition.x - 0.5f + x * 1.0f;
-            float my = Level_mapPosition.z - 0.5f + y * 1.0f;
+            float mx = Level_data.mapPosition.x - 0.5f + x * 1.0f;
+            float my = Level_data.mapPosition.z - 0.5f + y * 1.0f;
             int i    = y * levelCubicMap.width + x;
 
             const Color pixelColor =
@@ -106,37 +93,37 @@ void Level_PlaceBlocks()
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-                Level_data[i].blockModel       = cubeModel;
-                Level_data[i].blockPosition    = (Vector3) { mx, Level_mapPosition.y, my };
-                Level_data[i].modelId          = WALL_MODEL_ID;
-                Level_data[i].blockSize        = (Vector3) { 1.0f, 1.0f, 1.0f };
-                Level_data[i].blockBoundingBox = Utilities_MakeBoundingBox(
-                    (Vector3) { mx, Level_mapPosition.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
+                Level_data.blockData[i].blockModel       = cubeModel;
+                Level_data.blockData[i].blockPosition    = (Vector3) { mx, Level_data.mapPosition.y, my };
+                Level_data.blockData[i].modelId          = WALL_MODEL_ID;
+                Level_data.blockData[i].blockSize        = (Vector3) { 1.0f, 1.0f, 1.0f };
+                Level_data.blockData[i].blockBoundingBox = Utilities_MakeBoundingBox(
+                    (Vector3) { mx, Level_data.mapPosition.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
             }
 
             // Find start, which is green (0,255,0)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.startColor))
             {
-                Level_startPosition = (Vector3) { mx, 0.0f, my };
+                Level_data.startPosition = (Vector3) { mx, 0.0f, my };
             }
 
             // Find end, which is blue (0,0,255)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.endColor))
             {
-                Level_endPosition = (Vector3) { mx, 0.0f, my };
+                Level_data.endPosition = (Vector3) { mx, 0.0f, my };
             }
 
             // Find enemy, which is red (255,0,0)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.enemyColor))
             {
-                Level_enemies[i] = Enemy_Add(mx, my, i);
+                Level_data.enemies[i] = Enemy_Add(mx, my, i);
             }
 
             // TODO: More entities. For entities and their RGB values: check README.md
         }
     }
 
-    printf("Level has total %d blocks \n", Level_mapSize);
+    printf("Level has total %d blocks \n", Level_data.mapSize);
 }
 
 void Level_Update()
@@ -146,19 +133,18 @@ void Level_Update()
         return;
     }
 
-    DrawModel(
-        planeFloor, (Vector3) { Level_mapPosition.x, 0.0f, Level_mapPosition.z }, 1.0f, WHITE);
-    DrawModelEx(planeCeiling,
-                (Vector3) { Level_mapPosition.x, 1.0f, -Level_mapPosition.z },
-                ceilingRotation,
+    DrawModel(Level_data.planeFloor, (Vector3) { Level_data.mapPosition.x, 0.0f, Level_data.mapPosition.z }, 1.0f, WHITE);
+    DrawModelEx(Level_data.planeCeiling,
+                (Vector3) { Level_data.mapPosition.x, 1.0f, -Level_data.mapPosition.z },
+                (Vector3) { -1.0f, 0.0f, 0.0f },
                 180.0f,
                 (Vector3) { 1.0f, 1.0f, 1.0f },
                 WHITE);
 
-    for(int i = 0; i < Level_mapSize; i++)
+    for(int i = 0; i < Level_data.mapSize; i++)
     {
-        Level_Data* data  = &Level_data[i];
-        Enemy_Data* enemy = &Level_enemies[i];
+        Level_BlockData* data  = &Level_data.blockData[i];
+        Enemy_Data* enemy = &Level_data.enemies[i];
         if(data != NULL && data->modelId != 0)
         {
             DrawModel(data->blockModel, data->blockPosition, 1.0f, WHITE);
@@ -180,7 +166,7 @@ void Level_UpdateProjectiles()
 {
     for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        Projectile* projectile = &Level_projectiles[i];
+        Projectile* projectile = &Level_data.projectiles[i];
         if(projectile != NULL)
         {
             Projectile_Update(projectile);
@@ -192,20 +178,20 @@ bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
     BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
 
-    for(int i = 0; i < Level_mapSize; i++)
+    for(int i = 0; i < Level_data.mapSize; i++)
     {
         // Level blocks
 
         // Player and walls/enemies
-        if(CheckCollisionBoxes(entityBox, Level_data[i].blockBoundingBox))
+        if(CheckCollisionBoxes(entityBox, Level_data.blockData[i].blockBoundingBox))
         {
             return true;
         }
         // Enemy and wall/other enemies
         // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their
         // own projectiles
-        else if(CheckCollisionBoxes(entityBox, Level_enemies[i].boundingBox) &&
-                Level_enemies[i].id != entityId)
+        else if(CheckCollisionBoxes(entityBox, Level_data.enemies[i].boundingBox) &&
+                Level_data.enemies[i].id != entityId)
         {
             return true;
         }

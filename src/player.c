@@ -65,7 +65,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player->dead        = false;
     Player->size        = (Vector3) { 0.1f, 0.1f, 0.1f };
     Player->position    = (Vector3) { 0.0f, 0.0f, 0.0f };
-    Player->boundingBox = Utilities_MakeBoundingBox(Player->size, Player->position);
+    Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
     Player->nextFire    = 0.0f;
 
     Weapon_InitializeKeys();

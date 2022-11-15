@@ -125,9 +125,9 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
     float distance        = 0.0f;
     float levelDistance   = INFINITY;
     float playerDistance  = INFINITY;
-    int entitiesAmount    = Level_mapSize;
-    Level_Data* levelData = Level_data;
-    Level_Data levelDataHit;
+    int entitiesAmount    = Level_data.mapSize;
+    Level_BlockData* levelData = Level_data.blockData;
+    Level_BlockData levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
