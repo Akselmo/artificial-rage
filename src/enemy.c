@@ -125,17 +125,17 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
     float distance        = 0.0f;
     float levelDistance   = INFINITY;
     float playerDistance  = INFINITY;
-    int entitiesAmount    = Level_data.mapSize;
-    Level_BlockData* levelData = Level_data.blockData;
+    int entitiesAmount    = Level_data.size;
+    Level_BlockData* levelData = Level_data.blocks;
     Level_BlockData levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
-        if(levelData[i].modelId != 0)
+        if(levelData[i].id != 0)
         {
-            Vector3 pos           = levelData[i].blockPosition;
+            Vector3 pos           = levelData[i].position;
             RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+                rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)

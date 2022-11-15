@@ -58,11 +58,11 @@ void Projectile_CheckCollision(Projectile* projectile)
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
     BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for(int i = 0; i < Level_data.mapSize; i++)
+    for(int i = 0; i < Level_data.size; i++)
     {
 
         // Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Level_data.blockData[i].blockBoundingBox))
+        if(CheckCollisionBoxes(projectileBox, Level_data.blocks[i].boundingBox))
         {
             Projectile_Destroy(projectile);
             return;

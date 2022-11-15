@@ -22,25 +22,25 @@
 // Structs
 typedef struct Level_Data
 {
-        Model planeFloor;
-        Model planeCeiling;
-        struct Level_BlockData* blockData;
+        Model floorPlane;
+        Model ceilingPlane;
+        struct Level_BlockData* blocks;
         struct Enemy_Data* enemies;
         struct Item_Data* items;
         struct Projectile* projectiles;
-        Vector3 mapPosition;
+        Vector3 position;
         Vector3 startPosition;
         Vector3 endPosition;
-        int mapSize;
+        int size;
 } Level_Data;
 
 typedef struct Level_BlockData
 {
-        Vector3 blockPosition;
-        Vector3 blockSize;
-        BoundingBox blockBoundingBox;
-        Model blockModel;
-        int modelId;
+        Vector3 position;
+        Vector3 size;
+        BoundingBox boundingBox;
+        Model model;
+        int id;
         bool loaded;
 } Level_BlockData;
 
