@@ -208,62 +208,36 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
     // X width, Z height
     Mesh mesh = { 0 };
     Scene_AllocateMeshData(&mesh, 2);
+    // clang-format off
+    float vertices[] = {
+        0, 0, 0,
+        width, 0, height,
+        width, 0, 0,
+        0, 0, 0,
+        0, 0, height,
+        width, 0, height
+    };
 
-    // First triangle
-    mesh.vertices[0]  = 0;
-    mesh.vertices[1]  = 0;
-    mesh.vertices[2]  = 0;
-    mesh.normals[0]   = 0;
-    mesh.normals[1]   = 1;
-    mesh.normals[2]   = 0;
-    mesh.texcoords[0] = 0;
-    mesh.texcoords[1] = 0;
+    float normals[] = {
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0
+    };
 
-    mesh.vertices[3]  = width;
-    mesh.vertices[4]  = 0;
-    mesh.vertices[5]  = height;
-    mesh.normals[3]   = 0;
-    mesh.normals[4]   = 1;
-    mesh.normals[5]   = 0;
-    mesh.texcoords[2] = width / textureSize;
-    mesh.texcoords[3] = height / textureSize;
+    float texcoords[] = {
+        0, 0, width / textureSize,
+        height / textureSize, width / textureSize, 0,
+        0, 0, 0,
+        height / textureSize, width / textureSize, height / textureSize
+    };
+    // clang-format on
 
-    // Second triangle
-    mesh.vertices[6]  = width;
-    mesh.vertices[7]  = 0;
-    mesh.vertices[8]  = 0;
-    mesh.normals[6]   = 0;
-    mesh.normals[7]   = 1;
-    mesh.normals[8]   = 0;
-    mesh.texcoords[4] = width / textureSize;
-    mesh.texcoords[5] = 0;
-
-    mesh.vertices[9]  = 0;
-    mesh.vertices[10] = 0;
-    mesh.vertices[11] = 0;
-    mesh.normals[9]   = 0;
-    mesh.normals[10]  = 1;
-    mesh.normals[11]  = 0;
-    mesh.texcoords[6] = 0;
-    mesh.texcoords[7] = 0;
-
-    mesh.vertices[12] = 0;
-    mesh.vertices[13] = 0;
-    mesh.vertices[14] = height;
-    mesh.normals[12]  = 0;
-    mesh.normals[13]  = 1;
-    mesh.normals[14]  = 0;
-    mesh.texcoords[8] = 0;
-    mesh.texcoords[9] = height / textureSize;
-
-    mesh.vertices[15]  = width;
-    mesh.vertices[16]  = 0;
-    mesh.vertices[17]  = height;
-    mesh.normals[15]   = 0;
-    mesh.normals[16]   = 1;
-    mesh.normals[17]   = 0;
-    mesh.texcoords[10] = width / textureSize;
-    mesh.texcoords[11] = height / textureSize;
+    mesh.vertices = vertices;
+    mesh.normals = normals;
+    mesh.texcoords = texcoords;
 
     UploadMesh(&mesh, false);
 
