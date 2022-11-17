@@ -210,11 +210,11 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
     Scene_AllocateMeshData(&mesh, 2);
     // clang-format off
     float vertices[] = {
-        0, 0, 0,
+        0,     0, 0,
         width, 0, height,
         width, 0, 0,
-        0, 0, 0,
-        0, 0, height,
+        0,     0, 0,
+        0,     0, height,
         width, 0, height
     };
 
@@ -228,10 +228,12 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
     };
 
     float texcoords[] = {
-        0, 0, width / textureSize,
-        height / textureSize, width / textureSize, 0,
-        0, 0, 0,
-        height / textureSize, width / textureSize, height / textureSize
+        0, 0,
+        width / textureSize, height / textureSize,
+        width / textureSize, 0,
+        0, 0,
+        0, height / textureSize,
+        width / textureSize, height / textureSize
     };
     // clang-format on
 
