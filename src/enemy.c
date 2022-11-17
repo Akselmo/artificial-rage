@@ -125,9 +125,9 @@ bool Enemy_TestPlayerHit(Enemy_Data* enemy)
     float distance        = 0.0f;
     float levelDistance   = INFINITY;
     float playerDistance  = INFINITY;
-    int entitiesAmount    = Level_data.size;
-    Level_BlockData* levelData = Level_data.blocks;
-    Level_BlockData levelDataHit;
+    int entitiesAmount    = Scene_data.size;
+    Scene_BlockData* levelData = Scene_data.blocks;
+    Scene_BlockData levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
@@ -178,7 +178,7 @@ bool Enemy_UpdatePosition(Enemy_Data* enemy)
             Vector3 enemyOldPosition = enemy->position;
             Vector3 enemyNewPosition = (Vector3){Player->position.x, ENEMY_POSITION_Y,Player->position.z};
             enemy->position = Vector3Lerp(enemy->position,enemyNewPosition,enemy->movementSpeed * GetFrameTime());
-            if(Level_CheckCollision(enemy->position, enemy->size, enemy->id))
+            if(Scene_CheckCollision(enemy->position, enemy->size, enemy->id))
             {
                 enemy->position = enemyOldPosition;
             }

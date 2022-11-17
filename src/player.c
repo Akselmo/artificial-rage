@@ -142,7 +142,7 @@ void Player_Update(Camera* camera)
     // Camera position update
     camera->position.y = Player_CustomCamera.playerEyesPosition;
 
-    if(Level_CheckCollision(camera->position, Player->size, PLAYER_ID))
+    if(Scene_CheckCollision(camera->position, Player->size, PLAYER_ID))
     {
         camera->position = oldPlayerPos;
     }

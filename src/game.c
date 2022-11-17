@@ -21,7 +21,7 @@ void Game_Initialize()
     Settings_Initialize();
 
     // Add player camera
-    playerCamera = Level_Initialize();
+    playerCamera = Scene_Initialize();
 
     Game_isStarted = true;
 }
@@ -38,7 +38,7 @@ void Game_Update()
     if(Game_isStarted)
     {
         Player_Update(&playerCamera);
-        Level_Update();
+        Scene_Update();
     }
 
     EndMode3D();

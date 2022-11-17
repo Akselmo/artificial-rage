@@ -3,10 +3,10 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "level.h"
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "scene.h"
 #include "utilities.h"
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,8 +1,8 @@
 #include "weapon.h"
-#include "level.h"
 #include "player.h"
 #include "projectile.h"
 #include "raymath.h"
+#include "scene.h"
 
 // Prototypes
 
@@ -125,9 +125,9 @@ int TestEntityHit(Ray rayCast)
     int id;
     float levelDistance   = INFINITY;
     float enemyDistance   = INFINITY;
-    int entitiesAmount    = Level_data.size;
-    Level_BlockData* levelData = Level_data.blocks;
-    Enemy_Data* enemies   = Level_data.enemies;
+    int entitiesAmount    = Scene_data.size;
+    Scene_BlockData* levelData = Scene_data.blocks;
+    Enemy_Data* enemies   = Scene_data.enemies;
     Enemy_Data enemyDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
@@ -210,7 +210,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
                 if(id != 0 && id != PLAYER_ID)
                 {
                     Enemy_TakeDamage(
-                        &Level_data.enemies[id],
+                        &Scene_data.enemies[id],
                         WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
                     printf("Enemy_Data id %d takes %d damage\n",
                            id,

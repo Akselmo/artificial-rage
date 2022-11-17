@@ -1,7 +1,7 @@
 #pragma once
 #include "projectile.h"
-#ifndef _LEVEL_H_
-#define _LEVEL_H_
+#ifndef _SCENE_H_
+#define _SCENE_H_
 
 #include "enemy.h"
 #include "item.h"
@@ -15,16 +15,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LEVEL_SIZE        16384
+#define MAX_SCENE_SIZE        16384
 #define MAX_PROJECTILE_AMOUNT 254
 #define WALL_MODEL_ID         -2
 
 // Structs
-typedef struct Level_Data
+typedef struct Scene_Data
 {
         Model floorPlane;
         Model ceilingPlane;
-        struct Level_BlockData* blocks;
+        struct Scene_BlockData* blocks;
         struct Enemy_Data* enemies;
         struct Item_Data* items;
         struct Projectile* projectiles;
@@ -32,9 +32,9 @@ typedef struct Level_Data
         Vector3 startPosition;
         Vector3 endPosition;
         int size;
-} Level_Data;
+} Scene_Data;
 
-typedef struct Level_BlockData
+typedef struct Scene_BlockData
 {
         Vector3 position;
         Vector3 size;
@@ -42,7 +42,7 @@ typedef struct Level_BlockData
         Model model;
         int id;
         bool loaded;
-} Level_BlockData;
+} Scene_BlockData;
 
 typedef struct Level_BlockType
 {
@@ -54,13 +54,13 @@ typedef struct Level_BlockType
 } Level_BlockType;
 
 // Variables
-extern struct Level_Data Level_data;
+extern struct Scene_Data Scene_data;
 
 // Functions
-Camera Level_Initialize();
-Mesh Level_MakeCustomPlaneMesh(float height, float width, float textureSize);
-void Level_Build();
-void Level_Update();
-bool Level_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
+Camera Scene_Initialize();
+Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize);
+void Scene_Build();
+void Scene_Update();
+bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
 
 #endif
