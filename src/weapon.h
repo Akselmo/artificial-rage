@@ -4,7 +4,7 @@
 
 #define WEAPON_AMOUNT 5
 
-#include "enemy.h"
+#include "actor.h"
 #include "main.h"
 #include "player.h"
 #include "projectile.h"

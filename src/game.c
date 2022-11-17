@@ -12,6 +12,7 @@ Camera playerCamera;
 void Game_HudUpdate();
 void Game_MenuUpdate();
 bool Game_isStarted = false;
+
 // Initialization
 void Game_Initialize()
 {

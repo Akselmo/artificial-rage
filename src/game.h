@@ -2,7 +2,7 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "enemy.h"
+#include "actor.h"
 #include "hud.h"
 #include "item.h"
 #include "player.h"

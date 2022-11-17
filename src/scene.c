@@ -5,7 +5,7 @@
 // Level is basically the "scene"
 
 // Public variables
-Scene_Data Scene_data = {0};
+Scene_Data Scene_data = { 0 };
 
 // Private variables
 Level_BlockType Level_BlockTypes;
@@ -21,6 +21,7 @@ Camera Scene_Initialize()
     Scene_Build();
     return Player_InitializeCamera(Scene_data.startPosition.x, Scene_data.startPosition.z);
 }
+
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
@@ -30,16 +31,16 @@ void Scene_Build()
     Scene_SetBlockTypes();
 
     // Load level cubicmap image (RAM)
-    Image levelImageMap = LoadImage("./assets/level1/level.png");
-    Texture2D levelCubicMap = LoadTextureFromImage(levelImageMap);
+    Image sceneImageMap     = LoadImage("./assets/level1/level.png");
+    Texture2D sceneCubicMap = LoadTextureFromImage(sceneImageMap);
 
     // Get map image data to be used for collision detection
-    Color* levelMapPixels = LoadImageColors(levelImageMap);
+    Color* sceneMapPixels = LoadImageColors(sceneImageMap);
 
-    Scene_PlaceBlocks(levelCubicMap, levelMapPixels);
+    Scene_PlaceBlocks(sceneCubicMap, sceneMapPixels);
 
     // Unload image from RAM
-    UnloadImage(levelImageMap);
+    UnloadImage(sceneImageMap);
 }
 
 // TODO: Entities can be moved here! Map file can be one png.
@@ -62,13 +63,13 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     // Load map texture, hardcoded for now.
-    char* wallTextures[2] = {"./assets/level1/wall1.png", "./assets/level1/wall2.png"};
+    char* wallTextures[2] = { "./assets/level1/wall1.png", "./assets/level1/wall2.png" };
 
-    Scene_data.position    = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
-    Scene_data.size        = sceneCubicMap.height * sceneCubicMap.width;
+    Scene_data.position = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
+    Scene_data.size     = sceneCubicMap.height * sceneCubicMap.width;
 
     Scene_data.blocks      = calloc(Scene_data.size, sizeof(Scene_BlockData));
-    Scene_data.enemies     = calloc(Scene_data.size, sizeof(Enemy_Data));
+    Scene_data.enemies     = calloc(Scene_data.size, sizeof(Actor_Data));
     Scene_data.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < sceneCubicMap.height; y++)
@@ -93,11 +94,11 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-                Scene_data.blocks[i].model            = cubeModel;
-                Scene_data.blocks[i].position = (Vector3) { mx, Scene_data.position.y, my };
-                Scene_data.blocks[i].id               = WALL_MODEL_ID;
-                Scene_data.blocks[i].size             = (Vector3) { 1.0f, 1.0f, 1.0f };
-                Scene_data.blocks[i].boundingBox      = Utilities_MakeBoundingBox(
+                Scene_data.blocks[i].model       = cubeModel;
+                Scene_data.blocks[i].position    = (Vector3) { mx, Scene_data.position.y, my };
+                Scene_data.blocks[i].id          = WALL_MODEL_ID;
+                Scene_data.blocks[i].size        = (Vector3) { 1.0f, 1.0f, 1.0f };
+                Scene_data.blocks[i].boundingBox = Utilities_MakeBoundingBox(
                     (Vector3) { mx, Scene_data.position.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
             }
 
@@ -113,10 +114,10 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
                 Scene_data.endPosition = (Vector3) { mx, 0.0f, my };
             }
 
-            // Find enemy, which is red (255,0,0)
-            else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.enemyColor))
+            // Find actor, which is red (255,0,0)
+            else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.actorColor))
             {
-                Scene_data.enemies[i] = Enemy_Add(mx, my, i);
+                Scene_data.enemies[i] = Actor_Add(mx, my, i);
             }
 
             // TODO: More entities. For entities and their RGB values: check README.md
@@ -128,12 +129,15 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
 void Scene_Update()
 {
-    if (!Game_isStarted)
+    if(!Game_isStarted)
     {
         return;
     }
 
-    DrawModel(Scene_data.floorPlane, (Vector3) { Scene_data.position.x, 0.0f, Scene_data.position.z }, 1.0f, WHITE);
+    DrawModel(Scene_data.floorPlane,
+              (Vector3) { Scene_data.position.x, 0.0f, Scene_data.position.z },
+              1.0f,
+              WHITE);
     DrawModelEx(Scene_data.ceilingPlane,
                 (Vector3) { Scene_data.position.x, 1.0f, -Scene_data.position.z },
                 (Vector3) { -1.0f, 0.0f, 0.0f },
@@ -143,19 +147,19 @@ void Scene_Update()
 
     for(int i = 0; i < Scene_data.size; i++)
     {
-        Scene_BlockData* data  = &Scene_data.blocks[i];
-        Enemy_Data* enemy = &Scene_data.enemies[i];
+        Scene_BlockData* data = &Scene_data.blocks[i];
+        Actor_Data* actor     = &Scene_data.enemies[i];
         if(data != NULL && data->id != 0)
         {
             DrawModel(data->model, data->position, 1.0f, WHITE);
         }
 
-        if(enemy != NULL && enemy->id != 0)
+        if(actor != NULL && actor->id != 0)
         {
             // if Level_enemies[i] has nothing dont do anything
-            if(!enemy->dead)
+            if(!actor->dead)
             {
-                Enemy_Update(enemy);
+                Actor_Update(actor);
             }
         }
     }
@@ -187,8 +191,8 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         {
             return true;
         }
-        // Enemy and wall/other enemies
-        // Enemies ignore themselves so they dont collide to themselve. Enemies also ignore their
+        // Actor and wall/other enemies
+        // Actors ignore themselves so they dont collide to themselve. Actors also ignore their
         // own projectiles
         else if(CheckCollisionBoxes(entityBox, Scene_data.enemies[i].boundingBox) &&
                 Scene_data.enemies[i].id != entityId)
@@ -281,6 +285,6 @@ void Scene_SetBlockTypes()
     Level_BlockTypes.startColor = (Color) { 0, 255, 0 };
     Level_BlockTypes.endColor   = (Color) { 0, 0, 255 };
     Level_BlockTypes.wallColor  = (Color) { 255, 255, 255 };
-    Level_BlockTypes.enemyColor = (Color) { 255, 0, 0 };
+    Level_BlockTypes.actorColor = (Color) { 255, 0, 0 };
     Level_BlockTypes.NONE       = (Color) { 0, 0, 0 };
 }

@@ -123,12 +123,12 @@ void Weapon_Change(int weaponId)
 int TestEntityHit(Ray rayCast)
 {
     int id;
-    float levelDistance   = INFINITY;
-    float enemyDistance   = INFINITY;
-    int entitiesAmount    = Scene_data.size;
+    float levelDistance        = INFINITY;
+    float enemyDistance        = INFINITY;
+    int entitiesAmount         = Scene_data.size;
     Scene_BlockData* levelData = Scene_data.blocks;
-    Enemy_Data* enemies   = Scene_data.enemies;
-    Enemy_Data enemyDataHit;
+    Actor_Data* enemies        = Scene_data.enemies;
+    Actor_Data enemyDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
@@ -209,7 +209,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Enemy_TakeDamage(
+                    Actor_TakeDamage(
                         &Scene_data.enemies[id],
                         WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
                     printf("Enemy_Data id %d takes %d damage\n",

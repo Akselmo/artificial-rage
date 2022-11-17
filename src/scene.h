@@ -3,14 +3,14 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "enemy.h"
+#include "actor.h"
+#include "game.h"
 #include "item.h"
 #include "main.h"
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "utilities.h"
-#include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +25,7 @@ typedef struct Scene_Data
         Model floorPlane;
         Model ceilingPlane;
         struct Scene_BlockData* blocks;
-        struct Enemy_Data* enemies;
+        struct Actor_Data* enemies;
         struct Item_Data* items;
         struct Projectile* projectiles;
         Vector3 position;
@@ -50,7 +50,7 @@ typedef struct Level_BlockType
         Color startColor;
         Color endColor;
         Color wallColor;
-        Color enemyColor;
+        Color actorColor;
 } Level_BlockType;
 
 // Variables

@@ -1,5 +1,5 @@
 #include "projectile.h"
-#include "enemy.h"
+#include "actor.h"
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -71,7 +71,7 @@ void Projectile_CheckCollision(Projectile* projectile)
         else if(CheckCollisionBoxes(projectileBox, Scene_data.enemies[i].boundingBox) &&
                 Scene_data.enemies[i].id != projectile->ownerId)
         {
-            Enemy_TakeDamage(&Scene_data.enemies[i], projectile->damage);
+            Actor_TakeDamage(&Scene_data.enemies[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
