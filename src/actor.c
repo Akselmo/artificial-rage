@@ -17,14 +17,13 @@ void Actor_Idle(Actor_Data* actor);
 void Actor_Die(Actor_Data* actor);
 
 // TODO: Rotation
-Actor_Data Actor_Add(float pos_x, float pos_z, int id)
+Actor_Data Actor_Add(float pos_x, float pos_z, int id, const char* modelFileName)
 {
     Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
     Vector3 actorRotation = Vector3Zero();
     Vector3 actorSize     = (Vector3) { 0.25f, 0.8f, 0.25f };
     float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
 
-    const char modelFileName[128] = "./assets/models/actor.m3d";
     unsigned int animationsCount  = 0;
 
     Actor_Data actor = {

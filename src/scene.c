@@ -69,7 +69,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
     Scene_data.size     = sceneCubicMap.height * sceneCubicMap.width;
 
     Scene_data.blocks      = calloc(Scene_data.size, sizeof(Scene_BlockData));
-    Scene_data.enemies     = calloc(Scene_data.size, sizeof(Actor_Data));
+    Scene_data.actors      = calloc(Scene_data.size, sizeof(Actor_Data));
     Scene_data.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for(int y = 0; y < sceneCubicMap.height; y++)
@@ -117,7 +117,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
             // Find actor, which is red (255,0,0)
             else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.actorColor))
             {
-                Scene_data.enemies[i] = Actor_Add(mx, my, i);
+                Scene_data.actors[i] = Actor_Add(mx, my, i, "./assets/models/enemy.m3d");
             }
 
             // TODO: More entities. For entities and their RGB values: check README.md
@@ -148,7 +148,7 @@ void Scene_Update()
     for(int i = 0; i < Scene_data.size; i++)
     {
         Scene_BlockData* data = &Scene_data.blocks[i];
-        Actor_Data* actor     = &Scene_data.enemies[i];
+        Actor_Data* actor     = &Scene_data.actors[i];
         if(data != NULL && data->id != 0)
         {
             DrawModel(data->model, data->position, 1.0f, WHITE);
@@ -194,8 +194,8 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         // Actor and wall/other enemies
         // Actors ignore themselves so they dont collide to themselve. Actors also ignore their
         // own projectiles
-        else if(CheckCollisionBoxes(entityBox, Scene_data.enemies[i].boundingBox) &&
-                Scene_data.enemies[i].id != entityId)
+        else if(CheckCollisionBoxes(entityBox, Scene_data.actors[i].boundingBox) &&
+                Scene_data.actors[i].id != entityId)
         {
             return true;
         }

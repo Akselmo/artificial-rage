@@ -52,7 +52,7 @@ typedef struct Actor_Data
         float nextFire;
 } Actor_Data;
 
-Actor_Data Actor_Add(float pos_x, float pos_z, int id);
+Actor_Data Actor_Add(float pos_x, float pos_z, int id, const char* modelFileName);
 void Actor_Update(Actor_Data* actor);
 void Actor_Draw(Actor_Data* actor);
 void Actor_TakeDamage(Actor_Data* actor, int damageAmount);

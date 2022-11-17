@@ -25,7 +25,7 @@ typedef struct Scene_Data
         Model floorPlane;
         Model ceilingPlane;
         struct Scene_BlockData* blocks;
-        struct Actor_Data* enemies;
+        struct Actor_Data* actors;
         struct Item_Data* items;
         struct Projectile* projectiles;
         Vector3 position;

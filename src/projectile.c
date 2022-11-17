@@ -68,10 +68,10 @@ void Projectile_CheckCollision(Projectile* projectile)
             return;
         }
         // Against enemy except if owned by enemy
-        else if(CheckCollisionBoxes(projectileBox, Scene_data.enemies[i].boundingBox) &&
-                Scene_data.enemies[i].id != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Scene_data.actors[i].boundingBox) &&
+                Scene_data.actors[i].id != projectile->ownerId)
         {
-            Actor_TakeDamage(&Scene_data.enemies[i], projectile->damage);
+            Actor_TakeDamage(&Scene_data.actors[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
