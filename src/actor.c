@@ -17,12 +17,12 @@ void Actor_Idle(Actor_Data* actor);
 void Actor_Die(Actor_Data* actor);
 
 // TODO: Rotation
-Actor_Data Actor_Add(float pos_x, float pos_z, int id, const char* modelFileName)
+Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const char* modelFileName)
 {
-    Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
-    Vector3 actorRotation = Vector3Zero();
-    Vector3 actorSize     = (Vector3) { 0.25f, 0.8f, 0.25f };
-    float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
+    const Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
+    const Vector3 actorRotation = Vector3Zero();
+    const Vector3 actorSize     = (Vector3) { 0.25f, 0.8f, 0.25f };
+    const float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
 
     unsigned int animationsCount  = 0;
 
@@ -103,26 +103,28 @@ void Actor_Draw(Actor_Data* actor)
 
 Ray Actor_CreateRay(Actor_Data* actor)
 {
-    Ray rayCast;
-    BoundingBox playerBb   = Player->boundingBox;
-    Vector3 playerPosition = Player->position;
-    Vector3 v              = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
-    rayCast.direction      = (Vector3) { -1.0f * v.x, -1.0f * v.y, -1.0f * v.z };
-    rayCast.position       = actor->position;
+
+    const BoundingBox playerBb   = Player->boundingBox;
+    const Vector3 playerPosition = Player->position;
+    const Vector3 v              = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
+    Ray rayCast =  {
+        .direction = (Vector3) { -1.0f * v.x, -1.0f * v.y, -1.0f * v.z },
+        .position = actor->position
+    };
     return rayCast;
 }
 
 bool Actor_TestPlayerHit(Actor_Data* actor)
 {
 
-    Ray rayCast = Actor_CreateRay(actor);
+    const Ray rayCast = Actor_CreateRay(actor);
 
     bool hitPlayer             = false;
     float distance             = 0.0f;
     float levelDistance        = INFINITY;
     float playerDistance       = INFINITY;
-    int entitiesAmount         = Scene_data.size;
-    Scene_BlockData* levelData = Scene_data.blocks;
+    const int entitiesAmount         = Scene_data.size;
+    const Scene_BlockData* levelData = Scene_data.blocks;
     Scene_BlockData levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
@@ -163,7 +165,7 @@ bool Actor_UpdatePosition(Actor_Data* actor)
 {
     bool moving = true;
     // Move actor towards player
-    Vector3 DistanceFromPlayer = Vector3Subtract(actor->position, Player->position);
+    const Vector3 DistanceFromPlayer = Vector3Subtract(actor->position, Player->position);
     //- Check if player can be seen (first raycast hit returns player)
     if(Actor_TestPlayerHit(actor))
     {
@@ -171,8 +173,8 @@ bool Actor_UpdatePosition(Actor_Data* actor)
         if(fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
            fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
         {
-            Vector3 actorOldPosition = actor->position;
-            Vector3 actorNewPosition =
+            const Vector3 actorOldPosition = actor->position;
+            const Vector3 actorNewPosition =
                 (Vector3) { Player->position.x, ACTOR_POSITION_Y, Player->position.z };
             actor->position = Vector3Lerp(
                 actor->position, actorNewPosition, actor->movementSpeed * GetFrameTime());
@@ -190,7 +192,7 @@ bool Actor_UpdatePosition(Actor_Data* actor)
     return moving;
 }
 
-void Actor_TakeDamage(Actor_Data* actor, int damageAmount)
+void Actor_TakeDamage(Actor_Data* actor, const int damageAmount)
 {
     if(!actor->dead)
     {
@@ -201,9 +203,9 @@ void Actor_TakeDamage(Actor_Data* actor, int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep actor in the memory so we can use its position to display the
             // corpse/death anim
-            Vector3 deadBoxPos      = (Vector3) { ACTOR_GRAVEYARD_POSITION,
-                                                  ACTOR_GRAVEYARD_POSITION,
-                                                  ACTOR_GRAVEYARD_POSITION };
+            const Vector3 deadBoxPos      = (Vector3) { ACTOR_GRAVEYARD_POSITION,
+                                                        ACTOR_GRAVEYARD_POSITION,
+                                                        ACTOR_GRAVEYARD_POSITION };
             actor->boundingBox      = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             actor->dead             = true;
             actor->currentAnimation = DEATH;
@@ -236,16 +238,16 @@ float Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
     return nextFire;
 }
 
-void Actor_RotateTowards(Actor_Data* actor, Vector3 targetPosition)
+void Actor_RotateTowards(Actor_Data* actor, const Vector3 targetPosition)
 {
     // Rotates the actor around Y axis
-    Vector3 diff        = Vector3Subtract(actor->position, targetPosition);
-    float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
-    Vector3 newRotation = (Vector3) { 0, y_angle, 0 };
+    const Vector3 diff        = Vector3Subtract(actor->position, targetPosition);
+    const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
+    const Vector3 newRotation = (Vector3) { 0, y_angle, 0 };
 
-    Quaternion start = QuaternionFromEuler(actor->rotation.z, actor->rotation.y, actor->rotation.x);
-    Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
-    Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
+    const Quaternion start = QuaternionFromEuler(actor->rotation.z, actor->rotation.y, actor->rotation.x);
+    const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
+    const Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
 
     actor->model.transform = QuaternionToMatrix(slerp);
     actor->rotation        = newRotation;
@@ -256,7 +258,7 @@ void Actor_RotateTowards(Actor_Data* actor, Vector3 targetPosition)
 // blocking all the other set animations until this animation has played
 // If it's interruptable, just do it like below
 
-void Actor_PlayAnimation(Actor_Data* actor, float animationSpeed)
+void Actor_PlayAnimation(Actor_Data* actor, const float animationSpeed)
 {
 
     actor->animationFrame++;

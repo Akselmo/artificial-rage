@@ -31,13 +31,11 @@ void Scene_Build()
     Scene_SetBlockTypes();
 
     // Load level cubicmap image (RAM)
-    Image sceneImageMap     = LoadImage("./assets/level1/level.png");
-    Texture2D sceneCubicMap = LoadTextureFromImage(sceneImageMap);
+    const Image sceneImageMap     = LoadImage("./assets/level1/level.png");
+    const Texture2D sceneCubicMap = LoadTextureFromImage(sceneImageMap);
 
     // Get map image data to be used for collision detection
-    Color* sceneMapPixels = LoadImageColors(sceneImageMap);
-
-    Scene_PlaceBlocks(sceneCubicMap, sceneMapPixels);
+    Scene_PlaceBlocks(sceneCubicMap, LoadImageColors(sceneImageMap));
 
     // Unload image from RAM
     UnloadImage(sceneImageMap);
@@ -51,10 +49,10 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 {
     // Place all Level_items based on their colors
 
-    float mapPosZ            = (float)sceneCubicMap.height;
-    float mapPosX            = (float)sceneCubicMap.width;
-    Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
-    Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
+    const float mapPosZ            = (float)sceneCubicMap.height;
+    const float mapPosX            = (float)sceneCubicMap.width;
+    const Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
+    const Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
     Scene_data.ceilingPlane  = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     Scene_data.floorPlane    = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
@@ -63,7 +61,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     // Load map texture, hardcoded for now.
-    char* wallTextures[2] = { "./assets/level1/wall1.png", "./assets/level1/wall2.png" };
+    const char* wallTextures[2] = { "./assets/level1/wall1.png", "./assets/level1/wall2.png" };
 
     Scene_data.position = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
     Scene_data.size     = sceneCubicMap.height * sceneCubicMap.width;
@@ -77,9 +75,9 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
         for(int x = 0; x < sceneCubicMap.width; x++)
         {
 
-            float mx = Scene_data.position.x - 0.5f + x * 1.0f;
-            float my = Scene_data.position.z - 0.5f + y * 1.0f;
-            int i    = y * sceneCubicMap.width + x;
+            const float mx = Scene_data.position.x - 0.5f + x * 1.0f;
+            const float my = Scene_data.position.z - 0.5f + y * 1.0f;
+            const int i    = y * sceneCubicMap.width + x;
 
             const Color pixelColor =
                 Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
@@ -88,9 +86,9 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
             {
 
-                Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
+                const Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
+                const Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
@@ -180,7 +178,7 @@ void Scene_UpdateProjectiles()
 
 bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
-    BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
+    const BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
 
     for(int i = 0; i < Scene_data.size; i++)
     {

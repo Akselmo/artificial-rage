@@ -103,7 +103,7 @@ void Weapon_SelectDefault()
 void Weapon_GetSwitchInput()
 {
 
-    int key = GetKeyPressed();
+    const int key = GetKeyPressed();
 
     for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
@@ -115,12 +115,12 @@ void Weapon_GetSwitchInput()
 }
 
 // Check if weapon is equipped
-void Weapon_Change(int weaponId)
+void Weapon_Change(const int weaponId)
 {
     WeaponDataHolder.currentWeapon = weaponId;
 }
 
-int TestEntityHit(Ray rayCast)
+int TestEntityHit(const Ray rayCast)
 {
     int id;
     float levelDistance        = INFINITY;
@@ -134,8 +134,8 @@ int TestEntityHit(Ray rayCast)
     {
         if(levelData[i].id != 0)
         {
-            Vector3 pos           = levelData[i].position;
-            RayCollision hitLevel = GetRayCollisionMesh(
+            const Vector3 pos           = levelData[i].position;
+            const RayCollision hitLevel = GetRayCollisionMesh(
                 rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
@@ -145,7 +145,7 @@ int TestEntityHit(Ray rayCast)
                 }
             }
         }
-        RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
+        const RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
         if(enemyHit.hit)
         {
             if(!enemies[i].dead)
@@ -171,7 +171,7 @@ int TestEntityHit(Ray rayCast)
     return id;
 }
 
-bool WeaponHasAmmo(int currentWeapon)
+bool WeaponHasAmmo(const int currentWeapon)
 {
 
     if(currentWeapon == FIST)
@@ -202,8 +202,8 @@ float Weapon_Fire(Camera* camera, float nextFire)
         if(WeaponHasAmmo(WeaponDataHolder.currentWeapon))
         {
             // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
-            Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
-            int id      = TestEntityHit(rayCast);
+            const Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
+            const int id      = TestEntityHit(rayCast);
             if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
             {
                 printf("Id hit: %i \n", id);

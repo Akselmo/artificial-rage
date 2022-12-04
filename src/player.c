@@ -31,11 +31,11 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     camera.projection = CAMERA_PERSPECTIVE;
 
     // Distances
-    Vector3 v1 = camera.position;
-    Vector3 v2 = camera.target;
-    float dx   = v2.x - v1.x;
-    float dy   = v2.y - v1.y;
-    float dz   = v2.z - v1.z;
+    const Vector3 v1 = camera.position;
+    const Vector3 v2 = camera.target;
+    const float dx   = v2.x - v1.x;
+    const float dy   = v2.y - v1.y;
+    const float dz   = v2.z - v1.z;
 
     // Distance to target
     Player_CustomCamera.targetDistance = sqrtf(dx * dx + dy * dy + dz * dz);
@@ -78,16 +78,16 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 void Player_Update(Camera* camera)
 {
 
-    Vector3 oldPlayerPos = camera->position;
+    const Vector3 oldPlayerPos = camera->position;
 
     Player->boundingBox = Utilities_MakeBoundingBox(camera->position, Player->size);
 
-    Vector2 mousePositionDelta = GetMouseDelta();
+    const Vector2 mousePositionDelta = GetMouseDelta();
 
-    bool direction[4] = { IsKeyDown(Player_CustomCamera.moveForwardButton),
-                          IsKeyDown(Player_CustomCamera.moveBackwardButton),
-                          IsKeyDown(Player_CustomCamera.moveRightButton),
-                          IsKeyDown(Player_CustomCamera.moveLeftButton) };
+    const bool direction[4] = { IsKeyDown(Player_CustomCamera.moveForwardButton),
+                                IsKeyDown(Player_CustomCamera.moveBackwardButton),
+                                IsKeyDown(Player_CustomCamera.moveRightButton),
+                                IsKeyDown(Player_CustomCamera.moveLeftButton) };
 
     // Move camera around X pos
     camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
@@ -128,11 +128,11 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    Matrix translation =
+    const Matrix translation =
         MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3) {
+    const Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3) {
         PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
-    Matrix transform = MatrixMultiply(translation, rotation);
+    const Matrix transform = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;
