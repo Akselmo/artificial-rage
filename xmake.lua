@@ -12,6 +12,7 @@ target("artificial-rage")
     add_files("src/*.c")
     add_packages("raylib")
     set_languages("c99", "c++11")
+    add_cflags("-fanalyzer")
 
     after_build(function (target)
         print("Copying assets folder where build is...")
