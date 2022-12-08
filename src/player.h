@@ -3,10 +3,10 @@
 #define _PLAYER_H_
 
 #include "hud.h"
-#include "level.h"
 #include "main.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "scene.h"
 #include "settings.h"
 #include "utilities.h"
 #include "weapon.h"

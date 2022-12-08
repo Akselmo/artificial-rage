@@ -4,13 +4,13 @@
 
 #define WEAPON_AMOUNT 5
 
-#include "enemy.h"
-#include "level.h"
+#include "actor.h"
 #include "main.h"
 #include "player.h"
 #include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "scene.h"
 #include "settings.h"
 #include "utilities.h"
 #include <stdio.h>

@@ -1,9 +1,9 @@
 #include "projectile.h"
-#include "enemy.h"
-#include "level.h"
+#include "actor.h"
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "scene.h"
 #include "utilities.h"
 
 // Prototypes
@@ -16,7 +16,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
     // entities themselves.
     for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Level_projectiles[i].id != i || Level_projectiles[i].destroyed == true)
+        if(Scene_data.projectiles[i].id != i || Scene_data.projectiles[i].destroyed == true)
         {
             Projectile projectile = {
                 .startPosition = rayCast.position,
@@ -33,7 +33,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
                 .destroyed   = false,
             };
             printf("Projectile id created %d\n", projectile.id);
-            Level_projectiles[i] = projectile;
+            Scene_data.projectiles[i] = projectile;
             break;
         }
     }
@@ -57,21 +57,21 @@ void Projectile_CheckCollision(Projectile* projectile)
     // Check against the owner of the projectile and the entity id. if theres a match, ignore it,
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
-    BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for(int i = 0; i < Level_mapSize; i++)
+    const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
+    for(int i = 0; i < Scene_data.size; i++)
     {
 
         // Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Level_data[i].blockBoundingBox))
+        if(CheckCollisionBoxes(projectileBox, Scene_data.blocks[i].boundingBox))
         {
             Projectile_Destroy(projectile);
             return;
         }
         // Against enemy except if owned by enemy
-        else if(CheckCollisionBoxes(projectileBox, Level_enemies[i].boundingBox) &&
-                Level_enemies[i].id != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Scene_data.actors[i].boundingBox) &&
+                Scene_data.actors[i].id != projectile->ownerId)
         {
-            Enemy_TakeDamage(&Level_enemies[i], projectile->damage);
+            Actor_TakeDamage(&Scene_data.actors[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }

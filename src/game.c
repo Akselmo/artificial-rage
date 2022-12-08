@@ -12,17 +12,17 @@ Camera playerCamera;
 void Game_HudUpdate();
 void Game_MenuUpdate();
 bool Game_isStarted = false;
+
 // Initialization
 void Game_Initialize()
 {
     Game_isStarted = false;
+
     // Initialize game
     Settings_Initialize();
 
-    Level_Build();
     // Add player camera
-    Vector3 startPos = Level_startPosition;
-    playerCamera     = Player_InitializeCamera(startPos.x, startPos.z);
+    playerCamera = Scene_Initialize();
 
     Game_isStarted = true;
 }
@@ -39,7 +39,7 @@ void Game_Update()
     if(Game_isStarted)
     {
         Player_Update(&playerCamera);
-        Level_Update();
+        Scene_Update();
     }
 
     EndMode3D();

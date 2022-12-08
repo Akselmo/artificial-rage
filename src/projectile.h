@@ -2,8 +2,8 @@
 #ifndef _PROJECTILE_H_
 #define _PROJECTILE_H_
 
-#include "level.h"
 #include "raylib.h"
+#include "scene.h"
 #include <stdio.h>
 #include <stdlib.h>
 

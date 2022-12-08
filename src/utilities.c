@@ -2,11 +2,11 @@
 
 Vector2 Utilities_GetScreenCenter()
 {
-    Vector2 center = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
+    const Vector2 center = { GetScreenWidth() / 2, GetScreenHeight() / 2 };
     return center;
 }
 
-BoundingBox Utilities_MakeBoundingBox(Vector3 position, Vector3 size)
+BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
 {
     BoundingBox bb = (BoundingBox) {
         (Vector3) {position.x - size.x / 2,  position.y - size.y / 2, position.z - size.z / 2},
@@ -15,7 +15,7 @@ BoundingBox Utilities_MakeBoundingBox(Vector3 position, Vector3 size)
     return bb;
 }
 
-Color Utilities_GetLevelPixelColor(Color* levelMapPixels, int x, int width, int y)
+Color Utilities_GetLevelPixelColor(const Color* levelMapPixels, const int x, const int width, const int y)
 {
     Color pixelColor = { levelMapPixels[y * width + x].r,
                          levelMapPixels[y * width + x].g,
@@ -24,7 +24,7 @@ Color Utilities_GetLevelPixelColor(Color* levelMapPixels, int x, int width, int 
     return pixelColor;
 }
 
-bool Utilities_CompareColors(Color color1, Color color2)
+bool Utilities_CompareColors(const Color color1, const Color color2)
 {
     if(color1.r == color2.r && color1.g == color2.g && color1.b == color2.b)
     {

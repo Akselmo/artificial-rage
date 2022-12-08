@@ -1,8 +1,8 @@
 #include "weapon.h"
-#include "level.h"
 #include "player.h"
 #include "projectile.h"
 #include "raymath.h"
+#include "scene.h"
 
 // Prototypes
 
@@ -103,7 +103,7 @@ void Weapon_SelectDefault()
 void Weapon_GetSwitchInput()
 {
 
-    int key = GetKeyPressed();
+    const int key = GetKeyPressed();
 
     for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
@@ -115,28 +115,28 @@ void Weapon_GetSwitchInput()
 }
 
 // Check if weapon is equipped
-void Weapon_Change(int weaponId)
+void Weapon_Change(const int weaponId)
 {
     WeaponDataHolder.currentWeapon = weaponId;
 }
 
-int TestEntityHit(Ray rayCast)
+int TestEntityHit(const Ray rayCast)
 {
     int id;
-    float levelDistance   = INFINITY;
-    float enemyDistance   = INFINITY;
-    int entitiesAmount    = Level_mapSize;
-    Level_Data* levelData = Level_data;
-    Enemy_Data* enemies   = Level_enemies;
-    Enemy_Data enemyDataHit;
+    float levelDistance        = INFINITY;
+    float enemyDistance        = INFINITY;
+    int entitiesAmount         = Scene_data.size;
+    Scene_BlockData* levelData = Scene_data.blocks;
+    Actor_Data* enemies        = Scene_data.actors;
+    Actor_Data enemyDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
-        if(levelData[i].modelId != 0)
+        if(levelData[i].id != 0)
         {
-            Vector3 pos           = levelData[i].blockPosition;
-            RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].blockModel.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            const Vector3 pos           = levelData[i].position;
+            const RayCollision hitLevel = GetRayCollisionMesh(
+                rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -145,7 +145,7 @@ int TestEntityHit(Ray rayCast)
                 }
             }
         }
-        RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
+        const RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
         if(enemyHit.hit)
         {
             if(!enemies[i].dead)
@@ -171,7 +171,7 @@ int TestEntityHit(Ray rayCast)
     return id;
 }
 
-bool WeaponHasAmmo(int currentWeapon)
+bool WeaponHasAmmo(const int currentWeapon)
 {
 
     if(currentWeapon == FIST)
@@ -202,15 +202,15 @@ float Weapon_Fire(Camera* camera, float nextFire)
         if(WeaponHasAmmo(WeaponDataHolder.currentWeapon))
         {
             // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
-            Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
-            int id      = TestEntityHit(rayCast);
+            const Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
+            const int id      = TestEntityHit(rayCast);
             if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
             {
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Enemy_TakeDamage(
-                        &Level_enemies[id],
+                    Actor_TakeDamage(
+                        &Scene_data.actors[id],
                         WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
                     printf("Enemy_Data id %d takes %d damage\n",
                            id,

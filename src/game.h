@@ -2,12 +2,12 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "enemy.h"
+#include "actor.h"
 #include "hud.h"
 #include "item.h"
-#include "level.h"
 #include "player.h"
 #include "raylib.h"
+#include "scene.h"
 #include "settings.h"
 #include "utilities.h"
 #include "weapon.h"
