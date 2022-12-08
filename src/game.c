@@ -3,7 +3,6 @@
 //
 
 #include "game.h"
-#include "weapon.h"
 
 // Shared variables
 Camera playerCamera;
