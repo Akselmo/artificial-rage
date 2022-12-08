@@ -9,14 +9,7 @@ bool Actor_TestPlayerHit(Actor_Data* actor);
 float Actor_FireAtPlayer(Actor_Data* actor, float nextFire);
 Ray Actor_CreateRay(Actor_Data* actor);
 void Actor_PlayAnimation(Actor_Data* actor, float animationSpeed);
-// TODO: move all the functions in the following four functions
-//  If something is reused, make an utility function for it?
-void Actor_Attack(Actor_Data* actor);
-void Actor_Move(Actor_Data* actor);
-void Actor_Idle(Actor_Data* actor);
-void Actor_Die(Actor_Data* actor);
 
-// TODO: Rotation
 Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const char* modelFileName)
 {
     const Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
