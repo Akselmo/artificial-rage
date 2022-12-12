@@ -1,4 +1,3 @@
-// TODO: Should enemy be renamed to something else?
 #pragma once
 #ifndef _ACTOR_H_
 #define _ACTOR_H_

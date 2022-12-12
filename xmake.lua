@@ -4,6 +4,7 @@ add_requires("raylib master", {system = false})
 set_defaultmode("debug")
 
 set_policy("build.warning", true)
+set_policy("check.auto_ignore_flags", false)
 set_warnings("all", "conversion", "extra", "shadow", "pedantic")
 
 target("artificial-rage")
