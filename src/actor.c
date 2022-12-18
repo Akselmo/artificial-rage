@@ -6,7 +6,7 @@
 // Private functions
 bool Actor_UpdatePosition(Actor_Data* actor);
 bool Actor_TestPlayerHit(Actor_Data* actor);
-float Actor_FireAtPlayer(Actor_Data* actor, float nextFire);
+bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire);
 Ray Actor_CreateRay(Actor_Data* actor);
 void Actor_PlayAnimation(Actor_Data* actor, float animationSpeed);
 
@@ -50,10 +50,9 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 
 void Actor_Update(Actor_Data* actor)
 {
-
+    Actor_Draw(actor);
     if(!actor->dead)
     {
-        Actor_Draw(actor);
         if(actor->nextTick > 0)
         {
             actor->nextTick -= GetFrameTime();
@@ -63,29 +62,27 @@ void Actor_Update(Actor_Data* actor)
             actor->nextTick = actor->tickRate;
         }
 
-        actor->moving = Actor_UpdatePosition(actor);
+        if (Actor_TestPlayerHit(actor))
+        {
 
-        if(actor->attacking)
-        {
-            actor->currentAnimation = ATTACK;
-        }
-        else
-        {
-            if(actor->moving)
+            if(Actor_FireAtPlayer(actor, actor->nextFire))
             {
-                actor->currentAnimation = MOVE;
+                actor->currentAnimation = ATTACK;
             }
             else
             {
-                actor->currentAnimation = IDLE;
+                if(Actor_UpdatePosition(actor))
+                {
+                    actor->currentAnimation = MOVE;
+                }
+                else
+                {
+                    actor->currentAnimation = IDLE;
+                }
             }
+            actor->nextFire -= GetFrameTime();
         }
-        actor->attacking = !actor->moving;
-
-        actor->nextFire -= GetFrameTime();
-        actor->nextFire = Actor_FireAtPlayer(actor, actor->nextFire);
     }
-
     Actor_PlayAnimation(actor, 1.0f);
 }
 
@@ -160,27 +157,26 @@ bool Actor_UpdatePosition(Actor_Data* actor)
     // Move actor towards player
     const Vector3 DistanceFromPlayer = Vector3Subtract(actor->position, Player->position);
     //- Check if player can be seen (first raycast hit returns player)
-    if(Actor_TestPlayerHit(actor))
+
+    //- If in certain range from player, stop
+    if(fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
+       fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
     {
-        //- If in certain range from player, stop
-        if(fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
-           fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
+        const Vector3 actorOldPosition = actor->position;
+        const Vector3 actorNewPosition =
+            (Vector3) { Player->position.x, ACTOR_POSITION_Y, Player->position.z };
+        actor->position = Vector3Lerp(
+            actor->position, actorNewPosition, actor->movementSpeed * GetFrameTime());
+        if(Scene_CheckCollision(actor->position, actor->size, actor->id))
         {
-            const Vector3 actorOldPosition = actor->position;
-            const Vector3 actorNewPosition =
-                (Vector3) { Player->position.x, ACTOR_POSITION_Y, Player->position.z };
-            actor->position = Vector3Lerp(
-                actor->position, actorNewPosition, actor->movementSpeed * GetFrameTime());
-            if(Scene_CheckCollision(actor->position, actor->size, actor->id))
-            {
-                actor->position = actorOldPosition;
-            }
-        }
-        else
-        {
-            moving = false;
+            actor->position = actorOldPosition;
         }
     }
+    else
+    {
+        moving = false;
+    }
+
     actor->boundingBox = Utilities_MakeBoundingBox(actor->position, actor->size);
     return moving;
 }
@@ -206,29 +202,28 @@ void Actor_TakeDamage(Actor_Data* actor, const int damageAmount)
     }
 }
 
-float Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
+bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
 {
-    if(Actor_TestPlayerHit(actor))
-    {
-        Actor_RotateTowards(actor, Player->position);
-        if(nextFire > 0)
-        {
-            nextFire -= GetFrameTime();
-        }
-        else
-        {
-            // Fire animation should play before we shoot projectile
-            // TODO: Need to create "oneshot" animation thing that blocks all other animations until
-            // its done playing
-            actor->attacking        = true;
-            actor->currentAnimation = ATTACK;
 
-            Projectile_Create(
-                Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
-            nextFire = actor->fireRate;
-        }
+    Actor_RotateTowards(actor, Player->position);
+    if(nextFire > 0)
+    {
+        actor->nextFire -= GetFrameTime();
+        return false;
     }
-    return nextFire;
+    else
+    {
+        // Fire animation should play before we shoot projectile
+        // TODO: Need to create "oneshot" animation thing that blocks all other animations until
+        // its done playing
+        actor->attacking        = true;
+        actor->currentAnimation = ATTACK;
+
+        Projectile_Create(
+            Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
+        actor->nextFire = actor->fireRate;
+        return true;
+    }
 }
 
 void Actor_RotateTowards(Actor_Data* actor, const Vector3 targetPosition)
