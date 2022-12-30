@@ -2,11 +2,14 @@
 #ifndef _ACTOR_H_
 #define _ACTOR_H_
 
+#include "animator.h"
 #include "player.h"
+#include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "scene.h"
 #include "utilities.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,10 +38,7 @@ typedef struct Actor_Data
         Vector3 size;
         BoundingBox boundingBox;
         Model model;
-        ModelAnimation* animations;
-        unsigned int animationsCount;
-        int currentAnimation;
-        int animationFrame;
+        Animator_Data animator;
         bool dead;
         bool moving;
         bool attacking;

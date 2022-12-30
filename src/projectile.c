@@ -57,7 +57,8 @@ void Projectile_CheckCollision(Projectile* projectile)
     // Check against the owner of the projectile and the entity id. if theres a match, ignore it,
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
-    const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
+    const BoundingBox projectileBox =
+        Utilities_MakeBoundingBox(projectile->position, projectile->size);
     for(int i = 0; i < Scene_data.size; i++)
     {
 

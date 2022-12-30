@@ -53,8 +53,8 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
     const float mapPosX            = (float)sceneCubicMap.width;
     const Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
     const Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
-    Scene_data.ceilingPlane  = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    Scene_data.floorPlane    = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.floorPlane   = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
     Scene_data.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
     Scene_data.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
@@ -88,7 +88,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
                 const Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                const Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
+                const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
@@ -235,8 +235,8 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
     };
     // clang-format on
 
-    mesh.vertices = vertices;
-    mesh.normals = normals;
+    mesh.vertices  = vertices;
+    mesh.normals   = normals;
     mesh.texcoords = texcoords;
 
     UploadMesh(&mesh, false);

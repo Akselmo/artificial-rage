@@ -1,5 +1,4 @@
 #pragma once
-#include "projectile.h"
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
@@ -8,6 +7,7 @@
 #include "item.h"
 #include "main.h"
 #include "player.h"
+#include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "utilities.h"

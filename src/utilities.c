@@ -15,7 +15,10 @@ BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size
     return bb;
 }
 
-Color Utilities_GetLevelPixelColor(const Color* levelMapPixels, const int x, const int width, const int y)
+Color Utilities_GetLevelPixelColor(const Color* levelMapPixels,
+                                   const int x,
+                                   const int width,
+                                   const int y)
 {
     Color pixelColor = { levelMapPixels[y * width + x].r,
                          levelMapPixels[y * width + x].g,
@@ -26,12 +29,5 @@ Color Utilities_GetLevelPixelColor(const Color* levelMapPixels, const int x, con
 
 bool Utilities_CompareColors(const Color color1, const Color color2)
 {
-    if(color1.r == color2.r && color1.g == color2.g && color1.b == color2.b)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b);
 }
