@@ -12,13 +12,13 @@ void Animator_SetAnimation(Animator_Data * animator, const int animationId)
 
     if (!currentAnimation.interruptable)
     {
-        if (animator->animationFrame < currentAnimation.animation.frameCount)
+        if (animator->animationFrame < currentAnimation.lastFrame)
         {
             return;
         }
     }
 
-    animator->animationFrame = 0;
+    animator->animationFrame = currentAnimation.firstFrame;
     animator->currentAnimation = newAnimation;
 }
 
@@ -27,16 +27,16 @@ void Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed)
 
     Animator_Animation currentAnimation = animator->currentAnimation;
     animator->animationFrame += 1;
-    if(animator->animationFrame > currentAnimation.animation.frameCount)
+    if(animator->animationFrame > currentAnimation.lastFrame)
     {
         if (currentAnimation.loopable)
         {
-            animator->animationFrame = 0;
+            animator->animationFrame = currentAnimation.firstFrame;
         }
         else
         {
             // FIXME: This does not stop at the last frame of the animation
-            animator->animationFrame = currentAnimation.animation.frameCount;
+            animator->animationFrame = currentAnimation.lastFrame;
         }
     }
 

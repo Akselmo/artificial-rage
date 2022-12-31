@@ -21,21 +21,29 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     animations = calloc(animationsCount, sizeof(Animator_Animation));
 
     Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
+                                     .firstFrame    = 0,
+                                     .lastFrame     = (loadedAnimations[DEATH].frameCount-5),
                                      .id            = DEATH,
                                      .interruptable = false,
                                      .loopable      = false };
 
     Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
+                                      .firstFrame    = 0,
+                                      .lastFrame    = loadedAnimations[ATTACK].frameCount,
                                       .id            = ATTACK,
                                       .interruptable = false,
                                       .loopable      = false };
 
     Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
+                                    .firstFrame    = 0,
+                                    .lastFrame    = loadedAnimations[IDLE].frameCount,
                                     .id            = IDLE,
                                     .interruptable = true,
                                     .loopable      = true };
 
     Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
+                                    .firstFrame    = 0,
+                                    .lastFrame    = loadedAnimations[MOVE].frameCount,
                                     .id            = MOVE,
                                     .interruptable = true,
                                     .loopable      = true };
@@ -115,7 +123,6 @@ void Actor_Update(Actor_Data* actor)
     else
     {
         Animator_SetAnimation(&actor->animator, DEATH);
-        printf("%d / %d frame\n",actor->animator.animationFrame, actor->animator.currentAnimation.animation.frameCount);
     }
     Animator_PlayAnimation(&actor->animator, 1.0f);
 }
