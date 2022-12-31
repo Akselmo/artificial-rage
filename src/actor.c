@@ -5,7 +5,6 @@ bool Actor_UpdatePosition(Actor_Data* actor);
 bool Actor_TestPlayerHit(Actor_Data* actor);
 bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire);
 Ray Actor_CreateRay(Actor_Data* actor);
-void Actor_PlayAnimation(Actor_Data* actor, float animationSpeed);
 
 Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const char* modelFileName)
 {
@@ -22,18 +21,22 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     animations = calloc(animationsCount, sizeof(Animator_Animation));
 
     Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
+                                     .id            = DEATH,
                                      .interruptable = false,
                                      .loopable      = false };
 
     Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
+                                      .id            = ATTACK,
                                       .interruptable = false,
                                       .loopable      = false };
 
     Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
+                                    .id            = IDLE,
                                     .interruptable = true,
                                     .loopable      = true };
 
     Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
+                                    .id            = MOVE,
                                     .interruptable = true,
                                     .loopable      = true };
 
@@ -43,16 +46,16 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     animations[MOVE]   = moveAnim;
 
     Animator_Data animator = {
+        .model            = LoadModel(modelFileName),
         .animations       = animations,
         .animationsCount  = animationsCount,
-        .currentAnimation = IDLE,
+        .currentAnimation = animations[IDLE],
     };
 
     Actor_Data actor = {
         .position      = actorPosition,
         .rotation      = actorRotation,
         .size          = actorSize,
-        .model         = LoadModel(modelFileName),
         .dead          = false,
         .moving        = false,
         .attacking     = false,
@@ -72,10 +75,6 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 
     return actor;
 }
-
-// TODO: The animations need to be tied completely to the
-// firing and moving.
-// First we start playing animation, then we start doing the action related to animation
 
 void Actor_Update(Actor_Data* actor)
 {
@@ -97,28 +96,33 @@ void Actor_Update(Actor_Data* actor)
             {
                 // TODO: instead of directly changing the animation, use an animator that handles
                 //       the animation loops
-                actor->animator.currentAnimation = ATTACK;
+                Animator_SetAnimation(&actor->animator, ATTACK);
             }
             else
             {
                 if(Actor_UpdatePosition(actor))
                 {
-                    actor->animator.currentAnimation = MOVE;
+                    Animator_SetAnimation(&actor->animator, MOVE);
                 }
                 else
                 {
-                    actor->animator.currentAnimation = IDLE;
+                    Animator_SetAnimation(&actor->animator, IDLE);
                 }
             }
             actor->nextFire -= GetFrameTime();
         }
     }
-    Actor_PlayAnimation(actor, 1.0f);
+    else
+    {
+        Animator_SetAnimation(&actor->animator, DEATH);
+        printf("%d / %d frame\n",actor->animator.animationFrame, actor->animator.currentAnimation.animation.frameCount);
+    }
+    Animator_PlayAnimation(&actor->animator, 1.0f);
 }
 
 void Actor_Draw(Actor_Data* actor)
 {
-    DrawModel(actor->model, actor->position, 0.5f, WHITE);
+    DrawModel(actor->animator.model, actor->position, 0.5f, WHITE);
 }
 
 Ray Actor_CreateRay(Actor_Data* actor)
@@ -220,7 +224,7 @@ void Actor_TakeDamage(Actor_Data* actor, const int damageAmount)
                                                            ACTOR_GRAVEYARD_POSITION };
             actor->boundingBox               = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             actor->dead                      = true;
-            actor->animator.currentAnimation = DEATH;
+
         }
     }
 }
@@ -237,10 +241,7 @@ bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
     else
     {
         // Fire animation should play before we shoot projectile
-        // TODO: Need to create "oneshot" animation thing that blocks all other animations until
-        // its done playing
         actor->attacking                 = true;
-        actor->animator.currentAnimation = ATTACK;
 
         Projectile_Create(
             Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
@@ -261,28 +262,8 @@ void Actor_RotateTowards(Actor_Data* actor, const Vector3 targetPosition)
     const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
     const Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
 
-    actor->model.transform = QuaternionToMatrix(slerp);
+    actor->animator.model.transform = QuaternionToMatrix(slerp);
     actor->rotation        = newRotation;
 }
 
-// TODO: Need somekind of set animation thing
-// Set animation and is it interruptable/loopable? If not, play animation once
-// blocking all the other set animations until this animation has played
-// If it's interruptable, just do it like below
 
-void Actor_PlayAnimation(Actor_Data* actor, const float animationSpeed)
-{
-
-    actor->animator.animationFrame++;
-    if(actor->animator.animationFrame >=
-       actor->animator.animations[actor->animator.currentAnimation].animation.frameCount)
-    {
-        actor->animator.animationFrame = 0;
-    }
-
-    UpdateModelAnimation(actor->model,
-                         actor->animator.animations[actor->animator.currentAnimation].animation,
-                         actor->animator.animationFrame);
-
-    // printf("%d / %d\n",actor->model.animationFrame, frameCount);
-}

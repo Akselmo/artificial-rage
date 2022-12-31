@@ -37,7 +37,6 @@ typedef struct Actor_Data
         Vector3 rotation;
         Vector3 size;
         BoundingBox boundingBox;
-        Model model;
         Animator_Data animator;
         bool dead;
         bool moving;

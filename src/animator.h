@@ -7,16 +7,22 @@
 typedef struct Animator_Animation
 {
         ModelAnimation animation;
+        int id;
         bool loopable;
         bool interruptable;
 } Animator_Animation;
 
 typedef struct Animator_Data
 {
+        Model model;
         Animator_Animation* animations;
         unsigned int animationsCount;
-        int currentAnimation;
+        Animator_Animation currentAnimation;
         int animationFrame;
 } Animator_Data;
+
+void Animator_PlayAnimation(Animator_Data * animator, const float animationSpeed);
+void Animator_SetAnimation(Animator_Data * animator, const int animationId);
+
 
 #endif

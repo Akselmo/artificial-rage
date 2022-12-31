@@ -10,6 +10,7 @@
 #include "settings.h"
 #include "utilities.h"
 #include "weapon.h"
+#include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 

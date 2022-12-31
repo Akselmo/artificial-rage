@@ -155,10 +155,7 @@ void Scene_Update()
         if(actor != NULL && actor->id != 0)
         {
             // if Level_enemies[i] has nothing dont do anything
-            if(!actor->dead)
-            {
-                Actor_Update(actor);
-            }
+            Actor_Update(actor);
         }
     }
     Scene_UpdateProjectiles();
