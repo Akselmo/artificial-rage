@@ -60,9 +60,9 @@ typedef enum Weapon_ID
 
 extern struct Weapon_DataHolder WeaponDataHolder;
 
-void Weapon_InitializeKeys();
-void Weapon_GetSwitchInput();
-void Weapon_SelectDefault();
+void Weapon_InitializeKeys(void);
+void Weapon_GetSwitchInput(void);
+void Weapon_SelectDefault(void);
 float Weapon_Fire(Camera* camera, float nextFire);
 
 #endif

@@ -57,10 +57,10 @@ typedef struct Level_BlockType
 extern struct Scene_Data Scene_data;
 
 // Functions
-Camera Scene_Initialize();
+Camera Scene_Initialize(void);
 Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize);
-void Scene_Build();
-void Scene_Update();
+void Scene_Build(void);
+void Scene_Update(void);
 bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId);
 
 #endif

@@ -1,6 +1,6 @@
 #include "utilities.h"
 
-Vector2 Utilities_GetScreenCenter()
+Vector2 Utilities_GetScreenCenter(void)
 {
     const Vector2 center = { GetScreenWidth() / 2, GetScreenHeight() / 2 };
     return center;

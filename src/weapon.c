@@ -86,7 +86,7 @@ struct Weapon_DataHolder WeaponDataHolder = {
     .Weapons[RAILGUN] = &Weapon_Railgun,
 };
 
-void Weapon_InitializeKeys()
+void Weapon_InitializeKeys(void)
 {
     WeaponDataHolder.Weapons[FIST]->inputKey    = Settings_GetCustomInput(KEY_ONE);
     WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings_GetCustomInput(KEY_TWO);
@@ -95,12 +95,12 @@ void Weapon_InitializeKeys()
     WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings_GetCustomInput(KEY_FIVE);
 }
 
-void Weapon_SelectDefault()
+void Weapon_SelectDefault(void)
 {
     WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[FIST]->weaponId;
 }
 
-void Weapon_GetSwitchInput()
+void Weapon_GetSwitchInput(void)
 {
 
     const int key = GetKeyPressed();

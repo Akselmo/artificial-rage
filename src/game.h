@@ -14,8 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void Game_Initialize();
-void Game_Update();
+void Game_Initialize(void);
+void Game_Update(void);
 
 extern bool Game_isStarted;
 

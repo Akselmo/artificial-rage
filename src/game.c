@@ -8,12 +8,12 @@
 Camera playerCamera;
 
 // Prototypes
-void Game_HudUpdate();
-void Game_MenuUpdate();
+void Game_HudUpdate(void);
+void Game_MenuUpdate(void);
 bool Game_isStarted = false;
 
 // Initialization
-void Game_Initialize()
+void Game_Initialize(void)
 {
     Game_isStarted = false;
 
@@ -27,7 +27,7 @@ void Game_Initialize()
 }
 
 // Main game loop
-void Game_Update()
+void Game_Update(void)
 {
     BeginDrawing();
 
@@ -50,12 +50,12 @@ void Game_Update()
 }
 
 // TODO: Move these to their own files
-void Game_HudUpdate()
+void Game_HudUpdate(void)
 {
     Hud_Draw();
 }
 
-void Game_MenuUpdate()
+void Game_MenuUpdate(void)
 {
     DisableCursor();
     // menu presses etc come here
