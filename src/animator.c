@@ -35,7 +35,6 @@ void Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed)
         }
         else
         {
-            // FIXME: This does not stop at the last frame of the animation
             animator->animationFrame = currentAnimation.lastFrame;
         }
     }
