@@ -1,5 +1,5 @@
 [![aksdev-blog](https://img.shields.io/badge/blog-akselmo.dev-blue?style=flat-square)](https://akselmo.dev)
-[![mastodon](https://img.shields.io/mastodon/follow/109506891361619394?color=%233088D4&domain=https://social.linux.pizza&logo=mastodon&style=flat-square&logoColor=white)](https://social.linux.pizza/@aks)
+[![mastodon](https://img.shields.io/mastodon/follow/109598121971865878?color=%233088D4&domain=https://tilde.zone&logo=mastodon&style=flat-square&logoColor=white)](https://tilde.zone/@aks)
 [![itchio](https://img.shields.io/badge/itch.io-akselmo-%23FA5C5C?style=flat-square&logo=itch.io&logoColor=white)](https://akselmo.itch.io/)
 [![ko-fi](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/L4L57FOPF)
 [![Liberapay patrons](https://img.shields.io/liberapay/patrons/akselmo?label=LiberaPay&logo=liberapay&logoColor=ffffff&style=flat-square)](https://liberapay.com/akselmo/)
