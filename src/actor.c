@@ -58,6 +58,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
         .animations       = animations,
         .animationsCount  = animationsCount,
         .currentAnimation = animations[IDLE],
+        .nextFrame        = 0
     };
 
     Actor_Data actor = {
@@ -124,7 +125,8 @@ void Actor_Update(Actor_Data* actor)
     {
         Animator_SetAnimation(&actor->animator, DEATH);
     }
-    Animator_PlayAnimation(&actor->animator, 1.0f);
+    actor->animator.nextFrame -= GetFrameTime();
+    actor->animator.nextFrame = Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
 }
 
 void Actor_Draw(Actor_Data* actor)

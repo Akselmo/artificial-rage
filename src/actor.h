@@ -18,6 +18,7 @@
 #define ACTOR_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ACTOR_DEFAULT_MOVEMENT_SPEED   0.45f  // Lower values result to lower speed
 #define ACTOR_DEFAULT_ROTATION_SPEED   3.0f
+#define ACTOR_DEFAULT_ANIMATION_SPEED  0.02f  // Lower values result to faster speed??? I dont know and I dont have brains to debug this atm
 
 enum AnimationID
 {

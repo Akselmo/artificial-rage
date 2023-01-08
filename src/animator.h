@@ -21,9 +21,10 @@ typedef struct Animator_Data
         unsigned int animationsCount;
         Animator_Animation currentAnimation;
         int animationFrame;
+        float nextFrame;
 } Animator_Data;
 
-void Animator_PlayAnimation(Animator_Data * animator, const float animationSpeed);
+float Animator_PlayAnimation(Animator_Data * animator, const float animationSpeed, float nextFrame);
 void Animator_SetAnimation(Animator_Data * animator, const int animationId);
 
 

@@ -22,23 +22,30 @@ void Animator_SetAnimation(Animator_Data * animator, const int animationId)
     animator->currentAnimation = newAnimation;
 }
 
-void Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed)
+float Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed, float nextFrame)
 {
 
-    Animator_Animation currentAnimation = animator->currentAnimation;
-    animator->animationFrame += 1;
-    if(animator->animationFrame > currentAnimation.lastFrame)
+    if(nextFrame > 0)
     {
-        if (currentAnimation.loopable)
-        {
-            animator->animationFrame = currentAnimation.firstFrame;
-        }
-        else
-        {
-            animator->animationFrame = currentAnimation.lastFrame;
-        }
+        nextFrame -= GetFrameTime();
     }
-
-    UpdateModelAnimation(animator->model,currentAnimation.animation,animator->animationFrame);
-
+    else
+    {
+        Animator_Animation currentAnimation = animator->currentAnimation;
+        animator->animationFrame += 1;
+        if(animator->animationFrame > currentAnimation.lastFrame)
+        {
+            if (currentAnimation.loopable)
+            {
+                animator->animationFrame = currentAnimation.firstFrame;
+            }
+            else
+            {
+                animator->animationFrame = currentAnimation.lastFrame;
+            }
+        }
+        UpdateModelAnimation(animator->model,currentAnimation.animation,animator->animationFrame);
+        nextFrame = animationSpeed;
+    }
+    return nextFrame;
 }
