@@ -3,7 +3,7 @@
 #include "main.h"
 
 // Main loop
-int main()
+int main(void)
 {
 
     // Initialize game

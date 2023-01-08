@@ -1,7 +1,7 @@
 #include "hud.h"
 #include "weapon.h"
 
-void Hud_Draw()
+void Hud_Draw(void)
 {
     const char Hud_dedText[5]       = "DEAD";
     const char Hud_emptyAmmoText[2] = "-";

@@ -8,10 +8,10 @@ float Settings_CameraFov;
 // h: extern int Settings_KeyForward
 // And so on
 
-float GetSensitivity();
-float GetFOV();
+float GetSensitivity(void);
+float GetFOV(void);
 
-void Settings_Initialize()
+void Settings_Initialize(void)
 {
     // TODO: Allow customization of these
     const int screenWidth  = 800;
@@ -20,17 +20,17 @@ void Settings_Initialize()
 
     Settings_MouseSensitivity = GetSensitivity();
     Settings_CameraFov        = GetFOV();
-    SetTargetFPS(60);
+    SetTargetFPS(200);
 }
 
-float GetSensitivity()
+float GetSensitivity(void)
 {
     // TODO: Get Settings_MouseSensitivity from config file
     // 0.003f is default
     return 0.3f;
 }
 
-float GetFOV()
+float GetFOV(void)
 {
     // TODO: Get FOV from config file
     return 60.0f;

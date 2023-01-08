@@ -8,6 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void Hud_Draw();
+void Hud_Draw(void);
 
 #endif

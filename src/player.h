@@ -12,6 +12,7 @@
 #include "weapon.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define PLAYER_ID                     -1
 #define PLAYER_MAX_HEALTH             20

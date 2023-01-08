@@ -2,11 +2,14 @@
 #ifndef _ACTOR_H_
 #define _ACTOR_H_
 
+#include "animator.h"
 #include "player.h"
+#include "projectile.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "scene.h"
 #include "utilities.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,6 +18,7 @@
 #define ACTOR_MAX_DISTANCE_FROM_PLAYER 1.25f
 #define ACTOR_DEFAULT_MOVEMENT_SPEED   0.45f  // Lower values result to lower speed
 #define ACTOR_DEFAULT_ROTATION_SPEED   3.0f
+#define ACTOR_DEFAULT_ANIMATION_SPEED  30.0f  // Animation played in FPS
 
 enum AnimationID
 {
@@ -34,11 +38,7 @@ typedef struct Actor_Data
         Vector3 rotation;
         Vector3 size;
         BoundingBox boundingBox;
-        Model model;
-        ModelAnimation* animations;
-        unsigned int animationsCount;
-        int currentAnimation;
-        int animationFrame;
+        Animator_Data animator;
         bool dead;
         bool moving;
         bool attacking;

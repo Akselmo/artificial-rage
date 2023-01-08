@@ -13,10 +13,10 @@ Level_BlockType Level_BlockTypes;
 // Private functions
 void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels);
 void Scene_AllocateMeshData(Mesh* mesh, int triangleCount);
-void Scene_SetBlockTypes();
-void Scene_UpdateProjectiles();
+void Scene_SetBlockTypes(void);
+void Scene_UpdateProjectiles(void);
 
-Camera Scene_Initialize()
+Camera Scene_Initialize(void)
 {
     Scene_Build();
     return Player_InitializeCamera(Scene_data.startPosition.x, Scene_data.startPosition.z);
@@ -25,7 +25,7 @@ Camera Scene_Initialize()
 // TODO: Add integer so you can select which level to load
 //       Load textures from file, instead of being built into EXE
 //
-void Scene_Build()
+void Scene_Build(void)
 {
     // Initialize block types
     Scene_SetBlockTypes();
@@ -53,8 +53,8 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
     const float mapPosX            = (float)sceneCubicMap.width;
     const Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
     const Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
-    Scene_data.ceilingPlane  = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    Scene_data.floorPlane    = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.floorPlane   = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
     Scene_data.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
     Scene_data.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
@@ -88,7 +88,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
                 const Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                const Mesh cube       = GenMeshCube(1.0f, 1.0f, 1.0f);
+                const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
@@ -125,7 +125,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
     printf("Level has total %d blocks \n", Scene_data.size);
 }
 
-void Scene_Update()
+void Scene_Update(void)
 {
     if(!Game_isStarted)
     {
@@ -155,16 +155,13 @@ void Scene_Update()
         if(actor != NULL && actor->id != 0)
         {
             // if Level_enemies[i] has nothing dont do anything
-            if(!actor->dead)
-            {
-                Actor_Update(actor);
-            }
+            Actor_Update(actor);
         }
     }
     Scene_UpdateProjectiles();
 }
 
-void Scene_UpdateProjectiles()
+void Scene_UpdateProjectiles(void)
 {
     for(int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
@@ -235,8 +232,8 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
     };
     // clang-format on
 
-    mesh.vertices = vertices;
-    mesh.normals = normals;
+    mesh.vertices  = vertices;
+    mesh.normals   = normals;
     mesh.texcoords = texcoords;
 
     UploadMesh(&mesh, false);
@@ -254,7 +251,7 @@ void Scene_AllocateMeshData(Mesh* mesh, int triangleCount)
     mesh->normals   = (float*)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
-void Scene_SetBlockTypes()
+void Scene_SetBlockTypes(void)
 {
     Level_BlockTypes.startColor = (Color) { 0, 255, 0 };
     Level_BlockTypes.endColor   = (Color) { 0, 0, 255 };

@@ -79,3 +79,4 @@ out/
 .xmake/**
 *.blend1
 CMakeLists.txt
+.fleet
