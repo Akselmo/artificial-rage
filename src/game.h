@@ -2,8 +2,8 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "raylib.h"
 #include "hud.h"
+#include "raylib.h"
 #include "scene.h"
 #include <stdio.h>
 #include <stdlib.h>

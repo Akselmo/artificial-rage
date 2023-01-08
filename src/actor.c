@@ -22,28 +22,28 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 
     Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
                                      .firstFrame    = 0,
-                                     .lastFrame     = (loadedAnimations[DEATH].frameCount-5),
+                                     .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
                                      .id            = DEATH,
                                      .interruptable = false,
                                      .loopable      = false };
 
     Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
                                       .firstFrame    = 0,
-                                      .lastFrame    = loadedAnimations[ATTACK].frameCount,
+                                      .lastFrame     = loadedAnimations[ATTACK].frameCount,
                                       .id            = ATTACK,
                                       .interruptable = false,
                                       .loopable      = false };
 
     Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
                                     .firstFrame    = 0,
-                                    .lastFrame    = loadedAnimations[IDLE].frameCount,
+                                    .lastFrame     = loadedAnimations[IDLE].frameCount,
                                     .id            = IDLE,
                                     .interruptable = true,
                                     .loopable      = true };
 
     Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
                                     .firstFrame    = 0,
-                                    .lastFrame    = loadedAnimations[MOVE].frameCount,
+                                    .lastFrame     = loadedAnimations[MOVE].frameCount,
                                     .id            = MOVE,
                                     .interruptable = true,
                                     .loopable      = true };
@@ -53,13 +53,11 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     animations[IDLE]   = idleAnim;
     animations[MOVE]   = moveAnim;
 
-    Animator_Data animator = {
-        .model            = LoadModel(modelFileName),
-        .animations       = animations,
-        .animationsCount  = animationsCount,
-        .currentAnimation = animations[IDLE],
-        .nextFrame        = 0
-    };
+    Animator_Data animator = { .model            = LoadModel(modelFileName),
+                               .animations       = animations,
+                               .animationsCount  = animationsCount,
+                               .currentAnimation = animations[IDLE],
+                               .nextFrame        = 0 };
 
     Actor_Data actor = {
         .position      = actorPosition,
@@ -126,7 +124,8 @@ void Actor_Update(Actor_Data* actor)
         Animator_SetAnimation(&actor->animator, DEATH);
     }
     actor->animator.nextFrame -= GetFrameTime();
-    actor->animator.nextFrame = Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
+    actor->animator.nextFrame = Animator_PlayAnimation(
+        &actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
 }
 
 void Actor_Draw(Actor_Data* actor)
@@ -228,12 +227,11 @@ void Actor_TakeDamage(Actor_Data* actor, const int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep actor in the memory so we can use its position to display the
             // corpse/death anim
-            const Vector3 deadBoxPos         = (Vector3) { ACTOR_GRAVEYARD_POSITION,
-                                                           ACTOR_GRAVEYARD_POSITION,
-                                                           ACTOR_GRAVEYARD_POSITION };
-            actor->boundingBox               = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
-            actor->dead                      = true;
-
+            const Vector3 deadBoxPos = (Vector3) { ACTOR_GRAVEYARD_POSITION,
+                                                   ACTOR_GRAVEYARD_POSITION,
+                                                   ACTOR_GRAVEYARD_POSITION };
+            actor->boundingBox       = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
+            actor->dead              = true;
         }
     }
 }
@@ -250,7 +248,7 @@ bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
     else
     {
         // Fire animation should play before we shoot projectile
-        actor->attacking                 = true;
+        actor->attacking = true;
 
         Projectile_Create(
             Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
@@ -272,7 +270,5 @@ void Actor_RotateTowards(Actor_Data* actor, const Vector3 targetPosition)
     const Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
 
     actor->animator.model.transform = QuaternionToMatrix(slerp);
-    actor->rotation        = newRotation;
+    actor->rotation                 = newRotation;
 }
-
-
