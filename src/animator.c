@@ -45,7 +45,7 @@ float Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed
             }
         }
         UpdateModelAnimation(animator->model,currentAnimation.animation,animator->animationFrame);
-        nextFrame = animationSpeed;
+        nextFrame = 1.0/animationSpeed;
     }
     return nextFrame;
 }
