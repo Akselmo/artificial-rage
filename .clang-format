@@ -21,7 +21,7 @@ AlwaysBreakBeforeMultilineStrings: 'true'
 BreakBeforeBraces: Allman
 BreakStringLiterals: 'true'
 ContinuationIndentWidth: '4'
-ColumnLimit: '100'
+ColumnLimit: '160'
 Cpp11BracedListStyle: 'false'
 EmptyLineBeforeAccessModifier: 'Always'
 IndentAccessModifiers: 'true'
