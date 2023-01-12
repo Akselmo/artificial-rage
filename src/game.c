@@ -11,12 +11,10 @@ Camera playerCamera;
 void Game_HudUpdate(void);
 void Game_MenuUpdate(void);
 bool Game_isStarted = false;
-char Game_WorkingDirectory[FILENAME_MAX];
+
 // Initialization
 void Game_Initialize(void)
 {
-    getcwd(Game_WorkingDirectory, FILENAME_MAX);
-    printf("Current working dir: %s\n", Game_WorkingDirectory);
     Game_isStarted = false;
 
     // Initialize game
