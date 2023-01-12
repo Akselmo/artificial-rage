@@ -7,10 +7,12 @@
 #include "scene.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void Game_Initialize(void);
 void Game_Update(void);
 
 extern bool Game_isStarted;
+extern char Game_WorkingDirectory[FILENAME_MAX];
 
 #endif
