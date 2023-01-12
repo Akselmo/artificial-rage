@@ -20,7 +20,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     Animator_Animation* animations;
     animations = calloc(animationsCount, sizeof(Animator_Animation));
 
-    //clang-format off
+    // clang-format off
     Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
                                      .firstFrame    = 0,
                                      .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
@@ -81,7 +81,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 
     actor.animator = animator;
 
-    //clang-format on
+    // clang-format on
     return actor;
 }
 

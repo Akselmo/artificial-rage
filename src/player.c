@@ -80,7 +80,7 @@ void Player_Update(Camera* camera)
 
     const Vector2 mousePositionDelta = GetMouseDelta();
 
-    //clang-format off
+    // clang-format off
     const bool direction[4] = { IsKeyDown(Player_CustomCamera.moveForwardButton),
                                 IsKeyDown(Player_CustomCamera.moveBackwardButton),
                                 IsKeyDown(Player_CustomCamera.moveRightButton),
@@ -108,7 +108,7 @@ void Player_Update(Camera* camera)
                            Player_CustomCamera.playerSpeed) *
                           GetFrameTime();
 
-    //clang-format on
+    // clang-format on
 
     // Camera orientation calculation
     Player_CustomCamera.angle.x -=

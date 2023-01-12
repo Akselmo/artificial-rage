@@ -14,7 +14,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
     // TODO: Lerp between start and end position
     // Projectile does not need to know if it hits or not, that is calculated from
     // entities themselves.
-    //clang-format off
+    // clang-format off
     for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
         if(Scene_data.projectiles[i].id != i || Scene_data.projectiles[i].destroyed == true)
@@ -38,7 +38,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
             break;
         }
     }
-    //clang-format on
+    // clang-format on
 }
 
 void Projectile_Update(Projectile* projectile)

@@ -9,7 +9,7 @@
 void Weapon_Change(int weaponId);
 bool WeaponHasAmmo(int currentWeapon);
 
-//clang-format off
+// clang-format off
 Weapon_Data Weapon_Fists = {
     .name     = "Fists",
     .inputKey = KEY_ONE,
@@ -75,7 +75,7 @@ Weapon_Data Weapon_Railgun = {
     .hitscan  = false,
 };
 
-//clang-format on
+// clang-format on
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
