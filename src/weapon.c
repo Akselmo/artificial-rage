@@ -138,8 +138,7 @@ int TestEntityHit(const Ray rayCast)
         if(levelData[i].id != 0)
         {
             const Vector3 pos           = levelData[i].position;
-            const RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            const RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -153,12 +152,10 @@ int TestEntityHit(const Ray rayCast)
         {
             if(!enemies[i].dead)
             {
-                if(Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) <
-                   enemyDistance)
+                if(Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
                 {
-                    enemyDistance =
-                        Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
-                    enemyDataHit = enemies[i];
+                    enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
+                    enemyDataHit  = enemies[i];
                 }
             }
         }
@@ -212,20 +209,13 @@ float Weapon_Fire(Camera* camera, float nextFire)
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Actor_TakeDamage(
-                        &Scene_data.actors[id],
-                        WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
-                    printf("Enemy_Data id %d takes %d damage\n",
-                           id,
-                           WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    Actor_TakeDamage(&Scene_data.actors[id], WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
                 }
             }
             else
             {
-                Projectile_Create(rayCast,
-                                  (Vector3) { 0.2f, 0.2f, 0.2f },
-                                  WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage,
-                                  PLAYER_ID);
+                Projectile_Create(rayCast, (Vector3) { 0.2f, 0.2f, 0.2f }, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage, PLAYER_ID);
             }
         }
         nextFire = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->fireRate;

@@ -53,8 +53,8 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
     const float mapPosX            = (float)sceneCubicMap.width;
     const Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
     const Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
-    Scene_data.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    Scene_data.floorPlane   = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.ceilingPlane        = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene_data.floorPlane          = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
     Scene_data.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
     Scene_data.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
@@ -79,8 +79,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
             const float my = Scene_data.position.z - 0.5f + y * 1.0f;
             const int i    = y * sceneCubicMap.width + x;
 
-            const Color pixelColor =
-                Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
+            const Color pixelColor = Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
 
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
@@ -88,16 +87,15 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
                 const Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
                 // Set map diffuse texture
-                const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-                Model cubeModel = LoadModelFromMesh(cube);
+                const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
+                Model cubeModel                                           = LoadModelFromMesh(cube);
                 cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
                 Scene_data.blocks[i].model       = cubeModel;
                 Scene_data.blocks[i].position    = (Vector3) { mx, Scene_data.position.y, my };
                 Scene_data.blocks[i].id          = WALL_MODEL_ID;
                 Scene_data.blocks[i].size        = (Vector3) { 1.0f, 1.0f, 1.0f };
-                Scene_data.blocks[i].boundingBox = Utilities_MakeBoundingBox(
-                    (Vector3) { mx, Scene_data.position.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
+                Scene_data.blocks[i].boundingBox = Utilities_MakeBoundingBox((Vector3) { mx, Scene_data.position.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
             }
 
             // Find start, which is green (0,255,0)
@@ -132,10 +130,7 @@ void Scene_Update(void)
         return;
     }
 
-    DrawModel(Scene_data.floorPlane,
-              (Vector3) { Scene_data.position.x, 0.0f, Scene_data.position.z },
-              1.0f,
-              WHITE);
+    DrawModel(Scene_data.floorPlane, (Vector3) { Scene_data.position.x, 0.0f, Scene_data.position.z }, 1.0f, WHITE);
     DrawModelEx(Scene_data.ceilingPlane,
                 (Vector3) { Scene_data.position.x, 1.0f, -Scene_data.position.z },
                 (Vector3) { -1.0f, 0.0f, 0.0f },
@@ -189,8 +184,7 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         // Actor and wall/other enemies
         // Actors ignore themselves so they dont collide to themselve. Actors also ignore their
         // own projectiles
-        else if(CheckCollisionBoxes(entityBox, Scene_data.actors[i].boundingBox) &&
-                Scene_data.actors[i].id != entityId)
+        else if(CheckCollisionBoxes(entityBox, Scene_data.actors[i].boundingBox) && Scene_data.actors[i].id != entityId)
         {
             return true;
         }

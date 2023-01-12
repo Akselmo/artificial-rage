@@ -47,8 +47,7 @@ void Projectile_Update(Projectile* projectile)
     {
         DrawCubeV(projectile->position, projectile->size, projectile->color);
         // Lerp projectile here (both model and boundingbox)
-        projectile->position =
-            Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
+        projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
         Projectile_DestroyOverTime(projectile);
         Projectile_CheckCollision(projectile);
     }
@@ -59,8 +58,7 @@ void Projectile_CheckCollision(Projectile* projectile)
     // Check against the owner of the projectile and the entity id. if theres a match, ignore it,
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
-    const BoundingBox projectileBox =
-        Utilities_MakeBoundingBox(projectile->position, projectile->size);
+    const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
     for(int i = 0; i < Scene_data.size; i++)
     {
 
@@ -71,16 +69,14 @@ void Projectile_CheckCollision(Projectile* projectile)
             return;
         }
         // Against enemy except if owned by enemy
-        else if(CheckCollisionBoxes(projectileBox, Scene_data.actors[i].boundingBox) &&
-                Scene_data.actors[i].id != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Scene_data.actors[i].boundingBox) && Scene_data.actors[i].id != projectile->ownerId)
         {
             Actor_TakeDamage(&Scene_data.actors[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
         // Against player except if owned by player
-        else if(CheckCollisionBoxes(projectileBox, Player->boundingBox) &&
-                PLAYER_ID != projectile->ownerId)
+        else if(CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
         {
             Player_SetHealth(-1 * projectile->damage);
             Projectile_Destroy(projectile);

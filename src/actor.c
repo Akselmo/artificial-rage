@@ -126,8 +126,7 @@ void Actor_Update(Actor_Data* actor)
         Animator_SetAnimation(&actor->animator, DEATH);
     }
     actor->animator.nextFrame -= GetFrameTime();
-    actor->animator.nextFrame = Animator_PlayAnimation(
-        &actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
+    actor->animator.nextFrame = Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
 }
 
 void Actor_Draw(Actor_Data* actor)
@@ -140,11 +139,13 @@ Ray Actor_CreateRay(Actor_Data* actor)
 
     const BoundingBox playerBb   = Player->boundingBox;
     const Vector3 playerPosition = Player->position;
-    const Vector3 v = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
-    Ray rayCast     = {
-            .direction = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
-            .position  = actor->position
+    const Vector3 v              = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
+    // clang-format off
+    Ray rayCast                  = {
+        .direction = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
+        .position = actor->position
     };
+    // clang-format on
     return rayCast;
 }
 
@@ -166,8 +167,7 @@ bool Actor_TestPlayerHit(Actor_Data* actor)
         if(levelData[i].id != 0)
         {
             Vector3 pos           = levelData[i].position;
-            RayCollision hitLevel = GetRayCollisionMesh(
-                rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+            RayCollision hitLevel = GetRayCollisionMesh(rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
             if(hitLevel.hit)
             {
                 if(hitLevel.distance < levelDistance)
@@ -196,14 +196,11 @@ bool Actor_UpdatePosition(Actor_Data* actor)
     //- Check if player can be seen (first raycast hit returns player)
 
     //- If in certain range from player, stop
-    if(fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
-       fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
+    if(fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER || fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
     {
         const Vector3 actorOldPosition = actor->position;
-        const Vector3 actorNewPosition =
-            (Vector3) { Player->position.x, ACTOR_POSITION_Y, Player->position.z };
-        actor->position =
-            Vector3Lerp(actor->position, actorNewPosition, actor->movementSpeed * GetFrameTime());
+        const Vector3 actorNewPosition = (Vector3) { Player->position.x, ACTOR_POSITION_Y, Player->position.z };
+        actor->position                = Vector3Lerp(actor->position, actorNewPosition, actor->movementSpeed * GetFrameTime());
         if(Scene_CheckCollision(actor->position, actor->size, actor->id))
         {
             actor->position = actorOldPosition;
@@ -229,9 +226,7 @@ void Actor_TakeDamage(Actor_Data* actor, const int damageAmount)
             // Dirty hack to move bounding box outside of map so it cant be collided to.
             // We want to keep actor in the memory so we can use its position to display the
             // corpse/death anim
-            const Vector3 deadBoxPos = (Vector3) { ACTOR_GRAVEYARD_POSITION,
-                                                   ACTOR_GRAVEYARD_POSITION,
-                                                   ACTOR_GRAVEYARD_POSITION };
+            const Vector3 deadBoxPos = (Vector3) { ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
             actor->boundingBox       = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
             actor->dead              = true;
         }
@@ -252,8 +247,7 @@ bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
         // Fire animation should play before we shoot projectile
         actor->attacking = true;
 
-        Projectile_Create(
-            Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
+        Projectile_Create(Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
         actor->nextFire = actor->fireRate;
         return true;
     }
@@ -266,8 +260,7 @@ void Actor_RotateTowards(Actor_Data* actor, const Vector3 targetPosition)
     const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
     const Vector3 newRotation = (Vector3) { 0, y_angle, 0 };
 
-    const Quaternion start =
-        QuaternionFromEuler(actor->rotation.z, actor->rotation.y, actor->rotation.x);
+    const Quaternion start = QuaternionFromEuler(actor->rotation.z, actor->rotation.y, actor->rotation.x);
     const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
     const Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
 

@@ -111,10 +111,8 @@ void Player_Update(Camera* camera)
     // clang-format on
 
     // Camera orientation calculation
-    Player_CustomCamera.angle.x -=
-        mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();
-    Player_CustomCamera.angle.y -=
-        mousePositionDelta.y * Player_CustomCamera.mouseSensitivity * GetFrameTime();
+    Player_CustomCamera.angle.x -= mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();
+    Player_CustomCamera.angle.y -= mousePositionDelta.y * Player_CustomCamera.mouseSensitivity * GetFrameTime();
 
     // Angle clamp
     if(Player_CustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP * DEG2RAD)
@@ -127,11 +125,9 @@ void Player_Update(Camera* camera)
     }
 
     // Recalculate camera target considering translation and rotation
-    const Matrix translation =
-        MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
-    const Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3) {
-        PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
-    const Matrix transform = MatrixMultiply(translation, rotation);
+    const Matrix translation = MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
+    const Matrix rotation    = MatrixInvert(MatrixRotateXYZ((Vector3) { PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
+    const Matrix transform   = MatrixMultiply(translation, rotation);
 
     // Move camera according to matrix position (where camera looks at)
     camera->target.x = camera->position.x - transform.m12;
