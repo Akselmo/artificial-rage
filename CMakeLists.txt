@@ -1,0 +1,31 @@
+#Compiler used: GCC 10.3.0
+cmake_minimum_required(VERSION 3.0)
+set(OpenGL_GL_PREFERENCE LEGACY)
+project(ArtificialRage)
+
+#Copy commit hook
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/)
+
+find_package(raylib QUIET)
+if (NOT raylib_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+            raylib
+            GIT_REPOSITORY https://github.com/raysan5/raylib.git
+            GIT_TAG d224414eb1fcbe93bcaf2ba02490bbd6f8db624a
+    )
+    FetchContent_MakeAvailable(raylib)
+endif ()
+
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+
+add_subdirectory(src)
+
+add_executable(${PROJECT_NAME} ${SOURCE_CODE})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
+target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
+
+#Copy the level assets
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
