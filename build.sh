@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-xmake project -k compile_commands
-xmake -b -r
+mkdir build && cd build
+cmake ..
+cmake --build .
