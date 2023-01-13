@@ -30,18 +30,28 @@ If you find glaring bugs or issues in the code, I welcome issues and critique so
 
 First, get the dependencies that Raylib uses: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 
-This project uses the [xmake](https://xmake.io/) build system. It is quite simple to use, and should
-work for anyone.
+The game should run on anywhere where Raylib compiles.
 
-* After installing xmake, just run `xmake` in the project root directory.
-* If you want to use xmake to run the project, just execute `xmake run`.
-* For debugging with GDB for example, you can run `xmake run -d`.
-* If you need CMake files, for example for an IDE that doesn't work with xmake, run `xmake project -k cmake -y` to generate a `CMakeLists.txt` file
+### CMake
 
-There are also extensions for xmake for various editors and IDEs.
+This project uses CMake to build.
 
-If you don't want to use xmake, the older commits should have cmake configs lying around.
-However, xmake is highly recommended!
+Here's the basic commands you need.
+
+```sh
+git clone https://codeberg.org/akselmo/artificial-rage.git
+cd artificial-rage
+mkdir build && cd build
+cmake .. # You can use Raylib build flags here. For example, specific platform: -DPLATFORM=Android
+cmake --build .
+./ArtificialRage
+```
+
+Make sure to run the game in same folder where `assets` folder is. These assets are needed for level textures and so on.
+
+### XMake
+
+If you wish to use XMake instead, the xmake.lua can be found from here: [xmake.lua](https://codeberg.org/akselmo/artificial-rage/src/commit/98f54fc2b42be833f1b1f79b3a4eb086533777e1/xmake.lua)
 
 ## TODO:
 Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
