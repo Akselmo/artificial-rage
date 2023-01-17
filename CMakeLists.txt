@@ -25,7 +25,7 @@ add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion -Wshadow -Wpedantic")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion -Wshadow -Wpedantic -fbounds-check -fanalyzer")
 set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
 
