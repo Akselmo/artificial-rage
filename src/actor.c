@@ -10,7 +10,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 {
     const Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
     const Vector3 actorRotation = Vector3Zero();
-    const Vector3 actorSize     = (Vector3) { 0.25f, 0.8f, 0.25f };
+    const Vector3 actorSize     = (Vector3) { 0.25f, 1.1f, 0.25f };
     const float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
 
     unsigned int animationsCount = 0;
