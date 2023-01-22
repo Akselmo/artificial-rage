@@ -1,0 +1,29 @@
+{
+  "name": "artificial-rage",
+  "build": {
+    "directory": "build",
+    "default_target": "build",
+    "targets": [
+      {
+        "name": "clean",
+        "build_cmd": "cmake --build . --target clean",
+        "run_cmd": ""
+      },
+      {
+        "name": "config-gcc",
+        "build_cmd": "cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++",
+        "run_cmd": ""
+      },
+      {
+        "name": "config-clang",
+        "build_cmd": "cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++",
+        "run_cmd": ""
+      },
+      {
+          "name": "build",
+          "build_cmd": "cmake --build .",
+          "run_cmd": "./ArtificialRage"
+      }
+    ]
+  }
+}
