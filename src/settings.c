@@ -1,39 +1,21 @@
 #include "settings.h"
 
-float Settings_MouseSensitivity;
-float Settings_CameraFov;
-
 // TODO: List all input keys
 // c: int Settings_KeyForward
 // h: extern int Settings_KeyForward
 // And so on
-
-float GetSensitivity(void);
-float GetFOV(void);
+struct Settings_Data Settings;
 
 void Settings_Initialize(void)
 {
-    // TODO: Allow customization of these
-    const int screenWidth  = 800;
-    const int screenHeight = 600;
-    InitWindow(screenWidth, screenHeight, "Artificial Rage");
+    // if file not found
+    Settings = Settings_CreateDefault();
+    // else
+    // Settings = Settings_Read();
 
-    Settings_MouseSensitivity = GetSensitivity();
-    Settings_CameraFov        = GetFOV();
-    SetTargetFPS(200);
-}
+    InitWindow(Settings.screenWidth, Settings.screenHeight, "Artificial Rage");
 
-float GetSensitivity(void)
-{
-    // TODO: Get Settings_MouseSensitivity from config file
-    // 0.003f is default
-    return 0.3f;
-}
-
-float GetFOV(void)
-{
-    // TODO: Get FOV from config file
-    return 60.0f;
+    SetTargetFPS(Settings.maxFPS);
 }
 
 // TODO: Set up custom keys in initialization part
@@ -41,4 +23,29 @@ float GetFOV(void)
 int Settings_GetCustomInput(int key)
 {
     return key;
+}
+
+Settings_Data Settings_CreateDefault(void)
+{
+    // clang-format off
+    Settings_Data data = {
+        .screenWidth        = 800,
+        .screenHeight       = 600,
+        .mouseSensitivity   = 0.25f,
+        .cameraFOV          = 90,
+        .maxFPS             = 200
+    };
+    // clang format on
+    // Write settings to datafile here
+
+    return data;
+}
+
+Settings_Data Settings_Read(void)
+{
+    return Settings_CreateDefault();
+}
+
+void Settings_Write(Settings_Data* settings)
+{
 }

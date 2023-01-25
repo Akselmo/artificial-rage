@@ -23,7 +23,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     camera.position   = (Vector3) { pos_x, PLAYER_START_POSITION_Y, pos_z };
     camera.target     = (Vector3) { 0.0f, 0.5f, 0.0f };
     camera.up         = (Vector3) { 0.0f, 1.0f, 0.0f };
-    camera.fovy       = Settings_CameraFov;  // get fov from settings file
+    camera.fovy       = Settings.cameraFOV;  // get fov from settings file
     camera.projection = CAMERA_PERSPECTIVE;
 
     // Distances
@@ -50,7 +50,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player_CustomCamera.moveBackwardButton = Settings_GetCustomInput(KEY_S);
     Player_CustomCamera.moveRightButton    = Settings_GetCustomInput(KEY_D);
     Player_CustomCamera.moveLeftButton     = Settings_GetCustomInput(KEY_A);
-    Player_CustomCamera.mouseSensitivity   = Settings_MouseSensitivity;
+    Player_CustomCamera.mouseSensitivity   = Settings.mouseSensitivity;
     Player_CustomCamera.fireButton         = MOUSE_LEFT_BUTTON;
     Player_CustomCamera.useButton          = Settings_GetCustomInput(KEY_E);
     Player_CustomCamera.jumpButton         = Settings_GetCustomInput(KEY_SPACE);
