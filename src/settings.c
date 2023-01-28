@@ -8,10 +8,7 @@ struct Settings_Data Settings;
 
 void Settings_Initialize(void)
 {
-    // if file not found
-    Settings = Settings_CreateDefault();
-    // else
-    // Settings = Settings_Read();
+    Settings = Settings_Read();
 
     InitWindow(Settings.screenWidth, Settings.screenHeight, "Artificial Rage");
 
@@ -43,6 +40,7 @@ Settings_Data Settings_CreateDefault(void)
 
 Settings_Data Settings_Read(void)
 {
+    // if file not found, create defaults, else read from file
     return Settings_CreateDefault();
 }
 
