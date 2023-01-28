@@ -23,6 +23,7 @@ void Animator_SetAnimation(Animator_Data* animator, const int animationId)
     animator->currentAnimation = newAnimation;
 }
 
+// TODO: This would need somekind of frameskip feature if FPS is lower than animationspeed. Ideas welcome!
 float Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed, float nextFrame)
 {
 

@@ -127,7 +127,7 @@ void Actor_Update(Actor_Data* actor)
         Animator_SetAnimation(&actor->animator, DEATH);
     }
     actor->animator.nextFrame -= GetFrameTime();
-    actor->animator.nextFrame = Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED / GetFrameTime(), actor->animator.nextFrame);
+    actor->animator.nextFrame = Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
 }
 
 void Actor_Draw(Actor_Data* actor)
