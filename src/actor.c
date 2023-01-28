@@ -12,7 +12,6 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
     const Vector3 actorPosition = (Vector3) { pos_x, ACTOR_POSITION_Y, pos_z };
     const Vector3 actorRotation = Vector3Zero();
     const Vector3 actorSize     = (Vector3) { 0.25f, 1.1f, 0.25f };
-    const float randomTickRate  = ((float)rand() / (float)(RAND_MAX)) * 2;
 
     unsigned int animationsCount = 0;
 
@@ -72,8 +71,6 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
         .health        = 15,  // Check actor health balance later
         .boundingBox   = Utilities_MakeBoundingBox(actorPosition, actorSize),
         .id            = id,
-        .tickRate      = randomTickRate,
-        .nextTick      = -1.0f,
         .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
         .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
         .fireRate      = 5.75f,
@@ -91,15 +88,6 @@ void Actor_Update(Actor_Data* actor)
     Actor_Draw(actor);
     if(!actor->dead)
     {
-        if(actor->nextTick > 0)
-        {
-            actor->nextTick -= GetFrameTime();
-        }
-        else
-        {
-            actor->nextTick = actor->tickRate;
-        }
-
         if(Actor_TestPlayerHit(actor))
         {
             if(Actor_FireAtPlayer(actor, actor->nextFire))

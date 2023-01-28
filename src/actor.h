@@ -43,8 +43,6 @@ typedef struct Actor_Data
         bool moving;
         bool attacking;
         int id;
-        float tickRate;
-        float nextTick;
         float movementSpeed;
         float rotationSpeed;
         float fireRate;
