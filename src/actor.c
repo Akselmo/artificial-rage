@@ -126,7 +126,6 @@ void Actor_Draw(Actor_Data* actor)
 Ray Actor_CreateRay(Actor_Data* actor)
 {
 
-    const BoundingBox playerBb   = Player->boundingBox;
     const Vector3 playerPosition = Player->position;
     const Vector3 v              = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
     // clang-format off
@@ -144,12 +143,10 @@ bool Actor_TestPlayerHit(Actor_Data* actor)
     const Ray rayCast = Actor_CreateRay(actor);
 
     bool hitPlayer                   = false;
-    float distance                   = 0.0f;
     float levelDistance              = INFINITY;
     float playerDistance             = INFINITY;
     const int entitiesAmount         = Scene_data.size;
     const Scene_BlockData* levelData = Scene_data.blocks;
-    Scene_BlockData levelDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
     {
@@ -162,7 +159,6 @@ bool Actor_TestPlayerHit(Actor_Data* actor)
                 if(hitLevel.distance < levelDistance)
                 {
                     levelDistance = hitLevel.distance;
-                    levelDataHit  = levelData[i];
                 }
             }
         }
