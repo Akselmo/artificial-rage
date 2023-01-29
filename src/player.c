@@ -45,15 +45,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     // Init player eyes position to camera Y position
     Player_CustomCamera.playerEyesPosition = camera.position.y;
 
-    // Setup custom movement keys
-    Player_CustomCamera.moveForwardButton  = Settings_GetCustomInput(KEY_W);
-    Player_CustomCamera.moveBackwardButton = Settings_GetCustomInput(KEY_S);
-    Player_CustomCamera.moveRightButton    = Settings_GetCustomInput(KEY_D);
-    Player_CustomCamera.moveLeftButton     = Settings_GetCustomInput(KEY_A);
-    Player_CustomCamera.mouseSensitivity   = Settings.mouseSensitivity;
-    Player_CustomCamera.fireButton         = MOUSE_LEFT_BUTTON;
-    Player_CustomCamera.useButton          = Settings_GetCustomInput(KEY_E);
-    Player_CustomCamera.jumpButton         = Settings_GetCustomInput(KEY_SPACE);
+    Player_CustomCamera.mouseSensitivity = Settings.mouseSensitivity;
 
     // Initialize player data
     Player              = calloc(1, sizeof(Player_Data));
@@ -81,10 +73,10 @@ void Player_Update(Camera* camera)
     const Vector2 mousePositionDelta = GetMouseDelta();
 
     // clang-format off
-    const bool direction[4] = { IsKeyDown(Player_CustomCamera.moveForwardButton),
-                                IsKeyDown(Player_CustomCamera.moveBackwardButton),
-                                IsKeyDown(Player_CustomCamera.moveRightButton),
-                                IsKeyDown(Player_CustomCamera.moveLeftButton) };
+    const bool direction[4] = { IsKeyDown(Settings.keyMoveForward),
+                                IsKeyDown(Settings.keyMoveBackward),
+                                IsKeyDown(Settings.keyMoveRight),
+                                IsKeyDown(Settings.keyMoveLeft) };
 
     // Move camera around X pos
     camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
@@ -167,7 +159,7 @@ void Player_FireWeapon(Camera* camera, Player_CustomCameraData* cameraData)
 {
     // Calculate fire rate countdown here
     Player->nextFire -= GetFrameTime();
-    if(IsMouseButtonDown(cameraData->fireButton))
+    if(IsMouseButtonDown(Settings.keyFire))
     {
         Player->nextFire = Weapon_Fire(camera, Player->nextFire);
     }

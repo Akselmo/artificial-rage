@@ -15,13 +15,6 @@ void Settings_Initialize(void)
     SetTargetFPS(Settings.maxFPS);
 }
 
-// TODO: Set up custom keys in initialization part
-// Then we dont have to feed parameters
-int Settings_GetCustomInput(int key)
-{
-    return key;
-}
-
 Settings_Data Settings_CreateDefault(void)
 {
     // clang-format off
@@ -30,7 +23,19 @@ Settings_Data Settings_CreateDefault(void)
         .screenHeight       = 600,
         .mouseSensitivity   = 0.25f,
         .cameraFOV          = 90,
-        .maxFPS             = 200
+        .maxFPS             = 200,
+        .keyMoveForward     = KEY_W,
+        .keyMoveBackward    = KEY_S,
+        .keyMoveLeft        = KEY_A,
+        .keyMoveRight       = KEY_D,
+        .keyFire            = MOUSE_BUTTON_LEFT,
+        .keyUse             = KEY_E,
+        .keyJump            = KEY_SPACE,
+        .keyWeaponOne       = KEY_ONE,
+        .keyWeaponTwo       = KEY_TWO,
+        .keyWeaponThree     = KEY_THREE,
+        .keyWeaponFour      = KEY_FOUR,
+        .keyWeaponFive      = KEY_FIVE
     };
     // clang format on
     // Write settings to datafile here

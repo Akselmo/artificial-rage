@@ -10,7 +10,19 @@ typedef struct Settings_Data
         int screenHeight;
         float mouseSensitivity;
         int cameraFOV;
-        int maxFPS;  // Add custom inputs as well
+        int maxFPS;
+        int keyMoveForward;
+        int keyMoveBackward;
+        int keyMoveRight;
+        int keyMoveLeft;
+        int keyFire;
+        int keyUse;
+        int keyJump;
+        int keyWeaponOne;
+        int keyWeaponTwo;
+        int keyWeaponThree;
+        int keyWeaponFour;
+        int keyWeaponFive;
 } Settings_Data;
 
 // Public variables
@@ -18,7 +30,6 @@ extern struct Settings_Data Settings;
 
 // Public functions
 void Settings_Initialize(void);
-int Settings_GetCustomInput(int key);
 
 Settings_Data Settings_Read(void);
 void Settings_Write(Settings_Data* settings);

@@ -27,10 +27,6 @@ typedef struct Player_CustomCameraData
         float targetDistance;
         float playerEyesPosition;
         Vector2 angle;
-        int moveForwardButton, moveBackwardButton, moveRightButton, moveLeftButton;
-        int fireButton;
-        int useButton;
-        int jumpButton;
         float mouseSensitivity;
         float playerSpeed;
 } Player_CustomCameraData;

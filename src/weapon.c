@@ -91,11 +91,11 @@ struct Weapon_DataHolder WeaponDataHolder = {
 
 void Weapon_InitializeKeys(void)
 {
-    WeaponDataHolder.Weapons[FIST]->inputKey    = Settings_GetCustomInput(KEY_ONE);
-    WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings_GetCustomInput(KEY_TWO);
-    WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings_GetCustomInput(KEY_THREE);
-    WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings_GetCustomInput(KEY_FOUR);
-    WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings_GetCustomInput(KEY_FIVE);
+    WeaponDataHolder.Weapons[FIST]->inputKey    = Settings.keyWeaponOne;
+    WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings.keyWeaponTwo;
+    WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings.keyWeaponThree;
+    WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings.keyWeaponFour;
+    WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings.keyWeaponFive;
 }
 
 void Weapon_SelectDefault(void)
