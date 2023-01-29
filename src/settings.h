@@ -3,6 +3,10 @@
 #define _SETTINGS_H_
 
 #include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 typedef struct Settings_Data
 {

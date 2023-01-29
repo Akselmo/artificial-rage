@@ -8,7 +8,17 @@ struct Settings_Data Settings;
 
 void Settings_Initialize(void)
 {
-    Settings = Settings_Read();
+    const char* fileName = "settings.txt";
+
+    if(access(fileName, F_OK) == 0)
+    {
+        Settings = Settings_Read();
+    }
+    else
+    {
+        Settings = Settings_CreateDefault();
+        Settings_Write(&Settings);
+    }
 
     InitWindow(Settings.screenWidth, Settings.screenHeight, "Artificial Rage");
 
@@ -45,10 +55,67 @@ Settings_Data Settings_CreateDefault(void)
 
 Settings_Data Settings_Read(void)
 {
-    // if file not found, create defaults, else read from file
-    return Settings_CreateDefault();
+    const char *fileName = "settings.txt";
+    Settings_Data settings = {};
+
+    FILE *filePointer = fopen(fileName, "r");
+    if (NULL == filePointer) {
+        printf("======\n");
+        printf("Failed to open settings file %s \n", fileName);
+        printf("Using default settings! \n");
+        printf("======\n");
+        return Settings_CreateDefault();
+    }
+
+    printf("======\n");
+    printf("Loaded following settings \n");
+
+    int bufferLength = 255;
+    char buffer[bufferLength];
+
+    while(fgets(buffer, bufferLength, filePointer))
+    {
+        char *token = strtok(buffer, " ");
+        char *key;
+        char *value;
+        for (int i = 0; i < 2; i++)
+        {
+            if (i == 0)
+            {
+                key = token;
+            }
+            else if (i == 1)
+            {
+               value = token;
+            }
+            token = strtok(NULL, " ");
+        }
+
+        printf("KEY: %s\n", key);
+        printf("VALUE: %f\n", atof(value));
+    }
+
+    fclose(filePointer);
+
+    printf("======\n");
+
+    return settings;
 }
 
 void Settings_Write(Settings_Data* settings)
 {
+    const char *fileName = "settings.txt";
+
+    FILE *filePointer = fopen(fileName, "w");
+    if (filePointer == NULL)
+    {
+        printf("======\n");
+        printf("Failed to open settings file %s \n", fileName);
+        printf("======\n");
+    }
+
+    fprintf(filePointer, "screenWidth %d \n", settings->screenWidth);
+    fprintf(filePointer, "screenHeight %d \n", settings->screenHeight);
+
+    fclose(filePointer);
 }
