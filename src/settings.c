@@ -91,6 +91,7 @@ Settings_Data Settings_Read(void)
             token = strtok(NULL, " ");
         }
 
+    //TODO: Switch case that reads all the k/v pairs and assigns them to correct settings
         printf("KEY: %s\n", key);
         printf("VALUE: %f\n", atof(value));
     }
