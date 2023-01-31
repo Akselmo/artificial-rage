@@ -7,7 +7,7 @@
 struct Settings_Data Settings;
 
 // Private
-Settings_Data Settings_Read(void);
+void Settings_Read(Settings_Data* settings);
 void Settings_Write(Settings_Data* settings);
 Settings_Data Settings_CreateDefault(void);
 bool Settings_Parse(Settings_Data* settings, char* key, double value);
@@ -16,13 +16,15 @@ void Settings_Initialize(void)
 {
     const char* fileName = "settings.txt";
 
+    // Write default settings
+    Settings = Settings_CreateDefault();
+
     if(access(fileName, F_OK) == 0)
     {
-        Settings = Settings_Read();
+        Settings_Read(&Settings);
     }
     else
     {
-        Settings = Settings_CreateDefault();
         Settings_Write(&Settings);
     }
 
@@ -59,10 +61,9 @@ Settings_Data Settings_CreateDefault(void)
     return data;
 }
 
-Settings_Data Settings_Read(void)
+void Settings_Read(Settings_Data* settings)
 {
     const char *fileName = "settings.txt";
-    Settings_Data settings = {};
 
     FILE *filePointer = fopen(fileName, "r");
     if (NULL == filePointer) {
@@ -70,7 +71,7 @@ Settings_Data Settings_Read(void)
         printf("Failed to open settings file %s \n", fileName);
         printf("Using default settings! \n");
         printf("======\n");
-        return Settings_CreateDefault();
+        return;
     }
 
     printf("======\n");
@@ -99,7 +100,7 @@ Settings_Data Settings_Read(void)
 
     //TODO: Switch case that reads all the k/v pairs and assigns them to correct settings
 
-        if (!Settings_Parse(&settings, key, atof(value)))
+        if (!Settings_Parse(&Settings, key, atof(value)))
         {
             printf("Failed to parse setting key-value: %s - %f \n", key, atof(value));
         }
@@ -113,7 +114,6 @@ Settings_Data Settings_Read(void)
 
     printf("======\n");
 
-    return settings;
 }
 
 void Settings_Write(Settings_Data* settings)
