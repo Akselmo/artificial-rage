@@ -6,6 +6,12 @@
 // And so on
 struct Settings_Data Settings;
 
+// Private
+Settings_Data Settings_Read(void);
+void Settings_Write(Settings_Data* settings);
+Settings_Data Settings_CreateDefault(void);
+bool Settings_Parse(Settings_Data* settings, char* key, double value);
+
 void Settings_Initialize(void)
 {
     const char* fileName = "settings.txt";
@@ -86,14 +92,21 @@ Settings_Data Settings_Read(void)
             }
             else if (i == 1)
             {
-               value = token;
+                value = token;
             }
             token = strtok(NULL, " ");
         }
 
     //TODO: Switch case that reads all the k/v pairs and assigns them to correct settings
-        printf("KEY: %s\n", key);
-        printf("VALUE: %f\n", atof(value));
+
+        if (!Settings_Parse(&settings, key, atof(value)))
+        {
+            printf("Failed to parse setting key-value: %s - %f \n", key, atof(value));
+        }
+        else
+        {
+            printf("Parsed setting key-value: %s - %f \n", key, atof(value));
+        }
     }
 
     fclose(filePointer);
@@ -119,4 +132,25 @@ void Settings_Write(Settings_Data* settings)
     fprintf(filePointer, "screenHeight %d \n", settings->screenHeight);
 
     fclose(filePointer);
+}
+
+bool Settings_Parse(Settings_Data* settings, char* key, double value)
+{
+    if (strcmp(key, "screenWidth") == 0)
+    {
+        settings->screenWidth = value;
+        return true;
+    }
+    else if (strcmp(key, "screenHeight") == 0)
+    {
+        settings->screenHeight = value;
+        return true;
+    }
+    else
+    {
+        printf("======\n");
+        printf("Failed to parse settings file!\n");
+        printf("======\n");
+        return false;
+    }
 }
