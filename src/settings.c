@@ -151,16 +151,24 @@ void Settings_Write(Settings_Data* settings)
 
 bool Settings_Parse(Settings_Data* settings, char* key, double value)
 {
-    if (strcmp(key, "screenWidth") == 0)
-    {
-        settings->screenWidth = value;
-        return true;
-    }
-    else if (strcmp(key, "screenHeight") == 0)
-    {
-        settings->screenHeight = value;
-        return true;
-    }
+    // Excuse the ugly else if ladder
+    if (strcmp(key, "screenWidth") == 0)            { settings->screenWidth = value;        return true;}
+    else if (strcmp(key, "screenHeight") == 0)      { settings->screenHeight = value;       return true; }
+    else if (strcmp(key, "mouseSensitivity") == 0)  { settings->mouseSensitivity = value;   return true; }
+    else if (strcmp(key, "cameraFOV") == 0)         { settings->cameraFOV = value;          return true; }
+    else if (strcmp(key, "maxFPS") == 0)            { settings->maxFPS = value;             return true; }
+    else if (strcmp(key, "keyMoveForward") == 0)    { settings->keyMoveForward = value;     return true; }
+    else if (strcmp(key, "keyMoveBackward") == 0)   { settings->keyMoveBackward = value;    return true; }
+    else if (strcmp(key, "keyMoveLeft") == 0)       { settings->keyMoveLeft = value;        return true; }
+    else if (strcmp(key, "keyMoveRight") == 0)      { settings->keyMoveRight = value;       return true; }
+    else if (strcmp(key, "keyFire") == 0)           { settings->keyFire = value;            return true; }
+    else if (strcmp(key, "keyUse") == 0)            { settings->keyUse = value;             return true; }
+    else if (strcmp(key, "keyJump") == 0)           { settings->keyJump = value;            return true; }
+    else if (strcmp(key, "keyWeaponOne") == 0)      { settings->keyWeaponOne = value;       return true; }
+    else if (strcmp(key, "keyWeaponTwo") == 0)      { settings->keyWeaponTwo = value;       return true; }
+    else if (strcmp(key, "keyWeaponThree") == 0)    { settings->keyWeaponThree = value;     return true; }
+    else if (strcmp(key, "keyWeaponFour") == 0)     { settings->keyWeaponFour = value;      return true; }
+    else if (strcmp(key, "keyWeaponFive") == 0)     { settings->keyWeaponFive = value;      return true; }
     else
     {
         printf("======\n");
