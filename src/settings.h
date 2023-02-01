@@ -3,6 +3,10 @@
 #define _SETTINGS_H_
 
 #include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 typedef struct Settings_Data
 {
@@ -30,9 +34,5 @@ extern struct Settings_Data Settings;
 
 // Public functions
 void Settings_Initialize(void);
-
-Settings_Data Settings_Read(void);
-void Settings_Write(Settings_Data* settings);
-Settings_Data Settings_CreateDefault(void);
 
 #endif
