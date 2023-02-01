@@ -128,8 +128,23 @@ void Settings_Write(Settings_Data* settings)
         printf("======\n");
     }
 
-    fprintf(filePointer, "screenWidth %d \n", settings->screenWidth);
-    fprintf(filePointer, "screenHeight %d \n", settings->screenHeight);
+    fprintf(filePointer, "screenWidth %d\n", settings->screenWidth);
+    fprintf(filePointer, "screenHeight %d\n", settings->screenHeight);
+    fprintf(filePointer, "mouseSensitivity %f\n", settings->mouseSensitivity);
+    fprintf(filePointer, "cameraFOV %d\n", settings->cameraFOV);
+    fprintf(filePointer, "maxFPS %d\n", settings->maxFPS);
+    fprintf(filePointer, "keyMoveForward %d\n", settings->keyMoveForward);
+    fprintf(filePointer, "keyMoveBackward %d\n", settings->keyMoveBackward);
+    fprintf(filePointer, "keyMoveLeft %d\n", settings->keyMoveLeft);
+    fprintf(filePointer, "keyMoveRight %d\n", settings->keyMoveRight);
+    fprintf(filePointer, "keyFire %d\n", settings->keyFire);
+    fprintf(filePointer, "keyUse %d\n", settings->keyUse);
+    fprintf(filePointer, "keyJump %d\n", settings->keyJump);
+    fprintf(filePointer, "keyWeaponOne %d\n", settings->keyWeaponOne);
+    fprintf(filePointer, "keyWeaponTwo %d\n", settings->keyWeaponTwo);
+    fprintf(filePointer, "keyWeaponThree %d\n", settings->keyWeaponThree);
+    fprintf(filePointer, "keyWeaponFour %d\n", settings->keyWeaponFour);
+    fprintf(filePointer, "keyWeaponFive %d\n", settings->keyWeaponFive);
 
     fclose(filePointer);
 }
