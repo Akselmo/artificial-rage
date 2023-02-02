@@ -8,6 +8,7 @@
 
 // Prototypes
 void Projectile_DestroyOverTime(Projectile* projectile);
+void Projectile_RotateTowards(Projectile* projectile);
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
 {
@@ -24,6 +25,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
                 .endPosition   = Vector3Add(
                     rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
                 .position    = projectile.startPosition,
+                .rotation    = Vector3Zero(),
                 .id          = i,
                 .ownerId     = ownerId,
                 .size        = size,
@@ -33,6 +35,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
                 .speed       = 0.12f * GetFrameTime(),
                 .destroyed   = false,
             };
+            projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
             printf("Projectile id created %d\n", projectile.id);
             Scene_data.projectiles[i] = projectile;
             break;
@@ -45,9 +48,12 @@ void Projectile_Update(Projectile* projectile)
 {
     if(!projectile->destroyed && projectile->id != 0)
     {
-        DrawCubeV(projectile->position, projectile->size, projectile->color);
+
+        DrawModel(projectile->model, projectile->position, 1.0, projectile->color);
+
         // Lerp projectile here (both model and boundingbox)
         projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
+        Projectile_RotateTowards(projectile);
         Projectile_DestroyOverTime(projectile);
         Projectile_CheckCollision(projectile);
     }
@@ -98,4 +104,16 @@ void Projectile_Destroy(Projectile* projectile)
     projectile->destroyed = true;
     projectile            = NULL;
     free(projectile);
+}
+
+void Projectile_RotateTowards(Projectile* projectile)
+{
+    // Rotates the actor around Y axis
+    const Vector3 diff        = Vector3Subtract(projectile->position, projectile->endPosition);
+    const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
+    const float z_angle       = (atan2(diff.y, diff.x) + PI / 2.0);  // not sure if this is correct?
+    const Vector3 newRotation = (Vector3) { 0, y_angle, z_angle };
+
+    projectile->model.transform = QuaternionToMatrix(QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x));
+    projectile->rotation        = newRotation;
 }

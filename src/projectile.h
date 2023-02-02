@@ -15,6 +15,7 @@ typedef struct Projectile
         Vector3 startPosition;
         Vector3 endPosition;
         Vector3 position;
+        Vector3 rotation;
         Vector3 size;
         Color color;
         Model model;
