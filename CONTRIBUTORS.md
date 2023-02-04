@@ -17,3 +17,4 @@ I try to keep this list as up to date as possible. If you feel like your name is
 * [Tecsiederp](https://twitter.com/tecsiederp): Created the ar_1 and ar_2 logos!
 * [Rotlich](https://twitter.com/Satokekkyu): Created the enemy 3d model, its animations and texture!
 * JakobCh: Created the metal box and it's textures!
+* Tom 'Voxel' Purnell: Amazing weapon sprites!
