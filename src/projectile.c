@@ -111,7 +111,7 @@ void Projectile_RotateTowards(Projectile* projectile)
     float dy = projectile->endPosition.y - projectile->startPosition.y;
     float dz = projectile->endPosition.z - projectile->startPosition.z;
 
-    const float y_angle = -(atan2f(dz, dx) + PI / 2.0);
+    const float y_angle = -(atan2f(dz, dx) + PI / 2.0f);
     const float z_angle = atan2f(dy, sqrtf(dx * dx + dz * dz));
 
     projectile->model.transform = QuaternionToMatrix(QuaternionFromEuler(z_angle, y_angle, 0));

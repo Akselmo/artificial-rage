@@ -10,10 +10,10 @@ void Weapon_Change(int weaponId);
 bool WeaponHasAmmo(int currentWeapon);
 
 // clang-format off
-Weapon_Data Weapon_Fists = {
+Weapon_Data Weapon_Melee = {
     .name     = "Fists",
     .inputKey = KEY_ONE,
-    .weaponId = FIST,
+    .weaponId = MELEE,
     .damage   = 5,
     .ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
     .fireRate = 1.25f,
@@ -82,25 +82,39 @@ Weapon_Data Weapon_Railgun = {
 struct Weapon_DataHolder WeaponDataHolder = {
     // Current weapon data
     .currentWeapon    = 0,
-    .Weapons[FIST]    = &Weapon_Fists,
+    .Weapons[MELEE]   = &Weapon_Melee,
     .Weapons[PISTOL]  = &Weapon_Pistol,
     .Weapons[RIFLE]   = &Weapon_Rifle,
     .Weapons[SHOTGUN] = &Weapon_Shotgun,
     .Weapons[RAILGUN] = &Weapon_Railgun,
 };
 
-void Weapon_InitializeKeys(void)
+void Weapon_Initialize(void)
 {
-    WeaponDataHolder.Weapons[FIST]->inputKey    = Settings.keyWeaponOne;
+    // Initialize keys
+    WeaponDataHolder.Weapons[MELEE]->inputKey   = Settings.keyWeaponOne;
     WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings.keyWeaponTwo;
     WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings.keyWeaponThree;
     WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings.keyWeaponFour;
     WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings.keyWeaponFive;
+
+    // Initialize sprites
+    WeaponDataHolder.Weapons[MELEE]->weaponSprite   = LoadTexture("./assets/weapons/melee.png");
+    WeaponDataHolder.Weapons[PISTOL]->weaponSprite  = LoadTexture("./assets/weapons/pistol.png");
+    WeaponDataHolder.Weapons[RIFLE]->weaponSprite   = LoadTexture("./assets/weapons/rifle.png");
+    WeaponDataHolder.Weapons[SHOTGUN]->weaponSprite = LoadTexture("./assets/weapons/shotgun.png");
+    WeaponDataHolder.Weapons[RAILGUN]->weaponSprite = LoadTexture("./assets/weapons/railgun.png");
+    // Add total sprites
+    WeaponDataHolder.Weapons[MELEE]->weaponSpritesTotal   = 4;
+    WeaponDataHolder.Weapons[PISTOL]->weaponSpritesTotal  = 5;
+    WeaponDataHolder.Weapons[RIFLE]->weaponSpritesTotal   = 5;
+    WeaponDataHolder.Weapons[SHOTGUN]->weaponSpritesTotal = 5;
+    WeaponDataHolder.Weapons[RAILGUN]->weaponSpritesTotal = 5;
 }
 
 void Weapon_SelectDefault(void)
 {
-    WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[FIST]->weaponId;
+    WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[MELEE]->weaponId;
 }
 
 void Weapon_GetSwitchInput(void)
@@ -174,7 +188,7 @@ int TestEntityHit(const Ray rayCast)
 bool WeaponHasAmmo(const int currentWeapon)
 {
 
-    if(currentWeapon == FIST)
+    if(currentWeapon == MELEE)
     {
         return true;
     }
@@ -221,4 +235,21 @@ float Weapon_Fire(Camera* camera, float nextFire)
         nextFire = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->fireRate;
     }
     return nextFire;
+}
+
+void Weapon_DrawSprite(void)
+{
+    const Weapon_Data* weapon = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon];
+
+    const float frameWidth  = (float)weapon->weaponSprite.width / (float)weapon->weaponSpritesTotal;
+    const float frameHeight = (float)weapon->weaponSprite.height;
+    const Vector2 origin    = { (float)frameWidth, (float)frameHeight };
+    const float posX        = Utilities_GetScreenCenter().x + (float)frameWidth / 1.3f;
+    const float posY        = (float)GetScreenHeight() - (float)frameHeight / 1.3f;
+    const float scale       = 2.0f;
+
+    Rectangle sourceRec = { 0.0f, 0.0f, frameWidth, frameHeight };
+    Rectangle destRec   = { posX, posY, frameWidth * scale, frameHeight * scale };
+
+    DrawTexturePro(weapon->weaponSprite, sourceRec, destRec, origin, 0, WHITE);
 }

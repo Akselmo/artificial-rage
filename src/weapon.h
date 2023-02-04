@@ -35,7 +35,8 @@ typedef struct Weapon_Data
         float range;
         bool pickedUp;
         bool hitscan;
-
+        Texture2D weaponSprite;
+        int weaponSpritesTotal;
 } Weapon_Data;
 
 typedef struct Weapon_DataHolder
@@ -51,7 +52,7 @@ typedef struct Weapon_DataHolder
 
 typedef enum Weapon_ID
 {
-    FIST    = 0,
+    MELEE   = 0,
     PISTOL  = 1,
     RIFLE   = 2,
     SHOTGUN = 3,
@@ -60,9 +61,10 @@ typedef enum Weapon_ID
 
 extern struct Weapon_DataHolder WeaponDataHolder;
 
-void Weapon_InitializeKeys(void);
+void Weapon_Initialize(void);
 void Weapon_GetSwitchInput(void);
 void Weapon_SelectDefault(void);
 float Weapon_Fire(Camera* camera, float nextFire);
+void Weapon_DrawSprite(void);
 
 #endif

@@ -56,7 +56,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
     Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
     Player->nextFire    = 0.0f;
 
-    Weapon_InitializeKeys();
+    Weapon_Initialize();
 
     Weapon_SelectDefault();
 

@@ -29,7 +29,7 @@ void Hud_Draw(void)
     }
     if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->ammo)
     {
-        if(WeaponDataHolder.currentWeapon == (Weapon_ID)FIST)
+        if(WeaponDataHolder.currentWeapon == (Weapon_ID)MELEE)
         {
             strcpy(Hud_weaponAmmoText, Hud_emptyAmmoText);
         }
@@ -40,4 +40,5 @@ void Hud_Draw(void)
     }
     DrawText(Hud_healthText, 50, GetScreenHeight() - 20, 20, RED);
     DrawText(Hud_weaponAmmoText, GetScreenWidth() - 70, GetScreenHeight() - 20, 20, RED);
+    Weapon_DrawSprite();
 }
