@@ -21,6 +21,10 @@ Weapon_Data Weapon_Melee = {
     .pickedUp = true,  // You always have your fists with you
     .maxAmmo  = WEAPON_FIST_AMMO_MAX,
     .hitscan  = true,
+    .spriteSpeed = 10,
+    .spriteFireFrame = 1,
+    .projectileSize = (Vector3){0,0,0},
+    .projectileColor = WHITE
 };
 
 Weapon_Data Weapon_Pistol = {
@@ -34,6 +38,10 @@ Weapon_Data Weapon_Pistol = {
     .pickedUp = true,  // You also always have your trusty pistol with you
     .maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
     .hitscan  = false,
+    .spriteSpeed = 10,
+    .spriteFireFrame = 2,
+    .projectileSize = (Vector3){0.1f,0.1f,0.2f},
+    .projectileColor = GREEN
 };
 
 Weapon_Data Weapon_Rifle = {
@@ -41,12 +49,16 @@ Weapon_Data Weapon_Rifle = {
     .inputKey = KEY_THREE,
     .weaponId = RIFLE,
     .damage   = 3,
-    .ammo     = 0,
-    .fireRate = 0.9f,
+    .ammo     = 60,     //TODO: Set to 0 for release!
+    .fireRate = 0.3f,
     .range    = 20.0f,
     .pickedUp = false,
     .maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
     .hitscan  = false,
+    .spriteSpeed = 10,
+    .spriteFireFrame = 2,
+    .projectileSize = (Vector3){0.1f,0.1f,0.2f},
+    .projectileColor = BLUE
 };
 
 Weapon_Data Weapon_Shotgun = {
@@ -54,12 +66,16 @@ Weapon_Data Weapon_Shotgun = {
     .inputKey = KEY_FOUR,
     .weaponId = SHOTGUN,
     .damage   = 7,
-    .ammo     = 0,
+    .ammo     = 40, //TODO: Set to 0 for release!
     .fireRate = 1.5f,
     .range    = 6.0f,
     .pickedUp = false,
     .maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
     .hitscan  = false,
+    .spriteSpeed = 10,
+    .spriteFireFrame = 2,
+    .projectileSize = (Vector3){0.3f,0.05f,0.05f},
+    .projectileColor = RED
 };
 
 Weapon_Data Weapon_Railgun = {
@@ -67,12 +83,16 @@ Weapon_Data Weapon_Railgun = {
     .inputKey = KEY_FIVE,
     .weaponId = RAILGUN,
     .damage   = 30,
-    .ammo     = 0,
+    .ammo     = 10, //TODO: Set to 0 for release!
     .fireRate = 2.6f,
     .range    = 69.0f,
     .pickedUp = false,
     .maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
     .hitscan  = false,
+    .spriteSpeed = 10,
+    .spriteFireFrame = 1,
+    .projectileSize = (Vector3){0.05f,0.05f,0.5f},
+    .projectileColor = YELLOW
 };
 
 // clang-format on
@@ -87,6 +107,9 @@ struct Weapon_DataHolder WeaponDataHolder = {
     .Weapons[RIFLE]   = &Weapon_Rifle,
     .Weapons[SHOTGUN] = &Weapon_Shotgun,
     .Weapons[RAILGUN] = &Weapon_Railgun,
+    .currentFrame     = 0,
+    .frameCounter     = 0,
+    .active           = false
 };
 
 void Weapon_Initialize(void)
@@ -99,17 +122,17 @@ void Weapon_Initialize(void)
     WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings.keyWeaponFive;
 
     // Initialize sprites
-    WeaponDataHolder.Weapons[MELEE]->weaponSprite   = LoadTexture("./assets/weapons/melee.png");
-    WeaponDataHolder.Weapons[PISTOL]->weaponSprite  = LoadTexture("./assets/weapons/pistol.png");
-    WeaponDataHolder.Weapons[RIFLE]->weaponSprite   = LoadTexture("./assets/weapons/rifle.png");
-    WeaponDataHolder.Weapons[SHOTGUN]->weaponSprite = LoadTexture("./assets/weapons/shotgun.png");
-    WeaponDataHolder.Weapons[RAILGUN]->weaponSprite = LoadTexture("./assets/weapons/railgun.png");
+    WeaponDataHolder.Weapons[MELEE]->spriteTexture   = LoadTexture("./assets/weapons/melee.png");
+    WeaponDataHolder.Weapons[PISTOL]->spriteTexture  = LoadTexture("./assets/weapons/pistol.png");
+    WeaponDataHolder.Weapons[RIFLE]->spriteTexture   = LoadTexture("./assets/weapons/rifle.png");
+    WeaponDataHolder.Weapons[SHOTGUN]->spriteTexture = LoadTexture("./assets/weapons/shotgun.png");
+    WeaponDataHolder.Weapons[RAILGUN]->spriteTexture = LoadTexture("./assets/weapons/railgun.png");
     // Add total sprites
-    WeaponDataHolder.Weapons[MELEE]->weaponSpritesTotal   = 4;
-    WeaponDataHolder.Weapons[PISTOL]->weaponSpritesTotal  = 5;
-    WeaponDataHolder.Weapons[RIFLE]->weaponSpritesTotal   = 5;
-    WeaponDataHolder.Weapons[SHOTGUN]->weaponSpritesTotal = 5;
-    WeaponDataHolder.Weapons[RAILGUN]->weaponSpritesTotal = 5;
+    WeaponDataHolder.Weapons[MELEE]->spritesTotal   = 4;
+    WeaponDataHolder.Weapons[PISTOL]->spritesTotal  = 5;
+    WeaponDataHolder.Weapons[RIFLE]->spritesTotal   = 5;
+    WeaponDataHolder.Weapons[SHOTGUN]->spritesTotal = 5;
+    WeaponDataHolder.Weapons[RAILGUN]->spritesTotal = 5;
 }
 
 void Weapon_SelectDefault(void)
@@ -134,7 +157,10 @@ void Weapon_GetSwitchInput(void)
 // Check if weapon is equipped
 void Weapon_Change(const int weaponId)
 {
-    WeaponDataHolder.currentWeapon = weaponId;
+    if(!WeaponDataHolder.active)
+    {
+        WeaponDataHolder.currentWeapon = weaponId;
+    }
 }
 
 int TestEntityHit(const Ray rayCast)
@@ -213,26 +239,30 @@ float Weapon_Fire(Camera* camera, float nextFire)
     }
     else
     {
-        if(WeaponHasAmmo(WeaponDataHolder.currentWeapon))
+        const Weapon_Data* weapon = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon];
+        if(WeaponHasAmmo(WeaponDataHolder.currentWeapon) && !WeaponDataHolder.active)
         {
+            WeaponDataHolder.active       = true;
+            WeaponDataHolder.currentFrame = weapon->spriteFireFrame;
+
             // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
             const Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             const int id      = TestEntityHit(rayCast);
-            if(WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->hitscan)
+            if(weapon->hitscan)
             {
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Actor_TakeDamage(&Scene_data.actors[id], WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
-                    printf("Enemy_Data id %d takes %d damage\n", id, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage);
+                    Actor_TakeDamage(&Scene_data.actors[id], weapon->damage);
+                    printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);
                 }
             }
             else
             {
-                Projectile_Create(rayCast, (Vector3) { 0.2f, 0.2f, 0.2f }, WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->damage, PLAYER_ID);
+                Projectile_Create(rayCast, weapon->projectileSize, weapon->damage, PLAYER_ID, weapon->projectileColor);
             }
         }
-        nextFire = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->fireRate;
+        nextFire = weapon->fireRate;
     }
     return nextFire;
 }
@@ -241,8 +271,8 @@ void Weapon_DrawSprite(void)
 {
     const Weapon_Data* weapon = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon];
 
-    const float frameWidth  = (float)weapon->weaponSprite.width / (float)weapon->weaponSpritesTotal;
-    const float frameHeight = (float)weapon->weaponSprite.height;
+    const float frameWidth  = (float)weapon->spriteTexture.width / (float)weapon->spritesTotal;
+    const float frameHeight = (float)weapon->spriteTexture.height;
     const Vector2 origin    = { (float)frameWidth, (float)frameHeight };
     const float posX        = Utilities_GetScreenCenter().x + (float)frameWidth / 1.3f;
     const float posY        = (float)GetScreenHeight() - (float)frameHeight / 1.3f;
@@ -251,5 +281,24 @@ void Weapon_DrawSprite(void)
     Rectangle sourceRec = { 0.0f, 0.0f, frameWidth, frameHeight };
     Rectangle destRec   = { posX, posY, frameWidth * scale, frameHeight * scale };
 
-    DrawTexturePro(weapon->weaponSprite, sourceRec, destRec, origin, 0, WHITE);
+    if(WeaponDataHolder.active)
+    {
+        WeaponDataHolder.frameCounter++;
+
+        if(WeaponDataHolder.frameCounter >= GetFPS() / (weapon->spriteSpeed / weapon->fireRate))
+        {
+            WeaponDataHolder.currentFrame++;
+
+            if(WeaponDataHolder.currentFrame >= weapon->spritesTotal)
+            {
+                WeaponDataHolder.currentFrame = 0;
+                WeaponDataHolder.active       = false;
+            }
+            WeaponDataHolder.frameCounter = 0;
+        }
+    }
+
+    sourceRec.x = frameWidth * (float)WeaponDataHolder.currentFrame;
+
+    DrawTexturePro(weapon->spriteTexture, sourceRec, destRec, origin, 0, WHITE);
 }

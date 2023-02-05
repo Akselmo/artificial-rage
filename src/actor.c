@@ -232,7 +232,7 @@ bool Actor_FireAtPlayer(Actor_Data* actor, float nextFire)
         // Fire animation should play before we shoot projectile
         actor->attacking = true;
 
-        Projectile_Create(Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id);
+        Projectile_Create(Actor_CreateRay(actor), (Vector3) { 0.2f, 0.2f, 0.2f }, actor->damage, actor->id, PURPLE);
         actor->nextFire = actor->fireRate;
         return true;
     }

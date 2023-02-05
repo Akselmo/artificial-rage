@@ -26,7 +26,7 @@ typedef struct Projectile
         float speed;
 } Projectile;
 
-void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId);
+void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color color);
 void Projectile_CheckCollision(Projectile* projectile);
 void Projectile_Destroy(Projectile* projectile);
 void Projectile_Update(Projectile* projectile);

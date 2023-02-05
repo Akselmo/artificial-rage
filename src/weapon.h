@@ -35,8 +35,12 @@ typedef struct Weapon_Data
         float range;
         bool pickedUp;
         bool hitscan;
-        Texture2D weaponSprite;
-        int weaponSpritesTotal;
+        Texture2D spriteTexture;
+        int spritesTotal;
+        int spriteSpeed;
+        int spriteFireFrame;
+        Vector3 projectileSize;
+        Color projectileColor;
 } Weapon_Data;
 
 typedef struct Weapon_DataHolder
@@ -48,6 +52,9 @@ typedef struct Weapon_DataHolder
         // We could also use arrays but this way it is easier
         // to be able to remap weapon keys
         Weapon_Data* Weapons[WEAPON_AMOUNT];
+        int frameCounter;
+        int currentFrame;
+        bool active;
 } Weapon_DataHolder;
 
 typedef enum Weapon_ID

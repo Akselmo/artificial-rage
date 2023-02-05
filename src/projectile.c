@@ -10,7 +10,7 @@
 void Projectile_DestroyOverTime(Projectile* projectile);
 void Projectile_RotateTowards(Projectile* projectile);
 
-void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
+void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color color)
 {
     // Projectile does not need to know if it hits or not, that is calculated from
     // entities themselves.
@@ -29,11 +29,11 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId)
                 .size        = size,
                 .boundingBox = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
                 .damage      = damage,
-                .color       = BLUE,
+                .color       = color,
                 .speed       = 0.12f * GetFrameTime(),
                 .destroyed   = false,
             };
-            projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x/2.0f, projectile.size.y/2.0f, projectile.size.z));
+            projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
             printf("Projectile id created %d\n", projectile.id);
             Scene_data.projectiles[i] = projectile;
             Projectile_RotateTowards(&Scene_data.projectiles[i]);
