@@ -40,7 +40,7 @@ Weapon_Data Weapon_Pistol = {
     .hitscan  = false,
     .spriteSpeed = 10,
     .spriteFireFrame = 2,
-    .projectileSize = (Vector3){0.1f,0.1f,0.2f},
+    .projectileSize = (Vector3){0.05f,0.05f,0.2f},
     .projectileColor = GREEN
 };
 
@@ -57,7 +57,7 @@ Weapon_Data Weapon_Rifle = {
     .hitscan  = false,
     .spriteSpeed = 10,
     .spriteFireFrame = 2,
-    .projectileSize = (Vector3){0.1f,0.1f,0.2f},
+    .projectileSize = (Vector3){0.05f,0.05f,0.1f},
     .projectileColor = BLUE
 };
 
@@ -245,9 +245,9 @@ float Weapon_Fire(Camera* camera, float nextFire)
             WeaponDataHolder.active       = true;
             WeaponDataHolder.currentFrame = weapon->spriteFireFrame;
 
-            // TODO: Raycast or not? If projectile, add projectile to Level_projectiles
-            const Ray rayCast = GetMouseRay(Utilities_GetScreenCenter(), *camera);
+            Ray rayCast       = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             const int id      = TestEntityHit(rayCast);
+
             if(weapon->hitscan)
             {
                 printf("Id hit: %i \n", id);
@@ -259,6 +259,8 @@ float Weapon_Fire(Camera* camera, float nextFire)
             }
             else
             {
+                // Move raycast start position a bit further from player if firing a projectile
+                rayCast.position = Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, 0.1f));
                 Projectile_Create(rayCast, weapon->projectileSize, weapon->damage, PLAYER_ID, weapon->projectileColor);
             }
         }
