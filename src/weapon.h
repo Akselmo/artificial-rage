@@ -14,6 +14,7 @@
 #include "settings.h"
 #include "utilities.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 // Fist has always ammo! :)
@@ -39,6 +40,7 @@ typedef struct Weapon_Data
         int spritesTotal;
         int spriteSpeed;
         int spriteFireFrame;
+        Vector2 spritePositionOffset;
         Vector3 projectileSize;
         Color projectileColor;
 } Weapon_Data;

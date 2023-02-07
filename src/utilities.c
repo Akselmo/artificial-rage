@@ -26,3 +26,13 @@ bool Utilities_CompareColors(const Color color1, const Color color2)
 {
     return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b);
 }
+
+float Utilities_MinF(float a, float b)
+{
+    return (a > b) ? b : a;
+}
+
+float Utilities_MaxF(float a, float b)
+{
+    return (a < b) ? b : a;
+}

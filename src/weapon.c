@@ -3,6 +3,7 @@
 #include "projectile.h"
 #include "raymath.h"
 #include "scene.h"
+#include <stdlib.h>
 
 // Prototypes
 
@@ -24,7 +25,9 @@ Weapon_Data Weapon_Melee = {
     .spriteSpeed = 10,
     .spriteFireFrame = 1,
     .projectileSize = (Vector3){0,0,0},
-    .projectileColor = WHITE
+    .projectileColor = WHITE,
+    .spritesTotal = 7,
+    .spritePositionOffset = (Vector2){0.5f, 1.0f}
 };
 
 Weapon_Data Weapon_Pistol = {
@@ -41,7 +44,9 @@ Weapon_Data Weapon_Pistol = {
     .spriteSpeed = 10,
     .spriteFireFrame = 2,
     .projectileSize = (Vector3){0.05f,0.05f,0.2f},
-    .projectileColor = GREEN
+    .projectileColor = GREEN,
+    .spritesTotal = 5,
+    .spritePositionOffset = (Vector2){-0.10f, 0.75f}
 };
 
 Weapon_Data Weapon_Rifle = {
@@ -58,7 +63,9 @@ Weapon_Data Weapon_Rifle = {
     .spriteSpeed = 10,
     .spriteFireFrame = 2,
     .projectileSize = (Vector3){0.05f,0.05f,0.1f},
-    .projectileColor = BLUE
+    .projectileColor = BLUE,
+    .spritesTotal = 5,
+    .spritePositionOffset = (Vector2){-0.10f, 1.0f}
 };
 
 Weapon_Data Weapon_Shotgun = {
@@ -75,7 +82,9 @@ Weapon_Data Weapon_Shotgun = {
     .spriteSpeed = 10,
     .spriteFireFrame = 2,
     .projectileSize = (Vector3){0.3f,0.05f,0.05f},
-    .projectileColor = RED
+    .projectileColor = RED,
+    .spritesTotal = 5,
+    .spritePositionOffset = (Vector2){-0.6f, 1.0f}
 };
 
 Weapon_Data Weapon_Railgun = {
@@ -92,7 +101,9 @@ Weapon_Data Weapon_Railgun = {
     .spriteSpeed = 10,
     .spriteFireFrame = 1,
     .projectileSize = (Vector3){0.05f,0.05f,0.5f},
-    .projectileColor = YELLOW
+    .projectileColor = YELLOW,
+    .spritesTotal = 5,
+    .spritePositionOffset = (Vector2){-0.10f, 1.0f}
 };
 
 // clang-format on
@@ -127,12 +138,6 @@ void Weapon_Initialize(void)
     WeaponDataHolder.Weapons[RIFLE]->spriteTexture   = LoadTexture("./assets/weapons/rifle.png");
     WeaponDataHolder.Weapons[SHOTGUN]->spriteTexture = LoadTexture("./assets/weapons/shotgun.png");
     WeaponDataHolder.Weapons[RAILGUN]->spriteTexture = LoadTexture("./assets/weapons/railgun.png");
-    // Add total sprites
-    WeaponDataHolder.Weapons[MELEE]->spritesTotal   = 7;
-    WeaponDataHolder.Weapons[PISTOL]->spritesTotal  = 5;
-    WeaponDataHolder.Weapons[RIFLE]->spritesTotal   = 5;
-    WeaponDataHolder.Weapons[SHOTGUN]->spritesTotal = 5;
-    WeaponDataHolder.Weapons[RAILGUN]->spritesTotal = 5;
 }
 
 void Weapon_SelectDefault(void)
@@ -275,11 +280,11 @@ void Weapon_DrawSprite(void)
 
     const float frameWidth  = (float)weapon->spriteTexture.width / (float)weapon->spritesTotal;
     const float frameHeight = (float)weapon->spriteTexture.height;
-    const Vector2 origin    = { (float)frameWidth, (float)frameHeight };
-    // TODO: Weapon specific offsets
-    const float posX        = Utilities_GetScreenCenter().x + (float)frameWidth / 1.3f;
-    const float posY        = (float)GetScreenHeight() - (float)frameHeight / 1.3f;
-    const float scale       = 2.0f;
+    const Vector2 origin    = { (float)frameWidth / 2, (float)frameHeight };
+
+    const float scale = Utilities_MinF(frameWidth * 2.0f / frameWidth, frameHeight * 2.0f / frameHeight);
+    const float posX  = (float)Utilities_GetScreenCenter().x - ((float)frameWidth * weapon->spritePositionOffset.x);
+    const float posY  = (float)GetScreenHeight() - ((float)frameHeight * weapon->spritePositionOffset.y);
 
     Rectangle sourceRec = { 0.0f, 0.0f, frameWidth, frameHeight };
     Rectangle destRec   = { posX, posY, frameWidth * scale, frameHeight * scale };
