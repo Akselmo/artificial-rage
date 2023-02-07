@@ -128,7 +128,7 @@ void Weapon_Initialize(void)
     WeaponDataHolder.Weapons[SHOTGUN]->spriteTexture = LoadTexture("./assets/weapons/shotgun.png");
     WeaponDataHolder.Weapons[RAILGUN]->spriteTexture = LoadTexture("./assets/weapons/railgun.png");
     // Add total sprites
-    WeaponDataHolder.Weapons[MELEE]->spritesTotal   = 4;
+    WeaponDataHolder.Weapons[MELEE]->spritesTotal   = 7;
     WeaponDataHolder.Weapons[PISTOL]->spritesTotal  = 5;
     WeaponDataHolder.Weapons[RIFLE]->spritesTotal   = 5;
     WeaponDataHolder.Weapons[SHOTGUN]->spritesTotal = 5;
@@ -276,6 +276,7 @@ void Weapon_DrawSprite(void)
     const float frameWidth  = (float)weapon->spriteTexture.width / (float)weapon->spritesTotal;
     const float frameHeight = (float)weapon->spriteTexture.height;
     const Vector2 origin    = { (float)frameWidth, (float)frameHeight };
+    // TODO: Weapon specific offsets
     const float posX        = Utilities_GetScreenCenter().x + (float)frameWidth / 1.3f;
     const float posY        = (float)GetScreenHeight() - (float)frameHeight / 1.3f;
     const float scale       = 2.0f;
