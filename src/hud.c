@@ -3,18 +3,18 @@
 
 void Hud_Draw(void)
 {
-    const char Hud_dedText[5]       = "DEAD";
-    const char Hud_emptyAmmoText[2] = "-";
-    char Hud_healthText[5]          = "";
-    char Hud_weaponAmmoText[10]     = "";
-    char Hud_weaponNameText[15]     = "WeaponName";  // TODO: add weapon name to hud
+    const char Hud_dedText[6]       = "DEAD";
+    const char Hud_emptyAmmoText[4] = "-";
+    char Hud_healthText[6]          = "";
+    char Hud_weaponAmmoText[12]     = "";
+    char Hud_weaponNameText[16]     = "WeaponName";  // TODO: add weapon name to hud
 
     DrawFPS(10, 10);
     sprintf(Hud_healthText, "%d", Player->health);
 
-    char ammo[3];
-    char divider[2];
-    char maxAmmo[3];
+    char ammo[4];
+    char divider[3];
+    char maxAmmo[4];
 
     sprintf(ammo, "%d", WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->ammo);
     sprintf(maxAmmo, "%d", WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon]->maxAmmo);

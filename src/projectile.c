@@ -50,7 +50,7 @@ void Projectile_Update(Projectile* projectile)
 
         DrawModel(projectile->model, projectile->position, 1.0, projectile->color);
 
-        // Lerp projectile here (both model and boundingbox)
+        // Lerp projectile here (both model and bounding box)
         projectile->position = Vector3Lerp(projectile->position, projectile->endPosition, projectile->speed);
         Projectile_DestroyOverTime(projectile);
         Projectile_CheckCollision(projectile);
