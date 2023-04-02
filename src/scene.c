@@ -84,8 +84,10 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
             // Find walls, which is white (255,255,255)
             if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
             {
-
-                const Texture2D texture = LoadTexture(wallTextures[GetRandomValue(0, 1)]);
+                Image textureImage = LoadImage(wallTextures[GetRandomValue(0, 1)]);
+                // The image has to be flipped since its loaded upside down
+                ImageFlipVertical(&textureImage);
+                const Texture2D texture = LoadTextureFromImage(textureImage);
                 // Set map diffuse texture
                 const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
                 Model cubeModel                                           = LoadModelFromMesh(cube);
