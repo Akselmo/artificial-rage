@@ -54,7 +54,7 @@ typedef struct Level_BlockType
 } Level_BlockType;
 
 // Variables
-extern struct Scene_Data Scene_data;
+extern struct Scene_Data Scene;
 
 // Functions
 Camera Scene_Initialize(void);

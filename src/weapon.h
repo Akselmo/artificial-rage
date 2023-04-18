@@ -45,7 +45,7 @@ typedef struct Weapon_Data
         Color projectileColor;
 } Weapon_Data;
 
-typedef struct Weapon_DataHolder
+typedef struct Weapon_Holder
 {
         // Current Weapon Data
         int currentWeapon;
@@ -68,7 +68,7 @@ typedef enum Weapon_ID
     RAILGUN = 4
 } Weapon_ID;
 
-extern struct Weapon_DataHolder WeaponDataHolder;
+extern struct Weapon_Holder WeaponHolder;
 
 void Weapon_Initialize(void);
 void Weapon_GetSwitchInput(void);

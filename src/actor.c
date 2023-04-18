@@ -145,8 +145,8 @@ bool Actor_TestPlayerHit(Actor_Data* actor)
     bool hitPlayer                   = false;
     float levelDistance              = INFINITY;
     float playerDistance             = INFINITY;
-    const int entitiesAmount         = Scene_data.size;
-    const Scene_BlockData* levelData = Scene_data.blocks;
+    const int entitiesAmount         = Scene.size;
+    const Scene_BlockData* levelData = Scene.blocks;
 
     for(int i = 0; i < entitiesAmount; i++)
     {

@@ -110,7 +110,7 @@ Weapon_Data Weapon_Railgun = {
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons
-struct Weapon_DataHolder WeaponDataHolder = {
+struct Weapon_Holder WeaponHolder = {
     // Current weapon data
     .currentWeapon    = 0,
     .Weapons[MELEE]   = &Weapon_Melee,
@@ -126,23 +126,23 @@ struct Weapon_DataHolder WeaponDataHolder = {
 void Weapon_Initialize(void)
 {
     // Initialize keys
-    WeaponDataHolder.Weapons[MELEE]->inputKey   = Settings.keyWeaponOne;
-    WeaponDataHolder.Weapons[PISTOL]->inputKey  = Settings.keyWeaponTwo;
-    WeaponDataHolder.Weapons[RIFLE]->inputKey   = Settings.keyWeaponThree;
-    WeaponDataHolder.Weapons[SHOTGUN]->inputKey = Settings.keyWeaponFour;
-    WeaponDataHolder.Weapons[RAILGUN]->inputKey = Settings.keyWeaponFive;
+    WeaponHolder.Weapons[MELEE]->inputKey   = Settings.keyWeaponOne;
+    WeaponHolder.Weapons[PISTOL]->inputKey  = Settings.keyWeaponTwo;
+    WeaponHolder.Weapons[RIFLE]->inputKey   = Settings.keyWeaponThree;
+    WeaponHolder.Weapons[SHOTGUN]->inputKey = Settings.keyWeaponFour;
+    WeaponHolder.Weapons[RAILGUN]->inputKey = Settings.keyWeaponFive;
 
     // Initialize sprites
-    WeaponDataHolder.Weapons[MELEE]->spriteTexture   = LoadTexture("./assets/weapons/melee.png");
-    WeaponDataHolder.Weapons[PISTOL]->spriteTexture  = LoadTexture("./assets/weapons/pistol.png");
-    WeaponDataHolder.Weapons[RIFLE]->spriteTexture   = LoadTexture("./assets/weapons/rifle.png");
-    WeaponDataHolder.Weapons[SHOTGUN]->spriteTexture = LoadTexture("./assets/weapons/shotgun.png");
-    WeaponDataHolder.Weapons[RAILGUN]->spriteTexture = LoadTexture("./assets/weapons/railgun.png");
+    WeaponHolder.Weapons[MELEE]->spriteTexture   = LoadTexture("./assets/weapons/melee.png");
+    WeaponHolder.Weapons[PISTOL]->spriteTexture  = LoadTexture("./assets/weapons/pistol.png");
+    WeaponHolder.Weapons[RIFLE]->spriteTexture   = LoadTexture("./assets/weapons/rifle.png");
+    WeaponHolder.Weapons[SHOTGUN]->spriteTexture = LoadTexture("./assets/weapons/shotgun.png");
+    WeaponHolder.Weapons[RAILGUN]->spriteTexture = LoadTexture("./assets/weapons/railgun.png");
 }
 
 void Weapon_SelectDefault(void)
 {
-    WeaponDataHolder.currentWeapon = WeaponDataHolder.Weapons[MELEE]->weaponId;
+    WeaponHolder.currentWeapon = WeaponHolder.Weapons[MELEE]->weaponId;
 }
 
 void Weapon_GetSwitchInput(void)
@@ -152,9 +152,9 @@ void Weapon_GetSwitchInput(void)
 
     for(int i = 0; i < WEAPON_AMOUNT; i++)
     {
-        if(key == WeaponDataHolder.Weapons[i]->inputKey)
+        if(key == WeaponHolder.Weapons[i]->inputKey)
         {
-            Weapon_Change(WeaponDataHolder.Weapons[i]->weaponId);
+            Weapon_Change(WeaponHolder.Weapons[i]->weaponId);
         }
     }
 }
@@ -162,9 +162,9 @@ void Weapon_GetSwitchInput(void)
 // Check if weapon is equipped
 void Weapon_Change(const int weaponId)
 {
-    if(!WeaponDataHolder.active)
+    if(!WeaponHolder.active)
     {
-        WeaponDataHolder.currentWeapon = weaponId;
+        WeaponHolder.currentWeapon = weaponId;
     }
 }
 
@@ -173,9 +173,9 @@ int TestEntityHit(const Ray rayCast)
     int id;
     float levelDistance        = INFINITY;
     float enemyDistance        = INFINITY;
-    int entitiesAmount         = Scene_data.size;
-    Scene_BlockData* levelData = Scene_data.blocks;
-    Actor_Data* enemies        = Scene_data.actors;
+    int entitiesAmount         = Scene.size;
+    Scene_BlockData* levelData = Scene.blocks;
+    Actor_Data* enemies        = Scene.actors;
     Actor_Data enemyDataHit;
 
     for(int i = 0; i < entitiesAmount; i++)
@@ -223,11 +223,11 @@ bool WeaponHasAmmo(const int currentWeapon)
     {
         return true;
     }
-    printf("Ammo: %d \n", WeaponDataHolder.Weapons[currentWeapon]->ammo);
+    printf("Ammo: %d \n", WeaponHolder.Weapons[currentWeapon]->ammo);
     // TODO: Is there a better way to do this without so much repetition?
-    if(WeaponDataHolder.Weapons[currentWeapon]->ammo > 0)
+    if(WeaponHolder.Weapons[currentWeapon]->ammo > 0)
     {
-        WeaponDataHolder.Weapons[currentWeapon]->ammo--;
+        WeaponHolder.Weapons[currentWeapon]->ammo--;
         return true;
     }
     else
@@ -244,11 +244,11 @@ float Weapon_Fire(Camera* camera, float nextFire)
     }
     else
     {
-        const Weapon_Data* weapon = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon];
-        if(WeaponHasAmmo(WeaponDataHolder.currentWeapon) && !WeaponDataHolder.active)
+        const Weapon_Data* weapon = WeaponHolder.Weapons[WeaponHolder.currentWeapon];
+        if(WeaponHasAmmo(WeaponHolder.currentWeapon) && !WeaponHolder.active)
         {
-            WeaponDataHolder.active       = true;
-            WeaponDataHolder.currentFrame = weapon->spriteFireFrame;
+            WeaponHolder.active       = true;
+            WeaponHolder.currentFrame = weapon->spriteFireFrame;
 
             Ray rayCast       = GetMouseRay(Utilities_GetScreenCenter(), *camera);
             const int id      = TestEntityHit(rayCast);
@@ -258,7 +258,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
                 printf("Id hit: %i \n", id);
                 if(id != 0 && id != PLAYER_ID)
                 {
-                    Actor_TakeDamage(&Scene_data.actors[id], weapon->damage);
+                    Actor_TakeDamage(&Scene.actors[id], weapon->damage);
                     printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);
                 }
             }
@@ -276,7 +276,7 @@ float Weapon_Fire(Camera* camera, float nextFire)
 
 void Weapon_DrawSprite(void)
 {
-    const Weapon_Data* weapon = WeaponDataHolder.Weapons[WeaponDataHolder.currentWeapon];
+    const Weapon_Data* weapon = WeaponHolder.Weapons[WeaponHolder.currentWeapon];
 
     const float frameWidth  = (float)weapon->spriteTexture.width / (float)weapon->spritesTotal;
     const float frameHeight = (float)weapon->spriteTexture.height;
@@ -289,24 +289,24 @@ void Weapon_DrawSprite(void)
     Rectangle sourceRec = { 0.0f, 0.0f, frameWidth, frameHeight };
     Rectangle destRec   = { posX, posY, frameWidth * scale, frameHeight * scale };
 
-    if(WeaponDataHolder.active)
+    if(WeaponHolder.active)
     {
-        WeaponDataHolder.frameCounter++;
+        WeaponHolder.frameCounter++;
 
-        if(WeaponDataHolder.frameCounter >= GetFPS() / (weapon->spriteSpeed / weapon->fireRate))
+        if(WeaponHolder.frameCounter >= GetFPS() / (weapon->spriteSpeed / weapon->fireRate))
         {
-            WeaponDataHolder.currentFrame++;
+            WeaponHolder.currentFrame++;
 
-            if(WeaponDataHolder.currentFrame >= weapon->spritesTotal)
+            if(WeaponHolder.currentFrame >= weapon->spritesTotal)
             {
-                WeaponDataHolder.currentFrame = 0;
-                WeaponDataHolder.active       = false;
+                WeaponHolder.currentFrame = 0;
+                WeaponHolder.active       = false;
             }
-            WeaponDataHolder.frameCounter = 0;
+            WeaponHolder.frameCounter = 0;
         }
     }
 
-    sourceRec.x = frameWidth * (float)WeaponDataHolder.currentFrame;
+    sourceRec.x = frameWidth * (float)WeaponHolder.currentFrame;
 
     DrawTexturePro(weapon->spriteTexture, sourceRec, destRec, origin, 0, WHITE);
 }
