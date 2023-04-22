@@ -1,6 +1,5 @@
 #include "scene.h"
 #include "raylib.h"
-
 // Level has level data, Level_enemies, Level_items and Level_Projectiles
 // Level is basically the "scene"
 
@@ -8,13 +7,46 @@
 Scene_Data Scene = { 0 };
 
 // Private variables
-Level_BlockType Level_BlockTypes;
+Scene_Entity* Scene_entities[BLOCKS_TOTAL];  // Remember to update this if you add more blocks to below
+
+// Entities used in the game
+// TODO: More entities. For entities and their RGB values: check README.md
+Scene_Entity Scene_noneBlock = {
+    .mapColor = (Color) {0, 0, 0, 255},
+       .type = NONE, .fileName = ""
+};
+
+Scene_Entity Scene_startBlock = {
+    .mapColor = (Color) {0, 255, 0, 255},
+       .type = start, .fileName = ""
+};
+
+Scene_Entity Scene_endBlock = {
+    .mapColor = (Color) {0, 0, 255, 255},
+       .type = end, .fileName = ""
+};
+
+Scene_Entity Scene_wall1Block = {
+    .mapColor = (Color) {255, 255, 255, 255},
+       .type = wall, .fileName = "./assets/textures/wall1.png"
+};
+
+Scene_Entity Scene_wall2Block = {
+    .mapColor = (Color) {255, 255, 254, 255},
+       .type = wall, .fileName = "./assets/textures/wall2.png"
+};
+
+Scene_Entity Scene_actorBlock = {
+    .mapColor = (Color) {255, 0, 0, 255},
+       .type = actor, .fileName = "./assets/models/enemy.m3d"
+};
 
 // Private functions
 void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels);
 void Scene_AllocateMeshData(Mesh* mesh, int triangleCount);
 void Scene_SetBlockTypes(void);
 void Scene_UpdateProjectiles(void);
+void Scene_AddEntityToScene(Scene_Entity* entity, float mx, float my, int id);
 
 Camera Scene_Initialize(void)
 {
@@ -47,17 +79,13 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
     const float mapPosZ            = (float)sceneCubicMap.height;
     const float mapPosX            = (float)sceneCubicMap.width;
-    const Texture2D ceilingTexture = LoadTexture("./assets/level1/ceiling.png");
-    const Texture2D floorTexture   = LoadTexture("./assets/level1/floor.png");
+    const Texture2D ceilingTexture = LoadTexture("./assets/textures/ceiling1.png");  // TODO: Load texture from config
+    const Texture2D floorTexture   = LoadTexture("./assets/textures/floor1.png");    // TODO: Load texture from config
     Scene.ceilingPlane             = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     Scene.floorPlane               = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
     Scene.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
     Scene.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = floorTexture;
-
-    // NOTE: By default each cube is mapped to one part of texture atlas
-    // Load map texture, hardcoded for now.
-    const char* wallTextures[2] = { "./assets/level1/wall1.png", "./assets/level1/wall2.png" };
 
     Scene.position = (Vector3) { -mapPosX / 2, 0.5f, -mapPosZ / 2 };
     Scene.size     = sceneCubicMap.height * sceneCubicMap.width;
@@ -73,48 +101,17 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 
             const float mx = Scene.position.x - 0.5f + x * 1.0f;
             const float my = Scene.position.z - 0.5f + y * 1.0f;
-            const int i    = y * sceneCubicMap.width + x;
+            const int id   = y * sceneCubicMap.width + x;
 
             const Color pixelColor = Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
 
-            // Find walls, which is white (255,255,255)
-            if(Utilities_CompareColors(pixelColor, Level_BlockTypes.wallColor))
+            for(int b = 0; b < BLOCKS_TOTAL; b++)
             {
-                Image textureImage = LoadImage(wallTextures[GetRandomValue(0, 1)]);
-                // The image has to be flipped since its loaded upside down
-                ImageFlipVertical(&textureImage);
-                const Texture2D texture = LoadTextureFromImage(textureImage);
-                // Set map diffuse texture
-                const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
-                Model cubeModel                                           = LoadModelFromMesh(cube);
-                cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-
-                Scene.blocks[i].model       = cubeModel;
-                Scene.blocks[i].position    = (Vector3) { mx, Scene.position.y, my };
-                Scene.blocks[i].id          = WALL_MODEL_ID;
-                Scene.blocks[i].size        = (Vector3) { 1.0f, 1.0f, 1.0f };
-                Scene.blocks[i].boundingBox = Utilities_MakeBoundingBox((Vector3) { mx, Scene.position.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
+                if(Utilities_CompareColors(pixelColor, Scene_entities[b]->mapColor))
+                {
+                    Scene_AddEntityToScene(Scene_entities[b], mx, my, id);
+                }
             }
-
-            // Find start, which is green (0,255,0)
-            else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.startColor))
-            {
-                Scene.startPosition = (Vector3) { mx, 0.0f, my };
-            }
-
-            // Find end, which is blue (0,0,255)
-            else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.endColor))
-            {
-                Scene.endPosition = (Vector3) { mx, 0.0f, my };
-            }
-
-            // Find actor, which is red (255,0,0)
-            else if(Utilities_CompareColors(pixelColor, Level_BlockTypes.actorColor))
-            {
-                Scene.actors[i] = Actor_Add(mx, my, i, "./assets/models/enemy.m3d");
-            }
-
-            // TODO: More entities. For entities and their RGB values: check README.md
         }
     }
 
@@ -245,9 +242,46 @@ void Scene_AllocateMeshData(Mesh* mesh, int triangleCount)
 
 void Scene_SetBlockTypes(void)
 {
-    Level_BlockTypes.startColor = (Color) { 0, 255, 0, 255 };
-    Level_BlockTypes.endColor   = (Color) { 0, 0, 255, 255 };
-    Level_BlockTypes.wallColor  = (Color) { 255, 255, 255, 255 };
-    Level_BlockTypes.actorColor = (Color) { 255, 0, 0, 255 };
-    Level_BlockTypes.NONE       = (Color) { 0, 0, 0, 255 };
+    Scene_entities[0] = &Scene_noneBlock;
+    Scene_entities[1] = &Scene_startBlock;
+    Scene_entities[2] = &Scene_endBlock;
+    Scene_entities[3] = &Scene_wall1Block;
+    Scene_entities[4] = &Scene_wall2Block;
+    Scene_entities[5] = &Scene_actorBlock;
+}
+
+void Scene_AddEntityToScene(Scene_Entity* entity, float mx, float my, int id)
+{
+    if(entity->type == wall)
+    {
+        Image textureImage = LoadImage(entity->fileName);
+        // The image has to be flipped since its loaded upside down
+        ImageFlipVertical(&textureImage);
+        const Texture2D texture = LoadTextureFromImage(textureImage);
+        // Set map diffuse texture
+        const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
+        Model cubeModel                                           = LoadModelFromMesh(cube);
+        cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+
+        Scene.blocks[id].model       = cubeModel;
+        Scene.blocks[id].position    = (Vector3) { mx, Scene.position.y, my };
+        Scene.blocks[id].id          = WALL_MODEL_ID;
+        Scene.blocks[id].size        = (Vector3) { 1.0f, 1.0f, 1.0f };
+        Scene.blocks[id].boundingBox = Utilities_MakeBoundingBox((Vector3) { mx, Scene.position.y, my }, (Vector3) { 1.0f, 1.0f, 1.0f });
+    }
+
+    else if(entity->type == start)
+    {
+        Scene.startPosition = (Vector3) { mx, 0.0f, my };
+    }
+
+    else if(entity->type == end)
+    {
+        Scene.endPosition = (Vector3) { mx, 0.0f, my };
+    }
+
+    else if(entity->type == actor)
+    {
+        Scene.actors[id] = Actor_Add(mx, my, id, entity->fileName);
+    }
 }
