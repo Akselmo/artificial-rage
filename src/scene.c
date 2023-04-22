@@ -41,10 +41,6 @@ void Scene_Build(void)
     UnloadImage(sceneImageMap);
 }
 
-// TODO: Entities can be moved here! Map file can be one png.
-//       Move everything in this method, and change it's name
-//  should first calculate the needed size of Level_items, then redo it and add the Level_items =
-//  more memory efficient
 void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color* sceneMapPixels)
 {
     // Place all Level_items based on their colors
@@ -249,9 +245,9 @@ void Scene_AllocateMeshData(Mesh* mesh, int triangleCount)
 
 void Scene_SetBlockTypes(void)
 {
-    Level_BlockTypes.startColor = (Color) { 0, 255, 0 };
-    Level_BlockTypes.endColor   = (Color) { 0, 0, 255 };
-    Level_BlockTypes.wallColor  = (Color) { 255, 255, 255 };
-    Level_BlockTypes.actorColor = (Color) { 255, 0, 0 };
-    Level_BlockTypes.NONE       = (Color) { 0, 0, 0 };
+    Level_BlockTypes.startColor = (Color) { 0, 255, 0, 255 };
+    Level_BlockTypes.endColor   = (Color) { 0, 0, 255, 255 };
+    Level_BlockTypes.wallColor  = (Color) { 255, 255, 255, 255 };
+    Level_BlockTypes.actorColor = (Color) { 255, 0, 0, 255 };
+    Level_BlockTypes.NONE       = (Color) { 0, 0, 0, 255 };
 }
