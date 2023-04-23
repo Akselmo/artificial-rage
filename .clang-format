@@ -2,5 +2,5 @@ UseTab: Never
 IndentWidth: 4
 BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: false
-IndentCaseLabels: false
+IndentCaseLabels: true
 ColumnLimit: 0
