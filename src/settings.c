@@ -7,19 +7,19 @@
 struct Settings_Data Settings;
 
 // Private
-void Settings_Read(Settings_Data* settings);
-void Settings_Write(Settings_Data* settings);
+void Settings_Read(Settings_Data *settings);
+void Settings_Write(Settings_Data *settings);
 Settings_Data Settings_CreateDefault(void);
-bool Settings_Parse(Settings_Data* settings, char* key, double value);
+bool Settings_Parse(Settings_Data *settings, char *key, double value);
 
 void Settings_Initialize(void)
 {
-    const char* fileName = "settings.txt";
+    const char *fileName = "settings.txt";
 
     // Write default settings
     Settings = Settings_CreateDefault();
 
-    if(access(fileName, F_OK) == 0)
+    if (access(fileName, F_OK) == 0)
     {
         Settings_Read(&Settings);
     }

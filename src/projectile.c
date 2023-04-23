@@ -7,8 +7,8 @@
 #include "utilities.h"
 
 // Prototypes
-void Projectile_DestroyOverTime(Projectile* projectile);
-void Projectile_RotateTowards(Projectile* projectile);
+void Projectile_DestroyOverTime(Projectile *projectile);
+void Projectile_RotateTowards(Projectile *projectile);
 
 void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color color)
 {
@@ -43,9 +43,9 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
     // clang-format on
 }
 
-void Projectile_Update(Projectile* projectile)
+void Projectile_Update(Projectile *projectile)
 {
-    if(!projectile->destroyed && projectile->id != 0)
+    if (!projectile->destroyed && projectile->id != 0)
     {
 
         DrawModel(projectile->model, projectile->position, 1.0, projectile->color);
@@ -57,30 +57,30 @@ void Projectile_Update(Projectile* projectile)
     }
 }
 
-void Projectile_CheckCollision(Projectile* projectile)
+void Projectile_CheckCollision(Projectile *projectile)
 {
     // Check against the owner of the projectile and the entity id. if theres a match, ignore it,
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
     const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for(int i = 0; i < Scene.size; i++)
+    for (int i = 0; i < Scene.size; i++)
     {
 
         // Test hitting against wall
-        if(CheckCollisionBoxes(projectileBox, Scene.blocks[i].boundingBox))
+        if (CheckCollisionBoxes(projectileBox, Scene.blocks[i].boundingBox))
         {
             Projectile_Destroy(projectile);
             return;
         }
         // Against enemy except if owned by enemy
-        else if(CheckCollisionBoxes(projectileBox, Scene.actors[i].boundingBox) && Scene.actors[i].id != projectile->ownerId)
+        else if (CheckCollisionBoxes(projectileBox, Scene.actors[i].boundingBox) && Scene.actors[i].id != projectile->ownerId)
         {
             Actor_TakeDamage(&Scene.actors[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }
         // Against player except if owned by player
-        else if(CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
+        else if (CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
         {
             Player_SetHealth(-1 * projectile->damage);
             Projectile_Destroy(projectile);
@@ -90,21 +90,21 @@ void Projectile_CheckCollision(Projectile* projectile)
 }
 
 // Rename to projectile_DestroyOverTime
-void Projectile_DestroyOverTime(Projectile* projectile)
+void Projectile_DestroyOverTime(Projectile *projectile)
 {
     // TODO: Destroy after 20 seconds
 }
 
 // Rename to projectile_destroy
-void Projectile_Destroy(Projectile* projectile)
+void Projectile_Destroy(Projectile *projectile)
 {
     printf("Projectile id %d destroyed\n", projectile->id);
     projectile->destroyed = true;
-    projectile            = NULL;
+    projectile = NULL;
     free(projectile);
 }
 
-void Projectile_RotateTowards(Projectile* projectile)
+void Projectile_RotateTowards(Projectile *projectile)
 {
 
     float dx = projectile->endPosition.x - projectile->startPosition.x;

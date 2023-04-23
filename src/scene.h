@@ -15,10 +15,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_SCENE_SIZE        16384
+#define MAX_SCENE_SIZE 16384
 #define MAX_PROJECTILE_AMOUNT 254
-#define WALL_MODEL_ID         -2
-#define BLOCKS_TOTAL          6
+#define WALL_MODEL_ID -2
+#define BLOCKS_TOTAL 6
 
 enum Scene_BlockType
 {
@@ -31,33 +31,33 @@ enum Scene_BlockType
 
 typedef struct Scene_Data
 {
-        Model floorPlane;
-        Model ceilingPlane;
-        struct Scene_BlockData* blocks;
-        struct Actor_Data* actors;
-        struct Item_Data* items;
-        struct Projectile* projectiles;
-        Vector3 position;
-        Vector3 startPosition;
-        Vector3 endPosition;
-        int size;
+    Model floorPlane;
+    Model ceilingPlane;
+    struct Scene_BlockData *blocks;
+    struct Actor_Data *actors;
+    struct Item_Data *items;
+    struct Projectile *projectiles;
+    Vector3 position;
+    Vector3 startPosition;
+    Vector3 endPosition;
+    int size;
 } Scene_Data;
 
 typedef struct Scene_BlockData
 {
-        Vector3 position;
-        Vector3 size;
-        BoundingBox boundingBox;
-        Model model;
-        int id;
-        bool loaded;
+    Vector3 position;
+    Vector3 size;
+    BoundingBox boundingBox;
+    Model model;
+    int id;
+    bool loaded;
 } Scene_BlockData;
 
 typedef struct Scene_Entity
 {
-        Color mapColor;             // The color indicated in the level file, that is assigned to this type of block.
-        enum Scene_BlockType type;  // The type of the block. Type affects to the behavior of the block.
-        char* fileName;             // The name of the file to be loaded. Handled differently per type.
+    Color mapColor;            // The color indicated in the level file, that is assigned to this type of block.
+    enum Scene_BlockType type; // The type of the block. Type affects to the behavior of the block.
+    char *fileName;            // The name of the file to be loaded. Handled differently per type.
 } Scene_Entity;
 
 // Variables

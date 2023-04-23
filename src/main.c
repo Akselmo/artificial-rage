@@ -10,7 +10,7 @@ int main(void)
     Game_Initialize();
 
     // Main game loop
-    while(!WindowShouldClose())
+    while (!WindowShouldClose())
     {
         Game_Update();
     }
