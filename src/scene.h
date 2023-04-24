@@ -57,9 +57,9 @@ typedef struct Scene_EntityData
 
 typedef struct Scene_Entity
 {
-    Color mapColor;            // The color indicated in the level file, that is assigned to this type of block.
+    Color mapColor;             // The color indicated in the level file, that is assigned to this type of block.
     enum Scene_EntityType type; // The type of the block. Type affects to the behavior of the block.
-    char *fileName;            // The name of the file to be loaded. Handled differently per type.
+    char *fileName;             // The name of the file to be loaded. Handled differently per type.
 } Scene_Entity;
 
 // Variables
