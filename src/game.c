@@ -35,7 +35,7 @@ void Game_Update(void)
 
     BeginMode3D(playerCamera);
 
-    if(Game_isStarted)
+    if (Game_isStarted)
     {
         Player_Update(&playerCamera);
         Scene_Update();

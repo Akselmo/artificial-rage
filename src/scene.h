@@ -15,43 +15,52 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_SCENE_SIZE        16384
+#define MAX_SCENE_SIZE 16384
 #define MAX_PROJECTILE_AMOUNT 254
-#define WALL_MODEL_ID         -2
+#define WALL_MODEL_ID -2
+#define BLOCKS_TOTAL 6
 
-// Structs
+enum Scene_EntityType
+{
+    SCENE_NONE,
+    SCENE_START,
+    SCENE_END,
+    SCENE_WALL,
+    SCENE_ACTOR,
+};
+
 typedef struct Scene_Data
 {
-        Model floorPlane;
-        Model ceilingPlane;
-        struct Scene_BlockData* blocks;
-        struct Actor_Data* actors;
-        struct Item_Data* items;
-        struct Projectile* projectiles;
-        Vector3 position;
-        Vector3 startPosition;
-        Vector3 endPosition;
-        int size;
+    Model floorPlane;
+    Texture2D floorPlaneTexture;
+    Model ceilingPlane;
+    Texture2D ceilingPlaneTexture;
+    struct Scene_EntityData *entities;
+    struct Actor_Data *actors;
+    struct Item_Data *items;
+    struct Projectile *projectiles;
+    Vector3 position;
+    Vector3 startPosition;
+    Vector3 endPosition;
+    int size;
 } Scene_Data;
 
-typedef struct Scene_BlockData
+typedef struct Scene_EntityData
 {
-        Vector3 position;
-        Vector3 size;
-        BoundingBox boundingBox;
-        Model model;
-        int id;
-        bool loaded;
-} Scene_BlockData;
+    Vector3 position;
+    Vector3 size;
+    BoundingBox boundingBox;
+    Model model;
+    int id;
+    bool loaded;
+} Scene_EntityData;
 
-typedef struct Level_BlockType
+typedef struct Scene_Entity
 {
-        Color NONE;
-        Color startColor;
-        Color endColor;
-        Color wallColor;
-        Color actorColor;
-} Level_BlockType;
+    Color mapColor;             // The color indicated in the level file, that is assigned to this type of block.
+    enum Scene_EntityType type; // The type of the block. Type affects to the behavior of the block.
+    char *fileName;             // The name of the file to be loaded. Handled differently per type.
+} Scene_Entity;
 
 // Variables
 extern struct Scene_Data Scene;

@@ -1,33 +1,33 @@
 #include "animator.h"
 #include <stdio.h>
 
-void Animator_SetAnimation(Animator_Data* animator, const int animationId)
+void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 {
     const Animator_Animation currentAnimation = animator->currentAnimation;
-    const Animator_Animation newAnimation     = animator->animations[animationId];
+    const Animator_Animation newAnimation = animator->animations[animationId];
 
-    if(currentAnimation.id == newAnimation.id)
+    if (currentAnimation.id == newAnimation.id)
     {
         return;
     }
 
-    if(!currentAnimation.interruptable)
+    if (!currentAnimation.interruptable)
     {
-        if(animator->animationFrame < currentAnimation.lastFrame)
+        if (animator->animationFrame < currentAnimation.lastFrame)
         {
             return;
         }
     }
 
-    animator->animationFrame   = currentAnimation.firstFrame;
+    animator->animationFrame = currentAnimation.firstFrame;
     animator->currentAnimation = newAnimation;
 }
 
 // TODO: This would need somekind of frameskip feature if FPS is lower than animationspeed. Ideas welcome!
-float Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed, float nextFrame)
+float Animator_PlayAnimation(Animator_Data *animator, const float animationSpeed, float nextFrame)
 {
 
-    if(nextFrame > 0)
+    if (nextFrame > 0)
     {
         nextFrame -= GetFrameTime();
     }
@@ -35,9 +35,9 @@ float Animator_PlayAnimation(Animator_Data* animator, const float animationSpeed
     {
         Animator_Animation currentAnimation = animator->currentAnimation;
         animator->animationFrame += 1;
-        if(animator->animationFrame > currentAnimation.lastFrame)
+        if (animator->animationFrame > currentAnimation.lastFrame)
         {
-            if(currentAnimation.loopable)
+            if (currentAnimation.loopable)
             {
                 animator->animationFrame = currentAnimation.firstFrame;
             }
