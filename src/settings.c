@@ -11,15 +11,14 @@ void Settings_Read(Settings_Data *settings);
 void Settings_Write(Settings_Data *settings);
 Settings_Data Settings_CreateDefault(void);
 bool Settings_Parse(Settings_Data *settings, char *key, double value);
+const char *SETTINGS_FILENAME = "settings.cfg";
 
 void Settings_Initialize(void)
 {
-    const char *fileName = "settings.txt";
-
     // Write default settings
     Settings = Settings_CreateDefault();
 
-    if (access(fileName, F_OK) == 0)
+    if (access(SETTINGS_FILENAME, F_OK) == 0)
     {
         Settings_Read(&Settings);
     }
@@ -63,14 +62,14 @@ Settings_Data Settings_CreateDefault(void)
 
 void Settings_Read(Settings_Data* settings)
 {
-    const char *fileName = "settings.txt";
 
-    FILE *filePointer = fopen(fileName, "r");
+    FILE *filePointer = fopen(SETTINGS_FILENAME, "r");
     if (NULL == filePointer) {
         printf("======\n");
-        printf("Failed to open settings file %s \n", fileName);
+        printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
         printf("Using default settings! \n");
         printf("======\n");
+        fclose(filePointer);
         return;
     }
 
@@ -100,13 +99,13 @@ void Settings_Read(Settings_Data* settings)
 
     //TODO: Switch case that reads all the k/v pairs and assigns them to correct settings
 
-        if (!Settings_Parse(&Settings, key, atof(value)))
+        if (!Settings_Parse(settings, key, atof(value)))
         {
-            printf("Failed to parse setting key-value: %s - %f \n", key, atof(value));
+            printf("Failed to parse settings file key-value: %s - %f \n", key, atof(value));
         }
         else
         {
-            printf("Parsed setting key-value: %s - %f \n", key, atof(value));
+            printf("Parsed settings file key-value: %s - %f \n", key, atof(value));
         }
     }
 
@@ -118,13 +117,12 @@ void Settings_Read(Settings_Data* settings)
 
 void Settings_Write(Settings_Data* settings)
 {
-    const char *fileName = "settings.txt";
 
-    FILE *filePointer = fopen(fileName, "w");
+    FILE *filePointer = fopen(SETTINGS_FILENAME, "w");
     if (filePointer == NULL)
     {
         printf("======\n");
-        printf("Failed to open settings file %s \n", fileName);
+        printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
         printf("======\n");
     }
 

@@ -67,7 +67,7 @@ void Projectile_CheckCollision(Projectile *projectile)
     {
 
         // Test hitting against wall
-        if (CheckCollisionBoxes(projectileBox, Scene.blocks[i].boundingBox))
+        if (CheckCollisionBoxes(projectileBox, Scene.entities[i].boundingBox))
         {
             Projectile_Destroy(projectile);
             return;

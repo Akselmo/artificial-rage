@@ -8,37 +8,36 @@ Scene_Data Scene = {0};
 
 // Private variables
 Scene_Entity *Scene_entities[BLOCKS_TOTAL]; // Remember to update this if you add more blocks to below
-
 // Entities used in the game
 // TODO: More entities. For entities and their RGB values: check README.md
 Scene_Entity Scene_noneBlock = {
     .mapColor = (Color){0, 0, 0, 255},
-    .type = NONE,
+    .type = SCENE_NONE,
     .fileName = ""};
 
 Scene_Entity Scene_startBlock = {
     .mapColor = (Color){0, 255, 0, 255},
-    .type = start,
+    .type = SCENE_START,
     .fileName = ""};
 
 Scene_Entity Scene_endBlock = {
     .mapColor = (Color){0, 0, 255, 255},
-    .type = end,
+    .type = SCENE_END,
     .fileName = ""};
 
 Scene_Entity Scene_wall1Block = {
     .mapColor = (Color){255, 255, 255, 255},
-    .type = wall,
+    .type = SCENE_WALL,
     .fileName = "./assets/textures/wall1.png"};
 
 Scene_Entity Scene_wall2Block = {
     .mapColor = (Color){255, 255, 254, 255},
-    .type = wall,
+    .type = SCENE_WALL,
     .fileName = "./assets/textures/wall2.png"};
 
 Scene_Entity Scene_actorBlock = {
     .mapColor = (Color){255, 0, 0, 255},
-    .type = actor,
+    .type = SCENE_ACTOR,
     .fileName = "./assets/models/enemy.m3d"};
 
 // Private functions
@@ -47,6 +46,8 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
 void Scene_SetBlockTypes(void);
 void Scene_UpdateProjectiles(void);
 void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id);
+void Scene_LoadPlaneTextures(void);
+bool Scene_ParseConfig(char *key, char *value);
 
 Camera Scene_Initialize(void)
 {
@@ -75,22 +76,22 @@ void Scene_Build(void)
 
 void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color *sceneMapPixels)
 {
-    // Place all Level_items based on their colors
-
     const float mapPosZ = (float)sceneCubicMap.height;
     const float mapPosX = (float)sceneCubicMap.width;
-    const Texture2D ceilingTexture = LoadTexture("./assets/textures/ceiling1.png"); // TODO: Load texture from config
-    const Texture2D floorTexture = LoadTexture("./assets/textures/floor1.png");     // TODO: Load texture from config
+
+    // Prepare plane textures for level
+    Scene_LoadPlaneTextures();
+
     Scene.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     Scene.floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
-    Scene.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ceilingTexture;
-    Scene.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = floorTexture;
+    Scene.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene.ceilingPlaneTexture;
+    Scene.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene.floorPlaneTexture;
 
     Scene.position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
     Scene.size = sceneCubicMap.height * sceneCubicMap.width;
 
-    Scene.blocks = calloc(Scene.size, sizeof(Scene_BlockData));
+    Scene.entities = calloc(Scene.size, sizeof(Scene_EntityData));
     Scene.actors = calloc(Scene.size, sizeof(Actor_Data));
     Scene.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
@@ -135,7 +136,7 @@ void Scene_Update(void)
 
     for (int i = 0; i < Scene.size; i++)
     {
-        Scene_BlockData *data = &Scene.blocks[i];
+        Scene_EntityData *data = &Scene.entities[i];
         Actor_Data *actor = &Scene.actors[i];
         if (data != NULL && data->id != 0)
         {
@@ -172,7 +173,7 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
         // Level blocks
 
         // Player and walls/enemies
-        if (CheckCollisionBoxes(entityBox, Scene.blocks[i].boundingBox))
+        if (CheckCollisionBoxes(entityBox, Scene.entities[i].boundingBox))
         {
             return true;
         }
@@ -252,7 +253,7 @@ void Scene_SetBlockTypes(void)
 
 void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id)
 {
-    if (entity->type == wall)
+    if (entity->type == SCENE_WALL)
     {
         Image textureImage = LoadImage(entity->fileName);
         // The image has to be flipped since its loaded upside down
@@ -263,25 +264,98 @@ void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id)
         Model cubeModel = LoadModelFromMesh(cube);
         cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-        Scene.blocks[id].model = cubeModel;
-        Scene.blocks[id].position = (Vector3){mx, Scene.position.y, my};
-        Scene.blocks[id].id = WALL_MODEL_ID;
-        Scene.blocks[id].size = (Vector3){1.0f, 1.0f, 1.0f};
-        Scene.blocks[id].boundingBox = Utilities_MakeBoundingBox((Vector3){mx, Scene.position.y, my}, (Vector3){1.0f, 1.0f, 1.0f});
+        Scene.entities[id].model = cubeModel;
+        Scene.entities[id].position = (Vector3){mx, Scene.position.y, my};
+        Scene.entities[id].id = WALL_MODEL_ID;
+        Scene.entities[id].size = (Vector3){1.0f, 1.0f, 1.0f};
+        Scene.entities[id].boundingBox = Utilities_MakeBoundingBox((Vector3){mx, Scene.position.y, my}, (Vector3){1.0f, 1.0f, 1.0f});
     }
 
-    else if (entity->type == start)
+    else if (entity->type == SCENE_START)
     {
         Scene.startPosition = (Vector3){mx, 0.0f, my};
     }
 
-    else if (entity->type == end)
+    else if (entity->type == SCENE_END)
     {
         Scene.endPosition = (Vector3){mx, 0.0f, my};
     }
 
-    else if (entity->type == actor)
+    else if (entity->type == SCENE_ACTOR)
     {
         Scene.actors[id] = Actor_Add(mx, my, id, entity->fileName);
+    }
+}
+
+// Parse scene plane textures from level.cfg
+void Scene_LoadPlaneTextures(void)
+{
+    const char *fileName = "./assets/level1/level.cfg";
+
+    FILE *filePointer = fopen(fileName, "r");
+    if (NULL == filePointer)
+    {
+        printf("======\n");
+        printf("Failed to open level config file %s \n", fileName);
+        printf("Please check your levelfolderhere/level.cfg file \n");
+        ;
+        printf("======\n");
+        fclose(filePointer);
+    }
+    int bufferLength = 255;
+    char buffer[bufferLength];
+
+    while (fgets(buffer, bufferLength, filePointer))
+    {
+        // TODO: since creating kv pairs is shared between settings and levelcfg, can this be moved elsewhere?
+        char *token = strtok(buffer, " ");
+        char *key;
+        char *value;
+        for (int i = 0; i < 2; i++)
+        {
+            if (i == 0)
+            {
+                key = token;
+            }
+            else if (i == 1)
+            {
+                value = token;
+            }
+            token = strtok(NULL, " ");
+        }
+        // Remove \r and \n from end of string
+        value[strcspn(value, "\r\n")] = 0;
+
+        if (!Scene_ParseConfig(key, value))
+        {
+            printf("Failed to parse level.cfg key-value: %s - %s \n", key, value);
+        }
+        else
+        {
+            printf("Parsed level.cfg key-value: %s - %s \n", key, value);
+        }
+    }
+    fclose(filePointer);
+}
+
+bool Scene_ParseConfig(char *key, char *value)
+{
+    if (strcmp(key, "ceiling") == 0)
+    {
+        Scene.ceilingPlaneTexture = LoadTexture(value);
+        return true;
+    }
+    else if (strcmp(key, "floor") == 0)
+    {
+        Scene.floorPlaneTexture = LoadTexture(value);
+        return true;
+    }
+    else
+    {
+        printf("======\n");
+        printf("Failed to parse scene config file!\n");
+        printf("Please check your levelfolderhere/level.cfg file \n");
+        printf("======\n");
+        return false;
     }
 }

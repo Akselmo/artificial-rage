@@ -173,7 +173,7 @@ int TestEntityHit(const Ray rayCast)
     float levelDistance = INFINITY;
     float enemyDistance = INFINITY;
     int entitiesAmount = Scene.size;
-    Scene_BlockData *levelData = Scene.blocks;
+    Scene_EntityData *levelData = Scene.entities;
     Actor_Data *enemies = Scene.actors;
     Actor_Data enemyDataHit;
 
