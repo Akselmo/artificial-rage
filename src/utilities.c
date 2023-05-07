@@ -16,7 +16,7 @@ BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size
 
 Color Utilities_GetLevelPixelColor(const Color *levelMapPixels, const int x, const int width, const int y)
 {
-    Color pixelColor = {levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b};
+    Color pixelColor = {levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b, 255};
 
     return pixelColor;
 }

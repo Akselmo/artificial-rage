@@ -297,7 +297,7 @@ void Scene_LoadPlaneTextures(void)
     {
         printf("Failed to open level config file %s \n", fileName);
         printf("Please check your levelfolderhere/level.cfg file \n");
-        fclose(filePointer);
+        return;
     }
     int bufferLength = 255;
     char buffer[bufferLength];
@@ -327,20 +327,22 @@ bool Scene_ParseConfig(char *key, char *value)
     char *fullPath = malloc(strlen(texturesPath) + strlen(value) + 1);
     strcpy(fullPath, texturesPath);
     strcat(fullPath, value);
+    bool returnVal = false;
     if (strcmp(key, "ceiling") == 0)
     {
         Scene.ceilingPlaneTexture = LoadTexture(fullPath);
-        return true;
+        returnVal = true;
     }
     else if (strcmp(key, "floor") == 0)
     {
         Scene.floorPlaneTexture = LoadTexture(fullPath);
-        return true;
+        returnVal = true;
     }
     else
     {
         printf("Failed to parse scene config file!\n");
         printf("Please check your levelfolderhere/level.cfg file \n");
-        return false;
     }
+    free(fullPath);
+    return returnVal;
 }

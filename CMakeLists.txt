@@ -25,7 +25,8 @@ add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fsanitize=undefined,address")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address")
+
 set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
 
