@@ -340,14 +340,19 @@ void Scene_LoadPlaneTextures(void)
 
 bool Scene_ParseConfig(char *key, char *value)
 {
+
+    char *texturesPath = "./assets/textures/";
+    char *fullPath = malloc(strlen(texturesPath) + strlen(value) + 1);
+    strcpy(fullPath, texturesPath);
+    strcat(fullPath, value);
     if (strcmp(key, "ceiling") == 0)
     {
-        Scene.ceilingPlaneTexture = LoadTexture(value);
+        Scene.ceilingPlaneTexture = LoadTexture(fullPath);
         return true;
     }
     else if (strcmp(key, "floor") == 0)
     {
-        Scene.floorPlaneTexture = LoadTexture(value);
+        Scene.floorPlaneTexture = LoadTexture(fullPath);
         return true;
     }
     else
