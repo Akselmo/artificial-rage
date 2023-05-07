@@ -7,43 +7,43 @@
 Scene_Data Scene = {0};
 
 // Private variables
-Scene_Entity *Scene_entities[BLOCKS_TOTAL]; // Remember to update this if you add more blocks to below
+Scene_Entity *Scene_entities[ENTITIES_TOTAL]; // Remember to update this if you add more entities to below
 // Entities used in the game
 // TODO: More entities. For entities and their RGB values: check README.md
-Scene_Entity Scene_noneBlock = {
+Scene_Entity Scene_noneEntity = {
     .mapColor = (Color){0, 0, 0, 255},
     .type = SCENE_NONE,
     .fileName = ""};
 
-Scene_Entity Scene_startBlock = {
+Scene_Entity Scene_startEntity = {
     .mapColor = (Color){0, 255, 0, 255},
     .type = SCENE_START,
     .fileName = ""};
 
-Scene_Entity Scene_endBlock = {
+Scene_Entity Scene_endEntity = {
     .mapColor = (Color){0, 0, 255, 255},
     .type = SCENE_END,
     .fileName = ""};
 
-Scene_Entity Scene_wall1Block = {
+Scene_Entity Scene_wall1Entity = {
     .mapColor = (Color){255, 255, 255, 255},
     .type = SCENE_WALL,
     .fileName = "./assets/textures/wall1.png"};
 
-Scene_Entity Scene_wall2Block = {
+Scene_Entity Scene_wall2Entity = {
     .mapColor = (Color){255, 255, 254, 255},
     .type = SCENE_WALL,
     .fileName = "./assets/textures/wall2.png"};
 
-Scene_Entity Scene_actorBlock = {
+Scene_Entity Scene_actorEntity = {
     .mapColor = (Color){255, 0, 0, 255},
     .type = SCENE_ACTOR,
     .fileName = "./assets/models/enemy.m3d"};
 
 // Private functions
-void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color *sceneMapPixels);
+void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
-void Scene_SetBlockTypes(void);
+void Scene_SetEntityTypes(void);
 void Scene_UpdateProjectiles(void);
 void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id);
 void Scene_LoadPlaneTextures(void);
@@ -60,21 +60,21 @@ Camera Scene_Initialize(void)
 //
 void Scene_Build(void)
 {
-    // Initialize block types
-    Scene_SetBlockTypes();
+    // Initialize entity types
+    Scene_SetEntityTypes();
 
     // Load level cubicmap image (RAM)
     const Image sceneImageMap = LoadImage("./assets/level1/level.png");
     const Texture2D sceneCubicMap = LoadTextureFromImage(sceneImageMap);
 
     // Get map image data to be used for collision detection
-    Scene_PlaceBlocks(sceneCubicMap, LoadImageColors(sceneImageMap));
+    Scene_PlaceEntities(sceneCubicMap, LoadImageColors(sceneImageMap));
 
     // Unload image from RAM
     UnloadImage(sceneImageMap);
 }
 
-void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color *sceneMapPixels)
+void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels)
 {
     const float mapPosZ = (float)sceneCubicMap.height;
     const float mapPosX = (float)sceneCubicMap.width;
@@ -106,7 +106,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color *sceneMapPixels)
 
             const Color pixelColor = Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
 
-            for (int b = 0; b < BLOCKS_TOTAL; b++)
+            for (int b = 0; b < ENTITIES_TOTAL; b++)
             {
                 if (Utilities_CompareColors(pixelColor, Scene_entities[b]->mapColor))
                 {
@@ -116,7 +116,7 @@ void Scene_PlaceBlocks(Texture2D sceneCubicMap, Color *sceneMapPixels)
         }
     }
 
-    printf("Level has total %d blocks \n", Scene.size);
+    printf("Level has total %d entities \n", Scene.size);
 }
 
 void Scene_Update(void)
@@ -170,7 +170,7 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 
     for (int i = 0; i < Scene.size; i++)
     {
-        // Level blocks
+        // Level entities
 
         // Player and walls/enemies
         if (CheckCollisionBoxes(entityBox, Scene.entities[i].boundingBox))
@@ -241,14 +241,14 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
     mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
-void Scene_SetBlockTypes(void)
+void Scene_SetEntityTypes(void)
 {
-    Scene_entities[0] = &Scene_noneBlock;
-    Scene_entities[1] = &Scene_startBlock;
-    Scene_entities[2] = &Scene_endBlock;
-    Scene_entities[3] = &Scene_wall1Block;
-    Scene_entities[4] = &Scene_wall2Block;
-    Scene_entities[5] = &Scene_actorBlock;
+    Scene_entities[0] = &Scene_noneEntity;
+    Scene_entities[1] = &Scene_startEntity;
+    Scene_entities[2] = &Scene_endEntity;
+    Scene_entities[3] = &Scene_wall1Entity;
+    Scene_entities[4] = &Scene_wall2Entity;
+    Scene_entities[5] = &Scene_actorEntity;
 }
 
 void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id)
