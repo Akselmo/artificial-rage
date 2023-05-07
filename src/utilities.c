@@ -35,3 +35,22 @@ float Utilities_MaxF(float a, float b)
 {
     return (a < b) ? b : a;
 }
+
+void Utilities_ParseKeyValuePair(char *buffer, char *key, char *value)
+{
+    char *token = strtok(buffer, " ");
+    for (int i = 0; i < 2; i++)
+    {
+        if (i == 0)
+        {
+            strcpy(key, token);
+        }
+        else if (i == 1)
+        {
+            strcpy(value, token);
+        }
+        token = strtok(NULL, " ");
+    }
+    // Remove \r and \n from end of string
+    value[strcspn(value, "\r\n")] = 0;
+}

@@ -65,15 +65,12 @@ void Settings_Read(Settings_Data* settings)
 
     FILE *filePointer = fopen(SETTINGS_FILENAME, "r");
     if (NULL == filePointer) {
-        printf("======\n");
         printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
         printf("Using default settings! \n");
-        printf("======\n");
         fclose(filePointer);
         return;
     }
 
-    printf("======\n");
     printf("Loaded following settings \n");
 
     int bufferLength = 255;
@@ -81,23 +78,9 @@ void Settings_Read(Settings_Data* settings)
 
     while(fgets(buffer, bufferLength, filePointer))
     {
-        char *token = strtok(buffer, " ");
-        char *key;
-        char *value;
-        for (int i = 0; i < 2; i++)
-        {
-            if (i == 0)
-            {
-                key = token;
-            }
-            else if (i == 1)
-            {
-                value = token;
-            }
-            token = strtok(NULL, " ");
-        }
-
-    //TODO: Switch case that reads all the k/v pairs and assigns them to correct settings
+        char key[255];
+        char value[255];
+        Utilities_ParseKeyValuePair(buffer, key, value);
 
         if (!Settings_Parse(settings, key, atof(value)))
         {
@@ -110,9 +93,6 @@ void Settings_Read(Settings_Data* settings)
     }
 
     fclose(filePointer);
-
-    printf("======\n");
-
 }
 
 void Settings_Write(Settings_Data* settings)
@@ -121,9 +101,7 @@ void Settings_Write(Settings_Data* settings)
     FILE *filePointer = fopen(SETTINGS_FILENAME, "w");
     if (filePointer == NULL)
     {
-        printf("======\n");
         printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
-        printf("======\n");
     }
 
     fprintf(filePointer, "screenWidth %d\n", settings->screenWidth);
@@ -169,9 +147,7 @@ bool Settings_Parse(Settings_Data* settings, char* key, double value)
     else if (strcmp(key, "keyWeaponFive") == 0)     { settings->keyWeaponFive = value;      return true; }
     else
     {
-        printf("======\n");
-        printf("Failed to parse settings file!\n");
-        printf("======\n");
+        printf("Failed to parse settings file!\n");;
         return false;
     }
 }

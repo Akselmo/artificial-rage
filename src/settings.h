@@ -3,6 +3,7 @@
 #define _SETTINGS_H_
 
 #include "raylib.h"
+#include "utilities.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

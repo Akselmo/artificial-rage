@@ -295,11 +295,8 @@ void Scene_LoadPlaneTextures(void)
     FILE *filePointer = fopen(fileName, "r");
     if (NULL == filePointer)
     {
-        printf("======\n");
         printf("Failed to open level config file %s \n", fileName);
         printf("Please check your levelfolderhere/level.cfg file \n");
-        ;
-        printf("======\n");
         fclose(filePointer);
     }
     int bufferLength = 255;
@@ -307,24 +304,9 @@ void Scene_LoadPlaneTextures(void)
 
     while (fgets(buffer, bufferLength, filePointer))
     {
-        // TODO: since creating kv pairs is shared between settings and levelcfg, can this be moved elsewhere?
-        char *token = strtok(buffer, " ");
-        char *key;
-        char *value;
-        for (int i = 0; i < 2; i++)
-        {
-            if (i == 0)
-            {
-                key = token;
-            }
-            else if (i == 1)
-            {
-                value = token;
-            }
-            token = strtok(NULL, " ");
-        }
-        // Remove \r and \n from end of string
-        value[strcspn(value, "\r\n")] = 0;
+        char key[255];
+        char value[255];
+        Utilities_ParseKeyValuePair(buffer, key, value);
 
         if (!Scene_ParseConfig(key, value))
         {
@@ -357,10 +339,8 @@ bool Scene_ParseConfig(char *key, char *value)
     }
     else
     {
-        printf("======\n");
         printf("Failed to parse scene config file!\n");
         printf("Please check your levelfolderhere/level.cfg file \n");
-        printf("======\n");
         return false;
     }
 }
