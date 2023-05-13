@@ -39,11 +39,12 @@ This project uses CMake to build.
 Here's the basic commands you need.
 
 ```sh
+# build
 git clone https://codeberg.org/akselmo/artificial-rage.git
 cd artificial-rage
-mkdir build && cd build
-cmake .. # You can use Raylib build flags here. For example, specific platform: -DPLATFORM=Android
-cmake --build .
+cmake -Bbuild && cmake --build build --parallel
+# run
+cd build
 ./ArtificialRage
 ```
 
