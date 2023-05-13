@@ -7,45 +7,14 @@
 Scene_Data Scene = {0};
 
 // Private variables
-Scene_Entity *Scene_entities[ENTITIES_TOTAL]; // Remember to update this if you add more entities to below
-// Entities used in the game
-// TODO: More entities. For entities and their RGB values: check README.md
-Scene_Entity Scene_noneEntity = {
-    .mapColor = (Color){0, 0, 0, 255},
-    .type = SCENE_NONE,
-    .fileName = ""};
-
-Scene_Entity Scene_startEntity = {
-    .mapColor = (Color){0, 255, 0, 255},
-    .type = SCENE_START,
-    .fileName = ""};
-
-Scene_Entity Scene_endEntity = {
-    .mapColor = (Color){0, 0, 255, 255},
-    .type = SCENE_END,
-    .fileName = ""};
-
-Scene_Entity Scene_wall1Entity = {
-    .mapColor = (Color){255, 255, 255, 255},
-    .type = SCENE_WALL,
-    .fileName = "./assets/textures/wall1.png"};
-
-Scene_Entity Scene_wall2Entity = {
-    .mapColor = (Color){255, 255, 254, 255},
-    .type = SCENE_WALL,
-    .fileName = "./assets/textures/wall2.png"};
-
-Scene_Entity Scene_actorEntity = {
-    .mapColor = (Color){255, 0, 0, 255},
-    .type = SCENE_ACTOR,
-    .fileName = "./assets/models/enemy.m3d"};
+Entity_Data *Scene_entities[ENTITIES_TOTAL]; // Remember to update this if you add more entities to below
 
 // Private functions
 void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
 void Scene_SetEntityTypes(void);
 void Scene_UpdateProjectiles(void);
-void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id);
+void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id);
 void Scene_LoadPlaneTextures(void);
 bool Scene_ParseConfig(char *key, char *value);
 
@@ -91,7 +60,7 @@ void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels)
     Scene.position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
     Scene.size = sceneCubicMap.height * sceneCubicMap.width;
 
-    Scene.entities = calloc(Scene.size, sizeof(Scene_EntityData));
+    Scene.entities = calloc(Scene.size, sizeof(Entity_Data));
     Scene.actors = calloc(Scene.size, sizeof(Actor_Data));
     Scene.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
@@ -136,7 +105,7 @@ void Scene_Update(void)
 
     for (int i = 0; i < Scene.size; i++)
     {
-        Scene_EntityData *data = &Scene.entities[i];
+        Entity_Data *data = &Scene.entities[i];
         Actor_Data *actor = &Scene.actors[i];
         if (data != NULL && data->id != 0)
         {
@@ -243,15 +212,15 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
 
 void Scene_SetEntityTypes(void)
 {
-    Scene_entities[0] = &Scene_noneEntity;
-    Scene_entities[1] = &Scene_startEntity;
-    Scene_entities[2] = &Scene_endEntity;
-    Scene_entities[3] = &Scene_wall1Entity;
-    Scene_entities[4] = &Scene_wall2Entity;
-    Scene_entities[5] = &Scene_actorEntity;
+    Scene_entities[0] = &Entity_none;
+    Scene_entities[1] = &Entity_start;
+    Scene_entities[2] = &Entity_end;
+    Scene_entities[3] = &Entity_wall1;
+    Scene_entities[4] = &Entity_wall2;
+    Scene_entities[5] = &Entity_enemy;
 }
 
-void Scene_AddEntityToScene(Scene_Entity *entity, float mx, float my, int id)
+void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 {
     if (entity->type == SCENE_WALL)
     {

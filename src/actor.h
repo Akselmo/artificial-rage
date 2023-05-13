@@ -3,6 +3,7 @@
 #define _ACTOR_H_
 
 #include "animator.h"
+#include "entity.h"
 #include "player.h"
 #include "projectile.h"
 #include "raylib.h"

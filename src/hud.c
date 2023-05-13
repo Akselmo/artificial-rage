@@ -11,7 +11,6 @@ void Hud_Draw(void)
 
     DrawFPS(10, 10);
     sprintf(Hud_healthText, "%d", Player->health);
-
     char ammo[4];
     char divider[3];
     char maxAmmo[4];
