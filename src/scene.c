@@ -7,7 +7,7 @@
 Scene_Data Scene = {0};
 
 // Private variables
-Entity_Data *Scene_entities[ENTITIES_TOTAL]; // Remember to update this if you add more entities to below
+Entity_Data *Scene_entities[ENTITIES_TOTAL];
 
 // Private functions
 void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels);

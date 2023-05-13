@@ -4,6 +4,9 @@
 
 #include "raylib.h"
 
+// Remember to update this if you add more entities to below
+#define ENTITIES_TOTAL 6
+
 enum Entity_Type
 {
     SCENE_NONE,

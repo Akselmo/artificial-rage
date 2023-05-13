@@ -19,7 +19,6 @@
 #define MAX_SCENE_SIZE 16384
 #define MAX_PROJECTILE_AMOUNT 254
 #define WALL_MODEL_ID -2
-#define ENTITIES_TOTAL 6
 
 typedef struct Scene_Data
 {
