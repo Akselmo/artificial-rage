@@ -1,6 +1,16 @@
 {
     "automappingRulesFile": "",
     "commands": [
+        {
+            "arguments": "./generate.py ./entities.json %mapfile",
+            "command": "python",
+            "enabled": true,
+            "name": "Generate Config",
+            "saveBeforeExecute": true,
+            "shortcut": "F5",
+            "showOutput": true,
+            "workingDirectory": "/home/akseli/Repositories/artificial-rage/tiled_map_template"
+        }
     ],
     "compatibilityVersion": 1100,
     "extensionsPath": "extensions",
