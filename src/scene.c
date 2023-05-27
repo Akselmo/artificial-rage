@@ -4,18 +4,19 @@
 // Level is basically the "scene"
 
 // Public variables
+// TODO: Initialize scene properly
 Scene_Data Scene = {0};
 
 // Private variables
 Entity_Data *Scene_entities[ENTITIES_TOTAL];
 
 // Private functions
-void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels);
+void Scene_PlaceEntities(void);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
-void Scene_SetEntityTypes(void);
+void Scene_InitEntityTypes(void);
 void Scene_UpdateProjectiles(void);
 void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id);
-void Scene_LoadPlaneTextures(void);
+void Scene_LoadSceneConfig(void);
 bool Scene_ParseConfig(char *key, char *value);
 
 Camera Scene_Initialize(void)
@@ -29,27 +30,23 @@ Camera Scene_Initialize(void)
 //
 void Scene_Build(void)
 {
+    Scene.data = calloc(sizeof(int), MAX_SCENE_SIZE);
     // Initialize entity types
-    Scene_SetEntityTypes();
+    Scene_InitEntityTypes();
 
-    // Load level cubicmap image (RAM)
-    const Image sceneImageMap = LoadImage("./assets/level1/level.png");
-    const Texture2D sceneCubicMap = LoadTextureFromImage(sceneImageMap);
-
+    Scene_LoadSceneConfig();
     // Get map image data to be used for collision detection
-    Scene_PlaceEntities(sceneCubicMap, LoadImageColors(sceneImageMap));
-
-    // Unload image from RAM
-    UnloadImage(sceneImageMap);
+    // Scene_PlaceEntities();
 }
-
-void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels)
+/*
+void Scene_PlaceEntities(void)
 {
+
     const float mapPosZ = (float)sceneCubicMap.height;
     const float mapPosX = (float)sceneCubicMap.width;
 
     // Prepare plane textures for level
-    Scene_LoadPlaneTextures();
+    Scene_LoadSceneConfig();
 
     Scene.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
     Scene.floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
@@ -87,7 +84,7 @@ void Scene_PlaceEntities(Texture2D sceneCubicMap, Color *sceneMapPixels)
 
     printf("Level has total %d entities \n", Scene.size);
 }
-
+*/
 void Scene_Update(void)
 {
     if (!Game_isStarted)
@@ -210,7 +207,7 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
     mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
-void Scene_SetEntityTypes(void)
+void Scene_InitEntityTypes(void)
 {
     Scene_entities[0] = &Entity_none;
     Scene_entities[1] = &Entity_start;
@@ -257,15 +254,14 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 }
 
 // Parse scene plane textures from level.cfg
-void Scene_LoadPlaneTextures(void)
+void Scene_LoadSceneConfig(void)
 {
-    const char *fileName = "./assets/level1/level.cfg";
+    const char *fileName = "./assets/levels/level1.cfg";
 
     FILE *filePointer = fopen(fileName, "r");
     if (NULL == filePointer)
     {
         printf("Failed to open level config file %s \n", fileName);
-        printf("Please check your levelfolderhere/level.cfg file \n");
         return;
     }
     int bufferLength = 255;
@@ -291,27 +287,26 @@ void Scene_LoadPlaneTextures(void)
 
 bool Scene_ParseConfig(char *key, char *value)
 {
-
+    // TODO: somekind of utility for getting full asset path here
     char *texturesPath = "./assets/textures/";
-    char *fullPath = malloc(strlen(texturesPath) + strlen(value) + 1);
-    strcpy(fullPath, texturesPath);
-    strcat(fullPath, value);
-    bool returnVal = false;
-    if (strcmp(key, "ceiling") == 0)
-    {
-        Scene.ceilingPlaneTexture = LoadTexture(fullPath);
-        returnVal = true;
-    }
-    else if (strcmp(key, "floor") == 0)
-    {
-        Scene.floorPlaneTexture = LoadTexture(fullPath);
-        returnVal = true;
-    }
+    char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
+    strcpy(fullTexturePath, texturesPath);
+    strcat(fullTexturePath, value);
+    // Ugly ladder incoming
+    // clang-format off
+
+    // NOTE: remove this snippet when done: else if (strcmp(key, "") == 0) { return true;}
+
+    if (strcmp(key, "ceilingtexture") == 0)    { Scene.ceilingPlaneTexture = LoadTexture(fullTexturePath); free(fullTexturePath); return true; }
+    else if (strcmp(key, "floortexture") == 0) { Scene.floorPlaneTexture = LoadTexture(fullTexturePath);   free(fullTexturePath); return true; }
+    else if (strcmp(key, "name") == 0) { Scene.name = value; return true;}
+    else if (strcmp(key, "height") == 0) { Scene.height = atoi(value); return true;}
+    else if (strcmp(key, "width") == 0) { Scene.width = atoi(value); return true;}
+    //TODO: Its probably better parse and handle data after everything else, so we know the right size for it
     else
     {
-        printf("Failed to parse scene config file!\n");
-        printf("Please check your levelfolderhere/level.cfg file \n");
+        printf("No such key: %s \n", key);
+        return false;
     }
-    free(fullPath);
-    return returnVal;
+    // clang-format on
 }

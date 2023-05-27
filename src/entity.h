@@ -21,7 +21,6 @@ typedef struct Entity_Data
     int id;
     Vector3 position;
     Vector3 size;
-    Color mapColor;
     enum Entity_Type type;
     char *fileName;
     BoundingBox boundingBox;

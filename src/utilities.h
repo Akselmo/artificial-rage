@@ -6,6 +6,7 @@
 #include "raymath.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 Vector2 Utilities_GetScreenCenter(void);
 BoundingBox Utilities_MakeBoundingBox(Vector3 position, Vector3 size);
@@ -14,4 +15,5 @@ bool Utilities_CompareColors(Color color1, Color color2);
 float Utilities_MinF(float a, float b);
 float Utilities_MaxF(float a, float b);
 void Utilities_ParseKeyValuePair(char *buffer, char *key, char *value);
+void Utilities_ParseIntArray(char *input, char *delim, int* output);
 #endif

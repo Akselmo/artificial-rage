@@ -36,9 +36,10 @@ float Utilities_MaxF(float a, float b)
     return (a < b) ? b : a;
 }
 
-void Utilities_ParseKeyValuePair(char *buffer, char *key, char *value)
+void Utilities_ParseKeyValuePair(char *input, char *key, char *value)
 {
-    char *token = strtok(buffer, " ");
+    char *delim = "=";
+    char *token = strtok(input, delim);
     for (int i = 0; i < 2; i++)
     {
         if (i == 0)
@@ -49,8 +50,17 @@ void Utilities_ParseKeyValuePair(char *buffer, char *key, char *value)
         {
             strcpy(value, token);
         }
-        token = strtok(NULL, " ");
+        token = strtok(NULL, delim);
     }
     // Remove \r and \n from end of string
     value[strcspn(value, "\r\n")] = 0;
+}
+
+void Utilities_ParseIntArray(char *input, char *delim, int *output)
+{
+    // TODO: this thing
+    // Allocate output first in caller, allocate it with zeros
+    // Then go through input and get tokens with delimiter
+    // Give these parsed integers to the output, like: output[i] = token[i]
+    // Return back to main function
 }
