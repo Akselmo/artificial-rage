@@ -5,7 +5,7 @@
 
 // Public variables
 // TODO: Initialize scene properly
-Scene_Data Scene = {0};
+Scene_Data *Scene = NULL;
 
 // Private variables
 Entity_Data *Scene_entities[ENTITIES_TOTAL];
@@ -22,7 +22,7 @@ bool Scene_ParseConfig(char *key, char *value);
 Camera Scene_Initialize(void)
 {
     Scene_Build();
-    return Player_InitializeCamera(Scene.startPosition.x, Scene.startPosition.z);
+    return Player_InitializeCamera(Scene->startPosition.x, Scene->startPosition.z);
 }
 
 // TODO: Add integer so you can select which level to load
@@ -30,15 +30,24 @@ Camera Scene_Initialize(void)
 //
 void Scene_Build(void)
 {
-    Scene.data = calloc(sizeof(int), MAX_SCENE_SIZE);
+    // Create scene
+    Scene = calloc(1, sizeof(Scene_Data));
+    // TODO: Free all scene data
+
     // Initialize entity types
     Scene_InitEntityTypes();
 
     Scene_LoadSceneConfig();
+    // Parse the string of integers into actual int array
+    printf("Scene name: %s \n", Scene->name);
+    printf("Datastring: %s \n", Scene->dataString);
+    Utilities_ParseIntArray(Scene->dataString, (Scene->width * Scene->height), Scene->data);
     // Get map image data to be used for collision detection
-    // Scene_PlaceEntities();
+    Scene_PlaceEntities();
+
 }
 /*
+ * FIXME: Do this part next
 void Scene_PlaceEntities(void)
 {
 
@@ -48,26 +57,26 @@ void Scene_PlaceEntities(void)
     // Prepare plane textures for level
     Scene_LoadSceneConfig();
 
-    Scene.ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    Scene.floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene->ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+    Scene->floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
-    Scene.ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene.ceilingPlaneTexture;
-    Scene.floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene.floorPlaneTexture;
+    Scene->ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->ceilingPlaneTexture;
+    Scene->floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->floorPlaneTexture;
 
-    Scene.position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
-    Scene.size = sceneCubicMap.height * sceneCubicMap.width;
+    Scene->position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
+    Scene->size = sceneCubicMap.height * sceneCubicMap.width;
 
-    Scene.entities = calloc(Scene.size, sizeof(Entity_Data));
-    Scene.actors = calloc(Scene.size, sizeof(Actor_Data));
-    Scene.projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
+    Scene->entities = calloc(Scene->size, sizeof(Entity_Data));
+    Scene->actors = calloc(Scene->size, sizeof(Actor_Data));
+    Scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
     for (int y = 0; y < sceneCubicMap.height; y++)
     {
         for (int x = 0; x < sceneCubicMap.width; x++)
         {
 
-            const float mx = Scene.position.x - 0.5f + x * 1.0f;
-            const float my = Scene.position.z - 0.5f + y * 1.0f;
+            const float mx = Scene->position.x - 0.5f + x * 1.0f;
+            const float my = Scene->position.z - 0.5f + y * 1.0f;
             const int id = y * sceneCubicMap.width + x;
 
             const Color pixelColor = Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
@@ -82,7 +91,7 @@ void Scene_PlaceEntities(void)
         }
     }
 
-    printf("Level has total %d entities \n", Scene.size);
+    printf("Level has total %d entities \n", Scene->size);
 }
 */
 void Scene_Update(void)
@@ -92,18 +101,18 @@ void Scene_Update(void)
         return;
     }
 
-    DrawModel(Scene.floorPlane, (Vector3){Scene.position.x, 0.0f, Scene.position.z}, 1.0f, WHITE);
-    DrawModelEx(Scene.ceilingPlane,
-                (Vector3){Scene.position.x, 1.0f, -Scene.position.z},
+    DrawModel(Scene->floorPlane, (Vector3){Scene->position.x, 0.0f, Scene->position.z}, 1.0f, WHITE);
+    DrawModelEx(Scene->ceilingPlane,
+                (Vector3){Scene->position.x, 1.0f, -Scene->position.z},
                 (Vector3){-1.0f, 0.0f, 0.0f},
                 180.0f,
                 (Vector3){1.0f, 1.0f, 1.0f},
                 WHITE);
 
-    for (int i = 0; i < Scene.size; i++)
+    for (int i = 0; i < Scene->size; i++)
     {
-        Entity_Data *data = &Scene.entities[i];
-        Actor_Data *actor = &Scene.actors[i];
+        Entity_Data *data = &Scene->entities[i];
+        Actor_Data *actor = &Scene->actors[i];
         if (data != NULL && data->id != 0)
         {
             DrawModel(data->model, data->position, 1.0f, WHITE);
@@ -122,7 +131,7 @@ void Scene_UpdateProjectiles(void)
 {
     for (int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        Projectile *projectile = &Scene.projectiles[i];
+        Projectile *projectile = &Scene->projectiles[i];
         if (projectile != NULL)
         {
             Projectile_Update(projectile);
@@ -134,19 +143,19 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
     const BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
 
-    for (int i = 0; i < Scene.size; i++)
+    for (int i = 0; i < Scene->size; i++)
     {
         // Level entities
 
         // Player and walls/enemies
-        if (CheckCollisionBoxes(entityBox, Scene.entities[i].boundingBox))
+        if (CheckCollisionBoxes(entityBox, Scene->entities[i].boundingBox))
         {
             return true;
         }
         // Actor and wall/other enemies
         // Actors ignore themselves so they dont collide to themselve. Actors also ignore their
         // own projectiles
-        else if (CheckCollisionBoxes(entityBox, Scene.actors[i].boundingBox) && Scene.actors[i].id != entityId)
+        else if (CheckCollisionBoxes(entityBox, Scene->actors[i].boundingBox) && Scene->actors[i].id != entityId)
         {
             return true;
         }
@@ -230,26 +239,26 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
         Model cubeModel = LoadModelFromMesh(cube);
         cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-        Scene.entities[id].model = cubeModel;
-        Scene.entities[id].position = (Vector3){mx, Scene.position.y, my};
-        Scene.entities[id].id = WALL_MODEL_ID;
-        Scene.entities[id].size = (Vector3){1.0f, 1.0f, 1.0f};
-        Scene.entities[id].boundingBox = Utilities_MakeBoundingBox((Vector3){mx, Scene.position.y, my}, (Vector3){1.0f, 1.0f, 1.0f});
+        Scene->entities[id].model = cubeModel;
+        Scene->entities[id].position = (Vector3){mx, Scene->position.y, my};
+        Scene->entities[id].id = WALL_MODEL_ID;
+        Scene->entities[id].size = (Vector3){1.0f, 1.0f, 1.0f};
+        Scene->entities[id].boundingBox = Utilities_MakeBoundingBox((Vector3){mx, Scene->position.y, my}, (Vector3){1.0f, 1.0f, 1.0f});
     }
 
     else if (entity->type == SCENE_START)
     {
-        Scene.startPosition = (Vector3){mx, 0.0f, my};
+        Scene->startPosition = (Vector3){mx, 0.0f, my};
     }
 
     else if (entity->type == SCENE_END)
     {
-        Scene.endPosition = (Vector3){mx, 0.0f, my};
+        Scene->endPosition = (Vector3){mx, 0.0f, my};
     }
 
     else if (entity->type == SCENE_ACTOR)
     {
-        Scene.actors[id] = Actor_Add(mx, my, id, entity->fileName);
+        Scene->actors[id] = Actor_Add(mx, my, id, entity->fileName);
     }
 }
 
@@ -257,6 +266,7 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 void Scene_LoadSceneConfig(void)
 {
     const char *fileName = "./assets/levels/level1.cfg";
+    const int bufferSize = Utilities_GetFileCharacterCount(fileName);
 
     FILE *filePointer = fopen(fileName, "r");
     if (NULL == filePointer)
@@ -264,14 +274,13 @@ void Scene_LoadSceneConfig(void)
         printf("Failed to open level config file %s \n", fileName);
         return;
     }
-    int bufferLength = 255;
-    char buffer[bufferLength];
 
-    while (fgets(buffer, bufferLength, filePointer))
+    char buffer[bufferSize];
+    while (fgets(buffer, bufferSize, filePointer))
     {
-        char key[255];
-        char value[255];
-        Utilities_ParseKeyValuePair(buffer, key, value);
+        char key[bufferSize];
+        char value[bufferSize];
+        Utilities_ParseKeyValuePair(buffer, key, "=", value);
 
         if (!Scene_ParseConfig(key, value))
         {
@@ -292,21 +301,46 @@ bool Scene_ParseConfig(char *key, char *value)
     char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
     strcpy(fullTexturePath, texturesPath);
     strcat(fullTexturePath, value);
-    // Ugly ladder incoming
-    // clang-format off
 
     // NOTE: remove this snippet when done: else if (strcmp(key, "") == 0) { return true;}
 
-    if (strcmp(key, "ceilingtexture") == 0)    { Scene.ceilingPlaneTexture = LoadTexture(fullTexturePath); free(fullTexturePath); return true; }
-    else if (strcmp(key, "floortexture") == 0) { Scene.floorPlaneTexture = LoadTexture(fullTexturePath);   free(fullTexturePath); return true; }
-    else if (strcmp(key, "name") == 0) { Scene.name = value; return true;}
-    else if (strcmp(key, "height") == 0) { Scene.height = atoi(value); return true;}
-    else if (strcmp(key, "width") == 0) { Scene.width = atoi(value); return true;}
-    //TODO: Its probably better parse and handle data after everything else, so we know the right size for it
+    if (strcmp(key, "ceilingtexture") == 0)
+    {
+        Scene->ceilingPlaneTexture = LoadTexture(fullTexturePath);
+        free(fullTexturePath);
+        return true;
+    }
+    else if (strcmp(key, "floortexture") == 0)
+    {
+        Scene->floorPlaneTexture = LoadTexture(fullTexturePath);
+        free(fullTexturePath);
+        return true;
+    }
+    else if (strcmp(key, "name") == 0)
+    {
+        Scene->name = calloc(strlen(value)+5, sizeof(char));
+        strcpy(Scene->name, value);
+        return true;
+    }
+    else if (strcmp(key, "height") == 0)
+    {
+        Scene->height = atoi(value);
+        return true;
+    }
+    else if (strcmp(key, "width") == 0)
+    {
+        Scene->width = atoi(value);
+        return true;
+    }
+    else if (strcmp(key, "data") == 0)
+    {
+        Scene->dataString = calloc(strlen(value)+5, sizeof(char));
+        strcpy(Scene->dataString, value);
+        return true; // Handle array after the parsing is done
+    }
     else
     {
         printf("No such key: %s \n", key);
         return false;
     }
-    // clang-format on
 }

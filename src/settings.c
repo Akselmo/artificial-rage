@@ -62,7 +62,7 @@ Settings_Data Settings_CreateDefault(void)
 
 void Settings_Read(Settings_Data* settings)
 {
-
+    const int bufferLength = Utilities_GetFileCharacterCount(SETTINGS_FILENAME);
     FILE *filePointer = fopen(SETTINGS_FILENAME, "r");
     if (NULL == filePointer) {
         printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
@@ -72,14 +72,12 @@ void Settings_Read(Settings_Data* settings)
 
     printf("Loaded following settings \n");
 
-    int bufferLength = 255;
     char buffer[bufferLength];
-
     while(fgets(buffer, bufferLength, filePointer))
     {
-        char key[255];
-        char value[255];
-        Utilities_ParseKeyValuePair(buffer, key, value);
+        char key[bufferLength];
+        char value[bufferLength];
+        Utilities_ParseKeyValuePair(buffer, key, "=", value);
 
         if (!Settings_Parse(settings, key, (float)atof(value)))
         {

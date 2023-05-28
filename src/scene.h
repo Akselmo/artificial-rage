@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_SCENE_SIZE 16384
 #define MAX_PROJECTILE_AMOUNT 254
 #define WALL_MODEL_ID -2
 
@@ -26,6 +25,7 @@ typedef struct Scene_Data
     int height;
     int width;
     int *data;
+    char *dataString;
     int ceilingHeight;
     Model floorPlane;
     Texture2D floorPlaneTexture;
@@ -43,7 +43,7 @@ typedef struct Scene_Data
 } Scene_Data;
 
 // Variables
-extern struct Scene_Data Scene;
+extern struct Scene_Data *Scene;
 
 // Functions
 Camera Scene_Initialize(void);

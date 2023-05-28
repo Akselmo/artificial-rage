@@ -17,7 +17,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
     // clang-format off
     for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
     {
-        if(Scene.projectiles[i].id != i || Scene.projectiles[i].destroyed == true)
+        if(Scene->projectiles[i].id != i || Scene->projectiles[i].destroyed == true)
         {
             Projectile projectile = {
                 .startPosition = rayCast.position,
@@ -35,8 +35,8 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
             };
             projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
             printf("Projectile id created %d\n", projectile.id);
-            Scene.projectiles[i] = projectile;
-            Projectile_RotateTowards(&Scene.projectiles[i]);
+            Scene->projectiles[i] = projectile;
+            Projectile_RotateTowards(&Scene->projectiles[i]);
             break;
         }
     }
@@ -63,19 +63,19 @@ void Projectile_CheckCollision(Projectile *projectile)
     // unless its a wall
     //  Otherwise tell the entity they've been hit and give them damage
     const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-    for (int i = 0; i < Scene.size; i++)
+    for (int i = 0; i < Scene->size; i++)
     {
 
         // Test hitting against wall
-        if (CheckCollisionBoxes(projectileBox, Scene.entities[i].boundingBox))
+        if (CheckCollisionBoxes(projectileBox, Scene->entities[i].boundingBox))
         {
             Projectile_Destroy(projectile);
             return;
         }
         // Against enemy except if owned by enemy
-        else if (CheckCollisionBoxes(projectileBox, Scene.actors[i].boundingBox) && Scene.actors[i].id != projectile->ownerId)
+        else if (CheckCollisionBoxes(projectileBox, Scene->actors[i].boundingBox) && Scene->actors[i].id != projectile->ownerId)
         {
-            Actor_TakeDamage(&Scene.actors[i], projectile->damage);
+            Actor_TakeDamage(&Scene->actors[i], projectile->damage);
             Projectile_Destroy(projectile);
             return;
         }

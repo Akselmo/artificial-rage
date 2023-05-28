@@ -36,9 +36,8 @@ float Utilities_MaxF(float a, float b)
     return (a < b) ? b : a;
 }
 
-void Utilities_ParseKeyValuePair(char *input, char *key, char *value)
+void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *value)
 {
-    char *delim = "=";
     char *token = strtok(input, delim);
     for (int i = 0; i < 2; i++)
     {
@@ -56,11 +55,45 @@ void Utilities_ParseKeyValuePair(char *input, char *key, char *value)
     value[strcspn(value, "\r\n")] = 0;
 }
 
-void Utilities_ParseIntArray(char *input, char *delim, int *output)
+void Utilities_ParseIntArray(char *input, const int size, int *output)
 {
-    // TODO: this thing
-    // Allocate output first in caller, allocate it with zeros
-    // Then go through input and get tokens with delimiter
-    // Give these parsed integers to the output, like: output[i] = token[i]
-    // Return back to main function
+    // Allocates the output with size, then parses the integer array with "," as delimiter
+    // Thanks to: https://stackoverflow.com/a/29589157 !
+    // NOTE: Feel free to improve this, however this seems to work nicely.
+    output = calloc(size, sizeof(int));
+    char *end = input;
+    int i = 0;
+    while(*end)
+    {
+        int n = strtol(input, &end, 10);
+        while (*end == ',')
+        {
+            end++;
+        }
+        input = end;
+        // Assign the parsed numbers to the output array
+        output[i] = n;
+        i++;
+    }
+}
+
+int Utilities_GetFileCharacterCount(const char *fileName)
+{
+    FILE *filePointer = fopen(fileName, "r");
+    if (NULL == filePointer)
+    {
+        printf("Failed to get character amount from file: %s \n", fileName);
+        return -1;
+    }
+
+    int count = 0;
+    char c;
+    for (c = getc(filePointer); c != EOF; c = getc(filePointer))
+    {
+        count++;
+    }
+
+    fclose(filePointer);
+
+    return count;
 }
