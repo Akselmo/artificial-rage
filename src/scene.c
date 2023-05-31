@@ -37,14 +37,12 @@ void Scene_Build(void)
     // Initialize entity types
     Scene_InitEntityTypes();
 
+    // Load scene data from the config file
     Scene_LoadSceneConfig();
-    // Parse the string of integers into actual int array
-    printf("Scene name: %s \n", Scene->name);
-    printf("Datastring: %s \n", Scene->dataString);
-    Utilities_ParseIntArray(Scene->dataString, (Scene->width * Scene->height), Scene->data);
-    // Get map image data to be used for collision detection
-    Scene_PlaceEntities();
 
+    printf("Scene data 3: %d\n", Scene->data[2]);
+    // Get map image data to be used for collision detection
+    // Scene_PlaceEntities();
 }
 /*
  * FIXME: Do this part next
@@ -334,8 +332,7 @@ bool Scene_ParseConfig(char *key, char *value)
     }
     else if (strcmp(key, "data") == 0)
     {
-        Scene->dataString = calloc(strlen(value)+5, sizeof(char));
-        strcpy(Scene->dataString, value);
+        Scene->data = Utilities_ParseIntArray(value, &Scene->dataCount);
         return true; // Handle array after the parsing is done
     }
     else

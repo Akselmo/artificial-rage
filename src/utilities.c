@@ -52,29 +52,37 @@ void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *valu
         token = strtok(NULL, delim);
     }
     // Remove \r and \n from end of string
-    value[strcspn(value, "\r\n")] = 0;
+    value[strcspn(value, "\r\n")] = '\0';
 }
 
-void Utilities_ParseIntArray(char *input, const int size, int *output)
+int *Utilities_ParseIntArray(char *input, int *outputCount)
 {
-    // Allocates the output with size, then parses the integer array with "," as delimiter
-    // Thanks to: https://stackoverflow.com/a/29589157 !
-    // NOTE: Feel free to improve this, however this seems to work nicely.
-    output = calloc(size, sizeof(int));
-    char *end = input;
-    int i = 0;
-    while(*end)
+    // Create tokens array
+    char tokens[strlen(input) + 1];
+    strcpy(tokens, input);
+
+    // Get the amount of delimiters, count starts from 1 due to last item not having a delimiter
+    int count = 1;
+    for (unsigned long i = 0; i < strlen(input); i++)
     {
-        int n = strtol(input, &end, 10);
-        while (*end == ',')
+        if (input[i] == ',')
         {
-            end++;
+            count++;
         }
-        input = end;
-        // Assign the parsed numbers to the output array
-        output[i] = n;
-        i++;
     }
+
+    // Get integers from tokens
+    int tokenCount = 0;
+    int *output = calloc(count, sizeof(int));
+    for (char *token = strtok(tokens, ","); token != NULL; token = strtok(NULL, ","))
+    {
+        // Add integers to output
+        output[tokenCount] = atoi(token);
+        tokenCount++;
+    }
+    // Return the count of tokens in output
+    *outputCount = tokenCount;
+    return output;
 }
 
 int Utilities_GetFileCharacterCount(const char *fileName)

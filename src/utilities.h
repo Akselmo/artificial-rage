@@ -17,6 +17,6 @@ bool Utilities_CompareColors(Color color1, Color color2);
 float Utilities_MinF(float a, float b);
 float Utilities_MaxF(float a, float b);
 void Utilities_ParseKeyValuePair(char *buffer, char *key, char* delim, char *value);
-void Utilities_ParseIntArray(char *input, const int size, int *output);
+int *Utilities_ParseIntArray(char *input, int *outputCount);
 int Utilities_GetFileCharacterCount(const char *fileName);
 #endif

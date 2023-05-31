@@ -25,7 +25,7 @@ typedef struct Scene_Data
     int height;
     int width;
     int *data;
-    char *dataString;
+    int dataCount;
     int ceilingHeight;
     Model floorPlane;
     Texture2D floorPlaneTexture;
