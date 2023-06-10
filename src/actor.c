@@ -11,7 +11,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 {
 	const Vector3 actorPosition = (Vector3){ pos_x, ACTOR_POSITION_Y, pos_z };
 	const Vector3 actorRotation = Vector3Zero();
-	const Vector3 actorSize		= (Vector3){ 0.25f, 1.1f, 0.25f };
+	const Vector3 actorSize     = (Vector3){ 0.25f, 1.1f, 0.25f };
 
 	unsigned int animationsCount = 0;
 
@@ -20,60 +20,60 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 	Animator_Animation *animations;
 	animations = calloc(animationsCount, sizeof(Animator_Animation));
 
-	Animator_Animation deathAnim = { .animation		= loadedAnimations[DEATH],
-									 .firstFrame	= 0,
-									 .lastFrame		= (loadedAnimations[DEATH].frameCount - 5),
-									 .id			= DEATH,
-									 .interruptable = false,
-									 .loopable		= false };
+	Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
+		                             .firstFrame    = 0,
+		                             .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
+		                             .id            = DEATH,
+		                             .interruptable = false,
+		                             .loopable      = false };
 
-	Animator_Animation attackAnim = { .animation	 = loadedAnimations[ATTACK],
-									  .firstFrame	 = 0,
-									  .lastFrame	 = loadedAnimations[ATTACK].frameCount,
-									  .id			 = ATTACK,
-									  .interruptable = false,
-									  .loopable		 = false };
+	Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
+		                              .firstFrame    = 0,
+		                              .lastFrame     = loadedAnimations[ATTACK].frameCount,
+		                              .id            = ATTACK,
+		                              .interruptable = false,
+		                              .loopable      = false };
 
-	Animator_Animation idleAnim = { .animation	   = loadedAnimations[IDLE],
-									.firstFrame	   = 0,
-									.lastFrame	   = loadedAnimations[IDLE].frameCount,
-									.id			   = IDLE,
-									.interruptable = true,
-									.loopable	   = true };
+	Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
+		                            .firstFrame    = 0,
+		                            .lastFrame     = loadedAnimations[IDLE].frameCount,
+		                            .id            = IDLE,
+		                            .interruptable = true,
+		                            .loopable      = true };
 
-	Animator_Animation moveAnim = { .animation	   = loadedAnimations[MOVE],
-									.firstFrame	   = 0,
-									.lastFrame	   = loadedAnimations[MOVE].frameCount,
-									.id			   = MOVE,
-									.interruptable = true,
-									.loopable	   = true };
+	Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
+		                            .firstFrame    = 0,
+		                            .lastFrame     = loadedAnimations[MOVE].frameCount,
+		                            .id            = MOVE,
+		                            .interruptable = true,
+		                            .loopable      = true };
 
 	animations[DEATH]  = deathAnim;
 	animations[ATTACK] = attackAnim;
 	animations[IDLE]   = idleAnim;
 	animations[MOVE]   = moveAnim;
 
-	Animator_Data animator = { .model			 = LoadModel(modelFileName),
-							   .animations		 = animations,
-							   .animationsCount	 = animationsCount,
-							   .currentAnimation = animations[IDLE],
-							   .nextFrame		 = 0 };
+	Animator_Data animator = { .model            = LoadModel(modelFileName),
+		                       .animations       = animations,
+		                       .animationsCount  = animationsCount,
+		                       .currentAnimation = animations[IDLE],
+		                       .nextFrame        = 0 };
 
 	Actor_Data actor = {
-		.position	   = actorPosition,
-		.rotation	   = actorRotation,
-		.size		   = actorSize,
-		.dead		   = false,
-		.moving		   = false,
-		.attacking	   = false,
-		.damage		   = 5,
-		.health		   = 15, // Check actor health balance later
+		.position      = actorPosition,
+		.rotation      = actorRotation,
+		.size          = actorSize,
+		.dead          = false,
+		.moving        = false,
+		.attacking     = false,
+		.damage        = 5,
+		.health        = 15, // Check actor health balance later
 		.boundingBox   = Utilities_MakeBoundingBox(actorPosition, actorSize),
-		.id			   = id,
+		.id            = id,
 		.movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
 		.rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-		.fireRate	   = 5.75f,
-		.nextFire	   = 5.75f,
+		.fireRate      = 5.75f,
+		.nextFire      = 5.75f,
 	};
 
 	actor.animator = animator;
@@ -123,11 +123,11 @@ Ray Actor_CreateRay(Actor_Data *actor)
 {
 
 	const Vector3 playerPosition = Player->position;
-	const Vector3 v				 = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
+	const Vector3 v              = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
 
 	Ray rayCast = {
 		.direction = (Vector3){-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
-			 .position = actor->position
+          .position = actor->position
 	};
 
 	return rayCast;
@@ -138,10 +138,10 @@ bool Actor_TestPlayerHit(Actor_Data *actor)
 
 	const Ray rayCast = Actor_CreateRay(actor);
 
-	bool hitPlayer				 = false;
-	float levelDistance			 = INFINITY;
-	float playerDistance		 = INFINITY;
-	const int entitiesAmount	 = Scene->size;
+	bool hitPlayer               = false;
+	float levelDistance          = INFINITY;
+	float playerDistance         = INFINITY;
+	const int entitiesAmount     = Scene->size;
 	const Entity_Data *levelData = Scene->entities;
 
 	for (int i = 0; i < entitiesAmount; i++)
@@ -179,7 +179,7 @@ bool Actor_UpdatePosition(Actor_Data *actor)
 
 	//- If in certain range from player, stop
 	if (fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
-		fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
+	    fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
 	{
 		const Vector3 actorOldPosition = actor->position;
 		const Vector3 actorNewPosition = (Vector3){ Player->position.x, ACTOR_POSITION_Y, Player->position.z };
@@ -212,7 +212,7 @@ void Actor_TakeDamage(Actor_Data *actor, const int damageAmount)
 			const Vector3 deadBoxPos =
 				(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
 			actor->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
-			actor->dead		   = true;
+			actor->dead        = true;
 		}
 	}
 }
@@ -240,8 +240,8 @@ bool Actor_FireAtPlayer(Actor_Data *actor, float nextFire)
 void Actor_RotateTowards(Actor_Data *actor, const Vector3 targetPosition)
 {
 	// Rotates the actor around Y axis
-	const Vector3 diff		  = Vector3Subtract(actor->position, targetPosition);
-	const float y_angle		  = -(atan2(diff.z, diff.x) + PI / 2.0);
+	const Vector3 diff        = Vector3Subtract(actor->position, targetPosition);
+	const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
 	const Vector3 newRotation = (Vector3){ 0, y_angle, 0 };
 
 	const Quaternion start = QuaternionFromEuler(actor->rotation.z, actor->rotation.y, actor->rotation.x);
@@ -249,5 +249,5 @@ void Actor_RotateTowards(Actor_Data *actor, const Vector3 targetPosition)
 	const Quaternion slerp = QuaternionSlerp(start, end, actor->rotationSpeed * GetFrameTime());
 
 	actor->animator.model.transform = QuaternionToMatrix(slerp);
-	actor->rotation					= newRotation;
+	actor->rotation                 = newRotation;
 }

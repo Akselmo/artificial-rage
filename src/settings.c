@@ -35,23 +35,23 @@ void Settings_Initialize(void)
 Settings_Data Settings_CreateDefault(void)
 {
 
-	Settings_Data data = { .screenWidth		 = 800,
-						   .screenHeight	 = 600,
-						   .mouseSensitivity = 0.25f,
-						   .cameraFOV		 = 90,
-						   .maxFPS			 = 200,
-						   .keyMoveForward	 = KEY_W,
-						   .keyMoveBackward	 = KEY_S,
-						   .keyMoveLeft		 = KEY_A,
-						   .keyMoveRight	 = KEY_D,
-						   .keyFire			 = MOUSE_BUTTON_LEFT,
-						   .keyUse			 = KEY_E,
-						   .keyJump			 = KEY_SPACE,
-						   .keyWeaponOne	 = KEY_ONE,
-						   .keyWeaponTwo	 = KEY_TWO,
-						   .keyWeaponThree	 = KEY_THREE,
-						   .keyWeaponFour	 = KEY_FOUR,
-						   .keyWeaponFive	 = KEY_FIVE };
+	Settings_Data data = { .screenWidth      = 800,
+		                   .screenHeight     = 600,
+		                   .mouseSensitivity = 0.25f,
+		                   .cameraFOV        = 90,
+		                   .maxFPS           = 200,
+		                   .keyMoveForward   = KEY_W,
+		                   .keyMoveBackward  = KEY_S,
+		                   .keyMoveLeft      = KEY_A,
+		                   .keyMoveRight     = KEY_D,
+		                   .keyFire          = MOUSE_BUTTON_LEFT,
+		                   .keyUse           = KEY_E,
+		                   .keyJump          = KEY_SPACE,
+		                   .keyWeaponOne     = KEY_ONE,
+		                   .keyWeaponTwo     = KEY_TWO,
+		                   .keyWeaponThree   = KEY_THREE,
+		                   .keyWeaponFour    = KEY_FOUR,
+		                   .keyWeaponFive    = KEY_FIVE };
 	// clang format on
 	// Write settings to datafile here
 
@@ -61,7 +61,7 @@ Settings_Data Settings_CreateDefault(void)
 void Settings_Read(Settings_Data *settings)
 {
 	const int bufferLength = Utilities_GetFileCharacterCount(SETTINGS_FILENAME);
-	FILE *filePointer	   = fopen(SETTINGS_FILENAME, "r");
+	FILE *filePointer      = fopen(SETTINGS_FILENAME, "r");
 	if (NULL == filePointer)
 	{
 		printf("Failed to open settings file %s \n", SETTINGS_FILENAME);

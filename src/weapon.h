@@ -61,9 +61,9 @@ typedef struct Weapon_Holder
 
 typedef enum Weapon_ID
 {
-	MELEE	= 0,
-	PISTOL	= 1,
-	RIFLE	= 2,
+	MELEE   = 0,
+	PISTOL  = 1,
+	RIFLE   = 2,
 	SHOTGUN = 3,
 	RAILGUN = 4
 } Weapon_ID;

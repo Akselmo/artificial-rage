@@ -4,11 +4,11 @@
 
 // Initialize Custom Camera
 static Player_CustomCameraData Player_CustomCamera = {
-	.targetDistance		= 0,
+	.targetDistance     = 0,
 	.playerEyesPosition = 1.85f,
-	.angle				= { 0 },
-	.mouseSensitivity	= 0.003f,
-	.playerSpeed		= 1.75f,
+	.angle              = { 0 },
+	.mouseSensitivity   = 0.003f,
+	.playerSpeed        = 1.75f,
 };
 
 Player_Data *Player = NULL;
@@ -20,18 +20,18 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 	Camera camera = { 0 };
 
 	// Place camera and apply settings
-	camera.position	  = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
-	camera.target	  = (Vector3){ 0.0f, 0.5f, 0.0f };
-	camera.up		  = (Vector3){ 0.0f, 1.0f, 0.0f };
-	camera.fovy		  = Settings.cameraFOV; // get fov from settings file
+	camera.position   = (Vector3){ pos_x, PLAYER_START_POSITION_Y, pos_z };
+	camera.target     = (Vector3){ 0.0f, 0.5f, 0.0f };
+	camera.up         = (Vector3){ 0.0f, 1.0f, 0.0f };
+	camera.fovy       = Settings.cameraFOV; // get fov from settings file
 	camera.projection = CAMERA_PERSPECTIVE;
 
 	// Distances
 	const Vector3 v1 = camera.position;
 	const Vector3 v2 = camera.target;
-	const float dx	 = v2.x - v1.x;
-	const float dy	 = v2.y - v1.y;
-	const float dz	 = v2.z - v1.z;
+	const float dx   = v2.x - v1.x;
+	const float dy   = v2.y - v1.y;
+	const float dz   = v2.z - v1.z;
 
 	// Distance to target
 	Player_CustomCamera.targetDistance = sqrtf(dx * dx + dy * dy + dz * dz);
@@ -48,13 +48,13 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 	Player_CustomCamera.mouseSensitivity = Settings.mouseSensitivity;
 
 	// Initialize player data
-	Player				= calloc(1, sizeof(Player_Data));
-	Player->health		= PLAYER_MAX_HEALTH;
-	Player->dead		= false;
-	Player->size		= (Vector3){ 0.1f, 0.1f, 0.1f };
-	Player->position	= (Vector3){ 0.0f, 0.0f, 0.0f };
+	Player              = calloc(1, sizeof(Player_Data));
+	Player->health      = PLAYER_MAX_HEALTH;
+	Player->dead        = false;
+	Player->size        = (Vector3){ 0.1f, 0.1f, 0.1f };
+	Player->position    = (Vector3){ 0.0f, 0.0f, 0.0f };
 	Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
-	Player->nextFire	= 0.0f;
+	Player->nextFire    = 0.0f;
 
 	Weapon_Initialize();
 
@@ -73,31 +73,31 @@ void Player_Update(Camera *camera)
 	const Vector2 mousePositionDelta = GetMouseDelta();
 
 	const bool direction[4] = { IsKeyDown(Settings.keyMoveForward),
-								IsKeyDown(Settings.keyMoveBackward),
-								IsKeyDown(Settings.keyMoveRight),
-								IsKeyDown(Settings.keyMoveLeft) };
+		                        IsKeyDown(Settings.keyMoveBackward),
+		                        IsKeyDown(Settings.keyMoveRight),
+		                        IsKeyDown(Settings.keyMoveLeft) };
 
 	// Move camera around X pos
 	camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-							sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
-							cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
-							cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
-						   Player_CustomCamera.playerSpeed) *
-						  GetFrameTime();
+	                        sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
+	                        cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
+	                        cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+	                       Player_CustomCamera.playerSpeed) *
+	                      GetFrameTime();
 
 	// Move camera around Y pos
 	camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
-							sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
-						   Player_CustomCamera.playerSpeed) *
-						  GetFrameTime();
+	                        sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
+	                       Player_CustomCamera.playerSpeed) *
+	                      GetFrameTime();
 
 	// Move camera around Z pos
 	camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-							cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
-							sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
-							sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
-						   Player_CustomCamera.playerSpeed) *
-						  GetFrameTime();
+	                        cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
+	                        sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
+	                        sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+	                       Player_CustomCamera.playerSpeed) *
+	                      GetFrameTime();
 
 	// Camera orientation calculation
 	Player_CustomCamera.angle.x -= mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();
@@ -117,7 +117,7 @@ void Player_Update(Camera *camera)
 	const Matrix translation =
 		MatrixTranslate(0, 0, (Player_CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER));
 	const Matrix rotation  = MatrixInvert(MatrixRotateXYZ((Vector3
-	 ){ PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
+    ){ PI * 2 - Player_CustomCamera.angle.y, PI * 2 - Player_CustomCamera.angle.x, 0 }));
 	const Matrix transform = MatrixMultiply(translation, rotation);
 
 	// Move camera according to matrix position (where camera looks at)
@@ -133,7 +133,7 @@ void Player_Update(Camera *camera)
 		camera->position = oldPlayerPos;
 	}
 
-	Player->position	= camera->position;
+	Player->position    = camera->position;
 	Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
 	// Check if we need to switch weapon
 	Weapon_GetSwitchInput();

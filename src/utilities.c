@@ -9,7 +9,7 @@ Vector2 Utilities_GetScreenCenter(void)
 BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
 {
 	BoundingBox bb = (BoundingBox){
-		(Vector3){position.x - size.x / 2,	position.y - size.y / 2, position.z - size.z / 2},
+		(Vector3){position.x - size.x / 2,  position.y - size.y / 2, position.z - size.z / 2},
 		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}
 	};
 	return bb;
@@ -70,7 +70,7 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 
 	// Get integers from tokens
 	int tokenCount = 0;
-	int *output	   = calloc(count, sizeof(int));
+	int *output    = calloc(count, sizeof(int));
 	for (char *token = strtok(tokens, ","); token != NULL; token = strtok(NULL, ","))
 	{
 		// Add integers to output

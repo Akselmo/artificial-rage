@@ -23,15 +23,15 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 				.startPosition = rayCast.position,
 				.endPosition =
 					Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
-				.position	 = projectile.startPosition,
-				.id			 = i,
-				.ownerId	 = ownerId,
-				.size		 = size,
+				.position    = projectile.startPosition,
+				.id          = i,
+				.ownerId     = ownerId,
+				.size        = size,
 				.boundingBox = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
-				.damage		 = damage,
-				.color		 = color,
-				.speed		 = 0.12f * GetFrameTime(),
-				.destroyed	 = false,
+				.damage      = damage,
+				.color       = color,
+				.speed       = 0.12f * GetFrameTime(),
+				.destroyed   = false,
 			};
 			projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
 			printf("Projectile id created %d\n", projectile.id);
@@ -99,7 +99,7 @@ void Projectile_Destroy(Projectile *projectile)
 {
 	printf("Projectile id %d destroyed\n", projectile->id);
 	projectile->destroyed = true;
-	projectile			  = NULL;
+	projectile            = NULL;
 	free(projectile);
 }
 

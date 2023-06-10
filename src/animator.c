@@ -4,7 +4,7 @@
 void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 {
 	const Animator_Animation currentAnimation = animator->currentAnimation;
-	const Animator_Animation newAnimation	  = animator->animations[animationId];
+	const Animator_Animation newAnimation     = animator->animations[animationId];
 
 	if (currentAnimation.id == newAnimation.id)
 	{

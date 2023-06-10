@@ -1,4 +1,4 @@
-UseTab: Always
+UseTab: AlignWithSpaces
 IndentWidth: 4
 TabWidth: 4
 AlignConsecutiveAssignments: Consecutive
