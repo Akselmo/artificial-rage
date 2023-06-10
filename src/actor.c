@@ -20,66 +20,64 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 	Animator_Animation *animations;
 	animations = calloc(animationsCount, sizeof(Animator_Animation));
 
-	// clang-format off
-    Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
-                                     .firstFrame    = 0,
-                                     .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
-                                     .id            = DEATH,
-                                     .interruptable = false,
-                                     .loopable      = false };
+	Animator_Animation deathAnim = {.animation = loadedAnimations[DEATH],
+									.firstFrame = 0,
+									.lastFrame = (loadedAnimations[DEATH].frameCount - 5),
+									.id = DEATH,
+									.interruptable = false,
+									.loopable = false};
 
-    Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
-                                      .firstFrame    = 0,
-                                      .lastFrame     = loadedAnimations[ATTACK].frameCount,
-                                      .id            = ATTACK,
-                                      .interruptable = false,
-                                      .loopable      = false };
+	Animator_Animation attackAnim = {.animation = loadedAnimations[ATTACK],
+									 .firstFrame = 0,
+									 .lastFrame = loadedAnimations[ATTACK].frameCount,
+									 .id = ATTACK,
+									 .interruptable = false,
+									 .loopable = false};
 
-    Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
-                                    .firstFrame    = 0,
-                                    .lastFrame     = loadedAnimations[IDLE].frameCount,
-                                    .id            = IDLE,
-                                    .interruptable = true,
-                                    .loopable      = true };
+	Animator_Animation idleAnim = {.animation = loadedAnimations[IDLE],
+								   .firstFrame = 0,
+								   .lastFrame = loadedAnimations[IDLE].frameCount,
+								   .id = IDLE,
+								   .interruptable = true,
+								   .loopable = true};
 
-    Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
-                                    .firstFrame    = 0,
-                                    .lastFrame     = loadedAnimations[MOVE].frameCount,
-                                    .id            = MOVE,
-                                    .interruptable = true,
-                                    .loopable      = true };
+	Animator_Animation moveAnim = {.animation = loadedAnimations[MOVE],
+								   .firstFrame = 0,
+								   .lastFrame = loadedAnimations[MOVE].frameCount,
+								   .id = MOVE,
+								   .interruptable = true,
+								   .loopable = true};
 
-    animations[DEATH]  = deathAnim;
-    animations[ATTACK] = attackAnim;
-    animations[IDLE]   = idleAnim;
-    animations[MOVE]   = moveAnim;
+	animations[DEATH] = deathAnim;
+	animations[ATTACK] = attackAnim;
+	animations[IDLE] = idleAnim;
+	animations[MOVE] = moveAnim;
 
-    Animator_Data animator = { .model            = LoadModel(modelFileName),
-                               .animations       = animations,
-                               .animationsCount  = animationsCount,
-                               .currentAnimation = animations[IDLE],
-                               .nextFrame        = 0 };
+	Animator_Data animator = {.model = LoadModel(modelFileName),
+							  .animations = animations,
+							  .animationsCount = animationsCount,
+							  .currentAnimation = animations[IDLE],
+							  .nextFrame = 0};
 
-    Actor_Data actor = {
-        .position      = actorPosition,
-        .rotation      = actorRotation,
-        .size          = actorSize,
-        .dead          = false,
-        .moving        = false,
-        .attacking     = false,
-        .damage        = 5,
-        .health        = 15,  // Check actor health balance later
-        .boundingBox   = Utilities_MakeBoundingBox(actorPosition, actorSize),
-        .id            = id,
-        .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
-        .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-        .fireRate      = 5.75f,
-        .nextFire      = 5.75f,
-    };
+	Actor_Data actor = {
+		.position = actorPosition,
+		.rotation = actorRotation,
+		.size = actorSize,
+		.dead = false,
+		.moving = false,
+		.attacking = false,
+		.damage = 5,
+		.health = 15, // Check actor health balance later
+		.boundingBox = Utilities_MakeBoundingBox(actorPosition, actorSize),
+		.id = id,
+		.movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		.rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		.fireRate = 5.75f,
+		.nextFire = 5.75f,
+	};
 
-    actor.animator = animator;
+	actor.animator = animator;
 
-	// clang-format on
 	return actor;
 }
 
@@ -128,12 +126,11 @@ Ray Actor_CreateRay(Actor_Data *actor)
 
 	const Vector3 playerPosition = Player->position;
 	const Vector3 v = Vector3Normalize(Vector3Subtract(actor->position, playerPosition));
-	// clang-format off
-    Ray rayCast                  = {
-        .direction = (Vector3) {-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
-        .position = actor->position
-    };
-	// clang-format on
+
+	Ray rayCast = {
+		.direction = (Vector3){-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
+		.position = actor->position};
+
 	return rayCast;
 }
 

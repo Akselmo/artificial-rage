@@ -72,35 +72,32 @@ void Player_Update(Camera *camera)
 
 	const Vector2 mousePositionDelta = GetMouseDelta();
 
-	// clang-format off
-    const bool direction[4] = { IsKeyDown(Settings.keyMoveForward),
-                                IsKeyDown(Settings.keyMoveBackward),
-                                IsKeyDown(Settings.keyMoveRight),
-                                IsKeyDown(Settings.keyMoveLeft) };
+	const bool direction[4] = {IsKeyDown(Settings.keyMoveForward),
+							   IsKeyDown(Settings.keyMoveBackward),
+							   IsKeyDown(Settings.keyMoveRight),
+							   IsKeyDown(Settings.keyMoveLeft)};
 
-    // Move camera around X pos
-    camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
-                           Player_CustomCamera.playerSpeed) *
-                          GetFrameTime();
+	// Move camera around X pos
+	camera->position.x += ((sinf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
+							sinf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] -
+							cosf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] +
+							cosf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+						   Player_CustomCamera.playerSpeed) *
+						  GetFrameTime();
 
-    // Move camera around Y pos
-    camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
-                            sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
-                           Player_CustomCamera.playerSpeed) *
-                          GetFrameTime();
+	// Move camera around Y pos
+	camera->position.y += ((sinf(Player_CustomCamera.angle.y) * direction[MOVE_FRONT] -
+							sinf(Player_CustomCamera.angle.y) * direction[MOVE_BACK]) *
+						   Player_CustomCamera.playerSpeed) *
+						  GetFrameTime();
 
-    // Move camera around Z pos
-    camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
-                            cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
-                            sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
-                           Player_CustomCamera.playerSpeed) *
-                          GetFrameTime();
-
-	// clang-format on
+	// Move camera around Z pos
+	camera->position.z += ((cosf(Player_CustomCamera.angle.x) * direction[MOVE_BACK] -
+							cosf(Player_CustomCamera.angle.x) * direction[MOVE_FRONT] +
+							sinf(Player_CustomCamera.angle.x) * direction[MOVE_LEFT] -
+							sinf(Player_CustomCamera.angle.x) * direction[MOVE_RIGHT]) *
+						   Player_CustomCamera.playerSpeed) *
+						  GetFrameTime();
 
 	// Camera orientation calculation
 	Player_CustomCamera.angle.x -= mousePositionDelta.x * Player_CustomCamera.mouseSensitivity * GetFrameTime();

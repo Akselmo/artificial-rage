@@ -14,33 +14,32 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 {
 	// Projectile does not need to know if it hits or not, that is calculated from
 	// entities themselves.
-	// clang-format off
-    for(int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
-    {
-        if(Scene->projectiles[i].id != i || Scene->projectiles[i].destroyed == true)
-        {
-            Projectile projectile = {
-                .startPosition = rayCast.position,
-                .endPosition   = Vector3Add(
-                    rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
-                .position    = projectile.startPosition,
-                .id          = i,
-                .ownerId     = ownerId,
-                .size        = size,
-                .boundingBox = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
-                .damage      = damage,
-                .color       = color,
-                .speed       = 0.12f * GetFrameTime(),
-                .destroyed   = false,
-            };
-            projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
-            printf("Projectile id created %d\n", projectile.id);
-            Scene->projectiles[i] = projectile;
-            Projectile_RotateTowards(&Scene->projectiles[i]);
-            break;
-        }
-    }
-	// clang-format on
+
+	for (int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
+	{
+		if (Scene->projectiles[i].id != i || Scene->projectiles[i].destroyed == true)
+		{
+			Projectile projectile = {
+				.startPosition = rayCast.position,
+				.endPosition = Vector3Add(
+					rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
+				.position = projectile.startPosition,
+				.id = i,
+				.ownerId = ownerId,
+				.size = size,
+				.boundingBox = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
+				.damage = damage,
+				.color = color,
+				.speed = 0.12f * GetFrameTime(),
+				.destroyed = false,
+			};
+			projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
+			printf("Projectile id created %d\n", projectile.id);
+			Scene->projectiles[i] = projectile;
+			Projectile_RotateTowards(&Scene->projectiles[i]);
+			break;
+		}
+	}
 }
 
 void Projectile_Update(Projectile *projectile)

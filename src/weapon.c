@@ -10,103 +10,95 @@
 void Weapon_Change(int weaponId);
 bool WeaponHasAmmo(int currentWeapon);
 
-// clang-format off
 Weapon_Data Weapon_Melee = {
-    .name     = "Fists",
-    .inputKey = KEY_ONE,
-    .weaponId = MELEE,
-    .damage   = 5,
-    .ammo     = WEAPON_FIST_AMMO_MAX,  // Unlimited ammo for your fists!
-    .fireRate = 1.25f,
-    .range    = 2.0f,
-    .pickedUp = true,  // You always have your fists with you
-    .maxAmmo  = WEAPON_FIST_AMMO_MAX,
-    .hitscan  = true,
-    .spriteSpeed = 10,
-    .spriteFireFrame = 1,
-    .projectileSize = (Vector3){0,0,0},
-    .projectileColor = WHITE,
-    .spritesTotal = 7,
-    .spritePositionOffset = (Vector2){0.5f, 1.0f}
-};
+	.name = "Fists",
+	.inputKey = KEY_ONE,
+	.weaponId = MELEE,
+	.damage = 5,
+	.ammo = WEAPON_FIST_AMMO_MAX, // Unlimited ammo for your fists!
+	.fireRate = 1.25f,
+	.range = 2.0f,
+	.pickedUp = true, // You always have your fists with you
+	.maxAmmo = WEAPON_FIST_AMMO_MAX,
+	.hitscan = true,
+	.spriteSpeed = 10,
+	.spriteFireFrame = 1,
+	.projectileSize = (Vector3){0, 0, 0},
+	.projectileColor = WHITE,
+	.spritesTotal = 7,
+	.spritePositionOffset = (Vector2){0.5f, 1.0f}};
 
 Weapon_Data Weapon_Pistol = {
-    .name     = "Pistol",
-    .inputKey = KEY_TWO,
-    .weaponId = PISTOL,
-    .damage   = 3,
-    .ammo     = 30,
-    .fireRate = 1.0f,
-    .range    = 8.0f,
-    .pickedUp = true,  // You also always have your trusty pistol with you
-    .maxAmmo  = WEAPON_PISTOL_AMMO_MAX,
-    .hitscan  = false,
-    .spriteSpeed = 10,
-    .spriteFireFrame = 2,
-    .projectileSize = (Vector3){0.05f,0.05f,0.2f},
-    .projectileColor = GREEN,
-    .spritesTotal = 5,
-    .spritePositionOffset = (Vector2){-0.10f, 0.75f}
-};
+	.name = "Pistol",
+	.inputKey = KEY_TWO,
+	.weaponId = PISTOL,
+	.damage = 3,
+	.ammo = 30,
+	.fireRate = 1.0f,
+	.range = 8.0f,
+	.pickedUp = true, // You also always have your trusty pistol with you
+	.maxAmmo = WEAPON_PISTOL_AMMO_MAX,
+	.hitscan = false,
+	.spriteSpeed = 10,
+	.spriteFireFrame = 2,
+	.projectileSize = (Vector3){0.05f, 0.05f, 0.2f},
+	.projectileColor = GREEN,
+	.spritesTotal = 5,
+	.spritePositionOffset = (Vector2){-0.10f, 0.75f}};
 
 Weapon_Data Weapon_Rifle = {
-    .name     = "Rifle",
-    .inputKey = KEY_THREE,
-    .weaponId = RIFLE,
-    .damage   = 3,
-    .ammo     = 60,     //TODO: Set to 0 for release!
-    .fireRate = 0.3f,
-    .range    = 20.0f,
-    .pickedUp = false,
-    .maxAmmo  = WEAPON_RIFLE_AMMO_MAX,
-    .hitscan  = false,
-    .spriteSpeed = 10,
-    .spriteFireFrame = 2,
-    .projectileSize = (Vector3){0.05f,0.05f,0.1f},
-    .projectileColor = BLUE,
-    .spritesTotal = 5,
-    .spritePositionOffset = (Vector2){-0.10f, 1.0f}
-};
+	.name = "Rifle",
+	.inputKey = KEY_THREE,
+	.weaponId = RIFLE,
+	.damage = 3,
+	.ammo = 60, // TODO: Set to 0 for release!
+	.fireRate = 0.3f,
+	.range = 20.0f,
+	.pickedUp = false,
+	.maxAmmo = WEAPON_RIFLE_AMMO_MAX,
+	.hitscan = false,
+	.spriteSpeed = 10,
+	.spriteFireFrame = 2,
+	.projectileSize = (Vector3){0.05f, 0.05f, 0.1f},
+	.projectileColor = BLUE,
+	.spritesTotal = 5,
+	.spritePositionOffset = (Vector2){-0.10f, 1.0f}};
 
 Weapon_Data Weapon_Shotgun = {
-    .name     = "Shotgun",
-    .inputKey = KEY_FOUR,
-    .weaponId = SHOTGUN,
-    .damage   = 7,
-    .ammo     = 40, //TODO: Set to 0 for release!
-    .fireRate = 1.5f,
-    .range    = 6.0f,
-    .pickedUp = false,
-    .maxAmmo  = WEAPON_SHOTGUN_AMMO_MAX,
-    .hitscan  = false,
-    .spriteSpeed = 10,
-    .spriteFireFrame = 2,
-    .projectileSize = (Vector3){0.3f,0.05f,0.05f},
-    .projectileColor = RED,
-    .spritesTotal = 5,
-    .spritePositionOffset = (Vector2){-0.6f, 1.0f}
-};
+	.name = "Shotgun",
+	.inputKey = KEY_FOUR,
+	.weaponId = SHOTGUN,
+	.damage = 7,
+	.ammo = 40, // TODO: Set to 0 for release!
+	.fireRate = 1.5f,
+	.range = 6.0f,
+	.pickedUp = false,
+	.maxAmmo = WEAPON_SHOTGUN_AMMO_MAX,
+	.hitscan = false,
+	.spriteSpeed = 10,
+	.spriteFireFrame = 2,
+	.projectileSize = (Vector3){0.3f, 0.05f, 0.05f},
+	.projectileColor = RED,
+	.spritesTotal = 5,
+	.spritePositionOffset = (Vector2){-0.6f, 1.0f}};
 
 Weapon_Data Weapon_Railgun = {
-    .name     = "Railgun",
-    .inputKey = KEY_FIVE,
-    .weaponId = RAILGUN,
-    .damage   = 30,
-    .ammo     = 10, //TODO: Set to 0 for release!
-    .fireRate = 2.6f,
-    .range    = 69.0f,
-    .pickedUp = false,
-    .maxAmmo  = WEAPON_RAILGUN_AMMO_MAX,
-    .hitscan  = false,
-    .spriteSpeed = 10,
-    .spriteFireFrame = 1,
-    .projectileSize = (Vector3){0.05f,0.05f,0.5f},
-    .projectileColor = YELLOW,
-    .spritesTotal = 5,
-    .spritePositionOffset = (Vector2){-0.10f, 1.0f}
-};
-
-// clang-format on
+	.name = "Railgun",
+	.inputKey = KEY_FIVE,
+	.weaponId = RAILGUN,
+	.damage = 30,
+	.ammo = 10, // TODO: Set to 0 for release!
+	.fireRate = 2.6f,
+	.range = 69.0f,
+	.pickedUp = false,
+	.maxAmmo = WEAPON_RAILGUN_AMMO_MAX,
+	.hitscan = false,
+	.spriteSpeed = 10,
+	.spriteFireFrame = 1,
+	.projectileSize = (Vector3){0.05f, 0.05f, 0.5f},
+	.projectileColor = YELLOW,
+	.spritesTotal = 5,
+	.spritePositionOffset = (Vector2){-0.10f, 1.0f}};
 
 // TODO: Make weapon struct then make those structs into this
 // Keeps code cleaner and easier to add/remove weapons

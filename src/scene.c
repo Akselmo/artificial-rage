@@ -166,34 +166,30 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
 	// X width, Z height
 	Mesh mesh = {0};
 	Scene_AllocateMeshData(&mesh, 2);
-	// clang-format off
-    float vertices[] = {
-        0,     0, 0,
-        width, 0, height,
-        width, 0, 0,
-        0,     0, 0,
-        0,     0, height,
-        width, 0, height
-    };
 
-    float normals[] = {
-        0, 1, 0,
-        0, 1, 0,
-        0, 1, 0,
-        0, 1, 0,
-        0, 1, 0,
-        0, 1, 0
-    };
+	float vertices[] = {
+		0, 0, 0,
+		width, 0, height,
+		width, 0, 0,
+		0, 0, 0,
+		0, 0, height,
+		width, 0, height};
 
-    float texcoords[] = {
-        0, 0,
-        width / textureSize, height / textureSize,
-        width / textureSize, 0,
-        0, 0,
-        0, height / textureSize,
-        width / textureSize, height / textureSize
-    };
-	// clang-format on
+	float normals[] = {
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0};
+
+	float texcoords[] = {
+		0, 0,
+		width / textureSize, height / textureSize,
+		width / textureSize, 0,
+		0, 0,
+		0, height / textureSize,
+		width / textureSize, height / textureSize};
 
 	mesh.vertices = vertices;
 	mesh.normals = normals;
