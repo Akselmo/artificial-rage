@@ -2,21 +2,24 @@
 
 Vector2 Utilities_GetScreenCenter(void)
 {
-	const Vector2 center = {GetScreenWidth() / 2, GetScreenHeight() / 2};
+	const Vector2 center = { GetScreenWidth() / 2, GetScreenHeight() / 2 };
 	return center;
 }
 
 BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
 {
 	BoundingBox bb = (BoundingBox){
-		(Vector3){position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2},
-		(Vector3){position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}};
+		(Vector3){position.x - size.x / 2,	position.y - size.y / 2, position.z - size.z / 2},
+		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}
+	};
 	return bb;
 }
 
 Color Utilities_GetLevelPixelColor(const Color *levelMapPixels, const int x, const int width, const int y)
 {
-	Color pixelColor = {levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b, 255};
+	Color pixelColor = {
+		levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b, 255
+	};
 
 	return pixelColor;
 }
@@ -26,15 +29,9 @@ bool Utilities_CompareColors(const Color color1, const Color color2)
 	return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b);
 }
 
-float Utilities_MinF(float a, float b)
-{
-	return (a > b) ? b : a;
-}
+float Utilities_MinF(float a, float b) { return (a > b) ? b : a; }
 
-float Utilities_MaxF(float a, float b)
-{
-	return (a < b) ? b : a;
-}
+float Utilities_MaxF(float a, float b) { return (a < b) ? b : a; }
 
 void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *value)
 {
@@ -73,7 +70,7 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 
 	// Get integers from tokens
 	int tokenCount = 0;
-	int *output = calloc(count, sizeof(int));
+	int *output	   = calloc(count, sizeof(int));
 	for (char *token = strtok(tokens, ","); token != NULL; token = strtok(NULL, ","))
 	{
 		// Add integers to output

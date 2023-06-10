@@ -23,10 +23,10 @@
 
 enum AnimationID
 {
-	DEATH = 0,
+	DEATH  = 0,
 	ATTACK = 1,
-	IDLE = 2,
-	MOVE = 3
+	IDLE   = 2,
+	MOVE   = 3
 };
 
 // Example: https://www.raylib.com/examples/models/loader.html?name=models_animation

@@ -44,6 +44,7 @@ void Scene_Build(void)
 	// Get map image data to be used for collision detection
 	// Scene_PlaceEntities();
 }
+
 /*
  * FIXME: Do this part next
 void Scene_PlaceEntities(void)
@@ -99,13 +100,15 @@ void Scene_Update(void)
 		return;
 	}
 
-	DrawModel(Scene->floorPlane, (Vector3){Scene->position.x, 0.0f, Scene->position.z}, 1.0f, WHITE);
-	DrawModelEx(Scene->ceilingPlane,
-				(Vector3){Scene->position.x, 1.0f, -Scene->position.z},
-				(Vector3){-1.0f, 0.0f, 0.0f},
-				180.0f,
-				(Vector3){1.0f, 1.0f, 1.0f},
-				WHITE);
+	DrawModel(Scene->floorPlane, (Vector3){ Scene->position.x, 0.0f, Scene->position.z }, 1.0f, WHITE);
+	DrawModelEx(
+		Scene->ceilingPlane,
+		(Vector3){ Scene->position.x, 1.0f, -Scene->position.z },
+		(Vector3){ -1.0f, 0.0f, 0.0f },
+		180.0f,
+		(Vector3){ 1.0f, 1.0f, 1.0f },
+		WHITE
+	);
 
 	for (int i = 0; i < Scene->size; i++)
 	{
@@ -164,35 +167,18 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
 {
 	// X width, Z height
-	Mesh mesh = {0};
+	Mesh mesh = { 0 };
 	Scene_AllocateMeshData(&mesh, 2);
 
-	float vertices[] = {
-		0, 0, 0,
-		width, 0, height,
-		width, 0, 0,
-		0, 0, 0,
-		0, 0, height,
-		width, 0, height};
+	float vertices[] = { 0, 0, 0, width, 0, height, width, 0, 0, 0, 0, 0, 0, 0, height, width, 0, height };
 
-	float normals[] = {
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0};
+	float normals[] = { 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 };
 
-	float texcoords[] = {
-		0, 0,
-		width / textureSize, height / textureSize,
-		width / textureSize, 0,
-		0, 0,
-		0, height / textureSize,
-		width / textureSize, height / textureSize};
+	float texcoords[] = { 0, 0, width / textureSize,  height / textureSize, width / textureSize, 0, 0,
+						  0, 0, height / textureSize, width / textureSize,	height / textureSize };
 
-	mesh.vertices = vertices;
-	mesh.normals = normals;
+	mesh.vertices  = vertices;
+	mesh.normals   = normals;
 	mesh.texcoords = texcoords;
 
 	UploadMesh(&mesh, false);
@@ -202,12 +188,12 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
 
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
 {
-	mesh->vertexCount = triangleCount * 3;
+	mesh->vertexCount	= triangleCount * 3;
 	mesh->triangleCount = triangleCount;
 
-	mesh->vertices = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+	mesh->vertices	= (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 	mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
-	mesh->normals = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
+	mesh->normals	= (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
 void Scene_InitEntityTypes(void)
@@ -229,25 +215,26 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 		ImageFlipVertical(&textureImage);
 		const Texture2D texture = LoadTextureFromImage(textureImage);
 		// Set map diffuse texture
-		const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-		Model cubeModel = LoadModelFromMesh(cube);
+		const Mesh cube											  = GenMeshCube(1.0f, 1.0f, 1.0f);
+		Model cubeModel											  = LoadModelFromMesh(cube);
 		cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-		Scene->entities[id].model = cubeModel;
-		Scene->entities[id].position = (Vector3){mx, Scene->position.y, my};
-		Scene->entities[id].id = WALL_MODEL_ID;
-		Scene->entities[id].size = (Vector3){1.0f, 1.0f, 1.0f};
-		Scene->entities[id].boundingBox = Utilities_MakeBoundingBox((Vector3){mx, Scene->position.y, my}, (Vector3){1.0f, 1.0f, 1.0f});
+		Scene->entities[id].model	 = cubeModel;
+		Scene->entities[id].position = (Vector3){ mx, Scene->position.y, my };
+		Scene->entities[id].id		 = WALL_MODEL_ID;
+		Scene->entities[id].size	 = (Vector3){ 1.0f, 1.0f, 1.0f };
+		Scene->entities[id].boundingBox =
+			Utilities_MakeBoundingBox((Vector3){ mx, Scene->position.y, my }, (Vector3){ 1.0f, 1.0f, 1.0f });
 	}
 
 	else if (entity->type == SCENE_START)
 	{
-		Scene->startPosition = (Vector3){mx, 0.0f, my};
+		Scene->startPosition = (Vector3){ mx, 0.0f, my };
 	}
 
 	else if (entity->type == SCENE_END)
 	{
-		Scene->endPosition = (Vector3){mx, 0.0f, my};
+		Scene->endPosition = (Vector3){ mx, 0.0f, my };
 	}
 
 	else if (entity->type == SCENE_ACTOR)
@@ -291,7 +278,7 @@ void Scene_LoadSceneConfig(void)
 bool Scene_ParseConfig(char *key, char *value)
 {
 	// TODO: somekind of utility for getting full asset path here
-	char *texturesPath = "./assets/textures/";
+	char *texturesPath	  = "./assets/textures/";
 	char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
 	strcpy(fullTexturePath, texturesPath);
 	strcat(fullTexturePath, value);

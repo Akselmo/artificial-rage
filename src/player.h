@@ -55,9 +55,9 @@ void Player_FireWeapon(Camera *camera, Player_CustomCameraData *cameraData);
 typedef enum Player_CameraMoveKeys
 {
 	MOVE_FRONT = 0,
-	MOVE_BACK = 1,
+	MOVE_BACK  = 1,
 	MOVE_RIGHT = 2,
-	MOVE_LEFT = 3
+	MOVE_LEFT  = 3
 } Player_CameraMoveKeys;
 
 #endif

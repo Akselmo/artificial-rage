@@ -50,10 +50,7 @@ void Game_Update(void)
 }
 
 // TODO: Move these to their own files
-void Game_HudUpdate(void)
-{
-	Hud_Draw();
-}
+void Game_HudUpdate(void) { Hud_Draw(); }
 
 void Game_MenuUpdate(void)
 {
