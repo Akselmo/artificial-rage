@@ -15,26 +15,26 @@ const char *SETTINGS_FILENAME = "settings.cfg";
 
 void Settings_Initialize(void)
 {
-    // Write default settings
-    Settings = Settings_CreateDefault();
+	// Write default settings
+	Settings = Settings_CreateDefault();
 
-    if (access(SETTINGS_FILENAME, F_OK) == 0)
-    {
-        Settings_Read(&Settings);
-    }
-    else
-    {
-        Settings_Write(&Settings);
-    }
+	if (access(SETTINGS_FILENAME, F_OK) == 0)
+	{
+		Settings_Read(&Settings);
+	}
+	else
+	{
+		Settings_Write(&Settings);
+	}
 
-    InitWindow(Settings.screenWidth, Settings.screenHeight, "Artificial Rage");
+	InitWindow(Settings.screenWidth, Settings.screenHeight, "Artificial Rage");
 
-    SetTargetFPS(Settings.maxFPS);
+	SetTargetFPS(Settings.maxFPS);
 }
 
 Settings_Data Settings_CreateDefault(void)
 {
-    // clang-format off
+	// clang-format off
     Settings_Data data = {
         .screenWidth        = 800,
         .screenHeight       = 600,

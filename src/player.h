@@ -24,21 +24,21 @@
 // Struct for all the camera data
 typedef struct Player_CustomCameraData
 {
-    float targetDistance;
-    float playerEyesPosition;
-    Vector2 angle;
-    float mouseSensitivity;
-    float playerSpeed;
+	float targetDistance;
+	float playerEyesPosition;
+	Vector2 angle;
+	float mouseSensitivity;
+	float playerSpeed;
 } Player_CustomCameraData;
 
 typedef struct Player_Data
 {
-    int health;
-    bool dead;
-    Vector3 position;
-    Vector3 size;
-    BoundingBox boundingBox;
-    float nextFire;
+	int health;
+	bool dead;
+	Vector3 position;
+	Vector3 size;
+	BoundingBox boundingBox;
+	float nextFire;
 } Player_Data;
 
 // Public variables
@@ -54,10 +54,10 @@ void Player_FireWeapon(Camera *camera, Player_CustomCameraData *cameraData);
 // Movement keys enum for directions
 typedef enum Player_CameraMoveKeys
 {
-    MOVE_FRONT = 0,
-    MOVE_BACK = 1,
-    MOVE_RIGHT = 2,
-    MOVE_LEFT = 3
+	MOVE_FRONT = 0,
+	MOVE_BACK = 1,
+	MOVE_RIGHT = 2,
+	MOVE_LEFT = 3
 } Player_CameraMoveKeys;
 
 #endif

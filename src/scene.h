@@ -21,25 +21,25 @@
 
 typedef struct Scene_Data
 {
-    char *name;
-    int height;
-    int width;
-    int *data;
-    int dataCount;
-    int ceilingHeight;
-    Model floorPlane;
-    Texture2D floorPlaneTexture;
-    Model ceilingPlane;
-    Texture2D ceilingPlaneTexture;
-    int entitiesTotal; // entitiesTotal = (last_entity_id + 1) in entities.json
-    struct Entity_Data *entities;
-    struct Actor_Data *actors;
-    struct Item_Data *items;
-    struct Projectile *projectiles;
-    Vector3 position;
-    Vector3 startPosition;
-    Vector3 endPosition;
-    int size;
+	char *name;
+	int height;
+	int width;
+	int *data;
+	int dataCount;
+	int ceilingHeight;
+	Model floorPlane;
+	Texture2D floorPlaneTexture;
+	Model ceilingPlane;
+	Texture2D ceilingPlaneTexture;
+	int entitiesTotal; // entitiesTotal = (last_entity_id + 1) in entities.json
+	struct Entity_Data *entities;
+	struct Actor_Data *actors;
+	struct Item_Data *items;
+	struct Projectile *projectiles;
+	Vector3 position;
+	Vector3 startPosition;
+	Vector3 endPosition;
+	int size;
 } Scene_Data;
 
 // Variables

@@ -6,16 +6,16 @@
 int main(void)
 {
 
-    // Initialize game
-    Game_Initialize();
+	// Initialize game
+	Game_Initialize();
 
-    // Main game loop
-    while (!WindowShouldClose())
-    {
-        Game_Update();
-    }
+	// Main game loop
+	while (!WindowShouldClose())
+	{
+		Game_Update();
+	}
 
-    // End game
-    CloseWindow();
-    return 0;
+	// End game
+	CloseWindow();
+	return 0;
 }

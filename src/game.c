@@ -15,49 +15,49 @@ bool Game_isStarted = false;
 // Initialization
 void Game_Initialize(void)
 {
-    Game_isStarted = false;
+	Game_isStarted = false;
 
-    // Initialize game
-    Settings_Initialize();
+	// Initialize game
+	Settings_Initialize();
 
-    // Add player camera
-    playerCamera = Scene_Initialize();
+	// Add player camera
+	playerCamera = Scene_Initialize();
 
-    Game_isStarted = true;
+	Game_isStarted = true;
 }
 
 // Main game loop
 void Game_Update(void)
 {
-    BeginDrawing();
+	BeginDrawing();
 
-    ClearBackground(BLACK);
+	ClearBackground(BLACK);
 
-    BeginMode3D(playerCamera);
+	BeginMode3D(playerCamera);
 
-    if (Game_isStarted)
-    {
-        Player_Update(&playerCamera);
-        Scene_Update();
-    }
+	if (Game_isStarted)
+	{
+		Player_Update(&playerCamera);
+		Scene_Update();
+	}
 
-    EndMode3D();
+	EndMode3D();
 
-    Game_HudUpdate();
-    Game_MenuUpdate();
+	Game_HudUpdate();
+	Game_MenuUpdate();
 
-    EndDrawing();
+	EndDrawing();
 }
 
 // TODO: Move these to their own files
 void Game_HudUpdate(void)
 {
-    Hud_Draw();
+	Hud_Draw();
 }
 
 void Game_MenuUpdate(void)
 {
-    DisableCursor();
-    // menu presses etc come here
-    // Enable and disable cursor based on if menu is on or off
+	DisableCursor();
+	// menu presses etc come here
+	// Enable and disable cursor based on if menu is on or off
 }

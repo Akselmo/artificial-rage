@@ -9,23 +9,23 @@
 
 enum Entity_Type
 {
-    SCENE_NONE,
-    SCENE_START,
-    SCENE_END,
-    SCENE_WALL,
-    SCENE_ACTOR,
+	SCENE_NONE,
+	SCENE_START,
+	SCENE_END,
+	SCENE_WALL,
+	SCENE_ACTOR,
 };
 
 typedef struct Entity_Data
 {
-    int id;
-    Vector3 position;
-    Vector3 size;
-    enum Entity_Type type;
-    char *fileName;
-    BoundingBox boundingBox;
-    Model model;
-    bool loaded;
+	int id;
+	Vector3 position;
+	Vector3 size;
+	enum Entity_Type type;
+	char *fileName;
+	BoundingBox boundingBox;
+	Model model;
+	bool loaded;
 } Entity_Data;
 
 extern Entity_Data Entity_none;

@@ -5,8 +5,8 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define DEFAULT_BUFFER_SIZE 16384 // I like big buffers and cant lie
 
@@ -16,7 +16,7 @@ Color Utilities_GetLevelPixelColor(const Color *levelMapPixels, const int x, con
 bool Utilities_CompareColors(Color color1, Color color2);
 float Utilities_MinF(float a, float b);
 float Utilities_MaxF(float a, float b);
-void Utilities_ParseKeyValuePair(char *buffer, char *key, char* delim, char *value);
+void Utilities_ParseKeyValuePair(char *buffer, char *key, char *delim, char *value);
 int *Utilities_ParseIntArray(char *input, int *outputCount);
 int Utilities_GetFileCharacterCount(const char *fileName);
 #endif
