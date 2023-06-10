@@ -10,8 +10,8 @@ typedef struct Animator_Animation
 	int id;
 	int firstFrame; // For trimming purposes. Some animations can have extra t-pose time,
 					// etc...
-	int lastFrame;	// This means that 0/maxFrameCount is not always the spot where the
-					// animation starts/stops
+	int lastFrame; // This means that 0/maxFrameCount is not always the spot where the
+				   // animation starts/stops
 	bool loopable;
 	bool interruptable;
 } Animator_Animation;
