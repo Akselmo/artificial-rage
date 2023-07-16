@@ -26,7 +26,7 @@ Camera Scene_Initialize(void)
 }
 
 // TODO: Add integer so you can select which level to load
-//       Load textures from file, instead of being built into EXE
+//	   Load textures from file, instead of being built into EXE
 //
 void Scene_Build(void)
 {
@@ -42,57 +42,60 @@ void Scene_Build(void)
 
 	printf("Scene data 3: %d\n", Scene->data[2]);
 	// Get map image data to be used for collision detection
-	// Scene_PlaceEntities();
+	Scene_PlaceEntities();
 }
 
-/*
- * FIXME: Do this part next
+
 void Scene_PlaceEntities(void)
 {
 
-    const float mapPosZ = (float)sceneCubicMap.height;
-    const float mapPosX = (float)sceneCubicMap.width;
+	const float mapPosZ = (float)Scene->height;
+	const float mapPosX = (float)Scene->width;
 
-    // Prepare plane textures for level
-    Scene_LoadSceneConfig();
+	// Prepare plane textures for level
+	Scene_LoadSceneConfig();
 
-    Scene->ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-    Scene->floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+	Scene->ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+	Scene->floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
-    Scene->ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->ceilingPlaneTexture;
-    Scene->floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->floorPlaneTexture;
+	Scene->ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->ceilingPlaneTexture;
+	Scene->floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->floorPlaneTexture;
 
-    Scene->position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
-    Scene->size = sceneCubicMap.height * sceneCubicMap.width;
+	Scene->position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
+	Scene->size = Scene->height * Scene->width;
 
-    Scene->entities = calloc(Scene->size, sizeof(Entity_Data));
-    Scene->actors = calloc(Scene->size, sizeof(Actor_Data));
-    Scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
+	Scene->entities = calloc(Scene->size, sizeof(Entity_Data));
+	Scene->actors = calloc(Scene->size, sizeof(Actor_Data));
+	Scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
-    for (int y = 0; y < sceneCubicMap.height; y++)
-    {
-        for (int x = 0; x < sceneCubicMap.width; x++)
-        {
 
-            const float mx = Scene->position.x - 0.5f + x * 1.0f;
-            const float my = Scene->position.z - 0.5f + y * 1.0f;
-            const int id = y * sceneCubicMap.width + x;
+	int entityPosX = 0;
+	int entityPosY = 0;
+	for (int entity = 0; entity < Scene->dataCount; entity++)
+	{
 
-            const Color pixelColor = Utilities_GetLevelPixelColor(sceneMapPixels, x, sceneCubicMap.width, y);
+		const float mx = Scene->position.x - 0.5f + entityPosX * 1.0f;
+		const float my = Scene->position.z - 0.5f + entityPosY * 1.0f;
 
-            for (int b = 0; b < ENTITIES_TOTAL; b++)
-            {
-                if (Utilities_CompareColors(pixelColor, Scene_entities[b]->mapColor))
-                {
-                    Scene_AddEntityToScene(Scene_entities[b], mx, my, id);
-                }
-            }
-        }
-    }
+		entityPosX++;
+		if (entityPosX >= Scene->width)
+		{
+			entityPosX = 0;
+			entityPosY++;
+		}
 
-    printf("Level has total %d entities \n", Scene->size);
+		const int id = entityPosX + GetRandomValue(1, Scene->dataCount) * entityPosY; // Generate some semirandom number as the id
+		printf("Currently adding entity %d from slot %d \n", Scene->data[entity], entity);
+		printf("PosX %d PosY %d\n", entityPosX, entityPosY);
+
+		//FIXME: segfaults here, idk im missing something, go to bed
+		Scene_AddEntityToScene(Scene_entities[Scene->data[entity]], mx, my, id);
+
+	}
+
+	printf("Level has total %d entities \n", Scene->size);
 }
-*/
+
 void Scene_Update(void)
 {
 	if (!Game_isStarted)
@@ -175,7 +178,7 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
 	float normals[] = { 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 };
 
 	float texcoords[] = { 0, 0, width / textureSize,  height / textureSize, width / textureSize, 0, 0,
-		                  0, 0, height / textureSize, width / textureSize,  height / textureSize };
+						  0, 0, height / textureSize, width / textureSize,  height / textureSize };
 
 	mesh.vertices  = vertices;
 	mesh.normals   = normals;
@@ -208,6 +211,10 @@ void Scene_InitEntityTypes(void)
 
 void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 {
+	if (entity->type == SCENE_NONE)
+	{
+		return;
+	}
 	if (entity->type == SCENE_WALL)
 	{
 		Image textureImage = LoadImage(entity->fileName);
@@ -215,14 +222,14 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 		ImageFlipVertical(&textureImage);
 		const Texture2D texture = LoadTextureFromImage(textureImage);
 		// Set map diffuse texture
-		const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
-		Model cubeModel                                           = LoadModelFromMesh(cube);
+		const Mesh cube										   = GenMeshCube(1.0f, 1.0f, 1.0f);
+		Model cubeModel										   = LoadModelFromMesh(cube);
 		cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-		Scene->entities[id].model    = cubeModel;
+		Scene->entities[id].model	= cubeModel;
 		Scene->entities[id].position = (Vector3){ mx, Scene->position.y, my };
-		Scene->entities[id].id       = WALL_MODEL_ID;
-		Scene->entities[id].size     = (Vector3){ 1.0f, 1.0f, 1.0f };
+		Scene->entities[id].id	   = WALL_MODEL_ID;
+		Scene->entities[id].size	 = (Vector3){ 1.0f, 1.0f, 1.0f };
 		Scene->entities[id].boundingBox =
 			Utilities_MakeBoundingBox((Vector3){ mx, Scene->position.y, my }, (Vector3){ 1.0f, 1.0f, 1.0f });
 	}
@@ -278,7 +285,7 @@ void Scene_LoadSceneConfig(void)
 bool Scene_ParseConfig(char *key, char *value)
 {
 	// TODO: somekind of utility for getting full asset path here
-	char *texturesPath    = "./assets/textures/";
+	char *texturesPath	= "./assets/textures/";
 	char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
 	strcpy(fullTexturePath, texturesPath);
 	strcat(fullTexturePath, value);
