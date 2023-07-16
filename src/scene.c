@@ -82,7 +82,6 @@ void Scene_PlaceEntities(void)
 		printf("Currently adding entity %d from slot %d \n", Scene->data[entity], entity);
 		printf("PosX %d PosY %d\n", entityPosX, entityPosY);
 
-		//FIXME: duplicate items for some reason, wrong coords too
 		Scene_AddEntityToScene(Scene_entities[Scene->data[entity]], mx, my, entity);
 
 	}
