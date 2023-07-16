@@ -216,8 +216,8 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 		ImageFlipVertical(&textureImage);
 		const Texture2D texture = LoadTextureFromImage(textureImage);
 		// Set map diffuse texture
-		const Mesh cube										   = GenMeshCube(1.0f, 1.0f, 1.0f);
-		Model cubeModel										   = LoadModelFromMesh(cube);
+		const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
+		Model cubeModel = LoadModelFromMesh(cube);
 		cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
 		Scene->entities[id].model	= cubeModel;

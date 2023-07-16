@@ -2,7 +2,7 @@
 
 // Entities used in the game
 // TODO: More entities. For entities and their RGB values: check README.md
-Entity_Data Entity_none = { .type = SCENE_NONE, .fileName = "" };
+Entity_Data Entity_none = { .type = SCENE_NONE, .fileName = "" }; // 0
 
 Entity_Data Entity_start = { .type = SCENE_START, .fileName = "" };
 

@@ -13,7 +13,7 @@
    "tileheight": 128,
    "tiles": [
       {
-         "id": 0,
+         "id": 4,
          "image": "tiles/enemy.jpg",
          "imageheight": 128,
          "imagewidth": 128,
@@ -21,7 +21,7 @@
       },
       {
          "height": 128,
-         "id": 1,
+         "id": 0,
          "image": "tiles/start.jpg",
          "imageheight": 129,
          "imagewidth": 128,
@@ -32,7 +32,7 @@
       },
       {
          "height": 128,
-         "id": 2,
+         "id": 1,
          "image": "tiles/end.jpg",
          "imageheight": 129,
          "imagewidth": 128,
@@ -42,14 +42,14 @@
          "y": 0
       },
       {
-         "id": 3,
+         "id": 2,
          "image": "tiles/wall1.png",
          "imageheight": 128,
          "imagewidth": 128,
          "type": "wall1"
       },
       {
-         "id": 4,
+         "id": 3,
          "image": "tiles/wall2.png",
          "imageheight": 128,
          "imagewidth": 128,
