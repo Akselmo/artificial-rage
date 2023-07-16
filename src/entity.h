@@ -4,7 +4,7 @@
 
 #include "raylib.h"
 
-// Remember to update this if you add more entities to below
+// Remember to update this if you add more entities in entity.c
 #define ENTITIES_TOTAL 6
 
 enum Entity_Type
@@ -28,11 +28,14 @@ typedef struct Entity_Data
 	bool loaded;
 } Entity_Data;
 
+extern Entity_Data *Entity_list[ENTITIES_TOTAL];
 extern Entity_Data Entity_none;
 extern Entity_Data Entity_start;
 extern Entity_Data Entity_end;
 extern Entity_Data Entity_wall1;
 extern Entity_Data Entity_wall2;
 extern Entity_Data Entity_enemy;
+
+void Entity_InitList(void);
 
 #endif

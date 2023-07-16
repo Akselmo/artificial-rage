@@ -1,4 +1,5 @@
 #include "scene.h"
+#include "entity.h"
 #include "raylib.h"
 // Level has level data, Level_enemies, Level_items and Level_Projectiles
 // Level is basically the "scene"
@@ -7,13 +8,9 @@
 // TODO: Initialize scene properly
 Scene_Data *Scene = NULL;
 
-// Private variables
-Entity_Data *Scene_entities[ENTITIES_TOTAL];
-
 // Private functions
 void Scene_PlaceEntities(void);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
-void Scene_InitEntityTypes(void);
 void Scene_UpdateProjectiles(void);
 void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id);
 void Scene_LoadSceneConfig(void);
@@ -35,7 +32,7 @@ void Scene_Build(void)
 	// TODO: Free all scene data
 
 	// Initialize entity types
-	Scene_InitEntityTypes();
+	Entity_InitList();
 
 	// Load scene data from the config file
 	Scene_LoadSceneConfig();
@@ -78,11 +75,7 @@ void Scene_PlaceEntities(void)
 		const float mx = Scene->position.x - 0.5f + entityPosX * 1.0f;
 		const float my = Scene->position.z - 0.5f + entityPosY * 1.0f;
 
-
-		printf("Currently adding entity %d from slot %d \n", Scene->data[entity], entity);
-		printf("PosX %d PosY %d\n", entityPosX, entityPosY);
-
-		Scene_AddEntityToScene(Scene_entities[Scene->data[entity]], mx, my, entity);
+		Scene_AddEntityToScene(Entity_list[Scene->data[entity]], mx, my, entity);
 
 	}
 
@@ -190,16 +183,6 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
 	mesh->vertices  = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 	mesh->texcoords = (float *)MemAlloc(mesh->vertexCount * 2 * sizeof(float));
 	mesh->normals   = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
-}
-
-void Scene_InitEntityTypes(void)
-{
-	Scene_entities[0] = &Entity_none;
-	Scene_entities[1] = &Entity_start;
-	Scene_entities[2] = &Entity_end;
-	Scene_entities[3] = &Entity_wall1;
-	Scene_entities[4] = &Entity_wall2;
-	Scene_entities[5] = &Entity_enemy;
 }
 
 void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
