@@ -69,27 +69,21 @@ void Scene_PlaceEntities(void)
 	Scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
 
-	int entityPosX = 0;
-	int entityPosY = 0;
+
 	for (int entity = 0; entity < Scene->dataCount; entity++)
 	{
 
+		int entityPosX = entity % Scene->width;
+		int entityPosY = entity / Scene->width;
 		const float mx = Scene->position.x - 0.5f + entityPosX * 1.0f;
 		const float my = Scene->position.z - 0.5f + entityPosY * 1.0f;
 
-		entityPosX++;
-		if (entityPosX >= Scene->width)
-		{
-			entityPosX = 0;
-			entityPosY++;
-		}
 
-		const int id = entityPosX + GetRandomValue(1, Scene->dataCount) * entityPosY; // Generate some semirandom number as the id
 		printf("Currently adding entity %d from slot %d \n", Scene->data[entity], entity);
 		printf("PosX %d PosY %d\n", entityPosX, entityPosY);
 
-		//FIXME: segfaults here, idk im missing something, go to bed
-		Scene_AddEntityToScene(Scene_entities[Scene->data[entity]], mx, my, id);
+		//FIXME: duplicate items for some reason, wrong coords too
+		Scene_AddEntityToScene(Scene_entities[Scene->data[entity]], mx, my, entity);
 
 	}
 
