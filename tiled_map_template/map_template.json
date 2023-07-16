@@ -1,0 +1,78 @@
+{ "class":"map",
+ "compressionlevel":-1,
+ "editorsettings":
+    {
+     "chunksize":
+        {
+         "height":32,
+         "width":32
+        }
+    },
+ "height":17,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            0, 3, 1, 0, 0, 3, 0, 5, 0, 3, 0, 0, 0, 0, 0, 0, 5, 3,
+            0, 4, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 3, 3, 0, 0, 0, 3,
+            0, 4, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 4, 3, 0, 0, 3,
+            0, 4, 0, 3, 4, 4, 4, 0, 0, 3, 0, 4, 0, 0, 3, 0, 0, 3,
+            0, 4, 0, 0, 0, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
+            0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 4, 3, 4, 4, 4, 0, 0, 4,
+            0, 3, 0, 3, 0, 0, 4, 0, 0, 0, 0, 5, 3, 4, 0, 0, 0, 4,
+            0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 3, 3, 0, 0, 0, 4,
+            0, 3, 0, 3, 0, 0, 0, 4, 0, 0, 4, 4, 4, 4, 0, 4, 0, 4,
+            0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
+            3, 3, 0, 0, 4, 0, 3, 0, 0, 0, 3, 3, 3, 3, 0, 4, 0, 4,
+            3, 5, 0, 0, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
+            3, 3, 0, 0, 4, 5, 4, 0, 4, 4, 4, 0, 5, 0, 4, 5, 3, 3,
+            3, 2, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 5, 3, 4, 3,
+            3, 3, 0, 0, 0, 0, 0, 0, 4, 5, 4, 0, 5, 0, 4, 4, 4, 3,
+            0, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3],
+         "height":17,
+         "id":1,
+         "name":"Map",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":18,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"ceiling_height",
+         "type":"int",
+         "value":1
+        }, 
+        {
+         "name":"ceiling_texture",
+         "type":"string",
+         "value":"ceiling1.png"
+        }, 
+        {
+         "name":"floor_texture",
+         "type":"string",
+         "value":"floor1.png"
+        }, 
+        {
+         "name":"level_name",
+         "type":"string",
+         "value":"TemplateLevel"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.10.1",
+ "tileheight":128,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"entities.json"
+        }],
+ "tilewidth":128,
+ "type":"map",
+ "version":"1.10",
+ "width":18
+}

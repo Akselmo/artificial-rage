@@ -23,31 +23,31 @@
 
 enum AnimationID
 {
-    DEATH = 0,
-    ATTACK = 1,
-    IDLE = 2,
-    MOVE = 3
+	DEATH  = 0,
+	ATTACK = 1,
+	IDLE   = 2,
+	MOVE   = 3
 };
 
 // Example: https://www.raylib.com/examples/models/loader.html?name=models_animation
 // TODO: Clean up structs, make them into smaller pieces?
 typedef struct Actor_Data
 {
-    int health;
-    int damage;
-    Vector3 position;
-    Vector3 rotation;
-    Vector3 size;
-    BoundingBox boundingBox;
-    Animator_Data animator;
-    bool dead;
-    bool moving;
-    bool attacking;
-    int id;
-    float movementSpeed;
-    float rotationSpeed;
-    float fireRate;
-    float nextFire;
+	int health;
+	int damage;
+	Vector3 position;
+	Vector3 rotation;
+	Vector3 size;
+	BoundingBox boundingBox;
+	Animator_Data animator;
+	bool dead;
+	bool moving;
+	bool attacking;
+	int id;
+	float movementSpeed;
+	float rotationSpeed;
+	float fireRate;
+	float nextFire;
 } Actor_Data;
 
 Actor_Data Actor_Add(float pos_x, float pos_z, int id, const char *modelFileName);
