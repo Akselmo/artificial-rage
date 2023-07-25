@@ -37,7 +37,6 @@ void Scene_Build(void)
 	// Load scene data from the config file
 	Scene_LoadSceneConfig();
 
-	printf("Scene data 3: %d\n", Scene->data[2]);
 	// Get map image data to be used for collision detection
 	Scene_PlaceEntities();
 }

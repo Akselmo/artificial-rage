@@ -1,5 +1,4 @@
-#Compiler used: GCC 10.3.0
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 set(CMAKE_BUILD_TYPE Debug)
 set(OpenGL_GL_PREFERENCE LEGACY)
 project(ArtificialRage)
