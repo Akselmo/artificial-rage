@@ -6,14 +6,15 @@ then
     exit 0
 fi
 
-currentver="$(clang-format --version)"
+currentver="$(clang-format --version | cut -c 22-)"
 requiredver="16.0.0"
- if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
-        echo "Running git clang-format"
- else
-        echo "clang-format version must be higher than ${requiredver}"
-        exit 0
- fi
+if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+    echo "Formatting code with git clang-format"
+else
+    echo "clang-format has to be at least version ${requiredver}. Your clang-format is version ${currentver}"
+    echo "Skipping formatting..."
+    exit 0
+fi
 
 readonly output=$(git clang-format --extensions 'cpp,h,hpp,c' -v --diff)
 if [[ "$output" == *"no modified files to format"* ]]; then echo "No files to format"; exit 0; fi
