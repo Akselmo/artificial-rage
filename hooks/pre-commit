@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 
-echo "Running git clang-format"
 if ! command -v clang-format &> /dev/null
 then
     echo "clang-format could not be found!"
-    exit 1
+    exit 0
 fi
+
+currentver="$(clang-format --version)"
+requiredver="16.0.0"
+ if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+        echo "Running git clang-format"
+ else
+        echo "clang-format version must be higher than ${requiredver}"
+        exit 0
+ fi
+
 readonly output=$(git clang-format --extensions 'cpp,h,hpp,c' -v --diff)
 if [[ "$output" == *"no modified files to format"* ]]; then echo "No files to format"; exit 0; fi
 if [[ "$output" == *"clang-format did not modify any files"* ]]; "No files to format"; then exit 0; fi
