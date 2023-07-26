@@ -17,7 +17,6 @@ Entity_Data Entity_wall2 = { .type = SCENE_WALL, .fileName = "./assets/textures/
 
 Entity_Data Entity_enemy = { .type = SCENE_ACTOR, .fileName = "./assets/models/enemy.m3d" };
 
-
 void Entity_InitList(void)
 {
 	// In Tiled, Entity_none is not used.

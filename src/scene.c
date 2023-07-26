@@ -41,7 +41,6 @@ void Scene_Build(void)
 	Scene_PlaceEntities();
 }
 
-
 void Scene_PlaceEntities(void)
 {
 
@@ -52,19 +51,17 @@ void Scene_PlaceEntities(void)
 	Scene_LoadSceneConfig();
 
 	Scene->ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
-	Scene->floorPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
+	Scene->floorPlane   = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 
 	Scene->ceilingPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->ceilingPlaneTexture;
-	Scene->floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Scene->floorPlaneTexture;
+	Scene->floorPlane.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture   = Scene->floorPlaneTexture;
 
-	Scene->position = (Vector3){-mapPosX / 2, 0.5f, -mapPosZ / 2};
-	Scene->size = Scene->height * Scene->width;
+	Scene->position = (Vector3){ -mapPosX / 2, 0.5f, -mapPosZ / 2 };
+	Scene->size     = Scene->height * Scene->width;
 
-	Scene->entities = calloc(Scene->size, sizeof(Entity_Data));
-	Scene->actors = calloc(Scene->size, sizeof(Actor_Data));
+	Scene->entities    = calloc(Scene->size, sizeof(Entity_Data));
+	Scene->actors      = calloc(Scene->size, sizeof(Actor_Data));
 	Scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
-
-
 
 	for (int entity = 0; entity < Scene->dataCount; entity++)
 	{
@@ -75,7 +72,6 @@ void Scene_PlaceEntities(void)
 		const float my = Scene->position.z - 0.5f + entityPosY * 1.0f;
 
 		Scene_AddEntityToScene(Entity_list[Scene->data[entity]], mx, my, entity);
-
 	}
 
 	printf("Level has total %d entities \n", Scene->size);
@@ -163,7 +159,7 @@ Mesh Scene_MakeCustomPlaneMesh(float height, float width, float textureSize)
 	float normals[] = { 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 };
 
 	float texcoords[] = { 0, 0, width / textureSize,  height / textureSize, width / textureSize, 0, 0,
-						  0, 0, height / textureSize, width / textureSize,  height / textureSize };
+		                  0, 0, height / textureSize, width / textureSize,  height / textureSize };
 
 	mesh.vertices  = vertices;
 	mesh.normals   = normals;
@@ -197,14 +193,14 @@ void Scene_AddEntityToScene(Entity_Data *entity, float mx, float my, int id)
 		ImageFlipVertical(&textureImage);
 		const Texture2D texture = LoadTextureFromImage(textureImage);
 		// Set map diffuse texture
-		const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-		Model cubeModel = LoadModelFromMesh(cube);
+		const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
+		Model cubeModel                                           = LoadModelFromMesh(cube);
 		cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-		Scene->entities[id].model	= cubeModel;
+		Scene->entities[id].model    = cubeModel;
 		Scene->entities[id].position = (Vector3){ mx, Scene->position.y, my };
-		Scene->entities[id].id	   = WALL_MODEL_ID;
-		Scene->entities[id].size	 = (Vector3){ 1.0f, 1.0f, 1.0f };
+		Scene->entities[id].id       = WALL_MODEL_ID;
+		Scene->entities[id].size     = (Vector3){ 1.0f, 1.0f, 1.0f };
 		Scene->entities[id].boundingBox =
 			Utilities_MakeBoundingBox((Vector3){ mx, Scene->position.y, my }, (Vector3){ 1.0f, 1.0f, 1.0f });
 	}
@@ -260,7 +256,7 @@ void Scene_LoadSceneConfig(void)
 bool Scene_ParseConfig(char *key, char *value)
 {
 	// TODO: somekind of utility for getting full asset path here
-	char *texturesPath	= "./assets/textures/";
+	char *texturesPath    = "./assets/textures/";
 	char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
 	strcpy(fullTexturePath, texturesPath);
 	strcat(fullTexturePath, value);
