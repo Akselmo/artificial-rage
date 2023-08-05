@@ -1,8 +1,16 @@
 # Artificial Rage build file
 cmake_minimum_required(VERSION 3.11.0)
-set(CMAKE_BUILD_TYPE Debug)
-set(OpenGL_GL_PREFERENCE LEGACY)
 project(ArtificialRage)
+set(CMAKE_BUILD_TYPE Debug)
+# Use legacy version of OpenGL if possible, to make the game work on older
+# devices
+set(OpenGL_GL_PREFERENCE LEGACY)
+# Create compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+# Warning flags, sanitizer
+set(CMAKE_C_FLAGS
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
+)
 
 # Copy commit hook, used for formatting code at commit
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit
@@ -19,20 +27,12 @@ if(NOT raylib_FOUND)
   FetchContent_MakeAvailable(raylib)
 endif()
 
-# Create compile_commands.json
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-
 # Get all files from src (I know that this is "bad" but for this project it
 # makes sense)
 file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.c)
 
 # Add code to project
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
-
-# Warning flags, sanitizer
-set(CMAKE_C_FLAGS
-    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
-)
 
 # Use C11 standard, will likely bump it to C23 at some point maybe
 set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
