@@ -3,6 +3,7 @@
 #define _ANIMATOR_H_
 
 #include "raylib.h"
+#include <stdio.h>
 
 typedef struct Animator_Animation
 {

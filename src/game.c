@@ -1,7 +1,3 @@
-//
-// Created by akseli on 12/06/22.
-//
-
 #include "game.h"
 
 // Shared variables

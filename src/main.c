@@ -1,4 +1,4 @@
-// Scifi FPS, uses RayLib library
+// Artificial Rage - a Scifi FPS, uses RayLib library
 // Made by Akseli
 #include "main.h"
 

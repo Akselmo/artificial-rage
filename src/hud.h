@@ -5,6 +5,7 @@
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "weapon.h"
 #include <stdio.h>
 #include <string.h>
 

@@ -1,5 +1,4 @@
 #include "hud.h"
-#include "weapon.h"
 
 void Hud_Draw(void)
 {

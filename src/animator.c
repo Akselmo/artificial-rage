@@ -1,5 +1,4 @@
 #include "animator.h"
-#include <stdio.h>
 
 void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 {

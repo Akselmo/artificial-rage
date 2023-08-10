@@ -1,5 +1,4 @@
 #include "actor.h"
-#include "raylib.h"
 
 // Private functions
 bool Actor_UpdatePosition(Actor_Data *actor);

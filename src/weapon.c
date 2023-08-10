@@ -1,9 +1,4 @@
 #include "weapon.h"
-#include "player.h"
-#include "projectile.h"
-#include "raymath.h"
-#include "scene.h"
-#include <stdlib.h>
 
 // Prototypes
 

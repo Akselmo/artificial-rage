@@ -1,6 +1,4 @@
 #include "scene.h"
-#include "entity.h"
-#include "raylib.h"
 // Level has level data, Level_enemies, Level_items and Level_Projectiles
 // Level is basically the "scene"
 

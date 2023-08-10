@@ -1,10 +1,4 @@
 #include "projectile.h"
-#include "actor.h"
-#include "player.h"
-#include "raylib.h"
-#include "raymath.h"
-#include "scene.h"
-#include "utilities.h"
 
 // Prototypes
 void Projectile_DestroyOverTime(Projectile *projectile);
