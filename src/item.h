@@ -6,12 +6,16 @@
 
 #define ITEM_START_POSITION_Y 0.4f
 
+enum Item_Type
+{
+	ITEM_HEALTH_SMALL,
+	ITEM_HEALTH_MEDIUM,
+	ITEM_HEALTH_BIG,
+};
+
 typedef struct Item_Data
 {
-	int itemtype;
-	Vector3 position;
-	Vector3 size;
-	BoundingBox boundingBox;
+	enum Item_Type type;
 	bool destroyed;
 } Item_Data;
 

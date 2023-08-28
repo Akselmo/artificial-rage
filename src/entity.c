@@ -1,7 +1,7 @@
 #include "entity.h"
+#include "item.h"
 
 // Entities used in the game
-// TODO: More entities. For entities and their RGB values: check README.md
 
 Entity_Data *Entity_list[ENTITIES_TOTAL];
 
@@ -17,6 +17,8 @@ Entity_Data Entity_wall2 = { .type = SCENE_WALL, .fileName = "./assets/textures/
 
 Entity_Data Entity_enemy = { .type = SCENE_ACTOR, .fileName = "./assets/models/enemy.m3d" };
 
+Entity_Data Entity_item = { .type = SCENE_ITEM, .item = {.type = ITEM_HEALTH_SMALL} };
+
 void Entity_InitList(void)
 {
 	// In Tiled, Entity_none is not used.
@@ -29,4 +31,5 @@ void Entity_InitList(void)
 	Entity_list[3] = &Entity_wall1;
 	Entity_list[4] = &Entity_wall2;
 	Entity_list[5] = &Entity_enemy;
+	Entity_list[6] = &Entity_item; // TODO: Likely have to do it's own entity per item. This is just for getting started
 }
