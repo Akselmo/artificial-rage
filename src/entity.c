@@ -3,21 +3,21 @@
 
 // Entities used in the game
 
-Entity_Data *Entity_list[ENTITIES_TOTAL];
+Entity *Entity_list[ENTITIES_TOTAL];
 
-Entity_Data Entity_none = { .type = SCENE_NONE, .fileName = "" };
+Entity Entity_none = { .type = SCENE_NONE, .fileName = "" };
 
-Entity_Data Entity_start = { .type = SCENE_START, .fileName = "" };
+Entity Entity_start = { .type = SCENE_START, .fileName = "" };
 
-Entity_Data Entity_end = { .type = SCENE_END, .fileName = "" };
+Entity Entity_end = { .type = SCENE_END, .fileName = "" };
 
-Entity_Data Entity_wall1 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall1.png" };
+Entity Entity_wall1 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall1.png" };
 
-Entity_Data Entity_wall2 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall2.png" };
+Entity Entity_wall2 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall2.png" };
 
-Entity_Data Entity_enemy = { .type = SCENE_ACTOR, .fileName = "./assets/models/enemy.m3d" };
+Entity Entity_enemy = { .type = SCENE_ACTOR, .fileName = "./assets/models/enemy.m3d" };
 
-Entity_Data Entity_item = { .type = SCENE_ITEM, .item = {.type = ITEM_HEALTH_SMALL} };
+Entity Entity_item = { .type = SCENE_ITEM, .item = { .type = ITEM_HEALTH_SMALL } };
 
 void Entity_InitList(void)
 {

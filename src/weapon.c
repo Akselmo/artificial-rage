@@ -162,10 +162,10 @@ int TestEntityHit(const Ray rayCast)
 	int id;
 	float levelDistance    = INFINITY;
 	float enemyDistance    = INFINITY;
-	int entitiesAmount     = Scene->size;
-	Entity_Data *levelData = Scene->entities;
-	Actor_Data *enemies    = Scene->actors;
-	Actor_Data enemyDataHit;
+	int entitiesAmount     = scene->size;
+	Entity *levelData      = scene->entities;
+	Actor *enemies         = scene->actors;
+	Actor enemyDataHit;
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
@@ -248,7 +248,7 @@ float Weapon_Fire(Camera *camera, float nextFire)
 				printf("Id hit: %i \n", id);
 				if (id != 0 && id != PLAYER_ID)
 				{
-					Actor_TakeDamage(&Scene->actors[id], weapon->damage);
+					Actor_TakeDamage(&scene->actors[id], weapon->damage);
 					printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);
 				}
 			}

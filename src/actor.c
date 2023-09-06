@@ -1,12 +1,12 @@
 #include "actor.h"
 
 // Private functions
-bool Actor_UpdatePosition(Actor_Data *actor);
-bool Actor_TestPlayerHit(Actor_Data *actor);
-bool Actor_FireAtPlayer(Actor_Data *actor, float nextFire);
-Ray Actor_CreateRay(Actor_Data *actor);
+bool Actor_UpdatePosition(Actor *actor);
+bool Actor_TestPlayerHit(Actor *actor);
+bool Actor_FireAtPlayer(Actor *actor, float nextFire);
+Ray Actor_CreateRay(Actor *actor);
 
-Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const char *modelFileName)
+Actor Actor_Add(const float pos_x, const float pos_z, const int id, const char *modelFileName)
 {
 	const Vector3 actorPosition = (Vector3){ pos_x, ACTOR_POSITION_Y, pos_z };
 	const Vector3 actorRotation = Vector3Zero();
@@ -58,7 +58,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 		                       .currentAnimation = animations[IDLE],
 		                       .nextFrame        = 0 };
 
-	Actor_Data actor = {
+	Actor actor = {
 		.position      = actorPosition,
 		.rotation      = actorRotation,
 		.size          = actorSize,
@@ -80,7 +80,7 @@ Actor_Data Actor_Add(const float pos_x, const float pos_z, const int id, const c
 	return actor;
 }
 
-void Actor_Update(Actor_Data *actor)
+void Actor_Update(Actor *actor)
 {
 	Actor_Draw(actor);
 	if (!actor->dead)
@@ -116,9 +116,9 @@ void Actor_Update(Actor_Data *actor)
 		Animator_PlayAnimation(&actor->animator, ACTOR_DEFAULT_ANIMATION_SPEED, actor->animator.nextFrame);
 }
 
-void Actor_Draw(Actor_Data *actor) { DrawModel(actor->animator.model, actor->position, 0.5f, WHITE); }
+void Actor_Draw(Actor *actor) { DrawModel(actor->animator.model, actor->position, 0.5f, WHITE); }
 
-Ray Actor_CreateRay(Actor_Data *actor)
+Ray Actor_CreateRay(Actor *actor)
 {
 
 	const Vector3 playerPosition = Player->position;
@@ -132,16 +132,16 @@ Ray Actor_CreateRay(Actor_Data *actor)
 	return rayCast;
 }
 
-bool Actor_TestPlayerHit(Actor_Data *actor)
+bool Actor_TestPlayerHit(Actor *actor)
 {
 
 	const Ray rayCast = Actor_CreateRay(actor);
 
-	bool hitPlayer               = false;
-	float levelDistance          = INFINITY;
-	float playerDistance         = INFINITY;
-	const int entitiesAmount     = Scene->size;
-	const Entity_Data *levelData = Scene->entities;
+	bool hitPlayer           = false;
+	float levelDistance      = INFINITY;
+	float playerDistance     = INFINITY;
+	const int entitiesAmount = scene->size;
+	const Entity *levelData  = scene->entities;
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
@@ -169,7 +169,7 @@ bool Actor_TestPlayerHit(Actor_Data *actor)
 }
 
 // Make this boolean: moving or not
-bool Actor_UpdatePosition(Actor_Data *actor)
+bool Actor_UpdatePosition(Actor *actor)
 {
 	bool moving = true;
 	// Move actor towards player
@@ -197,7 +197,7 @@ bool Actor_UpdatePosition(Actor_Data *actor)
 	return moving;
 }
 
-void Actor_TakeDamage(Actor_Data *actor, const int damageAmount)
+void Actor_TakeDamage(Actor *actor, const int damageAmount)
 {
 	if (!actor->dead)
 	{
@@ -216,7 +216,7 @@ void Actor_TakeDamage(Actor_Data *actor, const int damageAmount)
 	}
 }
 
-bool Actor_FireAtPlayer(Actor_Data *actor, float nextFire)
+bool Actor_FireAtPlayer(Actor *actor, float nextFire)
 {
 
 	Actor_RotateTowards(actor, Player->position);
@@ -236,7 +236,7 @@ bool Actor_FireAtPlayer(Actor_Data *actor, float nextFire)
 	}
 }
 
-void Actor_RotateTowards(Actor_Data *actor, const Vector3 targetPosition)
+void Actor_RotateTowards(Actor *actor, const Vector3 targetPosition)
 {
 	// Rotates the actor around Y axis
 	const Vector3 diff        = Vector3Subtract(actor->position, targetPosition);
