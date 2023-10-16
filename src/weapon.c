@@ -163,37 +163,44 @@ int TestEntityHit(const Ray rayCast)
 	float levelDistance    = INFINITY;
 	float enemyDistance    = INFINITY;
 	int entitiesAmount     = scene->size;
-	Entity *levelData      = scene->entities;
-	Actor *enemies         = scene->actors;
-	Actor enemyDataHit;
+	Entity *entities      = scene->entities;
+	Entity enemyDataHit;
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
-		if (levelData[i].id != 0)
+		if (entities[i].id != 0)
 		{
-			const Vector3 pos = levelData[i].position;
-			const RayCollision hitLevel =
-				GetRayCollisionMesh(rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
-			if (hitLevel.hit)
+			if (entities[i].type == SCENE_ACTOR)
 			{
-				if (hitLevel.distance < levelDistance)
+				const RayCollision enemyHit = GetRayCollisionBox(rayCast, entities[i].boundingBox);
+				if (enemyHit.hit)
 				{
-					levelDistance = hitLevel.distance;
+					if (!entities[i].actor.dead)
+					{
+						if (Vector3Length(Vector3Subtract(entities[i].position, rayCast.position)) < enemyDistance)
+						{
+							enemyDistance = Vector3Length(Vector3Subtract(entities[i].position, rayCast.position));
+							enemyDataHit  = entities[i];
+						}
+					}
 				}
 			}
-		}
-		const RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
-		if (enemyHit.hit)
-		{
-			if (!enemies[i].dead)
+			else
 			{
-				if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+				const Vector3 pos = entities[i].position;
+				const RayCollision hitLevel =
+					GetRayCollisionMesh(rayCast, entities[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+				if (hitLevel.hit)
 				{
-					enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
-					enemyDataHit  = enemies[i];
+					if (hitLevel.distance < levelDistance)
+					{
+						levelDistance = hitLevel.distance;
+					}
 				}
 			}
+
 		}
+
 	}
 	if (enemyDistance < levelDistance)
 	{
@@ -246,9 +253,9 @@ float Weapon_Fire(Camera *camera, float nextFire)
 			if (weapon->hitscan)
 			{
 				printf("Id hit: %i \n", id);
-				if (id != 0 && id != PLAYER_ID)
+				if (id != 0 && id != PLAYER_ID && scene->entities[id].type == SCENE_ACTOR)
 				{
-					Actor_TakeDamage(&scene->actors[id], weapon->damage);
+					Entity_TakeDamage(&scene->entities[id], weapon->damage);
 					printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);
 				}
 			}

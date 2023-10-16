@@ -19,7 +19,6 @@ typedef struct Animator_Animation
 
 typedef struct Animator_Data
 {
-	Model model;
 	Animator_Animation *animations;
 	unsigned int animationsCount;
 	Animator_Animation currentAnimation;
@@ -27,7 +26,7 @@ typedef struct Animator_Data
 	float nextFrame;
 } Animator_Data;
 
-float Animator_PlayAnimation(Animator_Data *animator, const float animationSpeed, float nextFrame);
+float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float animationSpeed, float nextFrame);
 void Animator_SetAnimation(Animator_Data *animator, const int animationId);
 
 #endif

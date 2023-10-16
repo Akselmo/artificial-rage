@@ -17,7 +17,6 @@
 #include <string.h>
 
 #define MAX_PROJECTILE_AMOUNT 254
-#define WALL_MODEL_ID -2
 
 typedef struct Scene
 {
@@ -33,8 +32,6 @@ typedef struct Scene
 	Texture2D ceilingPlaneTexture;
 	int entitiesTotal; // entitiesTotal = (last_entity_id + 1) in entities.json
 	struct Entity *entities;
-	struct Actor *actors;
-	struct Item *items;
 	struct Projectile *projectiles;
 	Vector3 position;
 	Vector3 startPosition;

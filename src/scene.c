@@ -58,7 +58,6 @@ void Scene_PlaceEntities(void)
 	scene->size     = scene->height * scene->width;
 
 	scene->entities    = calloc(scene->size, sizeof(Entity));
-	scene->actors      = calloc(scene->size, sizeof(Actor));
 	scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
 	for (int entity = 0; entity < scene->dataCount; entity++)
@@ -94,17 +93,10 @@ void Scene_Update(void)
 
 	for (int i = 0; i < scene->size; i++)
 	{
-		Entity *data = &scene->entities[i];
-		Actor *actor = &scene->actors[i];
-		if (data != NULL && data->id != 0)
+		Entity *entity = &scene->entities[i];
+		if (entity != NULL && entity->id != 0)
 		{
-			DrawModel(data->model, data->position, 1.0f, WHITE);
-		}
-
-		if (actor != NULL && actor->id != 0)
-		{
-			// if Level_enemies[i] has nothing dont do anything
-			Actor_Update(actor);
+			Entity_Update(entity);
 		}
 	}
 	Scene_UpdateProjectiles();
@@ -128,17 +120,8 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 
 	for (int i = 0; i < scene->size; i++)
 	{
-		// Level entities
-
 		// Player and walls/enemies
-		if (CheckCollisionBoxes(entityBox, scene->entities[i].boundingBox))
-		{
-			return true;
-		}
-		// Actor and wall/other enemies
-		// Actors ignore themselves so they dont collide to themselve. Actors also ignore their
-		// own projectiles
-		else if (CheckCollisionBoxes(entityBox, scene->actors[i].boundingBox) && scene->actors[i].id != entityId)
+		if (CheckCollisionBoxes(entityBox, scene->entities[i].boundingBox) && scene->entities[i].id != entityId)
 		{
 			return true;
 		}
@@ -186,21 +169,7 @@ void Scene_AddEntityToScene(Entity *entity, float mx, float my, int id)
 	}
 	if (entity->type == SCENE_WALL)
 	{
-		Image textureImage = LoadImage(entity->fileName);
-		// The image has to be flipped since its loaded upside down
-		ImageFlipVertical(&textureImage);
-		const Texture2D texture = LoadTextureFromImage(textureImage);
-		// Set map diffuse texture
-		const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
-		Model cubeModel                                           = LoadModelFromMesh(cube);
-		cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-
-		scene->entities[id].model    = cubeModel;
-		scene->entities[id].position = (Vector3){ mx, scene->position.y, my };
-		scene->entities[id].id       = WALL_MODEL_ID;
-		scene->entities[id].size     = (Vector3){ 1.0f, 1.0f, 1.0f };
-		scene->entities[id].boundingBox =
-			Utilities_MakeBoundingBox((Vector3){ mx, scene->position.y, my }, (Vector3){ 1.0f, 1.0f, 1.0f });
+		scene->entities[id] = Entity_CreateWall(entity->fileName, (Vector3){ mx, scene->position.y, my });
 	}
 
 	else if (entity->type == SCENE_START)
@@ -215,7 +184,7 @@ void Scene_AddEntityToScene(Entity *entity, float mx, float my, int id)
 
 	else if (entity->type == SCENE_ACTOR)
 	{
-		scene->actors[id] = Actor_Add(mx, my, id, entity->fileName);
+		scene->entities[id] = Entity_CreateEnemy((Vector3){ mx, ACTOR_POSITION_Y, my }, id, entity->fileName);
 	}
 }
 

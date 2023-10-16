@@ -1,13 +1,15 @@
 #pragma once
-#include "item.h"
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-#include "entity.h"
 #include "raylib.h"
+#include "item.h"
+#include "actor.h"
+#include "player.h"
 
 // Remember to update this if you add more entities in entity.c
 #define ENTITIES_TOTAL 7
+#define WALL_MODEL_ID -2
 
 enum Entity_Type
 {
@@ -29,25 +31,38 @@ enum Entity_Type
 typedef struct Entity
 {
 	int id;
-	Vector3 position;
-	Vector3 size;
-	enum Entity_Type type;
-	char *fileName;
-	BoundingBox boundingBox;
-	Model model;
-	Item item;
 	bool loaded;
+	Vector3 position;
+	Vector3 rotation;
+	Vector3 size;
+	float scale;
+	BoundingBox boundingBox;
+	char *fileName;
+	Model model;
+	enum Entity_Type type;
+	// Only one of these is used per initialization
+	struct Item item;
+	struct Actor actor;
 } Entity;
 
-extern Entity *Entity_list[ENTITIES_TOTAL];
-extern Entity Entity_none;
-extern Entity Entity_start;
-extern Entity Entity_end;
-extern Entity Entity_wall1;
-extern Entity Entity_wall2;
-extern Entity Entity_enemy;
-extern Entity Entity_item;
+extern struct Entity *Entity_list[ENTITIES_TOTAL];
+extern struct Entity Entity_none;
+extern struct Entity Entity_start;
+extern struct Entity Entity_end;
+extern struct Entity Entity_wall1;
+extern struct Entity Entity_wall2;
+extern struct Entity Entity_enemy;
+extern struct Entity Entity_item;
 
+// Control functions
 void Entity_InitList(void);
+void Entity_Update(Entity *entity);
+void Entity_Draw(Entity *entity);
+void Entity_TakeDamage(Entity *entity, int damageAmount);
+void Entity_RotateTowards(Entity *entity, Vector3 targetPosition);
+
+// Creation functions
+Entity Entity_CreateEnemy(const Vector3 position, const int id, const char *modelFileName);
+Entity Entity_CreateWall(const char *textureFileName, const Vector3 position);
 
 #endif

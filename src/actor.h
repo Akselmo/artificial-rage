@@ -3,13 +3,6 @@
 #define _ACTOR_H_
 
 #include "animator.h"
-#include "entity.h"
-#include "player.h"
-#include "projectile.h"
-#include "raylib.h"
-#include "raymath.h"
-#include "scene.h"
-#include "utilities.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,25 +28,16 @@ typedef struct Actor
 {
 	int health;
 	int damage;
-	Vector3 position;
-	Vector3 rotation;
-	Vector3 size;
-	BoundingBox boundingBox;
-	Animator_Data animator;
 	bool dead;
 	bool moving;
 	bool attacking;
-	int id;
 	float movementSpeed;
 	float rotationSpeed;
 	float fireRate;
 	float nextFire;
+	Animator_Data animator;
 } Actor;
 
-Actor Actor_Add(float pos_x, float pos_z, int id, const char *modelFileName);
-void Actor_Update(Actor *actor);
-void Actor_Draw(Actor *actor);
-void Actor_TakeDamage(Actor *actor, int damageAmount);
-void Actor_RotateTowards(Actor *actor, Vector3 targetPosition);
+Actor Actor_Add(const char *modelFileName);
 
 #endif

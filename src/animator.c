@@ -23,7 +23,7 @@ void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 }
 
 // TODO: This would need somekind of frameskip feature if FPS is lower than animationspeed. Ideas welcome!
-float Animator_PlayAnimation(Animator_Data *animator, const float animationSpeed, float nextFrame)
+float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float animationSpeed, float nextFrame)
 {
 
 	if (nextFrame > 0)
@@ -45,7 +45,7 @@ float Animator_PlayAnimation(Animator_Data *animator, const float animationSpeed
 				animator->animationFrame = currentAnimation.lastFrame;
 			}
 		}
-		UpdateModelAnimation(animator->model, currentAnimation.animation, animator->animationFrame);
+		UpdateModelAnimation(*model, currentAnimation.animation, animator->animationFrame);
 		nextFrame = 1.0 / animationSpeed;
 	}
 	return nextFrame;

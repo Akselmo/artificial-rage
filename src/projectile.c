@@ -59,16 +59,13 @@ void Projectile_CheckCollision(Projectile *projectile)
 	for (int i = 0; i < scene->size; i++)
 	{
 
-		// Test hitting against wall
-		if (CheckCollisionBoxes(projectileBox, scene->entities[i].boundingBox))
-		{
-			Projectile_Destroy(projectile);
-			return;
-		}
 		// Against enemy except if owned by enemy
-		else if (CheckCollisionBoxes(projectileBox, scene->actors[i].boundingBox) && scene->actors[i].id != projectile->ownerId)
+		if (CheckCollisionBoxes(projectileBox, scene->entities[i].boundingBox) && scene->entities[i].id != projectile->ownerId)
 		{
-			Actor_TakeDamage(&scene->actors[i], projectile->damage);
+			if (scene->entities[i].type == SCENE_ACTOR)
+			{
+				Entity_TakeDamage(&scene->entities[i], projectile->damage);
+			}
 			Projectile_Destroy(projectile);
 			return;
 		}
