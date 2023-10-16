@@ -34,41 +34,44 @@ void Entity_InitList(void)
 void Entity_Update(Entity *entity)
 {
 	Entity_Draw(entity);
-	if (entity->type == SCENE_ACTOR)
+	if (entity->type != SCENE_ACTOR)
 	{
-		if (!entity->actor.dead)
+		return;
+	}
+
+	if (!entity->actor.dead)
+	{
+		if (Entity_TestPlayerHit(entity))
 		{
-			if (Entity_TestPlayerHit(entity))
+			entity->actor.playerSpotted = true;
+			if (Entity_FireAtPlayer(entity, entity->actor.nextFire))
 			{
-				if (Entity_FireAtPlayer(entity, entity->actor.nextFire))
+				// TODO: instead of directly changing the animation, use an animator that handles
+				//       the animation loops
+				Animator_SetAnimation(&entity->actor.animator, ATTACK);
+			}
+			else
+			{
+				if (Entity_UpdatePosition(entity))
 				{
-					// TODO: instead of directly changing the animation, use an animator that handles
-					//       the animation loops
-					Animator_SetAnimation(&entity->actor.animator, ATTACK);
+					Animator_SetAnimation(&entity->actor.animator, MOVE);
 				}
 				else
 				{
-					if (Entity_UpdatePosition(entity))
-					{
-						Animator_SetAnimation(&entity->actor.animator, MOVE);
-					}
-					else
-					{
-						Animator_SetAnimation(&entity->actor.animator, IDLE);
-					}
+					Animator_SetAnimation(&entity->actor.animator, IDLE);
 				}
-				entity->actor.nextFire -= GetFrameTime();
 			}
+			entity->actor.nextFire -= GetFrameTime();
 		}
-		else
-		{
-			Animator_SetAnimation(&entity->actor.animator, DEATH);
-		}
-		entity->actor.animator.nextFrame -= GetFrameTime();
-		entity->actor.animator.nextFrame = Animator_PlayAnimation(
-			&entity->actor.animator, &entity->model, ACTOR_DEFAULT_ANIMATION_SPEED, entity->actor.animator.nextFrame
-		);
 	}
+	else
+	{
+		Animator_SetAnimation(&entity->actor.animator, DEATH);
+	}
+	entity->actor.animator.nextFrame -= GetFrameTime();
+	entity->actor.animator.nextFrame = Animator_PlayAnimation(
+		&entity->actor.animator, &entity->model, ACTOR_DEFAULT_ANIMATION_SPEED, entity->actor.animator.nextFrame
+	);
 }
 
 void Entity_Draw(Entity *entity) { DrawModel(entity->model, entity->position, entity->scale, WHITE); }
@@ -89,22 +92,32 @@ Ray Entity_CreateRay(Entity *entity)
 
 bool Entity_TestPlayerHit(Entity *entity)
 {
+	// TODO: this function can be quite heavy, could give it a tickrate?
+	//  every 1-2 seconds instead of every frame
+	if (entity->type != SCENE_ACTOR)
+	{
+		return false;
+	}
 
+	if (Vector3Distance(Player->position, entity->position) > 5.0f && !entity->actor.playerSpotted)
+	{
+		return false;
+	}
 	const Ray rayCast = Entity_CreateRay(entity);
 
 	bool hitPlayer           = false;
 	float levelDistance      = INFINITY;
 	float playerDistance     = INFINITY;
 	const int entitiesAmount = scene->size;
-	const Entity *levelData  = scene->entities;
+	const Entity *entities   = scene->entities;
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
-		if (levelData[i].id != 0)
+		if (entities[i].id != 0 && entities[i].id != entity->id)
 		{
-			Vector3 pos = levelData[i].position;
+			Vector3 pos = entities[i].position;
 			RayCollision hitLevel =
-				GetRayCollisionMesh(rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+				GetRayCollisionMesh(rayCast, entities[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
 			if (hitLevel.hit)
 			{
 				if (hitLevel.distance < levelDistance)
@@ -126,82 +139,87 @@ bool Entity_TestPlayerHit(Entity *entity)
 // Make this boolean: moving or not
 bool Entity_UpdatePosition(Entity *entity)
 {
-	if (entity->type == SCENE_ACTOR)
+	if (entity->type != SCENE_ACTOR)
 	{
-		bool moving = true;
-		// Move entity towards player
-		const Vector3 DistanceFromPlayer = Vector3Subtract(entity->position, Player->position);
-		//- Check if player can be seen (first raycast hit returns player)
-
-		//- If in certain range from player, stop
-		if (fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
-		    fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
-		{
-			const Vector3 entityOldPosition = entity->position;
-			const Vector3 entityNewPosition = (Vector3){ Player->position.x, ACTOR_POSITION_Y, Player->position.z };
-			entity->position =
-				Vector3Lerp(entity->position, entityNewPosition, entity->actor.movementSpeed * GetFrameTime());
-			if (Scene_CheckCollision(entity->position, entity->size, entity->id))
-			{
-				entity->position = entityOldPosition;
-			}
-		}
-		else
-		{
-			moving = false;
-		}
-
-		entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
-		return moving;
+		return false;
 	}
-	return false;
+
+	bool moving = true;
+	// Move entity towards player
+	const Vector3 DistanceFromPlayer = Vector3Subtract(entity->position, Player->position);
+	//- Check if player can be seen (first raycast hit returns player)
+
+	//- If in certain range from player, stop
+	if (fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
+	    fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
+	{
+		const Vector3 entityOldPosition = entity->position;
+		const Vector3 entityNewPosition = (Vector3){ Player->position.x, ACTOR_POSITION_Y, Player->position.z };
+		entity->position =
+			Vector3Lerp(entity->position, entityNewPosition, entity->actor.movementSpeed * GetFrameTime());
+		if (Scene_CheckCollision(entity->position, entity->size, entity->id))
+		{
+			entity->position = entityOldPosition;
+		}
+	}
+	else
+	{
+		moving = false;
+	}
+
+	entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
+	return moving;
 }
 
 void Entity_TakeDamage(Entity *entity, const int damageAmount)
 {
-	if (entity->type == SCENE_ACTOR)
+	if (entity->type != SCENE_ACTOR)
 	{
-		if (!entity->actor.dead)
+		return;
+	}
+
+	if (!entity->actor.dead)
+	{
+		entity->actor.health -= damageAmount;
+		printf("entity id %d took %d damage\n", entity->id, damageAmount);
+		if (entity->actor.health <= 0)
 		{
-			entity->actor.health -= damageAmount;
-			printf("entity id %d took %d damage\n", entity->id, damageAmount);
-			if (entity->actor.health <= 0)
-			{
-				// Dirty hack to move bounding box outside of map so it cant be collided to.
-				// We want to keep entity in the memory so we can use its position to display the
-				// corpse/death anim
-				const Vector3 deadBoxPos =
-					(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
-				entity->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
-				entity->actor.dead  = true;
-			}
+			// Dirty hack to move bounding box outside of map so it cant be collided to.
+			// We want to keep entity in the memory so we can use its position to display the
+			// corpse/death anim
+			const Vector3 deadBoxPos =
+				(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
+			entity->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
+			entity->actor.dead  = true;
 		}
 	}
 }
 
 bool Entity_FireAtPlayer(Entity *entity, float nextFire)
 {
-	if (entity->type == SCENE_ACTOR)
-	{
-		Entity_RotateTowards(entity, Player->position);
-		if (nextFire > 0)
-		{
-			entity->actor.nextFire -= GetFrameTime();
-			return false;
-		}
-		else
-		{
-			// Fire animation should play before we shoot projectile
-			entity->actor.attacking = true;
 
-			Projectile_Create(
-				Entity_CreateRay(entity), (Vector3){ 0.2f, 0.2f, 0.2f }, entity->actor.damage, entity->id, PURPLE
-			);
-			entity->actor.nextFire = entity->actor.fireRate;
-			return true;
-		}
+	if (entity->type != SCENE_ACTOR)
+	{
+		return false;
 	}
-	return false;
+
+	Entity_RotateTowards(entity, Player->position);
+	if (nextFire > 0)
+	{
+		entity->actor.nextFire -= GetFrameTime();
+		return false;
+	}
+	else
+	{
+		// Fire animation should play before we shoot projectile
+		entity->actor.attacking = true;
+
+		Projectile_Create(
+			Entity_CreateRay(entity), (Vector3){ 0.2f, 0.2f, 0.2f }, entity->actor.damage, entity->id, PURPLE
+		);
+		entity->actor.nextFire = entity->actor.fireRate;
+		return true;
+	}
 }
 
 void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)

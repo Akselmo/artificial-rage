@@ -47,18 +47,17 @@ Actor Actor_Add(const char *modelFileName)
 		                       .currentAnimation = animations[IDLE],
 		                       .nextFrame        = 0 };
 
-	Actor actor = {
-		.dead          = false,
-		.moving        = false,
-		.attacking     = false,
-		.damage        = 5,
-		.health        = 15, // Check actor health balance later
-		.movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
-		.rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-		.fireRate      = 5.75f,
-		.nextFire      = 5.75f,
-		.animator      = animator
-	};
+	Actor actor = { .dead          = false,
+		            .moving        = false,
+		            .attacking     = false,
+		            .playerSpotted = false,
+		            .damage        = 5,
+		            .health        = 15, // Check actor health balance later
+		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		            .fireRate      = 5.75f,
+		            .nextFire      = 5.75f,
+		            .animator      = animator };
 
 	return actor;
 }

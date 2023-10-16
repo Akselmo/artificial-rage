@@ -31,6 +31,7 @@ typedef struct Actor
 	bool dead;
 	bool moving;
 	bool attacking;
+	bool playerSpotted;
 	float movementSpeed;
 	float rotationSpeed;
 	float fireRate;
