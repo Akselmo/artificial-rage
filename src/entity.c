@@ -38,8 +38,8 @@ void Entity_InitList(void)
 	EntityTemplate_list[3] = &EntityTemplate_wall1;
 	EntityTemplate_list[4] = &EntityTemplate_wall2;
 	EntityTemplate_list[5] = &EntityTemplate_enemy;
-	EntityTemplate_list[6] =
-		&EntityTemplate_item; // TODO: Likely have to do it's own entity per item. This is just for getting started
+	EntityTemplate_list[6] = &EntityTemplate_item;
+	// TODO: Likely have to do it's own entity per item. This is just for getting started
 }
 
 void Entity_Update(Entity *entity)
@@ -254,7 +254,7 @@ void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 // Creation functions
 Entity Entity_CreateEnemy(const Vector3 position, const int id, const char *modelFileName)
 {
-	const Vector3 entityPosition = (Vector3){ position.x, ACTOR_POSITION_Y, position.z};
+	const Vector3 entityPosition = (Vector3){ position.x, ACTOR_POSITION_Y, position.z };
 	const Vector3 entityRotation = Vector3Zero();
 	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
 
