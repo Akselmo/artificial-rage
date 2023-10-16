@@ -10,7 +10,7 @@ Scene *scene = NULL;
 void Scene_PlaceEntities(void);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
 void Scene_UpdateProjectiles(void);
-void Scene_AddEntityToScene(Entity *entity, float mx, float my, int id);
+void Scene_AddEntityToScene(EntityTemplate *entityTemplate, float mx, float my, int id);
 void Scene_LoadSceneConfig(void);
 bool Scene_ParseConfig(char *key, char *value);
 
@@ -68,7 +68,7 @@ void Scene_PlaceEntities(void)
 		const float mx = scene->position.x - 0.5f + entityPosX * 1.0f;
 		const float my = scene->position.z - 0.5f + entityPosY * 1.0f;
 
-		Scene_AddEntityToScene(Entity_list[scene->data[entity]], mx, my, entity);
+		Scene_AddEntityToScene(EntityTemplate_list[scene->data[entity]], mx, my, entity);
 	}
 
 	printf("Level has total %d entities \n", scene->size);
@@ -161,30 +161,32 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
 	mesh->normals   = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
-void Scene_AddEntityToScene(Entity *entity, float mx, float my, int id)
+void Scene_AddEntityToScene(EntityTemplate *entityTemplate, float mx, float my, int id)
 {
-	if (entity->type == SCENE_NONE)
+	if (entityTemplate->type == SCENE_NONE)
 	{
 		return;
 	}
-	if (entity->type == SCENE_WALL)
+	if (entityTemplate->type == SCENE_WALL)
 	{
-		scene->entities[id] = Entity_CreateWall(entity->fileName, (Vector3){ mx, scene->position.y, my });
+		scene->entities[id] =
+			Entity_CreateWall(entityTemplate->textureFileName, (Vector3){ mx, scene->position.y, my });
 	}
 
-	else if (entity->type == SCENE_START)
+	else if (entityTemplate->type == SCENE_START)
 	{
 		scene->startPosition = (Vector3){ mx, 0.0f, my };
 	}
 
-	else if (entity->type == SCENE_END)
+	else if (entityTemplate->type == SCENE_END)
 	{
 		scene->endPosition = (Vector3){ mx, 0.0f, my };
 	}
 
-	else if (entity->type == SCENE_ACTOR)
+	else if (entityTemplate->type == SCENE_ACTOR)
 	{
-		scene->entities[id] = Entity_CreateEnemy((Vector3){ mx, ACTOR_POSITION_Y, my }, id, entity->fileName);
+		scene->entities[id] =
+			Entity_CreateEnemy((Vector3){ mx, ACTOR_POSITION_Y, my }, id, entityTemplate->modelFileName);
 	}
 }
 

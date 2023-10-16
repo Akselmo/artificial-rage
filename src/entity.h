@@ -28,6 +28,13 @@ enum Entity_Type
 // TODO: Look into this! could just have one array of all entities, and update only that?
 // Then entity could have a struct matching it's type in it, which is used for the corresponding commands
 // Wouldn't need to have multiple arrays for items, enemies etc..
+typedef struct EntityTemplate
+{
+	enum Entity_Type type;
+	char *modelFileName;
+	char *textureFileName;
+} EntityTemplate;
+
 typedef struct Entity
 {
 	int id;
@@ -45,14 +52,14 @@ typedef struct Entity
 	struct Actor actor;
 } Entity;
 
-extern struct Entity *Entity_list[ENTITIES_TOTAL];
-extern struct Entity Entity_none;
-extern struct Entity Entity_start;
-extern struct Entity Entity_end;
-extern struct Entity Entity_wall1;
-extern struct Entity Entity_wall2;
-extern struct Entity Entity_enemy;
-extern struct Entity Entity_item;
+extern struct EntityTemplate *EntityTemplate_list[ENTITIES_TOTAL];
+extern struct EntityTemplate EntityTemplate_none;
+extern struct EntityTemplate EntityTemplate_start;
+extern struct EntityTemplate EntityTemplate_end;
+extern struct EntityTemplate EntityTemplate_wall1;
+extern struct EntityTemplate EntityTemplate_wall2;
+extern struct EntityTemplate EntityTemplate_enemy;
+extern struct EntityTemplate EntityTemplate_item;
 
 // Control functions
 void Entity_InitList(void);

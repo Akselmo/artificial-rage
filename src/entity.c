@@ -7,28 +7,39 @@ bool Entity_FireAtPlayer(Entity *entity, float nextFire);
 Ray Entity_CreateRay(Entity *entity);
 
 // Entities used in the game
-struct Entity *Entity_list[ENTITIES_TOTAL];
-struct Entity Entity_none  = { .type = SCENE_NONE, .fileName = "" };
-struct Entity Entity_start = { .type = SCENE_START, .fileName = "" };
-struct Entity Entity_end   = { .type = SCENE_END, .fileName = "" };
-struct Entity Entity_wall1 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall1.png" };
-struct Entity Entity_wall2 = { .type = SCENE_WALL, .fileName = "./assets/textures/wall2.png" };
-struct Entity Entity_enemy = { .type = SCENE_ACTOR, .fileName = "./assets/models/enemy.m3d" };
-struct Entity Entity_item  = { .type = SCENE_ITEM };
+// This list is used only for checking the entities from
+// the map data. If map data matches the same id as the
+// position of the template in the EntityList array
+// scene will then create a new entity matching the template
+struct EntityTemplate *EntityTemplate_list[ENTITIES_TOTAL];
+struct EntityTemplate EntityTemplate_none  = { .type = SCENE_NONE, .textureFileName = "", .modelFileName = "" };
+struct EntityTemplate EntityTemplate_start = { .type = SCENE_START, .textureFileName = "", .modelFileName = "" };
+struct EntityTemplate EntityTemplate_end   = { .type = SCENE_END, .textureFileName = "", .modelFileName = "" };
+struct EntityTemplate EntityTemplate_wall1 = { .type            = SCENE_WALL,
+	                                           .textureFileName = "./assets/textures/wall1.png",
+	                                           .modelFileName   = "" };
+struct EntityTemplate EntityTemplate_wall2 = { .type            = SCENE_WALL,
+	                                           .textureFileName = "./assets/textures/wall2.png",
+	                                           .modelFileName   = "" };
+struct EntityTemplate EntityTemplate_enemy = { .type            = SCENE_ACTOR,
+	                                           .textureFileName = "",
+	                                           .modelFileName   = "./assets/models/enemy.m3d" };
+struct EntityTemplate EntityTemplate_item  = { .type = SCENE_ITEM, .textureFileName = "", .modelFileName = "" };
 
 void Entity_InitList(void)
 {
 	// In Tiled, Entity_none is not used.
-	Entity_list[0] = &Entity_none;
+	EntityTemplate_list[0] = &EntityTemplate_none;
 	// Thus, in Tiled, Entity_start id is 0.
 	// NOTE: Make sure the entity id's are in sync with the position they have in this array.
 	// Example: Entity_list[TiledId+1] = &Entity_at_that_id;
-	Entity_list[1] = &Entity_start;
-	Entity_list[2] = &Entity_end;
-	Entity_list[3] = &Entity_wall1;
-	Entity_list[4] = &Entity_wall2;
-	Entity_list[5] = &Entity_enemy;
-	Entity_list[6] = &Entity_item; // TODO: Likely have to do it's own entity per item. This is just for getting started
+	EntityTemplate_list[1] = &EntityTemplate_start;
+	EntityTemplate_list[2] = &EntityTemplate_end;
+	EntityTemplate_list[3] = &EntityTemplate_wall1;
+	EntityTemplate_list[4] = &EntityTemplate_wall2;
+	EntityTemplate_list[5] = &EntityTemplate_enemy;
+	EntityTemplate_list[6] =
+		&EntityTemplate_item; // TODO: Likely have to do it's own entity per item. This is just for getting started
 }
 
 void Entity_Update(Entity *entity)
