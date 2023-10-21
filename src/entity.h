@@ -8,17 +8,29 @@
 #include "player.h"
 
 // Remember to update this if you add more entities in entity.c
-#define ENTITIES_TOTAL 7
 #define WALL_MODEL_ID -2
 
 enum Entity_Type
 {
-	SCENE_NONE,
-	SCENE_START,
-	SCENE_END,
-	SCENE_WALL,
-	SCENE_ACTOR,
-	SCENE_ITEM
+	ENTITY_NONE,
+	ENTITY_START,
+	ENTITY_END,
+	ENTITY_WALL_CARGO,
+	ENTITY_WALL_CARGO_SCUFFED,
+	ENTITY_ENEMY_DEFAULT,
+	ITEM_HEALTH_SMALL,
+	ITEM_HEALTH_MEDIUM,
+	ITEM_HEALTH_LARGE,
+	ITEM_CLUTTER, // an item that provides collision but nothing else
+	ITEM_PISTOL,  // Gives weapon and some ammo
+	ITEM_RIFLE,
+	ITEM_SHOTGUN,
+	ITEM_RAILGUN,
+	ITEM_PISTOL_AMMO, // Gives only ammo
+	ITEM_RIFLE_AMMO,
+	ITEM_SHOTGUN_AMMO,
+	ITEM_RAILGUN_AMMO,
+	ITEM_TELEPORT_KEY // Needed to go through ending teleporter
 };
 
 // This is basically a "box" that holds all entities,
@@ -28,12 +40,6 @@ enum Entity_Type
 // TODO: Look into this! could just have one array of all entities, and update only that?
 // Then entity could have a struct matching it's type in it, which is used for the corresponding commands
 // Wouldn't need to have multiple arrays for items, enemies etc..
-typedef struct EntityTemplate
-{
-	enum Entity_Type type;
-	char *modelFileName;
-	char *textureFileName;
-} EntityTemplate;
 
 typedef struct Entity
 {
@@ -44,7 +50,8 @@ typedef struct Entity
 	Vector3 size;
 	float scale;
 	BoundingBox boundingBox;
-	char *fileName;
+	char *modelFileName;
+	char *textureFileName;
 	Model model;
 	enum Entity_Type type;
 	// Only one of these is used per initialization
@@ -52,24 +59,13 @@ typedef struct Entity
 	struct Actor actor;
 } Entity;
 
-extern struct EntityTemplate *EntityTemplate_list[ENTITIES_TOTAL];
-extern struct EntityTemplate EntityTemplate_none;
-extern struct EntityTemplate EntityTemplate_start;
-extern struct EntityTemplate EntityTemplate_end;
-extern struct EntityTemplate EntityTemplate_wall1;
-extern struct EntityTemplate EntityTemplate_wall2;
-extern struct EntityTemplate EntityTemplate_enemy;
-extern struct EntityTemplate EntityTemplate_item;
-
 // Control functions
-void Entity_InitList(void);
 void Entity_Update(Entity *entity);
 void Entity_Draw(Entity *entity);
 void Entity_TakeDamage(Entity *entity, int damageAmount);
 void Entity_RotateTowards(Entity *entity, Vector3 targetPosition);
 
 // Creation functions
-Entity Entity_CreateEnemy(const Vector3 position, const int id, const char *modelFileName);
-Entity Entity_CreateWall(const char *textureFileName, const Vector3 position);
+Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id);
 
 #endif

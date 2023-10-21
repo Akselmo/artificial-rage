@@ -6,46 +6,14 @@ bool Entity_TestPlayerHit(Entity *entity);
 bool Entity_FireAtPlayer(Entity *entity, float nextFire);
 Ray Entity_CreateRay(Entity *entity);
 
-// Entities used in the game
-// This list is used only for checking the entities from
-// the map data. If map data matches the same id as the
-// position of the template in the EntityList array
-// scene will then create a new entity matching the template
-struct EntityTemplate *EntityTemplate_list[ENTITIES_TOTAL];
-struct EntityTemplate EntityTemplate_none  = { .type = SCENE_NONE, .textureFileName = "", .modelFileName = "" };
-struct EntityTemplate EntityTemplate_start = { .type = SCENE_START, .textureFileName = "", .modelFileName = "" };
-struct EntityTemplate EntityTemplate_end   = { .type = SCENE_END, .textureFileName = "", .modelFileName = "" };
-struct EntityTemplate EntityTemplate_wall1 = { .type            = SCENE_WALL,
-	                                           .textureFileName = "./assets/textures/wall1.png",
-	                                           .modelFileName   = "" };
-struct EntityTemplate EntityTemplate_wall2 = { .type            = SCENE_WALL,
-	                                           .textureFileName = "./assets/textures/wall2.png",
-	                                           .modelFileName   = "" };
-struct EntityTemplate EntityTemplate_enemy = { .type            = SCENE_ACTOR,
-	                                           .textureFileName = "",
-	                                           .modelFileName   = "./assets/models/enemy.m3d" };
-struct EntityTemplate EntityTemplate_item  = { .type = SCENE_ITEM, .textureFileName = "", .modelFileName = "" };
-
-void Entity_InitList(void)
-{
-	// In Tiled, Entity_none is not used.
-	EntityTemplate_list[0] = &EntityTemplate_none;
-	// Thus, in Tiled, Entity_start id is 0.
-	// NOTE: Make sure the entity id's are in sync with the position they have in this array.
-	// Example: Entity_list[TiledId+1] = &Entity_at_that_id;
-	EntityTemplate_list[1] = &EntityTemplate_start;
-	EntityTemplate_list[2] = &EntityTemplate_end;
-	EntityTemplate_list[3] = &EntityTemplate_wall1;
-	EntityTemplate_list[4] = &EntityTemplate_wall2;
-	EntityTemplate_list[5] = &EntityTemplate_enemy;
-	EntityTemplate_list[6] = &EntityTemplate_item;
-	// TODO: Likely have to do it's own entity per item. This is just for getting started
-}
+// Private creation functions
+void Entity_CreateWall(Entity *entity, char *textureFileName);
+void Entity_CreateEnemy(Entity *entity, char *modelFileName);
 
 void Entity_Update(Entity *entity)
 {
 	Entity_Draw(entity);
-	if (entity->type != SCENE_ACTOR)
+	if (entity->type != ENTITY_ENEMY_DEFAULT)
 	{
 		return;
 	}
@@ -105,7 +73,7 @@ bool Entity_TestPlayerHit(Entity *entity)
 {
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
-	if (entity->type != SCENE_ACTOR)
+	if (entity->type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
@@ -150,7 +118,7 @@ bool Entity_TestPlayerHit(Entity *entity)
 // Make this boolean: moving or not
 bool Entity_UpdatePosition(Entity *entity)
 {
-	if (entity->type != SCENE_ACTOR)
+	if (entity->type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
@@ -184,7 +152,7 @@ bool Entity_UpdatePosition(Entity *entity)
 
 void Entity_TakeDamage(Entity *entity, const int damageAmount)
 {
-	if (entity->type != SCENE_ACTOR)
+	if (entity->type != ENTITY_ENEMY_DEFAULT)
 	{
 		return;
 	}
@@ -209,7 +177,7 @@ void Entity_TakeDamage(Entity *entity, const int damageAmount)
 bool Entity_FireAtPlayer(Entity *entity, float nextFire)
 {
 
-	if (entity->type != SCENE_ACTOR)
+	if (entity->type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
@@ -235,7 +203,7 @@ bool Entity_FireAtPlayer(Entity *entity, float nextFire)
 
 void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 {
-	if (entity->type == SCENE_ACTOR)
+	if (entity->type == ENTITY_ENEMY_DEFAULT)
 	{
 		// Rotates the entity around Y axis
 		const Vector3 diff        = Vector3Subtract(entity->position, targetPosition);
@@ -251,45 +219,81 @@ void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 	}
 }
 
-// Creation functions
-Entity Entity_CreateEnemy(const Vector3 position, const int id, const char *modelFileName)
+Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
-	const Vector3 entityPosition = (Vector3){ position.x, ACTOR_POSITION_Y, position.z };
-	const Vector3 entityRotation = Vector3Zero();
-	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
+	Entity entity = { .type = type, .id = id, .position = position, .scale = 0.5f };
 
-	Entity enemy = { .type        = SCENE_ACTOR,
-		             .boundingBox = Utilities_MakeBoundingBox(entityPosition, entitySize),
-		             .id          = id,
-		             .position    = entityPosition,
-		             .rotation    = entityRotation,
-		             .size        = entitySize,
-		             .scale       = 0.5f,
-		             .model       = LoadModel(modelFileName),
-		             .actor       = Actor_Add(modelFileName) };
-	return enemy;
+	if (type == ENTITY_WALL_CARGO)
+	{
+		Entity_CreateWall(&entity, "./assets/textures/wall1.png");
+	}
+
+	else if (type == ENTITY_WALL_CARGO_SCUFFED)
+	{
+		Entity_CreateWall(&entity, "./assets/textures/wall2.png");
+	}
+
+	else if (type == ENTITY_ENEMY_DEFAULT)
+	{
+		Entity_CreateEnemy(&entity, "./assets/models/enemy.m3d");
+	}
+
+	return entity;
 }
 
-Entity Entity_CreateWall(const char *textureFileName, const Vector3 position)
-{
+// Creation functions
 
-	Image textureImage = LoadImage(textureFileName);
+void Entity_CreateWall(Entity *entity, char *textureFileName)
+{
+	entity->textureFileName = textureFileName;
+	Image textureImage      = LoadImage(entity->textureFileName);
 	// The image has to be flipped since its loaded upside down
 	ImageFlipVertical(&textureImage);
 	const Texture2D texture = LoadTextureFromImage(textureImage);
 	// Set map diffuse texture
 	const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
-	Model cubeModel                                           = LoadModelFromMesh(cube);
-	cubeModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-	Vector3 size                                              = Vector3One();
+	entity->model                                             = LoadModelFromMesh(cube);
+	entity->size                                              = Vector3One();
+	entity->scale                                             = 1.0f;
 
-	Entity wall = { .type        = SCENE_WALL,
-		            .model       = cubeModel,
-		            .position    = position,
-		            .id          = WALL_MODEL_ID,
-		            .size        = size,
-		            .scale       = 1.0f,
-		            .boundingBox = Utilities_MakeBoundingBox(position, size) };
+	// Set texture
+	entity->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-	return wall;
+	entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
 }
+
+void Entity_CreateEnemy(Entity *entity, char *modelFileName)
+{
+	const Vector3 entityPosition = (Vector3){ entity->position.x, ACTOR_POSITION_Y, entity->position.z };
+	const Vector3 entityRotation = Vector3Zero();
+	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
+	entity->boundingBox          = Utilities_MakeBoundingBox(entityPosition, entitySize);
+	entity->position             = entityPosition;
+	entity->rotation             = entityRotation;
+	entity->size                 = entitySize;
+	entity->scale                = 0.5f;
+	entity->model                = LoadModel(modelFileName);
+	entity->actor                = Actor_Add(modelFileName, 15, 2); // these could be randomized
+}
+
+/*
+
+Entity Entity_CreateItem(const Vector3 position, enum Item_Type type)
+{
+    Vector3 size = (Vector3){0.2f, 0.2f, 0.2f};
+
+    Item item = Item_Add(type);
+
+    Entity health = { .type        = SCENE_ITEM,
+                    .model       = LoadModel(EntityTemplate_itemHealthSmall.modelFileName),
+                    .position    = position,
+                    .id          = WALL_MODEL_ID,
+                    .size        = size,
+                    .scale       = 0.2f,
+                    .boundingBox = Utilities_MakeBoundingBox(position, size),
+                    .item = item
+    };
+
+    return health;
+}
+*/

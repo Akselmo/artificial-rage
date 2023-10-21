@@ -10,7 +10,7 @@ Scene *scene = NULL;
 void Scene_PlaceEntities(void);
 void Scene_AllocateMeshData(Mesh *mesh, int triangleCount);
 void Scene_UpdateProjectiles(void);
-void Scene_AddEntityToScene(EntityTemplate *entityTemplate, float mx, float my, int id);
+void Scene_AddEntityToScene(enum Entity_Type type, float mx, float my, int id);
 void Scene_LoadSceneConfig(void);
 bool Scene_ParseConfig(char *key, char *value);
 
@@ -29,9 +29,6 @@ void Scene_Build(void)
 	scene = calloc(1, sizeof(Scene));
 	// TODO: Free all scene data
 
-	// Initialize entity types
-	Entity_InitList();
-
 	// Load scene data from the config file
 	Scene_LoadSceneConfig();
 
@@ -41,12 +38,8 @@ void Scene_Build(void)
 
 void Scene_PlaceEntities(void)
 {
-
 	const float mapPosZ = (float)scene->height;
 	const float mapPosX = (float)scene->width;
-
-	// Prepare plane textures for level
-	Scene_LoadSceneConfig();
 
 	scene->ceilingPlane = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
 	scene->floorPlane   = LoadModelFromMesh(Scene_MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0f));
@@ -68,7 +61,7 @@ void Scene_PlaceEntities(void)
 		const float mx = scene->position.x - 0.5f + entityPosX * 1.0f;
 		const float my = scene->position.z - 0.5f + entityPosY * 1.0f;
 
-		Scene_AddEntityToScene(EntityTemplate_list[scene->data[entity]], mx, my, entity);
+		Scene_AddEntityToScene(scene->data[entity], mx, my, entity);
 	}
 
 	printf("Level has total %d entities \n", scene->size);
@@ -161,32 +154,28 @@ void Scene_AllocateMeshData(Mesh *mesh, int triangleCount)
 	mesh->normals   = (float *)MemAlloc(mesh->vertexCount * 3 * sizeof(float));
 }
 
-void Scene_AddEntityToScene(EntityTemplate *entityTemplate, float mx, float my, int id)
+void Scene_AddEntityToScene(enum Entity_Type type, float mx, float my, int id)
 {
-	if (entityTemplate->type == SCENE_NONE)
+	if (type == ENTITY_NONE)
 	{
 		return;
 	}
-	if (entityTemplate->type == SCENE_WALL)
-	{
-		scene->entities[id] =
-			Entity_CreateWall(entityTemplate->textureFileName, (Vector3){ mx, scene->position.y, my });
-	}
 
-	else if (entityTemplate->type == SCENE_START)
+	else if (type == ENTITY_START)
 	{
+		// TODO: will likely be turned into yet another entity
 		scene->startPosition = (Vector3){ mx, 0.0f, my };
 	}
 
-	else if (entityTemplate->type == SCENE_END)
+	else if (type == ENTITY_END)
 	{
+		// TODO: this will be turned into ending teleporter object
 		scene->endPosition = (Vector3){ mx, 0.0f, my };
 	}
 
-	else if (entityTemplate->type == SCENE_ACTOR)
+	else
 	{
-		scene->entities[id] =
-			Entity_CreateEnemy((Vector3){ mx, ACTOR_POSITION_Y, my }, id, entityTemplate->modelFileName);
+		scene->entities[id] = Entity_Create(type, (Vector3){ mx, 0.5f, my }, id);
 	}
 }
 
@@ -248,26 +237,31 @@ bool Scene_ParseConfig(char *key, char *value)
 	{
 		scene->name = calloc(strlen(value) + 5, sizeof(char));
 		strcpy(scene->name, value);
+		free(fullTexturePath);
 		return true;
 	}
 	else if (strcmp(key, "height") == 0)
 	{
 		scene->height = atoi(value);
+		free(fullTexturePath);
 		return true;
 	}
 	else if (strcmp(key, "width") == 0)
 	{
 		scene->width = atoi(value);
+		free(fullTexturePath);
 		return true;
 	}
 	else if (strcmp(key, "data") == 0)
 	{
 		scene->data = Utilities_ParseIntArray(value, &scene->dataCount);
+		free(fullTexturePath);
 		return true; // Handle array after the parsing is done
 	}
 	else
 	{
 		printf("No such key: %s \n", key);
+		free(fullTexturePath);
 		return false;
 	}
 }

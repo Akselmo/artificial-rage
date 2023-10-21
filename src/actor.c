@@ -1,6 +1,6 @@
 #include "actor.h"
 
-Actor Actor_Add(const char *modelFileName)
+Actor Actor_Add(const char *modelFileName, int health, int damage)
 {
 	unsigned int animationsCount = 0;
 
@@ -51,8 +51,8 @@ Actor Actor_Add(const char *modelFileName)
 		            .moving        = false,
 		            .attacking     = false,
 		            .playerSpotted = false,
-		            .damage        = 5,
-		            .health        = 15, // Check actor health balance later
+		            .damage        = damage,
+		            .health        = health, // Check actor health balance later
 		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
 		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
 		            .fireRate      = 5.75f,

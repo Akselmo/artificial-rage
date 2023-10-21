@@ -62,7 +62,7 @@ void Projectile_CheckCollision(Projectile *projectile)
 		// Against enemy except if owned by enemy
 		if (CheckCollisionBoxes(projectileBox, scene->entities[i].boundingBox) && scene->entities[i].id != projectile->ownerId)
 		{
-			if (scene->entities[i].type == SCENE_ACTOR)
+			if (scene->entities[i].type == ENTITY_ENEMY_DEFAULT)
 			{
 				Entity_TakeDamage(&scene->entities[i], projectile->damage);
 			}

@@ -170,7 +170,7 @@ int TestEntityHit(const Ray rayCast)
 	{
 		if (entities[i].id != 0)
 		{
-			if (entities[i].type == SCENE_ACTOR)
+			if (entities[i].type == ENTITY_ENEMY_DEFAULT)
 			{
 				const RayCollision enemyHit = GetRayCollisionBox(rayCast, entities[i].boundingBox);
 				if (enemyHit.hit)
@@ -253,7 +253,7 @@ float Weapon_Fire(Camera *camera, float nextFire)
 			if (weapon->hitscan)
 			{
 				printf("Id hit: %i \n", id);
-				if (id != 0 && id != PLAYER_ID && scene->entities[id].type == SCENE_ACTOR)
+				if (id != 0 && id != PLAYER_ID && scene->entities[id].type == ENTITY_ENEMY_DEFAULT)
 				{
 					Entity_TakeDamage(&scene->entities[id], weapon->damage);
 					printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);

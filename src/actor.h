@@ -39,6 +39,6 @@ typedef struct Actor
 	Animator_Data animator;
 } Actor;
 
-Actor Actor_Add(const char *modelFileName);
+Actor Actor_Add(const char *modelFileName, int health, int damage);
 
 #endif
