@@ -37,6 +37,7 @@ typedef struct Actor
 	float fireRate;
 	float nextFire;
 	Animator_Data animator;
+	// TODO: add tickrate and handle it
 } Actor;
 
 Actor Actor_Add(const char *modelFileName, int health, int damage);
