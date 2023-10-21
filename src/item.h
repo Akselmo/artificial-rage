@@ -13,4 +13,7 @@ typedef struct Item
 
 Item Item_Add(void);
 
+// TODO: Item could have its types from entity_type
+// then make a function that is done whenever player walks over the item
+// check what type is and act accordingly
 #endif
