@@ -251,10 +251,10 @@ void Entity_CreateWall(Entity *entity, char *textureFileName)
 	ImageFlipVertical(&textureImage);
 	const Texture2D texture = LoadTextureFromImage(textureImage);
 	// Set map diffuse texture
-	const Mesh cube                                           = GenMeshCube(1.0f, 1.0f, 1.0f);
-	entity->model                                             = LoadModelFromMesh(cube);
-	entity->size                                              = Vector3One();
-	entity->scale                                             = 1.0f;
+	const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
+	entity->model   = LoadModelFromMesh(cube);
+	entity->size    = Vector3One();
+	entity->scale   = 1.0f;
 
 	// Set texture
 	entity->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
