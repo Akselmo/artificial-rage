@@ -9,9 +9,10 @@
 typedef struct Item
 {
 	bool destroyed;
+	int value;
 } Item;
 
-Item Item_Add(void);
+Item Item_Add(const int value);
 
 // TODO: Item could have its types from entity_type
 // then make a function that is done whenever player walks over the item

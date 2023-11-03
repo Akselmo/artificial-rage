@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "item.h"
 
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
@@ -7,8 +8,9 @@ bool Entity_FireAtPlayer(Entity *entity, float nextFire);
 Ray Entity_CreateRay(Entity *entity);
 
 // Private creation functions
-void Entity_CreateWall(Entity *entity, char *textureFileName);
-void Entity_CreateEnemy(Entity *entity, char *modelFileName);
+void Entity_CreateWall(Entity *entity);
+void Entity_CreateEnemy(Entity *entity);
+void Entity_CreateItem(Entity *entity);
 
 void Entity_Update(Entity *entity)
 {
@@ -163,7 +165,7 @@ void Entity_TakeDamage(Entity *entity, const int damageAmount)
 		printf("entity id %d took %d damage\n", entity->id, damageAmount);
 		if (entity->actor.health <= 0)
 		{
-			// Dirty hack to move bounding box outside of map so it cant be collided to.
+			// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
 			// We want to keep entity in the memory so we can use its position to display the
 			// corpse/death anim
 			const Vector3 deadBoxPos =
@@ -225,17 +227,20 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 
 	if (type == ENTITY_WALL_CARGO)
 	{
-		Entity_CreateWall(&entity, "./assets/textures/wall1.png");
+		entity.textureFileName = "./assets/textures/wall1.png";
+		Entity_CreateWall(&entity);
 	}
 
 	else if (type == ENTITY_WALL_CARGO_SCUFFED)
 	{
-		Entity_CreateWall(&entity, "./assets/textures/wall2.png");
+		entity.textureFileName = "./assets/textures/wall2.png";
+		Entity_CreateWall(&entity);
 	}
 
 	else if (type == ENTITY_ENEMY_DEFAULT)
 	{
-		Entity_CreateEnemy(&entity, "./assets/models/enemy.m3d");
+		entity.textureFileName = "./assets/models/enemy.m3d";
+		Entity_CreateEnemy(&entity);
 	}
 
 	return entity;
@@ -243,10 +248,9 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 
 // Creation functions
 
-void Entity_CreateWall(Entity *entity, char *textureFileName)
+void Entity_CreateWall(Entity *entity)
 {
-	entity->textureFileName = textureFileName;
-	Image textureImage      = LoadImage(entity->textureFileName);
+	Image textureImage = LoadImage(entity->textureFileName);
 	// The image has to be flipped since its loaded upside down
 	ImageFlipVertical(&textureImage);
 	const Texture2D texture = LoadTextureFromImage(textureImage);
@@ -262,7 +266,7 @@ void Entity_CreateWall(Entity *entity, char *textureFileName)
 	entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
 }
 
-void Entity_CreateEnemy(Entity *entity, char *modelFileName)
+void Entity_CreateEnemy(Entity *entity)
 {
 	const Vector3 entityPosition = (Vector3){ entity->position.x, ACTOR_POSITION_Y, entity->position.z };
 	const Vector3 entityRotation = Vector3Zero();
@@ -272,28 +276,15 @@ void Entity_CreateEnemy(Entity *entity, char *modelFileName)
 	entity->rotation             = entityRotation;
 	entity->size                 = entitySize;
 	entity->scale                = 0.5f;
-	entity->model                = LoadModel(modelFileName);
-	entity->actor                = Actor_Add(modelFileName, 15, 2); // these could be randomized
+	entity->model                = LoadModel(entity->modelFileName);
+	entity->actor                = Actor_Add(entity->modelFileName, 15, 2); // these could be randomized
 }
 
-/*
-
-Entity Entity_CreateItem(const Vector3 position, enum Item_Type type)
+void Entity_CreateItem(Entity *entity)
 {
-    Vector3 size = (Vector3){0.2f, 0.2f, 0.2f};
 
-    Item item = Item_Add(type);
-
-    Entity health = { .type        = SCENE_ITEM,
-                    .model       = LoadModel(EntityTemplate_itemHealthSmall.modelFileName),
-                    .position    = position,
-                    .id          = WALL_MODEL_ID,
-                    .size        = size,
-                    .scale       = 0.2f,
-                    .boundingBox = Utilities_MakeBoundingBox(position, size),
-                    .item = item
-    };
-
-    return health;
+	// TODO: if the model name is 0, the entity is a 2d billboard
+	// value is added per item. could make switch ladder that sets the values
+	//
+	entity->item = Item_Add(1);
 }
-*/
