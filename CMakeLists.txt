@@ -16,14 +16,14 @@ set(CMAKE_C_FLAGS
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit
      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/)
 
-# Get raylib 4.5
+# Get raylib 5.0
 find_package(raylib QUIET)
 if(NOT raylib_FOUND)
   include(FetchContent)
   FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG 4.5.0)
+    GIT_TAG 5.0)
   FetchContent_MakeAvailable(raylib)
 endif()
 
