@@ -239,7 +239,7 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 
 	else if (type == ENTITY_ENEMY_DEFAULT)
 	{
-		entity.textureFileName = "./assets/models/enemy.m3d";
+		entity.modelFileName = "./assets/models/enemy.m3d";
 		Entity_CreateEnemy(&entity);
 	}
 
