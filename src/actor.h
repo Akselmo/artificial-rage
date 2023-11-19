@@ -40,6 +40,6 @@ typedef struct Actor
 	// TODO: add tickrate and handle it
 } Actor;
 
-Actor Actor_Add(const char *modelFileName, int health, int damage);
+Actor Actor_CreateEnemy(const char *modelFileName, int health, int damage);
 
 #endif

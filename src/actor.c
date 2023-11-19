@@ -1,8 +1,8 @@
 #include "actor.h"
 
-Actor Actor_Add(const char *modelFileName, int health, int damage)
+Actor Actor_CreateEnemy(const char *modelFileName, int health, int damage)
 {
-	unsigned int animationsCount = 0;
+	int animationsCount = 0;
 
 	ModelAnimation *loadedAnimations = LoadModelAnimations(modelFileName, &animationsCount);
 

@@ -161,6 +161,11 @@ void Entity_TakeDamage(Entity *entity, const int damageAmount)
 
 	if (!entity->actor.dead)
 	{
+		// "Wake up" enemy if it gets hit by a projectile
+		if (!entity->actor.playerSpotted)
+		{
+			entity->actor.playerSpotted = true;
+		}
 		entity->actor.health -= damageAmount;
 		printf("entity id %d took %d damage\n", entity->id, damageAmount);
 		if (entity->actor.health <= 0)
@@ -277,7 +282,7 @@ void Entity_CreateEnemy(Entity *entity)
 	entity->size                 = entitySize;
 	entity->scale                = 0.5f;
 	entity->model                = LoadModel(entity->modelFileName);
-	entity->actor                = Actor_Add(entity->modelFileName, 15, 2); // these could be randomized
+	entity->actor                = Actor_CreateEnemy(entity->modelFileName, 15, 2); // these could be randomized
 }
 
 void Entity_CreateItem(Entity *entity)
