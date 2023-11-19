@@ -1,6 +1,5 @@
 #include "entity.h"
-#include "item.h"
-
+#include "player.h"
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
 bool Entity_TestPlayerHit(Entity *entity);
@@ -282,7 +281,64 @@ void Entity_CreateEnemy(Entity *entity)
 	entity->size                 = entitySize;
 	entity->scale                = 0.5f;
 	entity->model                = LoadModel(entity->modelFileName);
-	entity->actor                = Actor_CreateEnemy(entity->modelFileName, 15, 2); // these could be randomized
+	int animationsCount          = 0;
+
+	ModelAnimation *loadedAnimations = LoadModelAnimations(entity->modelFileName, &animationsCount);
+
+	Animator_Animation *animations;
+	animations = calloc(animationsCount, sizeof(Animator_Animation));
+
+	Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
+		                             .firstFrame    = 0,
+		                             .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
+		                             .id            = DEATH,
+		                             .interruptable = false,
+		                             .loopable      = false };
+
+	Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
+		                              .firstFrame    = 0,
+		                              .lastFrame     = loadedAnimations[ATTACK].frameCount,
+		                              .id            = ATTACK,
+		                              .interruptable = false,
+		                              .loopable      = false };
+
+	Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
+		                            .firstFrame    = 0,
+		                            .lastFrame     = loadedAnimations[IDLE].frameCount,
+		                            .id            = IDLE,
+		                            .interruptable = true,
+		                            .loopable      = true };
+
+	Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
+		                            .firstFrame    = 0,
+		                            .lastFrame     = loadedAnimations[MOVE].frameCount,
+		                            .id            = MOVE,
+		                            .interruptable = true,
+		                            .loopable      = true };
+
+	animations[DEATH]  = deathAnim;
+	animations[ATTACK] = attackAnim;
+	animations[IDLE]   = idleAnim;
+	animations[MOVE]   = moveAnim;
+
+	Animator_Data animator = { .animations       = animations,
+		                       .animationsCount  = animationsCount,
+		                       .currentAnimation = animations[IDLE],
+		                       .nextFrame        = 0 };
+
+	Actor actor = { .dead          = false,
+		            .moving        = false,
+		            .attacking     = false,
+		            .playerSpotted = false,
+		            .damage        = 2,
+		            .health        = 15, // Check actor health balance later
+		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		            .fireRate      = 5.75f,
+		            .nextFire      = 5.75f,
+		            .animator      = animator };
+
+	entity->actor = actor;
 }
 
 void Entity_CreateItem(Entity *entity)
@@ -290,6 +346,7 @@ void Entity_CreateItem(Entity *entity)
 
 	// TODO: if the model name is 0, the entity is a 2d billboard
 	// value is added per item. could make switch ladder that sets the values
-	//
-	entity->item = Item_Add(1);
+
+	Item item    = { .destroyed = false, .value = 10 };
+	entity->item = item;
 }

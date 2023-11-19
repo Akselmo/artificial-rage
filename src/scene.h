@@ -2,10 +2,9 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "actor.h"
 #include "entity.h"
 #include "game.h"
-#include "item.h"
+
 #include "main.h"
 #include "player.h"
 #include "projectile.h"
