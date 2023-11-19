@@ -288,55 +288,51 @@ void Entity_CreateEnemy(Entity *entity)
 	Animator_Animation *animations;
 	animations = calloc(animationsCount, sizeof(Animator_Animation));
 
-	Animator_Animation deathAnim = { .animation     = loadedAnimations[DEATH],
-		                             .firstFrame    = 0,
-		                             .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
-		                             .id            = DEATH,
-		                             .interruptable = false,
-		                             .loopable      = false };
+	// TODO: Could move this to animator.c since its more of its thing
+	animations[DEATH] = (Animator_Animation){ .animation     = loadedAnimations[DEATH],
+		                                      .firstFrame    = 0,
+		                                      .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
+		                                      .id            = DEATH,
+		                                      .interruptable = false,
+		                                      .loopable      = false };
 
-	Animator_Animation attackAnim = { .animation     = loadedAnimations[ATTACK],
-		                              .firstFrame    = 0,
-		                              .lastFrame     = loadedAnimations[ATTACK].frameCount,
-		                              .id            = ATTACK,
-		                              .interruptable = false,
-		                              .loopable      = false };
+	animations[ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ATTACK],
+		                                       .firstFrame    = 0,
+		                                       .lastFrame     = loadedAnimations[ATTACK].frameCount,
+		                                       .id            = ATTACK,
+		                                       .interruptable = false,
+		                                       .loopable      = false };
 
-	Animator_Animation idleAnim = { .animation     = loadedAnimations[IDLE],
-		                            .firstFrame    = 0,
-		                            .lastFrame     = loadedAnimations[IDLE].frameCount,
-		                            .id            = IDLE,
-		                            .interruptable = true,
-		                            .loopable      = true };
+	animations[IDLE] = (Animator_Animation){ .animation     = loadedAnimations[IDLE],
+		                                     .firstFrame    = 0,
+		                                     .lastFrame     = loadedAnimations[IDLE].frameCount,
+		                                     .id            = IDLE,
+		                                     .interruptable = true,
+		                                     .loopable      = true };
 
-	Animator_Animation moveAnim = { .animation     = loadedAnimations[MOVE],
-		                            .firstFrame    = 0,
-		                            .lastFrame     = loadedAnimations[MOVE].frameCount,
-		                            .id            = MOVE,
-		                            .interruptable = true,
-		                            .loopable      = true };
+	animations[MOVE] = (Animator_Animation){ .animation     = loadedAnimations[MOVE],
+		                                     .firstFrame    = 0,
+		                                     .lastFrame     = loadedAnimations[MOVE].frameCount,
+		                                     .id            = MOVE,
+		                                     .interruptable = true,
+		                                     .loopable      = true };
 
-	animations[DEATH]  = deathAnim;
-	animations[ATTACK] = attackAnim;
-	animations[IDLE]   = idleAnim;
-	animations[MOVE]   = moveAnim;
-
-	Animator_Data animator = { .animations       = animations,
-		                       .animationsCount  = animationsCount,
-		                       .currentAnimation = animations[IDLE],
-		                       .nextFrame        = 0 };
-
-	Actor actor = { .dead          = false,
-		            .moving        = false,
-		            .attacking     = false,
-		            .playerSpotted = false,
-		            .damage        = 2,
-		            .health        = 15, // Check actor health balance later
-		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
-		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-		            .fireRate      = 5.75f,
-		            .nextFire      = 5.75f,
-		            .animator      = animator };
+	Actor actor = {
+		.dead          = false,
+		.moving        = false,
+		.attacking     = false,
+		.playerSpotted = false,
+		.damage        = 2,
+		.health        = 15, // Check actor health balance later
+		.movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		.rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		.fireRate      = 5.75f,
+		.nextFire      = 5.75f,
+		.animator      = (Animator_Data){.animations       = animations,
+                                         .animationsCount  = animationsCount,
+                                         .currentAnimation = animations[IDLE],
+                                         .nextFrame        = 0}
+	};
 
 	entity->actor = actor;
 }
