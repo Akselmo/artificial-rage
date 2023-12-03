@@ -26,8 +26,6 @@ void Entity_Update(Entity *entity)
 			entity->actor.playerSpotted = true;
 			if (Entity_FireAtPlayer(entity, entity->actor.nextFire))
 			{
-				// TODO: instead of directly changing the animation, use an animator that handles
-				//       the animation loops
 				Animator_SetAnimation(&entity->actor.animator, ATTACK);
 			}
 			else
