@@ -60,9 +60,10 @@ void Projectile_CheckCollision(Projectile *projectile)
 	{
 
 		// Against enemy except if owned by enemy
-		if (CheckCollisionBoxes(projectileBox, scene->entities[i].boundingBox) && scene->entities[i].id != projectile->ownerId)
+		if (CheckCollisionBoxes(projectileBox, scene->entities[i].transform.boundingBox) &&
+		    scene->entities[i].id != projectile->ownerId)
 		{
-			if (scene->entities[i].type == ENTITY_ENEMY_DEFAULT)
+			if (scene->entities[i].data.type == ENTITY_ENEMY_DEFAULT)
 			{
 				Entity_TakeDamage(&scene->entities[i], projectile->damage);
 			}
@@ -70,7 +71,7 @@ void Projectile_CheckCollision(Projectile *projectile)
 			return;
 		}
 		// Against player except if owned by player
-		else if (CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
+		else if (CheckCollisionBoxes(projectileBox, Player->transform.boundingBox) && PLAYER_ID != projectile->ownerId)
 		{
 			Player_SetHealth(-1 * projectile->damage);
 			Projectile_Destroy(projectile);

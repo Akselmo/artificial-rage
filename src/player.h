@@ -2,6 +2,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+#include "entity.h"
 #include "hud.h"
 #include "main.h"
 #include "raylib.h"
@@ -35,9 +36,7 @@ typedef struct Player_Data
 {
 	int health;
 	bool dead;
-	Vector3 position;
-	Vector3 size;
-	BoundingBox boundingBox;
+	Entity_Transform transform;
 	float nextFire;
 } Player_Data;
 

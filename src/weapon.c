@@ -170,16 +170,18 @@ int TestEntityHit(const Ray rayCast)
 	{
 		if (entities[i].id != 0)
 		{
-			if (entities[i].type == ENTITY_ENEMY_DEFAULT)
+			if (entities[i].data.type == ENTITY_ENEMY_DEFAULT)
 			{
-				const RayCollision enemyHit = GetRayCollisionBox(rayCast, entities[i].boundingBox);
+				const RayCollision enemyHit = GetRayCollisionBox(rayCast, entities[i].transform.boundingBox);
 				if (enemyHit.hit)
 				{
-					if (!entities[i].actor.dead)
+					if (!entities[i].data.value.actor.dead)
 					{
-						if (Vector3Length(Vector3Subtract(entities[i].position, rayCast.position)) < enemyDistance)
+						if (Vector3Length(Vector3Subtract(entities[i].transform.position, rayCast.position)) <
+						    enemyDistance)
 						{
-							enemyDistance = Vector3Length(Vector3Subtract(entities[i].position, rayCast.position));
+							enemyDistance =
+								Vector3Length(Vector3Subtract(entities[i].transform.position, rayCast.position));
 							enemyDataHit  = entities[i];
 						}
 					}
@@ -187,9 +189,10 @@ int TestEntityHit(const Ray rayCast)
 			}
 			else
 			{
-				const Vector3 pos = entities[i].position;
-				const RayCollision hitLevel =
-					GetRayCollisionMesh(rayCast, entities[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+				const Vector3 pos           = entities[i].transform.position;
+				const RayCollision hitLevel = GetRayCollisionMesh(
+					rayCast, entities[i].model.data.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z)
+				);
 				if (hitLevel.hit)
 				{
 					if (hitLevel.distance < levelDistance)
@@ -253,7 +256,7 @@ float Weapon_Fire(Camera *camera, float nextFire)
 			if (weapon->hitscan)
 			{
 				printf("Id hit: %i \n", id);
-				if (id != 0 && id != PLAYER_ID && scene->entities[id].type == ENTITY_ENEMY_DEFAULT)
+				if (id != 0 && id != PLAYER_ID && scene->entities[id].data.type == ENTITY_ENEMY_DEFAULT)
 				{
 					Entity_TakeDamage(&scene->entities[id], weapon->damage);
 					printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);

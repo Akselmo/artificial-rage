@@ -51,9 +51,9 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 	Player              = calloc(1, sizeof(Player_Data));
 	Player->health      = PLAYER_MAX_HEALTH;
 	Player->dead        = false;
-	Player->size        = (Vector3){ 0.1f, 0.1f, 0.1f };
-	Player->position    = (Vector3){ 0.0f, 0.0f, 0.0f };
-	Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
+	Player->transform.size        = (Vector3){ 0.1f, 0.1f, 0.1f };
+	Player->transform.position    = (Vector3){ 0.0f, 0.0f, 0.0f };
+	Player->transform.boundingBox = Utilities_MakeBoundingBox(Player->transform.position, Player->transform.size);
 	Player->nextFire    = 0.0f;
 
 	Weapon_Initialize();
@@ -68,7 +68,7 @@ void Player_Update(Camera *camera)
 
 	const Vector3 oldPlayerPos = camera->position;
 
-	Player->boundingBox = Utilities_MakeBoundingBox(camera->position, Player->size);
+	Player->transform.boundingBox = Utilities_MakeBoundingBox(camera->position, Player->transform.size);
 
 	const Vector2 mousePositionDelta = GetMouseDelta();
 
@@ -128,13 +128,13 @@ void Player_Update(Camera *camera)
 	// Camera position update
 	camera->position.y = Player_CustomCamera.playerEyesPosition;
 
-	if (Scene_CheckCollision(camera->position, Player->size, PLAYER_ID))
+	if (Scene_CheckCollision(camera->position, Player->transform.size, PLAYER_ID))
 	{
 		camera->position = oldPlayerPos;
 	}
 
-	Player->position    = camera->position;
-	Player->boundingBox = Utilities_MakeBoundingBox(Player->position, Player->size);
+	Player->transform.position    = camera->position;
+	Player->transform.boundingBox = Utilities_MakeBoundingBox(Player->transform.position, Player->transform.size);
 	// Check if we need to switch weapon
 	Weapon_GetSwitchInput();
 	Player_FireWeapon(camera, &Player_CustomCamera);

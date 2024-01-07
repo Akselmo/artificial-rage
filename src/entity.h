@@ -61,7 +61,8 @@ typedef struct Actor
 	float fireRate;
 	float nextFire;
 	Animator_Data animator;
-	// TODO: add tickrate and handle it
+	// TODO: actually utilize the tickrate
+	float tickRate;
 } Actor;
 
 // Items such as health pickups, ammo, etc..
@@ -70,6 +71,34 @@ typedef struct Item
 	bool destroyed;
 	int value;
 } Item;
+
+typedef struct Entity_Transform
+{
+	Vector3 position;
+	Vector3 rotation;
+	Vector3 size;
+	float scale;
+	BoundingBox boundingBox;
+} Entity_Transform;
+
+typedef struct Entity_Model
+{
+	char *fileName;
+	char *textureFileName;
+	Model data;
+} Entity_Model;
+
+typedef union Entity_Union
+{
+	struct Item item;
+	struct Actor actor;
+} Entity_Union;
+
+typedef struct Entity_Data
+{
+	enum Entity_Type type;
+	union Entity_Union value;
+} Entity_Data;
 
 // This is basically a "box" that holds all entities,
 // such as actors, scene building blocks, items..
@@ -82,20 +111,9 @@ typedef struct Entity
 {
 	int id;
 	bool loaded;
-	// TODO: Could move these in Transform struct
-	Vector3 position;
-	Vector3 rotation;
-	Vector3 size;
-	float scale;
-	BoundingBox boundingBox;
-	char *modelFileName;
-	char *textureFileName;
-	Model model;
-	enum Entity_Type type;
-	// Only one of these is used per initialization
-	// TODO: UNIONIZE
-	struct Item item;
-	struct Actor actor;
+	Entity_Transform transform;
+	Entity_Model model;
+	Entity_Data data;
 } Entity;
 
 // Control functions

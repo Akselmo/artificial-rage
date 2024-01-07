@@ -14,55 +14,61 @@ void Entity_CreateItem(Entity *entity);
 void Entity_Update(Entity *entity)
 {
 	Entity_Draw(entity);
-	if (entity->type != ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type != ENTITY_ENEMY_DEFAULT)
 	{
 		return;
 	}
 
-	if (!entity->actor.dead)
+	if (!entity->data.value.actor.dead)
 	{
 		if (Entity_TestPlayerHit(entity))
 		{
-			entity->actor.playerSpotted = true;
-			if (Entity_FireAtPlayer(entity, entity->actor.nextFire))
+			entity->data.value.actor.playerSpotted = true;
+			if (Entity_FireAtPlayer(entity, entity->data.value.actor.nextFire))
 			{
-				Animator_SetAnimation(&entity->actor.animator, ATTACK);
+				Animator_SetAnimation(&entity->data.value.actor.animator, ATTACK);
 			}
 			else
 			{
 				if (Entity_UpdatePosition(entity))
 				{
-					Animator_SetAnimation(&entity->actor.animator, MOVE);
+					Animator_SetAnimation(&entity->data.value.actor.animator, MOVE);
 				}
 				else
 				{
-					Animator_SetAnimation(&entity->actor.animator, IDLE);
+					Animator_SetAnimation(&entity->data.value.actor.animator, IDLE);
 				}
 			}
-			entity->actor.nextFire -= GetFrameTime();
+			entity->data.value.actor.nextFire -= GetFrameTime();
 		}
 	}
 	else
 	{
-		Animator_SetAnimation(&entity->actor.animator, DEATH);
+		Animator_SetAnimation(&entity->data.value.actor.animator, DEATH);
 	}
-	entity->actor.animator.nextFrame -= GetFrameTime();
-	entity->actor.animator.nextFrame = Animator_PlayAnimation(
-		&entity->actor.animator, &entity->model, ACTOR_DEFAULT_ANIMATION_SPEED, entity->actor.animator.nextFrame
+	entity->data.value.actor.animator.nextFrame -= GetFrameTime();
+	entity->data.value.actor.animator.nextFrame = Animator_PlayAnimation(
+		&entity->data.value.actor.animator,
+		&entity->model.data,
+		ACTOR_DEFAULT_ANIMATION_SPEED,
+		entity->data.value.actor.animator.nextFrame
 	);
 }
 
-void Entity_Draw(Entity *entity) { DrawModel(entity->model, entity->position, entity->scale, WHITE); }
+void Entity_Draw(Entity *entity)
+{
+	DrawModel(entity->model.data, entity->transform.position, entity->transform.scale, WHITE);
+}
 
 Ray Entity_CreateRay(Entity *entity)
 {
 
-	const Vector3 playerPosition = Player->position;
-	const Vector3 v              = Vector3Normalize(Vector3Subtract(entity->position, playerPosition));
+	const Vector3 playerPosition = Player->transform.position;
+	const Vector3 v              = Vector3Normalize(Vector3Subtract(entity->transform.position, playerPosition));
 
 	Ray rayCast = {
 		.direction = (Vector3){-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
-          .position = entity->position
+          .position = entity->transform.position
 	};
 
 	return rayCast;
@@ -72,12 +78,13 @@ bool Entity_TestPlayerHit(Entity *entity)
 {
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
-	if (entity->type != ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
 
-	if (Vector3Distance(Player->position, entity->position) > 5.0f && !entity->actor.playerSpotted)
+	if (Vector3Distance(Player->transform.position, entity->transform.position) > 5.0f &&
+	    !entity->data.value.actor.playerSpotted)
 	{
 		return false;
 	}
@@ -93,9 +100,9 @@ bool Entity_TestPlayerHit(Entity *entity)
 	{
 		if (entities[i].id != 0 && entities[i].id != entity->id)
 		{
-			Vector3 pos = entities[i].position;
+			Vector3 pos = entities[i].transform.position;
 			RayCollision hitLevel =
-				GetRayCollisionMesh(rayCast, entities[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
+				GetRayCollisionMesh(rayCast, entities[i].model.data.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
 			if (hitLevel.hit)
 			{
 				if (hitLevel.distance < levelDistance)
@@ -106,7 +113,7 @@ bool Entity_TestPlayerHit(Entity *entity)
 		}
 	}
 
-	playerDistance = Vector3Length(Vector3Subtract(Player->position, rayCast.position));
+	playerDistance = Vector3Length(Vector3Subtract(Player->transform.position, rayCast.position));
 
 	// Player is closer
 	hitPlayer = (playerDistance < levelDistance);
@@ -117,27 +124,29 @@ bool Entity_TestPlayerHit(Entity *entity)
 // Make this boolean: moving or not
 bool Entity_UpdatePosition(Entity *entity)
 {
-	if (entity->type != ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
 
 	bool moving = true;
 	// Move entity towards player
-	const Vector3 DistanceFromPlayer = Vector3Subtract(entity->position, Player->position);
+	const Vector3 DistanceFromPlayer = Vector3Subtract(entity->transform.position, Player->transform.position);
 	//- Check if player can be seen (first raycast hit returns player)
 
 	//- If in certain range from player, stop
 	if (fabsf(DistanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
 	    fabsf(DistanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
 	{
-		const Vector3 entityOldPosition = entity->position;
-		const Vector3 entityNewPosition = (Vector3){ Player->position.x, ACTOR_POSITION_Y, Player->position.z };
-		entity->position =
-			Vector3Lerp(entity->position, entityNewPosition, entity->actor.movementSpeed * GetFrameTime());
-		if (Scene_CheckCollision(entity->position, entity->size, entity->id))
+		const Vector3 entityOldPosition = entity->transform.position;
+		const Vector3 entityNewPosition =
+			(Vector3){ Player->transform.position.x, ACTOR_POSITION_Y, Player->transform.position.z };
+		entity->transform.position = Vector3Lerp(
+			entity->transform.position, entityNewPosition, entity->data.value.actor.movementSpeed * GetFrameTime()
+		);
+		if (Scene_CheckCollision(entity->transform.position, entity->transform.size, entity->id))
 		{
-			entity->position = entityOldPosition;
+			entity->transform.position = entityOldPosition;
 		}
 	}
 	else
@@ -145,35 +154,35 @@ bool Entity_UpdatePosition(Entity *entity)
 		moving = false;
 	}
 
-	entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
+	entity->transform.boundingBox = Utilities_MakeBoundingBox(entity->transform.position, entity->transform.size);
 	return moving;
 }
 
 void Entity_TakeDamage(Entity *entity, const int damageAmount)
 {
-	if (entity->type != ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type != ENTITY_ENEMY_DEFAULT)
 	{
 		return;
 	}
 
-	if (!entity->actor.dead)
+	if (!entity->data.value.actor.dead)
 	{
 		// "Wake up" enemy if it gets hit by a projectile
-		if (!entity->actor.playerSpotted)
+		if (!entity->data.value.actor.playerSpotted)
 		{
-			entity->actor.playerSpotted = true;
+			entity->data.value.actor.playerSpotted = true;
 		}
-		entity->actor.health -= damageAmount;
+		entity->data.value.actor.health -= damageAmount;
 		printf("entity id %d took %d damage\n", entity->id, damageAmount);
-		if (entity->actor.health <= 0)
+		if (entity->data.value.actor.health <= 0)
 		{
 			// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
 			// We want to keep entity in the memory so we can use its position to display the
 			// corpse/death anim
 			const Vector3 deadBoxPos =
 				(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
-			entity->boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
-			entity->actor.dead  = true;
+			entity->transform.boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
+			entity->data.value.actor.dead = true;
 		}
 	}
 }
@@ -181,67 +190,69 @@ void Entity_TakeDamage(Entity *entity, const int damageAmount)
 bool Entity_FireAtPlayer(Entity *entity, float nextFire)
 {
 
-	if (entity->type != ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type != ENTITY_ENEMY_DEFAULT)
 	{
 		return false;
 	}
 
-	Entity_RotateTowards(entity, Player->position);
+	Entity_RotateTowards(entity, Player->transform.position);
 	if (nextFire > 0)
 	{
-		entity->actor.nextFire -= GetFrameTime();
+		entity->data.value.actor.nextFire -= GetFrameTime();
 		return false;
 	}
 	else
 	{
 		// Fire animation should play before we shoot projectile
-		entity->actor.attacking = true;
+		entity->data.value.actor.attacking = true;
 
 		Projectile_Create(
-			Entity_CreateRay(entity), (Vector3){ 0.2f, 0.2f, 0.2f }, entity->actor.damage, entity->id, PURPLE
+			Entity_CreateRay(entity), (Vector3){ 0.2f, 0.2f, 0.2f }, entity->data.value.actor.damage, entity->id, PURPLE
 		);
-		entity->actor.nextFire = entity->actor.fireRate;
+		entity->data.value.actor.nextFire = entity->data.value.actor.fireRate;
 		return true;
 	}
 }
 
 void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 {
-	if (entity->type == ENTITY_ENEMY_DEFAULT)
+	if (entity->data.type == ENTITY_ENEMY_DEFAULT)
 	{
 		// Rotates the entity around Y axis
-		const Vector3 diff        = Vector3Subtract(entity->position, targetPosition);
+		const Vector3 diff        = Vector3Subtract(entity->transform.position, targetPosition);
 		const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
 		const Vector3 newRotation = (Vector3){ 0, y_angle, 0 };
 
-		const Quaternion start = QuaternionFromEuler(entity->rotation.z, entity->rotation.y, entity->rotation.x);
+		const Quaternion start = QuaternionFromEuler(
+			entity->transform.rotation.z, entity->transform.rotation.y, entity->transform.rotation.x
+		);
 		const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
-		const Quaternion slerp = QuaternionSlerp(start, end, entity->actor.rotationSpeed * GetFrameTime());
+		const Quaternion slerp = QuaternionSlerp(start, end, entity->data.value.actor.rotationSpeed * GetFrameTime());
 
-		entity->model.transform = QuaternionToMatrix(slerp);
-		entity->rotation        = newRotation;
+		entity->model.data.transform = QuaternionToMatrix(slerp);
+		entity->transform.rotation   = newRotation;
 	}
 }
 
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
-	Entity entity = { .type = type, .id = id, .position = position, .scale = 0.5f };
+	Entity entity = { .data.type = type, .id = id, .transform.position = position, .transform.scale = 0.5f };
 
 	if (type == ENTITY_WALL_CARGO)
 	{
-		entity.textureFileName = "./assets/textures/wall1.png";
+		entity.model.textureFileName = "./assets/textures/wall1.png";
 		Entity_CreateWall(&entity);
 	}
 
 	else if (type == ENTITY_WALL_CARGO_SCUFFED)
 	{
-		entity.textureFileName = "./assets/textures/wall2.png";
+		entity.model.textureFileName = "./assets/textures/wall2.png";
 		Entity_CreateWall(&entity);
 	}
 
 	else if (type == ENTITY_ENEMY_DEFAULT)
 	{
-		entity.modelFileName = "./assets/models/enemy.m3d";
+		entity.model.fileName = "./assets/models/enemy.m3d";
 		Entity_CreateEnemy(&entity);
 	}
 
@@ -252,36 +263,37 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 
 void Entity_CreateWall(Entity *entity)
 {
-	Image textureImage = LoadImage(entity->textureFileName);
+	Image textureImage = LoadImage(entity->model.textureFileName);
 	// The image has to be flipped since its loaded upside down
 	ImageFlipVertical(&textureImage);
 	const Texture2D texture = LoadTextureFromImage(textureImage);
 	// Set map diffuse texture
 	const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-	entity->model   = LoadModelFromMesh(cube);
-	entity->size    = Vector3One();
-	entity->scale   = 1.0f;
+	entity->model.data      = LoadModelFromMesh(cube);
+	entity->transform.size  = Vector3One();
+	entity->transform.scale = 1.0f;
 
 	// Set texture
-	entity->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+	entity->model.data.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
-	entity->boundingBox = Utilities_MakeBoundingBox(entity->position, entity->size);
+	entity->transform.boundingBox = Utilities_MakeBoundingBox(entity->transform.position, entity->transform.size);
 }
 
 void Entity_CreateEnemy(Entity *entity)
 {
-	const Vector3 entityPosition = (Vector3){ entity->position.x, ACTOR_POSITION_Y, entity->position.z };
+	const Vector3 entityPosition =
+		(Vector3){ entity->transform.position.x, ACTOR_POSITION_Y, entity->transform.position.z };
 	const Vector3 entityRotation = Vector3Zero();
 	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
-	entity->boundingBox          = Utilities_MakeBoundingBox(entityPosition, entitySize);
-	entity->position             = entityPosition;
-	entity->rotation             = entityRotation;
-	entity->size                 = entitySize;
-	entity->scale                = 0.5f;
-	entity->model                = LoadModel(entity->modelFileName);
+	entity->transform.boundingBox = Utilities_MakeBoundingBox(entityPosition, entitySize);
+	entity->transform.position    = entityPosition;
+	entity->transform.rotation    = entityRotation;
+	entity->transform.size        = entitySize;
+	entity->transform.scale       = 0.5f;
+	entity->model.data            = LoadModel(entity->model.fileName);
 	int animationsCount          = 0;
 
-	ModelAnimation *loadedAnimations = LoadModelAnimations(entity->modelFileName, &animationsCount);
+	ModelAnimation *loadedAnimations = LoadModelAnimations(entity->model.fileName, &animationsCount);
 
 	Animator_Animation *animations;
 	animations = calloc(animationsCount, sizeof(Animator_Animation));
@@ -332,7 +344,7 @@ void Entity_CreateEnemy(Entity *entity)
                                          .nextFrame        = 0}
 	};
 
-	entity->actor = actor;
+	entity->data.value.actor = actor;
 }
 
 void Entity_CreateItem(Entity *entity)
@@ -342,5 +354,5 @@ void Entity_CreateItem(Entity *entity)
 	// value is added per item. could make switch ladder that sets the values
 
 	Item item    = { .destroyed = false, .value = 10 };
-	entity->item = item;
+	entity->data.value.item = item;
 }

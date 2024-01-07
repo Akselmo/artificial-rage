@@ -114,7 +114,8 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 	for (int i = 0; i < scene->size; i++)
 	{
 		// Player and walls/enemies
-		if (CheckCollisionBoxes(entityBox, scene->entities[i].boundingBox) && scene->entities[i].id != entityId)
+		if (CheckCollisionBoxes(entityBox, scene->entities[i].transform.boundingBox) &&
+		    scene->entities[i].id != entityId)
 		{
 			return true;
 		}
