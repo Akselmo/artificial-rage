@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "animator.h"
 #include "player.h"
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
@@ -291,58 +292,18 @@ void Entity_CreateEnemy(Entity *entity)
 	entity->transform.size        = entitySize;
 	entity->transform.scale       = 0.5f;
 	entity->model.data            = LoadModel(entity->model.fileName);
-	int animationsCount          = 0;
 
-	ModelAnimation *loadedAnimations = LoadModelAnimations(entity->model.fileName, &animationsCount);
-
-	Animator_Animation *animations;
-	animations = calloc(animationsCount, sizeof(Animator_Animation));
-
-	// TODO: Could move this to animator.c since its more of its thing
-	animations[DEATH] = (Animator_Animation){ .animation     = loadedAnimations[DEATH],
-		                                      .firstFrame    = 0,
-		                                      .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
-		                                      .id            = DEATH,
-		                                      .interruptable = false,
-		                                      .loopable      = false };
-
-	animations[ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ATTACK],
-		                                       .firstFrame    = 0,
-		                                       .lastFrame     = loadedAnimations[ATTACK].frameCount,
-		                                       .id            = ATTACK,
-		                                       .interruptable = false,
-		                                       .loopable      = false };
-
-	animations[IDLE] = (Animator_Animation){ .animation     = loadedAnimations[IDLE],
-		                                     .firstFrame    = 0,
-		                                     .lastFrame     = loadedAnimations[IDLE].frameCount,
-		                                     .id            = IDLE,
-		                                     .interruptable = true,
-		                                     .loopable      = true };
-
-	animations[MOVE] = (Animator_Animation){ .animation     = loadedAnimations[MOVE],
-		                                     .firstFrame    = 0,
-		                                     .lastFrame     = loadedAnimations[MOVE].frameCount,
-		                                     .id            = MOVE,
-		                                     .interruptable = true,
-		                                     .loopable      = true };
-
-	Actor actor = {
-		.dead          = false,
-		.moving        = false,
-		.attacking     = false,
-		.playerSpotted = false,
-		.damage        = 2,
-		.health        = 15, // Check actor health balance later
-		.movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
-		.rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-		.fireRate      = 5.75f,
-		.nextFire      = 5.75f,
-		.animator      = (Animator_Data){.animations       = animations,
-                                         .animationsCount  = animationsCount,
-                                         .currentAnimation = animations[IDLE],
-                                         .nextFrame        = 0}
-	};
+	Actor actor = { .dead          = false,
+		            .moving        = false,
+		            .attacking     = false,
+		            .playerSpotted = false,
+		            .damage        = 2,
+		            .health        = 15, // Check actor health balance later
+		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		            .fireRate      = 5.75f,
+		            .nextFire      = 5.75f,
+		            .animator      = Animator_EnemyAnimations(entity->model.fileName) };
 
 	entity->data.value.actor = actor;
 }

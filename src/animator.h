@@ -3,7 +3,15 @@
 #define _ANIMATOR_H_
 
 #include "raylib.h"
-#include <stdio.h>
+
+// Animation ID's for enemies. Can be in other order for other 3d models.
+enum AnimationID
+{
+	DEATH  = 0,
+	ATTACK = 1,
+	IDLE   = 2,
+	MOVE   = 3
+};
 
 typedef struct Animator_Animation
 {
@@ -28,5 +36,6 @@ typedef struct Animator_Data
 
 float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float animationSpeed, float nextFrame);
 void Animator_SetAnimation(Animator_Data *animator, const int animationId);
+Animator_Data Animator_EnemyAnimations(char *modelFileName);
 
 #endif

@@ -1,4 +1,5 @@
 #include "animator.h"
+#include <stdlib.h>
 
 void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 {
@@ -49,4 +50,46 @@ float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float 
 		nextFrame = 1.0 / animationSpeed;
 	}
 	return nextFrame;
+}
+
+Animator_Data Animator_EnemyAnimations(char *modelFileName)
+{
+	int animationsCount              = 0;
+	ModelAnimation *loadedAnimations = LoadModelAnimations(modelFileName, &animationsCount);
+	Animator_Animation *animations   = calloc(animationsCount, sizeof(Animator_Animation));
+
+	// TODO: Could move this to animator.c since its more of its thing
+	animations[DEATH] = (Animator_Animation){ .animation     = loadedAnimations[DEATH],
+		                                      .firstFrame    = 0,
+		                                      .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
+		                                      .id            = DEATH,
+		                                      .interruptable = false,
+		                                      .loopable      = false };
+
+	animations[ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ATTACK],
+		                                       .firstFrame    = 0,
+		                                       .lastFrame     = loadedAnimations[ATTACK].frameCount,
+		                                       .id            = ATTACK,
+		                                       .interruptable = false,
+		                                       .loopable      = false };
+
+	animations[IDLE] = (Animator_Animation){ .animation     = loadedAnimations[IDLE],
+		                                     .firstFrame    = 0,
+		                                     .lastFrame     = loadedAnimations[IDLE].frameCount,
+		                                     .id            = IDLE,
+		                                     .interruptable = true,
+		                                     .loopable      = true };
+
+	animations[MOVE]   = (Animator_Animation){ .animation     = loadedAnimations[MOVE],
+		                                       .firstFrame    = 0,
+		                                       .lastFrame     = loadedAnimations[MOVE].frameCount,
+		                                       .id            = MOVE,
+		                                       .interruptable = true,
+		                                       .loopable      = true };
+	Animator_Data data = (Animator_Data){ .animations       = animations,
+		                                  .animationsCount  = animationsCount,
+		                                  .currentAnimation = animations[IDLE],
+		                                  .nextFrame        = 0 };
+
+	return data;
 }

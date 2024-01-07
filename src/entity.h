@@ -38,15 +38,6 @@ enum Entity_Type
 	ITEM_TELEPORT_KEY // Needed to go through ending teleporter
 };
 
-// Animation ID's for enemies. Can be in other order for other 3d models.
-enum AnimationID
-{
-	DEATH  = 0,
-	ATTACK = 1,
-	IDLE   = 2,
-	MOVE   = 3
-};
-
 // Actors, in this case hostile NPCs. Could be extended for friendlies too!
 typedef struct Actor
 {
