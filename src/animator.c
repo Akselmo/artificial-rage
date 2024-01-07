@@ -86,6 +86,7 @@ Animator_Data Animator_EnemyAnimations(char *modelFileName)
 		                                       .id            = MOVE,
 		                                       .interruptable = true,
 		                                       .loopable      = true };
+
 	Animator_Data data = (Animator_Data){ .animations       = animations,
 		                                  .animationsCount  = animationsCount,
 		                                  .currentAnimation = animations[IDLE],
