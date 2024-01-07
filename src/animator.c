@@ -59,37 +59,37 @@ Animator_Data Animator_EnemyAnimations(char *modelFileName)
 	Animator_Animation *animations   = calloc(animationsCount, sizeof(Animator_Animation));
 
 	// TODO: Could move this to animator.c since its more of its thing
-	animations[DEATH] = (Animator_Animation){ .animation     = loadedAnimations[DEATH],
-		                                      .firstFrame    = 0,
-		                                      .lastFrame     = (loadedAnimations[DEATH].frameCount - 5),
-		                                      .id            = DEATH,
-		                                      .interruptable = false,
-		                                      .loopable      = false };
+	animations[ENEMY_DEATH] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_DEATH],
+		                                            .firstFrame    = 0,
+		                                            .lastFrame     = (loadedAnimations[ENEMY_DEATH].frameCount - 5),
+		                                            .id            = ENEMY_DEATH,
+		                                            .interruptable = false,
+		                                            .loopable      = false };
 
-	animations[ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ATTACK],
-		                                       .firstFrame    = 0,
-		                                       .lastFrame     = loadedAnimations[ATTACK].frameCount,
-		                                       .id            = ATTACK,
-		                                       .interruptable = false,
-		                                       .loopable      = false };
+	animations[ENEMY_ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_ATTACK],
+		                                             .firstFrame    = 0,
+		                                             .lastFrame     = loadedAnimations[ENEMY_ATTACK].frameCount,
+		                                             .id            = ENEMY_ATTACK,
+		                                             .interruptable = false,
+		                                             .loopable      = false };
 
-	animations[IDLE] = (Animator_Animation){ .animation     = loadedAnimations[IDLE],
-		                                     .firstFrame    = 0,
-		                                     .lastFrame     = loadedAnimations[IDLE].frameCount,
-		                                     .id            = IDLE,
-		                                     .interruptable = true,
-		                                     .loopable      = true };
+	animations[ENEMY_IDLE] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_IDLE],
+		                                           .firstFrame    = 0,
+		                                           .lastFrame     = loadedAnimations[ENEMY_IDLE].frameCount,
+		                                           .id            = ENEMY_IDLE,
+		                                           .interruptable = true,
+		                                           .loopable      = true };
 
-	animations[MOVE]   = (Animator_Animation){ .animation     = loadedAnimations[MOVE],
-		                                       .firstFrame    = 0,
-		                                       .lastFrame     = loadedAnimations[MOVE].frameCount,
-		                                       .id            = MOVE,
-		                                       .interruptable = true,
-		                                       .loopable      = true };
+	animations[ENEMY_MOVE] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_MOVE],
+		                                           .firstFrame    = 0,
+		                                           .lastFrame     = loadedAnimations[ENEMY_MOVE].frameCount,
+		                                           .id            = ENEMY_MOVE,
+		                                           .interruptable = true,
+		                                           .loopable      = true };
 
 	Animator_Data data = (Animator_Data){ .animations       = animations,
 		                                  .animationsCount  = animationsCount,
-		                                  .currentAnimation = animations[IDLE],
+		                                  .currentAnimation = animations[ENEMY_IDLE],
 		                                  .nextFrame        = 0 };
 
 	return data;

@@ -5,12 +5,12 @@
 #include "raylib.h"
 
 // Animation ID's for enemies. Can be in other order for other 3d models.
-enum AnimationID
+enum Animator_EnemyAnimationID
 {
-	DEATH  = 0,
-	ATTACK = 1,
-	IDLE   = 2,
-	MOVE   = 3
+	ENEMY_DEATH  = 0,
+	ENEMY_ATTACK = 1,
+	ENEMY_IDLE   = 2,
+	ENEMY_MOVE   = 3
 };
 
 typedef struct Animator_Animation

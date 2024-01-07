@@ -27,17 +27,17 @@ void Entity_Update(Entity *entity)
 			entity->data.value.actor.playerSpotted = true;
 			if (Entity_FireAtPlayer(entity, entity->data.value.actor.nextFire))
 			{
-				Animator_SetAnimation(&entity->data.value.actor.animator, ATTACK);
+				Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_ATTACK);
 			}
 			else
 			{
 				if (Entity_UpdatePosition(entity))
 				{
-					Animator_SetAnimation(&entity->data.value.actor.animator, MOVE);
+					Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_MOVE);
 				}
 				else
 				{
-					Animator_SetAnimation(&entity->data.value.actor.animator, IDLE);
+					Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_IDLE);
 				}
 			}
 			entity->data.value.actor.nextFire -= GetFrameTime();
@@ -45,7 +45,7 @@ void Entity_Update(Entity *entity)
 	}
 	else
 	{
-		Animator_SetAnimation(&entity->data.value.actor.animator, DEATH);
+		Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_DEATH);
 	}
 	entity->data.value.actor.animator.nextFrame -= GetFrameTime();
 	entity->data.value.actor.animator.nextFrame = Animator_PlayAnimation(
