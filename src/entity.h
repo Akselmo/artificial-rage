@@ -104,9 +104,6 @@ typedef struct Entity_Data
 // such as actors, scene building blocks, items..
 // When the engine finds an entity, it checks what entity it is
 // and then handles it accordingly
-// TODO: Look into this! could just have one array of all entities, and update only that?
-// Then entity could have a struct matching it's type in it, which is used for the corresponding commands
-// Wouldn't need to have multiple arrays for items, enemies etc..
 typedef struct Entity
 {
 	int id;
