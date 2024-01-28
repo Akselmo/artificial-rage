@@ -40,8 +40,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
 # Link raylib
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
 
-# Copy the game assets to build dir so everything shows up Note, the working
-# directory has to be the builds folder when launching the game! Otherwise
-# assets wont load
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/assets
+# Copy the game assets to build dir, so if you use build dir as the current working dir,
+# the assets will show up.
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

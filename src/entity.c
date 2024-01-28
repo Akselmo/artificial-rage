@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "animator.h"
 #include "player.h"
+#include "raymath.h"
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
 bool Entity_TestPlayerHit(Entity *entity);
@@ -8,9 +9,10 @@ bool Entity_FireAtPlayer(Entity *entity, float nextFire);
 Ray Entity_CreateRay(Entity *entity);
 
 // Private creation functions
+void Entity_SetupTransform(Entity *entity, Vector3 pos, Vector3 rot, Vector3 size, float scale);
 void Entity_CreateWall(Entity *entity);
 void Entity_CreateEnemy(Entity *entity);
-void Entity_CreateItem(Entity *entity);
+void Entity_CreateItem(Entity *entity, bool pickup, int value);
 
 void Entity_Update(Entity *entity)
 {
@@ -237,7 +239,7 @@ void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
-	Entity entity = { .data.type = type, .id = id, .transform.position = position, .transform.scale = 0.5f };
+	Entity entity = { .data.type = type, .id = id, .transform.position = position };
 
 	if (type == ENTITY_WALL_CARGO)
 	{
@@ -257,10 +259,26 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 		Entity_CreateEnemy(&entity);
 	}
 
+	else if (type == ENTITY_ITEM_HEALTH_SMALL)
+	{
+		entity.model.isBillboard = true;
+		entity.model.fileName    = "./assets/billboards/health.png";
+		Entity_CreateItem(&entity, true, 10);
+	}
+
 	return entity;
 }
 
 // Creation functions
+
+void Entity_SetupTransform(Entity *entity, Vector3 pos, Vector3 rot, Vector3 size, float scale)
+{
+	entity->transform.boundingBox = Utilities_MakeBoundingBox(pos, size);
+	entity->transform.position    = pos;
+	entity->transform.rotation    = rot;
+	entity->transform.size        = size;
+	entity->transform.scale       = scale;
+}
 
 void Entity_CreateWall(Entity *entity)
 {
@@ -271,26 +289,18 @@ void Entity_CreateWall(Entity *entity)
 	// Set map diffuse texture
 	const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
 	entity->model.data      = LoadModelFromMesh(cube);
-	entity->transform.size  = Vector3One();
-	entity->transform.scale = 1.0f;
+	Entity_SetupTransform(entity, entity->transform.position, Vector3Zero(), Vector3One(), 1.0f);
 
 	// Set texture
 	entity->model.data.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-
-	entity->transform.boundingBox = Utilities_MakeBoundingBox(entity->transform.position, entity->transform.size);
 }
 
 void Entity_CreateEnemy(Entity *entity)
 {
 	const Vector3 entityPosition =
 		(Vector3){ entity->transform.position.x, ACTOR_POSITION_Y, entity->transform.position.z };
-	const Vector3 entityRotation = Vector3Zero();
 	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
-	entity->transform.boundingBox = Utilities_MakeBoundingBox(entityPosition, entitySize);
-	entity->transform.position    = entityPosition;
-	entity->transform.rotation    = entityRotation;
-	entity->transform.size        = entitySize;
-	entity->transform.scale       = 0.5f;
+	Entity_SetupTransform(entity, entityPosition, Vector3Zero(), entitySize, 0.5);
 	entity->model.data            = LoadModel(entity->model.fileName);
 
 	Actor actor = { .dead          = false,
@@ -308,12 +318,11 @@ void Entity_CreateEnemy(Entity *entity)
 	entity->data.value.actor = actor;
 }
 
-void Entity_CreateItem(Entity *entity)
+void Entity_CreateItem(Entity *entity, bool pickup, int value)
 {
-
-	// TODO: if the model name is 0, the entity is a 2d billboard
-	// value is added per item. could make switch ladder that sets the values
-
-	Item item    = { .destroyed = false, .value = 10 };
+	Item item = { .destroyed = false, .value = value, .pickup = pickup };
+	const Vector3 entityPosition =
+		(Vector3){ entity->transform.position.x, ITEM_START_POSITION_Y, entity->transform.position.z };
+	Entity_SetupTransform(entity, entityPosition, Vector3Zero(), Vector3One(), 1.0);
 	entity->data.value.item = item;
 }

@@ -23,19 +23,19 @@ enum Entity_Type
 	ENTITY_WALL_CARGO,
 	ENTITY_WALL_CARGO_SCUFFED,
 	ENTITY_ENEMY_DEFAULT,
-	ITEM_HEALTH_SMALL,
-	ITEM_HEALTH_MEDIUM,
-	ITEM_HEALTH_LARGE,
-	ITEM_CLUTTER, // an item that provides collision but nothing else
-	ITEM_PISTOL,  // Gives weapon and some ammo
-	ITEM_RIFLE,
-	ITEM_SHOTGUN,
-	ITEM_RAILGUN,
-	ITEM_PISTOL_AMMO, // Gives only ammo
-	ITEM_RIFLE_AMMO,
-	ITEM_SHOTGUN_AMMO,
-	ITEM_RAILGUN_AMMO,
-	ITEM_TELEPORT_KEY // Needed to go through ending teleporter
+	ENTITY_ITEM_HEALTH_SMALL,
+	ENTITY_ITEM_HEALTH_MEDIUM,
+	ENTITY_ITEM_HEALTH_LARGE,
+	ENTITY_ITEM_CLUTTER, // an item that provides collision but nothing else
+	ENTITY_ITEM_PISTOL,  // Gives weapon and some ammo
+	ENTITY_ITEM_RIFLE,
+	ENTITY_ITEM_SHOTGUN,
+	ENTITY_ITEM_RAILGUN,
+	ENTITY_ITEM_PISTOL_AMMO, // Gives only ammo
+	ENTITY_ITEM_RIFLE_AMMO,
+	ENTITY_ITEM_SHOTGUN_AMMO,
+	ENTITY_ITEM_RAILGUN_AMMO,
+	ENTITY_ITEM_TELEPORT_KEY // Needed to go through ending teleporter
 };
 
 // Actors, in this case hostile NPCs. Could be extended for friendlies too!
@@ -60,6 +60,7 @@ typedef struct Actor
 typedef struct Item
 {
 	bool destroyed;
+	bool pickup;
 	int value;
 } Item;
 
@@ -77,6 +78,7 @@ typedef struct Entity_Model
 	char *fileName;
 	char *textureFileName;
 	Model data;
+	bool isBillboard;
 } Entity_Model;
 
 typedef union Entity_Union
