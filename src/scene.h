@@ -3,17 +3,8 @@
 #define _SCENE_H_
 
 #include "entity.h"
-#include "game.h"
-
-#include "main.h"
-#include "player.h"
 #include "projectile.h"
 #include "raylib.h"
-#include "raymath.h"
-#include "utilities.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MAX_PROJECTILE_AMOUNT 254
 

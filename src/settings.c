@@ -1,4 +1,9 @@
 #include "settings.h"
+#include "raylib.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // TODO: List all input keys
 // c: int Settings_KeyForward

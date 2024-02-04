@@ -1,7 +1,7 @@
 // Artificial Rage - a Scifi FPS, uses RayLib library
 // Made by Akseli
-#include "main.h"
-
+#include "game.h"
+#include "raylib.h"
 // Main loop
 int main(void)
 {

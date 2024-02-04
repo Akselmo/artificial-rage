@@ -1,4 +1,9 @@
 #include "hud.h"
+#include "player.h"
+#include "raylib.h"
+#include "weapon.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void Hud_HealthText(char *text);
 void Hud_WeaponText(char *text);

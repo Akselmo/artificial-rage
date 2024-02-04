@@ -2,6 +2,9 @@
 #include "animator.h"
 #include "player.h"
 #include "raymath.h"
+#include "scene.h"
+#include "utilities.h"
+#include <stdio.h>
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
 bool Entity_TestPlayerHit(Entity *entity);

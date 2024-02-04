@@ -1,4 +1,14 @@
 #include "player.h"
+#include "entity.h"
+#include "raylib.h"
+#include "raymath.h"
+#include "scene.h"
+#include "settings.h"
+#include "utilities.h"
+#include "weapon.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // Took some parts of raylib camera.h and made my own camera based on that for full control
 

@@ -1,4 +1,14 @@
 #include "scene.h"
+#include "entity.h"
+#include "game.h"
+
+#include "player.h"
+#include "projectile.h"
+#include "raylib.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 // Level has level data, Level_enemies, Level_items and Level_Projectiles
 // Level is basically the "scene"
 

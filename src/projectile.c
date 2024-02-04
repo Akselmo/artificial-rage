@@ -1,5 +1,9 @@
 #include "projectile.h"
-
+#include "player.h"
+#include "raymath.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
 // Prototypes
 void Projectile_DestroyOverTime(Projectile *projectile);
 void Projectile_RotateTowards(Projectile *projectile);

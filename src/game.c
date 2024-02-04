@@ -1,4 +1,9 @@
 #include "game.h"
+#include "hud.h"
+#include "player.h"
+#include "raylib.h"
+#include "scene.h"
+#include "settings.h"
 
 // Shared variables
 Camera playerCamera;
