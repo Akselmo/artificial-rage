@@ -1,42 +1,51 @@
 #include "hud.h"
 
+void Hud_HealthText(char *text);
+void Hud_WeaponText(char *text);
+
 void Hud_Draw(void)
 {
-	const char Hud_dedText[6]       = "DEAD";
-	const char Hud_emptyAmmoText[4] = "-";
-	char Hud_healthText[6]          = "";
-	char Hud_weaponAmmoText[12]     = "";
-	char Hud_weaponNameText[16]     = "WeaponName"; // TODO: add weapon name to hud
-
 	DrawFPS(10, 10);
-	sprintf(Hud_healthText, "%d", Player->health);
-	char ammo[4];
-	char divider[3];
-	char maxAmmo[4];
 
-	sprintf(ammo, "%d", WeaponHolder.Weapons[WeaponHolder.currentWeapon]->ammo);
-	sprintf(maxAmmo, "%d", WeaponHolder.Weapons[WeaponHolder.currentWeapon]->maxAmmo);
+	// Draw weapons first
+	Weapon_DrawSprite();
 
-	strcpy(Hud_weaponAmmoText, ammo);
-	strcat(Hud_weaponAmmoText, "/");
-	strcat(Hud_weaponAmmoText, maxAmmo);
-
+	// Draw health text
 	if (Player->health <= 0)
 	{
-		strcpy(Hud_healthText, Hud_dedText);
+		Hud_HealthText("DEAD");
 	}
+	else
+	{
+		char *Hud_healthText = calloc(50, sizeof(char));
+		snprintf(Hud_healthText, 5, "%d", Player->health);
+		Hud_HealthText(Hud_healthText);
+		free(Hud_healthText);
+	}
+
+	// Draw weapon ammo text
 	if (WeaponHolder.Weapons[WeaponHolder.currentWeapon]->ammo)
 	{
 		if (WeaponHolder.currentWeapon == (Weapon_ID)MELEE)
 		{
-			strcpy(Hud_weaponAmmoText, Hud_emptyAmmoText);
+			Hud_WeaponText("-");
 		}
 		else
 		{
-			strcpy(Hud_weaponAmmoText, Hud_weaponAmmoText);
+			char *Hud_weaponAmmoText = calloc(50, sizeof(char));
+			snprintf(
+				Hud_weaponAmmoText,
+				50,
+				"%d / %d",
+				WeaponHolder.Weapons[WeaponHolder.currentWeapon]->ammo,
+				WeaponHolder.Weapons[WeaponHolder.currentWeapon]->maxAmmo
+			);
+			Hud_WeaponText(Hud_weaponAmmoText);
+			free(Hud_weaponAmmoText);
 		}
 	}
-	DrawText(Hud_healthText, 50, GetScreenHeight() - 20, 20, RED);
-	DrawText(Hud_weaponAmmoText, GetScreenWidth() - 70, GetScreenHeight() - 20, 20, RED);
-	Weapon_DrawSprite();
 }
+
+void Hud_HealthText(char *text) { DrawText(text, 50, GetScreenHeight() - 20, 20, RED); }
+
+void Hud_WeaponText(char *text) { DrawText(text, GetScreenWidth() - 100, GetScreenHeight() - 20, 20, RED); }

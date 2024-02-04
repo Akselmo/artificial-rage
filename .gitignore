@@ -80,3 +80,4 @@ out/
 *.blend1
 .fleet
 tiled_map_template/artificial-rage_map_template.tiled-session
+settings.cfg
