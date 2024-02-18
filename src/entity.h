@@ -15,10 +15,12 @@
 #define ITEM_START_POSITION_Y 0.4f
 
 // Types of entities there are
+// TODO: make this more inline with tiled map template so
+// that the values always match..
 enum Entity_Type
 {
-	ENTITY_NONE,
-	ENTITY_START,
+	ENTITY_NONE,  // This is ignored in entities.json
+	ENTITY_START, // Tile map template index is 0. Here index is 1.
 	ENTITY_END,
 	ENTITY_WALL_CARGO,
 	ENTITY_WALL_CARGO_SCUFFED,
