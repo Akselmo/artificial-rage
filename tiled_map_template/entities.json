@@ -1,62 +1,145 @@
-{
-   "columns": 0,
-   "grid": {
-      "height": 1,
-      "orientation": "orthogonal",
-      "width": 1
-   },
-   "margin": 0,
-   "name": "entities",
-   "spacing": 0,
-   "tilecount": 5,
-   "tiledversion": "1.10.1",
-   "tileheight": 128,
-   "tiles": [
-      {
-         "id": 4,
-         "image": "tiles/enemy.jpg",
-         "imageheight": 128,
-         "imagewidth": 128,
-         "type": "enemy"
-      },
-      {
-         "height": 128,
-         "id": 0,
-         "image": "tiles/start.jpg",
-         "imageheight": 129,
-         "imagewidth": 128,
-         "type": "start",
-         "width": 128,
-         "x": 0,
-         "y": 0
-      },
-      {
-         "height": 128,
-         "id": 1,
-         "image": "tiles/end.jpg",
-         "imageheight": 129,
-         "imagewidth": 128,
-         "type": "end",
-         "width": 128,
-         "x": 0,
-         "y": 0
-      },
-      {
-         "id": 2,
-         "image": "tiles/wall1.png",
-         "imageheight": 128,
-         "imagewidth": 128,
-         "type": "wall1"
-      },
-      {
-         "id": 3,
-         "image": "tiles/wall2.png",
-         "imageheight": 128,
-         "imagewidth": 128,
-         "type": "wall2"
-      }
-   ],
-   "tilewidth": 128,
-   "type": "tileset",
-   "version": "1.10"
+{ "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"entities",
+ "spacing":0,
+ "tilecount":17,
+ "tiledversion":"1.10.2",
+ "tileheight":128,
+ "tiles":[
+        {
+         "id":4,
+         "image":"tiles\/enemy.jpg",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"enemy"
+        }, 
+        {
+         "height":128,
+         "id":0,
+         "image":"tiles\/start.jpg",
+         "imageheight":129,
+         "imagewidth":128,
+         "type":"start",
+         "width":128,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "height":128,
+         "id":1,
+         "image":"tiles\/end.jpg",
+         "imageheight":129,
+         "imagewidth":128,
+         "type":"end",
+         "width":128,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":2,
+         "image":"tiles\/wall1.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"wall1"
+        }, 
+        {
+         "id":3,
+         "image":"tiles\/wall2.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"wall2"
+        }, 
+        {
+         "id":5,
+         "image":"tiles\/health_small.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"health_small"
+        }, 
+        {
+         "id":13,
+         "image":"tiles\/ammo_pistol.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"ammo_pistol"
+        }, 
+        {
+         "id":16,
+         "image":"tiles\/ammo_railgun.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"ammo_railgun"
+        }, 
+        {
+         "id":14,
+         "image":"tiles\/ammo_rifle.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"ammo_rifle"
+        }, 
+        {
+         "id":15,
+         "image":"tiles\/ammo_shotgun.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"ammo_shotgun"
+        }, 
+        {
+         "id":7,
+         "image":"tiles\/health_large.png",
+         "imageheight":64,
+         "imagewidth":128,
+         "type":"health_large"
+        }, 
+        {
+         "id":6,
+         "image":"tiles\/health_medium.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"health_medium"
+        }, 
+        {
+         "id":17,
+         "image":"tiles\/pickup_teleportkey.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "type":"pickup_teleportkey"
+        }, 
+        {
+         "id":9,
+         "image":"tiles\/pistol.png",
+         "imageheight":53,
+         "imagewidth":128,
+         "type":"pickup_pistol"
+        }, 
+        {
+         "id":12,
+         "image":"tiles\/railgun.png",
+         "imageheight":53,
+         "imagewidth":128,
+         "type":"pickup_railgun"
+        }, 
+        {
+         "id":10,
+         "image":"tiles\/rifle.png",
+         "imageheight":53,
+         "imagewidth":128,
+         "type":"pickup_rifle"
+        }, 
+        {
+         "id":11,
+         "image":"tiles\/shotgun.png",
+         "imageheight":53,
+         "imagewidth":128,
+         "type":"pickup_shotgun"
+        }],
+ "tilewidth":128,
+ "type":"tileset",
+ "version":"1.10"
 }

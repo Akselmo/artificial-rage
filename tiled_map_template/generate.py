@@ -2,6 +2,9 @@ import json
 import sys
 from typing import Any
 
+# Run command:
+# python ./generate.py ./entities.json ./map_template.json
+
 class MapConfigGenerator():
     # Data loaded from json
     entities_data: dict[str, Any] = {}
