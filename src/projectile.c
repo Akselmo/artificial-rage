@@ -95,7 +95,7 @@ void Projectile_Destroy(Projectile *projectile)
 {
 	printf("Projectile id %d destroyed\n", projectile->id);
 	projectile->destroyed = true;
-	projectile            = NULL;
+	projectile            = nullptr;
 	free(projectile);
 }
 

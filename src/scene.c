@@ -14,7 +14,7 @@
 
 // Public variables
 // TODO: Initialize scene properly
-Scene *scene = NULL;
+Scene *scene = nullptr;
 
 // Private functions
 void Scene_PlaceEntities(void);
@@ -97,7 +97,7 @@ void Scene_Update(void)
 	for (int i = 0; i < scene->size; i++)
 	{
 		Entity *entity = &scene->entities[i];
-		if (entity != NULL && entity->id != 0)
+		if (entity != nullptr && entity->id != 0)
 		{
 			Entity_Update(entity);
 		}
@@ -110,7 +110,7 @@ void Scene_UpdateProjectiles(void)
 	for (int i = 0; i < MAX_PROJECTILE_AMOUNT; i++)
 	{
 		Projectile *projectile = &scene->projectiles[i];
-		if (projectile != NULL)
+		if (projectile != nullptr)
 		{
 			Projectile_Update(projectile);
 		}
@@ -197,7 +197,7 @@ void Scene_LoadSceneConfig(void)
 	const int bufferSize = Utilities_GetFileCharacterCount(fileName);
 
 	FILE *filePointer = fopen(fileName, "r");
-	if (NULL == filePointer)
+	if (nullptr == filePointer)
 	{
 		printf("Failed to open level config file %s \n", fileName);
 		return;

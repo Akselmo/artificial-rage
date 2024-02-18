@@ -21,7 +21,7 @@ static Player_CustomCameraData Player_CustomCamera = {
 	.playerSpeed        = 1.75f,
 };
 
-Player_Data *Player = NULL;
+Player_Data *Player = nullptr;
 
 // Private functions
 

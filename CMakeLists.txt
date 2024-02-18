@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 project(ArtificialRage)
 set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_C_STANDARD 23)
 # Use legacy version of OpenGL if possible, to make the game work on older
 # devices
 set(OpenGL_GL_PREFERENCE LEGACY)
@@ -33,9 +34,6 @@ file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.c)
 
 # Add code to project
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
-
-# Use C11 standard, will likely bump it to C23 at some point maybe
-set_target_properties(${PROJECT_NAME} PROPERTIES CMAKE_C_STANDARD 11)
 
 # Link raylib
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
