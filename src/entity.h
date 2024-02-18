@@ -26,16 +26,16 @@ enum Entity_Type
 	ENTITY_ITEM_HEALTH_SMALL,
 	ENTITY_ITEM_HEALTH_MEDIUM,
 	ENTITY_ITEM_HEALTH_LARGE,
-	ENTITY_ITEM_CLUTTER, // an item that provides collision but nothing else
-	ENTITY_ITEM_PISTOL,  // Gives weapon and some ammo
-	ENTITY_ITEM_RIFLE,
-	ENTITY_ITEM_SHOTGUN,
-	ENTITY_ITEM_RAILGUN,
-	ENTITY_ITEM_PISTOL_AMMO, // Gives only ammo
-	ENTITY_ITEM_RIFLE_AMMO,
-	ENTITY_ITEM_SHOTGUN_AMMO,
-	ENTITY_ITEM_RAILGUN_AMMO,
-	ENTITY_ITEM_TELEPORT_KEY // Needed to go through ending teleporter
+	ENTITY_ITEM_CLUTTER,       // an item that provides collision but nothing else
+	ENTITY_ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
+	ENTITY_ITEM_PICKUP_RIFLE,
+	ENTITY_ITEM_PICKUP_SHOTGUN,
+	ENTITY_ITEM_PICKUP_RAILGUN,
+	ENTITY_ITEM_AMMO_PISTOL, // Gives only ammo
+	ENTITY_ITEM_AMMO_RIFLE,
+	ENTITY_ITEM_AMMO_SHOTGUN,
+	ENTITY_ITEM_AMMO_RAILGUN,
+	ENTITY_ITEM_KEY_TELEPORT // Needed to go through ending teleporter
 };
 
 // Actors, in this case hostile NPCs. Could be extended for friendlies too!

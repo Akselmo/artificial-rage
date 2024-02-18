@@ -265,7 +265,7 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 	else if (type == ENTITY_ITEM_HEALTH_SMALL)
 	{
 		entity.model.isBillboard = true;
-		entity.model.fileName    = "./assets/billboards/health.png";
+		entity.model.fileName    = "./assets/textures/health_small.png";
 		Entity_CreateItem(&entity, true, 10);
 	}
 
