@@ -39,10 +39,7 @@ class MapConfigGenerator():
         for entity in self.entities_data["tiles"]:
             self.entities[entity["id"]+self.firstgid] = entity["type"]
 
-        # Could just get the tilecount from self.entities,
-        # but this makes sure we have the right count of them
-        self.entities_count = self.entities_data["tilecount"]
-        assert len(self.entities) == self.entities_count
+        self.entities_count = len(self.entities)
 
         # Get data from right layer
         map_layer: dict[int, str] = {}
@@ -50,7 +47,15 @@ class MapConfigGenerator():
             if layer["name"] == "Map":
                 map_layer = layer
 
-        self.level_array = str(map_layer["data"]).strip(r"[]").replace(" ", "")
+        # Since in tiled 0 is "untouched" and in game its "empty",
+        # just make any empty zones and untouched ones 0
+        data_array: list[str] = []
+        for item in map_layer["data"]:
+            if (item <= 0):
+                data_array.append(0)
+            else:
+                data_array.append(item - self.firstgid)
+        self.level_array = str(data_array).strip(r"[]").replace(" ", "")
         self.level_height = map_layer["height"]
         self.level_width = map_layer["width"]
 
