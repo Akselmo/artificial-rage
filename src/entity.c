@@ -104,7 +104,7 @@ bool Entity_TestPlayerHit(Entity *entity)
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
-		if (entities[i].id != 0 && entities[i].id != entity->id)
+		if (entities[i].id != 0 && entities[i].id != entity->id && !entities[i].model.isBillboard)
 		{
 			Vector3 pos = entities[i].transform.position;
 			RayCollision hitLevel =

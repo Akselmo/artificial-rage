@@ -176,7 +176,7 @@ int TestEntityHit(const Ray rayCast)
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
-		if (entities[i].id != 0)
+		if (entities[i].id != 0 && !entities[i].model.isBillboard)
 		{
 			if (entities[i].data.type == ENTITY_ENEMY_DEFAULT)
 			{
