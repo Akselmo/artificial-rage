@@ -12,7 +12,7 @@
 #define ACTOR_DEFAULT_MOVEMENT_SPEED 0.45f // Lower values result to lower speed
 #define ACTOR_DEFAULT_ROTATION_SPEED 3.0f
 #define ACTOR_DEFAULT_ANIMATION_SPEED 30.0f // Animation played in FPS
-#define ITEM_START_POSITION_Y 0.4f
+#define ITEM_START_POSITION_Y 0.1f
 
 // Types of entities there are
 // TODO: make this more inline with tiled map template so
@@ -73,6 +73,7 @@ typedef struct Entity_Transform
 	Vector3 size;
 	float scale;
 	BoundingBox boundingBox;
+	bool canCollide;
 } Entity_Transform;
 
 typedef struct Entity_Model

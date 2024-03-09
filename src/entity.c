@@ -1,6 +1,8 @@
 #include "entity.h"
 #include "animator.h"
+#include "game.h"
 #include "player.h"
+#include "raylib.h"
 #include "raymath.h"
 #include "scene.h"
 #include "utilities.h"
@@ -63,7 +65,15 @@ void Entity_Update(Entity *entity)
 
 void Entity_Draw(Entity *entity)
 {
-	DrawModel(entity->model.data, entity->transform.position, entity->transform.scale, WHITE);
+	if (entity->model.isBillboard)
+	{
+		DrawModel(entity->model.data, entity->transform.position, entity->transform.scale, WHITE);
+		Entity_RotateTowards(entity, Player->transform.position);
+	}
+	else
+	{
+		DrawModel(entity->model.data, entity->transform.position, entity->transform.scale, WHITE);
+	}
 }
 
 Ray Entity_CreateRay(Entity *entity)
@@ -222,27 +232,25 @@ bool Entity_FireAtPlayer(Entity *entity, float nextFire)
 
 void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 {
-	if (entity->data.type == ENTITY_ENEMY_DEFAULT)
-	{
-		// Rotates the entity around Y axis
-		const Vector3 diff        = Vector3Subtract(entity->transform.position, targetPosition);
-		const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
-		const Vector3 newRotation = (Vector3){ 0, y_angle, 0 };
 
-		const Quaternion start = QuaternionFromEuler(
-			entity->transform.rotation.z, entity->transform.rotation.y, entity->transform.rotation.x
-		);
-		const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
-		const Quaternion slerp = QuaternionSlerp(start, end, entity->data.value.actor.rotationSpeed * GetFrameTime());
+	// Rotates the entity around Y axis
+	const Vector3 diff        = Vector3Subtract(entity->transform.position, targetPosition);
+	const float y_angle       = -(atan2(diff.z, diff.x) + PI / 2.0);
+	const Vector3 newRotation = (Vector3){ 0, y_angle, 0 };
 
-		entity->model.data.transform = QuaternionToMatrix(slerp);
-		entity->transform.rotation   = newRotation;
-	}
+	const Quaternion start =
+		QuaternionFromEuler(entity->transform.rotation.z, entity->transform.rotation.y, entity->transform.rotation.x);
+	const Quaternion end   = QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x);
+	const Quaternion slerp = QuaternionSlerp(start, end, entity->data.value.actor.rotationSpeed * GetFrameTime());
+
+	entity->model.data.transform = QuaternionToMatrix(slerp);
+	entity->transform.rotation   = newRotation;
 }
 
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
-	Entity entity = { .data.type = type, .id = id, .transform.position = position };
+	// Default settings
+	Entity entity = { .data.type = type, .id = id, .transform.position = position, .transform.canCollide = true };
 
 	switch (type)
 	{
@@ -262,8 +270,9 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 			break;
 
 		case ENTITY_ITEM_HEALTH_SMALL:
-			entity.model.isBillboard = true;
-			entity.model.fileName    = "./assets/textures/health_small.png";
+			entity.model.isBillboard     = true;
+			entity.transform.canCollide  = false;
+			entity.model.textureFileName = "./assets/textures/health_small.png";
 			Entity_CreateItem(&entity, true, 10);
 			break;
 
@@ -325,9 +334,24 @@ void Entity_CreateEnemy(Entity *entity)
 
 void Entity_CreateItem(Entity *entity, bool pickup, int value)
 {
+	// Same as with making a wall, but we make a flat cube instead
 	Item item = { .destroyed = false, .value = value, .pickup = pickup };
-	const Vector3 entityPosition =
+
+	entity->transform.size = (Vector3){ 1.0f, 1.0f, 0.01f };
+	entity->transform.position =
 		(Vector3){ entity->transform.position.x, ITEM_START_POSITION_Y, entity->transform.position.z };
-	Entity_SetupTransform(entity, entityPosition, Vector3Zero(), Vector3One(), 1.0);
+
+	Image textureImage = LoadImage(entity->model.textureFileName);
+	// The image has to be flipped since its loaded upside down
+	ImageFlipVertical(&textureImage);
+	const Texture2D texture = LoadTextureFromImage(textureImage);
+	// Set map diffuse texture
+	const Mesh cube    = GenMeshCube(entity->transform.size.x, entity->transform.size.y, entity->transform.size.z);
+	entity->model.data = LoadModelFromMesh(cube);
+	Entity_SetupTransform(entity, entity->transform.position, Vector3Zero(), entity->transform.size, 0.1f);
+
+	// Set texture
+	entity->model.data.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+
 	entity->data.value.item = item;
 }
