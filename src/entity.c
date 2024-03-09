@@ -73,7 +73,7 @@ Ray Entity_CreateRay(Entity *entity)
 	const Vector3 v              = Vector3Normalize(Vector3Subtract(entity->transform.position, playerPosition));
 
 	Ray rayCast = {
-		.direction = (Vector3){-1.0f * v.x, -1.0f * v.y, -1.0f * v.z},
+		.direction = (Vector3){ -1.0f * v.x, -1.0f * v.y, -1.0f * v.z },
           .position = entity->transform.position
 	};
 
@@ -244,29 +244,31 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 {
 	Entity entity = { .data.type = type, .id = id, .transform.position = position };
 
-	if (type == ENTITY_WALL_CARGO)
+	switch (type)
 	{
-		entity.model.textureFileName = "./assets/textures/wall1.png";
-		Entity_CreateWall(&entity);
-	}
+		case ENTITY_WALL_CARGO:
+			entity.model.textureFileName = "./assets/textures/wall1.png";
+			Entity_CreateWall(&entity);
+			break;
 
-	else if (type == ENTITY_WALL_CARGO_SCUFFED)
-	{
-		entity.model.textureFileName = "./assets/textures/wall2.png";
-		Entity_CreateWall(&entity);
-	}
+		case ENTITY_WALL_CARGO_SCUFFED:
+			entity.model.textureFileName = "./assets/textures/wall2.png";
+			Entity_CreateWall(&entity);
+			break;
 
-	else if (type == ENTITY_ENEMY_DEFAULT)
-	{
-		entity.model.fileName = "./assets/models/enemy.m3d";
-		Entity_CreateEnemy(&entity);
-	}
+		case ENTITY_ENEMY_DEFAULT:
+			entity.model.fileName = "./assets/models/enemy.m3d";
+			Entity_CreateEnemy(&entity);
+			break;
 
-	else if (type == ENTITY_ITEM_HEALTH_SMALL)
-	{
-		entity.model.isBillboard = true;
-		entity.model.fileName    = "./assets/textures/health_small.png";
-		Entity_CreateItem(&entity, true, 10);
+		case ENTITY_ITEM_HEALTH_SMALL:
+			entity.model.isBillboard = true;
+			entity.model.fileName    = "./assets/textures/health_small.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+
+		default:
+			break;
 	}
 
 	return entity;
@@ -290,8 +292,8 @@ void Entity_CreateWall(Entity *entity)
 	ImageFlipVertical(&textureImage);
 	const Texture2D texture = LoadTextureFromImage(textureImage);
 	// Set map diffuse texture
-	const Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-	entity->model.data      = LoadModelFromMesh(cube);
+	const Mesh cube    = GenMeshCube(1.0f, 1.0f, 1.0f);
+	entity->model.data = LoadModelFromMesh(cube);
 	Entity_SetupTransform(entity, entity->transform.position, Vector3Zero(), Vector3One(), 1.0f);
 
 	// Set texture
@@ -302,9 +304,9 @@ void Entity_CreateEnemy(Entity *entity)
 {
 	const Vector3 entityPosition =
 		(Vector3){ entity->transform.position.x, ACTOR_POSITION_Y, entity->transform.position.z };
-	const Vector3 entitySize     = (Vector3){ 0.25f, 1.1f, 0.25f };
+	const Vector3 entitySize = (Vector3){ 0.25f, 1.1f, 0.25f };
 	Entity_SetupTransform(entity, entityPosition, Vector3Zero(), entitySize, 0.5);
-	entity->model.data            = LoadModel(entity->model.fileName);
+	entity->model.data = LoadModel(entity->model.fileName);
 
 	Actor actor = { .dead          = false,
 		            .moving        = false,
