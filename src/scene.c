@@ -201,6 +201,7 @@ void Scene_LoadSceneConfig(void)
 	if (nullptr == filePointer)
 	{
 		printf("Failed to open level config file %s \n", fileName);
+		fclose(filePointer);
 		return;
 	}
 

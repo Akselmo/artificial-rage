@@ -5,15 +5,15 @@
 
 Vector2 Utilities_GetScreenCenter(void)
 {
-	const Vector2 center = { GetScreenWidth() / 2, GetScreenHeight() / 2 };
+	const Vector2 center = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 	return center;
 }
 
 BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
 {
 	BoundingBox bb = (BoundingBox){
-		(Vector3){position.x - size.x / 2,  position.y - size.y / 2, position.z - size.z / 2},
-		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}
+		(Vector3){ position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2 },
+		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2 }
 	};
 	return bb;
 }
@@ -91,11 +91,12 @@ int Utilities_GetFileCharacterCount(const char *fileName)
 	if (nullptr == filePointer)
 	{
 		printf("Failed to get character amount from file: %s \n", fileName);
+		fclose(filePointer);
 		return -1;
 	}
 
 	int count = 0;
-	char c;
+	int c;
 	for (c = getc(filePointer); c != EOF; c = getc(filePointer))
 	{
 		count++;

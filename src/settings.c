@@ -71,6 +71,7 @@ void Settings_Read(Settings_Data *settings)
 	{
 		printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
 		printf("Using default settings! \n");
+		fclose(filePointer);
 		return;
 	}
 
@@ -103,6 +104,7 @@ void Settings_Write(Settings_Data *settings)
 	if (filePointer == nullptr)
 	{
 		printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
+		fclose(filePointer);
 		return;
 	}
 
