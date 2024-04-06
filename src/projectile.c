@@ -63,6 +63,10 @@ void Projectile_CheckCollision(Projectile *projectile)
 	for (int i = 0; i < scene->size; i++)
 	{
 
+		if (!scene->entities[i].transform.canCollide)
+		{
+			continue;
+		}
 		// Against enemy except if owned by enemy
 		if (CheckCollisionBoxes(projectileBox, scene->entities[i].transform.boundingBox) &&
 		    scene->entities[i].id != projectile->ownerId)
