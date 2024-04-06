@@ -2,17 +2,8 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "hud.h"
-#include "main.h"
+#include "entity.h"
 #include "raylib.h"
-#include "raymath.h"
-#include "scene.h"
-#include "settings.h"
-#include "utilities.h"
-#include "weapon.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define PLAYER_ID -1
 #define PLAYER_MAX_HEALTH 20
@@ -35,9 +26,7 @@ typedef struct Player_Data
 {
 	int health;
 	bool dead;
-	Vector3 position;
-	Vector3 size;
-	BoundingBox boundingBox;
+	Entity_Transform transform;
 	float nextFire;
 } Player_Data;
 
@@ -47,7 +36,6 @@ extern struct Player_Data *Player;
 // Public functions
 Camera Player_InitializeCamera(float pos_x, float pos_z);
 void Player_Update(Camera *camera);
-bool Player_CheckCollision(Camera camera, BoundingBox other);
 void Player_SetHealth(int healthToAdd);
 void Player_FireWeapon(Camera *camera, Player_CustomCameraData *cameraData);
 

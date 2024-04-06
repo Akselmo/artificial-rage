@@ -2,24 +2,13 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "actor.h"
 #include "entity.h"
-#include "game.h"
-#include "item.h"
-#include "main.h"
-#include "player.h"
 #include "projectile.h"
 #include "raylib.h"
-#include "raymath.h"
-#include "utilities.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MAX_PROJECTILE_AMOUNT 254
-#define WALL_MODEL_ID -2
 
-typedef struct Scene_Data
+typedef struct Scene
 {
 	char *name;
 	int height;
@@ -32,18 +21,16 @@ typedef struct Scene_Data
 	Model ceilingPlane;
 	Texture2D ceilingPlaneTexture;
 	int entitiesTotal; // entitiesTotal = (last_entity_id + 1) in entities.json
-	struct Entity_Data *entities;
-	struct Actor_Data *actors;
-	struct Item_Data *items;
+	struct Entity *entities;
 	struct Projectile *projectiles;
 	Vector3 position;
 	Vector3 startPosition;
 	Vector3 endPosition;
 	int size;
-} Scene_Data;
+} Scene;
 
 // Variables
-extern struct Scene_Data *Scene;
+extern struct Scene *scene;
 
 // Functions
 Camera Scene_Initialize(void);

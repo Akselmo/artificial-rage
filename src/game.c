@@ -1,7 +1,12 @@
 #include "game.h"
+#include "hud.h"
+#include "player.h"
+#include "raylib.h"
+#include "scene.h"
+#include "settings.h"
 
 // Shared variables
-Camera playerCamera;
+Camera Game_camera;
 
 // Prototypes
 void Game_HudUpdate(void);
@@ -17,7 +22,7 @@ void Game_Initialize(void)
 	Settings_Initialize();
 
 	// Add player camera
-	playerCamera = Scene_Initialize();
+	Game_camera = Scene_Initialize();
 
 	Game_isStarted = true;
 }
@@ -29,11 +34,11 @@ void Game_Update(void)
 
 	ClearBackground(BLACK);
 
-	BeginMode3D(playerCamera);
+	BeginMode3D(Game_camera);
 
 	if (Game_isStarted)
 	{
-		Player_Update(&playerCamera);
+		Player_Update(&Game_camera);
 		Scene_Update();
 	}
 

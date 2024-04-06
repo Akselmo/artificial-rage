@@ -4,18 +4,7 @@
 
 #define WEAPON_AMOUNT 5
 
-#include "actor.h"
-#include "main.h"
-#include "player.h"
-#include "projectile.h"
 #include "raylib.h"
-#include "raymath.h"
-#include "scene.h"
-#include "settings.h"
-#include "utilities.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 // Fist has always ammo! :)
 #define WEAPON_FIST_AMMO_MAX 10

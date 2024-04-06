@@ -1,4 +1,12 @@
 #include "weapon.h"
+#include "player.h"
+#include "projectile.h"
+#include "raylib.h"
+#include "raymath.h"
+#include "scene.h"
+#include "settings.h"
+#include "utilities.h"
+#include <stdio.h>
 
 // Prototypes
 
@@ -162,38 +170,48 @@ int TestEntityHit(const Ray rayCast)
 	int id;
 	float levelDistance    = INFINITY;
 	float enemyDistance    = INFINITY;
-	int entitiesAmount     = Scene->size;
-	Entity_Data *levelData = Scene->entities;
-	Actor_Data *enemies    = Scene->actors;
-	Actor_Data enemyDataHit;
+	int entitiesAmount     = scene->size;
+	Entity *entities      = scene->entities;
+	Entity enemyDataHit;
 
 	for (int i = 0; i < entitiesAmount; i++)
 	{
-		if (levelData[i].id != 0)
+		if (entities[i].id != 0 && !entities[i].model.isBillboard)
 		{
-			const Vector3 pos = levelData[i].position;
-			const RayCollision hitLevel =
-				GetRayCollisionMesh(rayCast, levelData[i].model.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z));
-			if (hitLevel.hit)
+			if (entities[i].data.type == ENTITY_ENEMY_DEFAULT)
 			{
-				if (hitLevel.distance < levelDistance)
+				const RayCollision enemyHit = GetRayCollisionBox(rayCast, entities[i].transform.boundingBox);
+				if (enemyHit.hit)
 				{
-					levelDistance = hitLevel.distance;
+					if (!entities[i].data.value.actor.dead)
+					{
+						if (Vector3Length(Vector3Subtract(entities[i].transform.position, rayCast.position)) <
+						    enemyDistance)
+						{
+							enemyDistance =
+								Vector3Length(Vector3Subtract(entities[i].transform.position, rayCast.position));
+							enemyDataHit  = entities[i];
+						}
+					}
 				}
 			}
-		}
-		const RayCollision enemyHit = GetRayCollisionBox(rayCast, enemies[i].boundingBox);
-		if (enemyHit.hit)
-		{
-			if (!enemies[i].dead)
+			else
 			{
-				if (Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position)) < enemyDistance)
+				const Vector3 pos           = entities[i].transform.position;
+				const RayCollision hitLevel = GetRayCollisionMesh(
+					rayCast, entities[i].model.data.meshes[0], MatrixTranslate(pos.x, pos.y, pos.z)
+				);
+				if (hitLevel.hit)
 				{
-					enemyDistance = Vector3Length(Vector3Subtract(enemies[i].position, rayCast.position));
-					enemyDataHit  = enemies[i];
+					if (hitLevel.distance < levelDistance)
+					{
+						levelDistance = hitLevel.distance;
+					}
 				}
 			}
+
 		}
+
 	}
 	if (enemyDistance < levelDistance)
 	{
@@ -246,9 +264,9 @@ float Weapon_Fire(Camera *camera, float nextFire)
 			if (weapon->hitscan)
 			{
 				printf("Id hit: %i \n", id);
-				if (id != 0 && id != PLAYER_ID)
+				if (id != 0 && id != PLAYER_ID && scene->entities[id].data.type == ENTITY_ENEMY_DEFAULT)
 				{
-					Actor_TakeDamage(&Scene->actors[id], weapon->damage);
+					Entity_TakeDamage(&scene->entities[id], weapon->damage);
 					printf("Enemy_Data id %d takes %d damage\n", id, weapon->damage);
 				}
 			}

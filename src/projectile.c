@@ -1,5 +1,9 @@
 #include "projectile.h"
-
+#include "player.h"
+#include "raymath.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
 // Prototypes
 void Projectile_DestroyOverTime(Projectile *projectile);
 void Projectile_RotateTowards(Projectile *projectile);
@@ -11,7 +15,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 
 	for (int i = 1; i < MAX_PROJECTILE_AMOUNT; i++)
 	{
-		if (Scene->projectiles[i].id != i || Scene->projectiles[i].destroyed == true)
+		if (scene->projectiles[i].id != i || scene->projectiles[i].destroyed == true)
 		{
 			Projectile projectile = {
 				.startPosition = rayCast.position,
@@ -29,8 +33,8 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 			};
 			projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
 			printf("Projectile id created %d\n", projectile.id);
-			Scene->projectiles[i] = projectile;
-			Projectile_RotateTowards(&Scene->projectiles[i]);
+			scene->projectiles[i] = projectile;
+			Projectile_RotateTowards(&scene->projectiles[i]);
 			break;
 		}
 	}
@@ -56,24 +60,22 @@ void Projectile_CheckCollision(Projectile *projectile)
 	// unless its a wall
 	//  Otherwise tell the entity they've been hit and give them damage
 	const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
-	for (int i = 0; i < Scene->size; i++)
+	for (int i = 0; i < scene->size; i++)
 	{
 
-		// Test hitting against wall
-		if (CheckCollisionBoxes(projectileBox, Scene->entities[i].boundingBox))
-		{
-			Projectile_Destroy(projectile);
-			return;
-		}
 		// Against enemy except if owned by enemy
-		else if (CheckCollisionBoxes(projectileBox, Scene->actors[i].boundingBox) && Scene->actors[i].id != projectile->ownerId)
+		if (CheckCollisionBoxes(projectileBox, scene->entities[i].transform.boundingBox) &&
+		    scene->entities[i].id != projectile->ownerId)
 		{
-			Actor_TakeDamage(&Scene->actors[i], projectile->damage);
+			if (scene->entities[i].data.type == ENTITY_ENEMY_DEFAULT)
+			{
+				Entity_TakeDamage(&scene->entities[i], projectile->damage);
+			}
 			Projectile_Destroy(projectile);
 			return;
 		}
 		// Against player except if owned by player
-		else if (CheckCollisionBoxes(projectileBox, Player->boundingBox) && PLAYER_ID != projectile->ownerId)
+		else if (CheckCollisionBoxes(projectileBox, Player->transform.boundingBox) && PLAYER_ID != projectile->ownerId)
 		{
 			Player_SetHealth(-1 * projectile->damage);
 			Projectile_Destroy(projectile);
@@ -93,7 +95,7 @@ void Projectile_Destroy(Projectile *projectile)
 {
 	printf("Projectile id %d destroyed\n", projectile->id);
 	projectile->destroyed = true;
-	projectile            = NULL;
+	projectile            = nullptr;
 	free(projectile);
 }
 

@@ -1,4 +1,9 @@
 #include "settings.h"
+#include "raylib.h"
+#include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // TODO: List all input keys
 // c: int Settings_KeyForward
@@ -62,10 +67,11 @@ void Settings_Read(Settings_Data *settings)
 {
 	const int bufferLength = Utilities_GetFileCharacterCount(SETTINGS_FILENAME);
 	FILE *filePointer      = fopen(SETTINGS_FILENAME, "r");
-	if (NULL == filePointer)
+	if (nullptr == filePointer)
 	{
 		printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
 		printf("Using default settings! \n");
+		fclose(filePointer);
 		return;
 	}
 
@@ -95,9 +101,10 @@ void Settings_Write(Settings_Data *settings)
 {
 
 	FILE *filePointer = fopen(SETTINGS_FILENAME, "w");
-	if (filePointer == NULL)
+	if (filePointer == nullptr)
 	{
 		printf("Failed to open settings file %s \n", SETTINGS_FILENAME);
+		fclose(filePointer);
 		return;
 	}
 

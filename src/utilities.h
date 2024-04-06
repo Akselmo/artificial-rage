@@ -3,10 +3,6 @@
 #define _UTILITIES_H_
 
 #include "raylib.h"
-#include "raymath.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define DEFAULT_BUFFER_SIZE 16384 // I like big buffers and cant lie
 

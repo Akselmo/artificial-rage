@@ -1,16 +1,19 @@
 #include "utilities.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 Vector2 Utilities_GetScreenCenter(void)
 {
-	const Vector2 center = { GetScreenWidth() / 2, GetScreenHeight() / 2 };
+	const Vector2 center = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 	return center;
 }
 
 BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
 {
 	BoundingBox bb = (BoundingBox){
-		(Vector3){position.x - size.x / 2,  position.y - size.y / 2, position.z - size.z / 2},
-		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2}
+		(Vector3){ position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2 },
+		(Vector3){ position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2 }
 	};
 	return bb;
 }
@@ -46,7 +49,7 @@ void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *valu
 		{
 			strcpy(value, token);
 		}
-		token = strtok(NULL, delim);
+		token = strtok(nullptr, delim);
 	}
 	// Remove \r and \n from end of string
 	value[strcspn(value, "\r\n")] = '\0';
@@ -71,7 +74,7 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 	// Get integers from tokens
 	int tokenCount = 0;
 	int *output    = calloc(count, sizeof(int));
-	for (char *token = strtok(tokens, ","); token != NULL; token = strtok(NULL, ","))
+	for (char *token = strtok(tokens, ","); token != nullptr; token = strtok(nullptr, ","))
 	{
 		// Add integers to output
 		output[tokenCount] = atoi(token);
@@ -85,14 +88,15 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 int Utilities_GetFileCharacterCount(const char *fileName)
 {
 	FILE *filePointer = fopen(fileName, "r");
-	if (NULL == filePointer)
+	if (nullptr == filePointer)
 	{
 		printf("Failed to get character amount from file: %s \n", fileName);
+		fclose(filePointer);
 		return -1;
 	}
 
 	int count = 0;
-	char c;
+	int c;
 	for (c = getc(filePointer); c != EOF; c = getc(filePointer))
 	{
 		count++;

@@ -17,6 +17,14 @@
     "folders": [
         "."
     ],
+    "properties": [
+        {
+            "name": "firstgid",
+            "propertytype": "",
+            "type": "string",
+            "value": "0"
+        }
+    ],
     "propertyTypes": [
     ]
 }
