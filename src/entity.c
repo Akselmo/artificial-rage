@@ -320,12 +320,53 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 			break;
 
 		case ENTITY_ITEM_HEALTH_SMALL:
-			entity.model.isBillboard     = true;
-			entity.transform.canCollide  = false;
 			entity.model.textureFileName = "./assets/textures/health_small.png";
+			Entity_CreateItem(&entity, true, 5);
+			break;
+		case ENTITY_ITEM_HEALTH_MEDIUM:
+			entity.model.textureFileName = "./assets/textures/health_medium.png";
 			Entity_CreateItem(&entity, true, 10);
 			break;
-
+		case ENTITY_ITEM_HEALTH_LARGE:
+			entity.model.textureFileName = "./assets/textures/health_large.png";
+			Entity_CreateItem(&entity, true, 15);
+			break;
+		case ENTITY_ITEM_PICKUP_PISTOL:
+			entity.model.textureFileName = "./assets/textures/pistol.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_PICKUP_RIFLE:
+			entity.model.textureFileName = "./assets/textures/rifle.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_PICKUP_SHOTGUN:
+			entity.model.textureFileName = "./assets/textures/shotgun.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_PICKUP_RAILGUN:
+			entity.model.textureFileName = "./assets/textures/railgun.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_AMMO_PISTOL:
+			entity.model.textureFileName = "./assets/textures/ammo_pistol.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_AMMO_RIFLE:
+			entity.model.textureFileName = "./assets/textures/ammo_rifle.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_AMMO_SHOTGUN:
+			entity.model.textureFileName = "./assets/textures/ammo_shotgun.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_AMMO_RAILGUN:
+			entity.model.textureFileName = "./assets/textures/ammo_railgun.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
+		case ENTITY_ITEM_KEY_TELEPORT:
+			entity.model.textureFileName = "./assets/textures/pikcup_teleportkey.png";
+			Entity_CreateItem(&entity, true, 10);
+			break;
 		default:
 			break;
 	}
@@ -386,6 +427,11 @@ void Entity_CreateEnemy(Entity *entity)
 void Entity_CreateItem(Entity *entity, bool pickup, int value)
 {
 	// Same as with making a wall, but we make a flat cube instead
+	if (pickup)
+	{
+		entity->model.isBillboard    = true;
+		entity->transform.canCollide = false;
+	}
 	Item item = { .destroyed = false, .value = value, .pickup = pickup };
 
 	entity->transform.size = (Vector3){ 1.0f, 1.0f, 0.01f };
