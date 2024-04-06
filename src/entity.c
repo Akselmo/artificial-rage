@@ -364,7 +364,7 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 			Entity_CreateItem(&entity, true, 10);
 			break;
 		case ENTITY_ITEM_KEY_TELEPORT:
-			entity.model.textureFileName = "./assets/textures/pikcup_teleportkey.png";
+			entity.model.textureFileName = "./assets/textures/pickup_teleportkey.png";
 			Entity_CreateItem(&entity, true, 10);
 			break;
 		default:
