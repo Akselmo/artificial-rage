@@ -445,7 +445,7 @@ void Entity_CreateItem(Entity *entity, bool pickup, int value)
 	// Set map diffuse texture
 	const Mesh cube    = GenMeshCube(entity->transform.size.x, entity->transform.size.y, entity->transform.size.z);
 	entity->model.data = LoadModelFromMesh(cube);
-	Entity_SetupTransform(entity, entity->transform.position, Vector3Zero(), entity->transform.size, 0.1f);
+	Entity_SetupTransform(entity, entity->transform.position, Vector3Zero(), entity->transform.size, 0.2f);
 
 	// Set texture
 	entity->model.data.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
