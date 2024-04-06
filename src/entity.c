@@ -18,6 +18,7 @@ void Entity_SetupTransform(Entity *entity, Vector3 pos, Vector3 rot, Vector3 siz
 void Entity_CreateWall(Entity *entity);
 void Entity_CreateEnemy(Entity *entity);
 void Entity_CreateItem(Entity *entity, bool pickup, int value);
+void Entity_Destroy(Entity *entity);
 
 void Entity_Update(Entity *entity)
 {
@@ -65,6 +66,10 @@ void Entity_Update(Entity *entity)
 
 void Entity_Draw(Entity *entity)
 {
+	if (!entity->active)
+	{
+		return;
+	}
 	if (entity->model.isBillboard)
 	{
 		DrawModel(entity->model.data, entity->transform.position, entity->transform.scale, WHITE);
@@ -192,14 +197,26 @@ void Entity_TakeDamage(Entity *entity, const int damageAmount)
 		printf("entity id %d took %d damage\n", entity->id, damageAmount);
 		if (entity->data.value.actor.health <= 0)
 		{
-			// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
-			// We want to keep entity in the memory so we can use its position to display the
-			// corpse/death anim
-			const Vector3 deadBoxPos =
-				(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
-			entity->transform.boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
-			entity->data.value.actor.dead = true;
+			Entity_Destroy(entity);
 		}
+	}
+}
+
+void Entity_Destroy(Entity *entity)
+{
+	if (entity->data.type == ENTITY_ENEMY_DEFAULT)
+	{
+		// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
+		// We want to keep entity in the memory so we can use its position to display the
+		// corpse/death anim
+		const Vector3 deadBoxPos =
+			(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
+		entity->transform.boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
+		entity->data.value.actor.dead = true;
+	}
+	else
+	{
+		entity->active = false;
 	}
 }
 
@@ -247,6 +264,39 @@ void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 	entity->transform.rotation   = newRotation;
 }
 
+void Entity_HandlePlayerPickup(Entity *entity)
+{
+	switch (entity->data.type)
+	{
+		case ENTITY_END:
+			break;
+		case ENTITY_ITEM_HEALTH_SMALL:
+		case ENTITY_ITEM_HEALTH_MEDIUM:
+		case ENTITY_ITEM_HEALTH_LARGE:
+			if (!entity->data.value.item.destroyed)
+			{
+				Player->health += entity->data.value.item.value;
+				entity->data.value.item.destroyed = true;
+				Entity_Destroy(entity);
+			}
+			break;
+		case ENTITY_ITEM_CLUTTER:
+		case ENTITY_ITEM_PICKUP_PISTOL:
+		case ENTITY_ITEM_PICKUP_RIFLE:
+		case ENTITY_ITEM_PICKUP_SHOTGUN:
+		case ENTITY_ITEM_PICKUP_RAILGUN:
+		case ENTITY_ITEM_AMMO_PISTOL:
+		case ENTITY_ITEM_AMMO_RIFLE:
+		case ENTITY_ITEM_AMMO_SHOTGUN:
+		case ENTITY_ITEM_AMMO_RAILGUN:
+		case ENTITY_ITEM_KEY_TELEPORT:
+			break;
+		default:
+			printf("Not an item!\n");
+			break;
+	}
+}
+
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
 	// Default settings
@@ -280,6 +330,7 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 			break;
 	}
 
+	entity.active = true;
 	return entity;
 }
 

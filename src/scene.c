@@ -125,10 +125,16 @@ bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 	{
 		// Player and walls/enemies
 		if (scene->entities[i].id != entityId &&
-		    CheckCollisionBoxes(entityBox, scene->entities[i].transform.boundingBox) &&
-		    scene->entities[i].transform.canCollide)
+		    CheckCollisionBoxes(entityBox, scene->entities[i].transform.boundingBox))
 		{
-			return true;
+			if (scene->entities[i].transform.canCollide)
+			{
+				return true;
+			}
+			else if (entityId == PLAYER_ID)
+			{
+				Entity_HandlePlayerPickup(&scene->entities[i]);
+			}
 		}
 	}
 	return false;

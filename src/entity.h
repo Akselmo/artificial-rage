@@ -103,7 +103,7 @@ typedef struct Entity_Data
 typedef struct Entity
 {
 	int id;
-	bool loaded;
+	bool active;
 	Entity_Transform transform;
 	Entity_Model model;
 	Entity_Data data;
@@ -114,7 +114,7 @@ void Entity_Update(Entity *entity);
 void Entity_Draw(Entity *entity);
 void Entity_TakeDamage(Entity *entity, int damageAmount);
 void Entity_RotateTowards(Entity *entity, Vector3 targetPosition);
-
+void Entity_HandlePlayerPickup(Entity *entity);
 // Creation functions
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id);
 

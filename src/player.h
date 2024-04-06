@@ -36,7 +36,6 @@ extern struct Player_Data *Player;
 // Public functions
 Camera Player_InitializeCamera(float pos_x, float pos_z);
 void Player_Update(Camera *camera);
-bool Player_CheckCollision(Camera camera, BoundingBox other);
 void Player_SetHealth(int healthToAdd);
 void Player_FireWeapon(Camera *camera, Player_CustomCameraData *cameraData);
 
