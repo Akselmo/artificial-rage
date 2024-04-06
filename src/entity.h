@@ -61,7 +61,6 @@ typedef struct Actor
 // Items such as health pickups, ammo, etc..
 typedef struct Item
 {
-	bool destroyed;
 	bool pickup;
 	int value;
 } Item;

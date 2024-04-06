@@ -1,11 +1,11 @@
 #include "entity.h"
 #include "animator.h"
-#include "game.h"
 #include "player.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "scene.h"
 #include "utilities.h"
+#include "weapon.h"
 #include <stdio.h>
 // Entities have shared functions
 bool Entity_UpdatePosition(Entity *entity);
@@ -266,6 +266,10 @@ void Entity_RotateTowards(Entity *entity, const Vector3 targetPosition)
 
 void Entity_HandlePlayerPickup(Entity *entity)
 {
+	if (!entity->active)
+	{
+		return;
+	}
 	switch (entity->data.type)
 	{
 		case ENTITY_END:
@@ -273,22 +277,45 @@ void Entity_HandlePlayerPickup(Entity *entity)
 		case ENTITY_ITEM_HEALTH_SMALL:
 		case ENTITY_ITEM_HEALTH_MEDIUM:
 		case ENTITY_ITEM_HEALTH_LARGE:
-			if (!entity->data.value.item.destroyed)
-			{
-				Player->health += entity->data.value.item.value;
-				entity->data.value.item.destroyed = true;
-				Entity_Destroy(entity);
-			}
+			Player->health += entity->data.value.item.value;
+			Entity_Destroy(entity);
 			break;
-		case ENTITY_ITEM_CLUTTER:
 		case ENTITY_ITEM_PICKUP_PISTOL:
+			WeaponHolder.Weapons[PISTOL]->ammo += entity->data.value.item.value;
+			WeaponHolder.Weapons[PISTOL]->pickedUp = true;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_PICKUP_RIFLE:
+			WeaponHolder.Weapons[RIFLE]->ammo += entity->data.value.item.value;
+			WeaponHolder.Weapons[RIFLE]->pickedUp = true;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_PICKUP_SHOTGUN:
+			WeaponHolder.Weapons[SHOTGUN]->ammo += entity->data.value.item.value;
+			WeaponHolder.Weapons[SHOTGUN]->pickedUp = true;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_PICKUP_RAILGUN:
+			WeaponHolder.Weapons[RAILGUN]->ammo += entity->data.value.item.value;
+			WeaponHolder.Weapons[RAILGUN]->pickedUp = true;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_AMMO_PISTOL:
+			WeaponHolder.Weapons[PISTOL]->ammo += entity->data.value.item.value;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_AMMO_RIFLE:
+			WeaponHolder.Weapons[RIFLE]->ammo += entity->data.value.item.value;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_AMMO_SHOTGUN:
+			WeaponHolder.Weapons[SHOTGUN]->ammo += entity->data.value.item.value;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_AMMO_RAILGUN:
+			WeaponHolder.Weapons[RAILGUN]->ammo += entity->data.value.item.value;
+			Entity_Destroy(entity);
+			break;
 		case ENTITY_ITEM_KEY_TELEPORT:
 			break;
 		default:
@@ -308,17 +335,14 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 			entity.model.textureFileName = "./assets/textures/wall1.png";
 			Entity_CreateWall(&entity);
 			break;
-
 		case ENTITY_WALL_CARGO_SCUFFED:
 			entity.model.textureFileName = "./assets/textures/wall2.png";
 			Entity_CreateWall(&entity);
 			break;
-
 		case ENTITY_ENEMY_DEFAULT:
 			entity.model.fileName = "./assets/models/enemy.m3d";
 			Entity_CreateEnemy(&entity);
 			break;
-
 		case ENTITY_ITEM_HEALTH_SMALL:
 			entity.model.textureFileName = "./assets/textures/health_small.png";
 			Entity_CreateItem(&entity, true, 5);
@@ -432,7 +456,7 @@ void Entity_CreateItem(Entity *entity, bool pickup, int value)
 		entity->model.isBillboard    = true;
 		entity->transform.canCollide = false;
 	}
-	Item item = { .destroyed = false, .value = value, .pickup = pickup };
+	Item item = { .value = value, .pickup = pickup };
 
 	entity->transform.size = (Vector3){ 1.0f, 1.0f, 0.01f };
 	entity->transform.position =
