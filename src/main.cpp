@@ -2,6 +2,7 @@
 // Made by Akseli
 #include "game.h"
 #include "raylib.h"
+
 // Main loop
 int main(void)
 {

@@ -36,7 +36,7 @@ Camera Scene_Initialize(void)
 void Scene_Build(void)
 {
 	// Create scene
-	scene = calloc(1, sizeof(Scene));
+	scene = (Scene *)calloc(1, sizeof(Scene));
 	// TODO: Free all scene data
 
 	// Load scene data from the config file
@@ -60,8 +60,8 @@ void Scene_PlaceEntities(void)
 	scene->position = (Vector3){ -mapPosX / 2, 0.5f, -mapPosZ / 2 };
 	scene->size     = scene->height * scene->width;
 
-	scene->entities    = calloc(scene->size, sizeof(Entity));
-	scene->projectiles = calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
+	scene->entities    = (Entity *)calloc(scene->size, sizeof(Entity));
+	scene->projectiles = (Projectile *)calloc(MAX_PROJECTILE_AMOUNT, sizeof(Projectile));
 
 	for (int entity = 0; entity < scene->dataCount; entity++)
 	{
@@ -71,7 +71,7 @@ void Scene_PlaceEntities(void)
 		const float mx = scene->position.x - 0.5f + entityPosX * 1.0f;
 		const float my = scene->position.z - 0.5f + entityPosY * 1.0f;
 
-		Scene_AddEntityToScene(scene->data[entity], mx, my, entity);
+		Scene_AddEntityToScene((Entity_Type)scene->data[entity], mx, my, entity);
 	}
 
 	printf("Level has total %d entities \n", scene->size);
@@ -234,7 +234,7 @@ bool Scene_ParseConfig(char *key, char *value)
 {
 	// TODO: somekind of utility for getting full asset path here
 	char *texturesPath    = "./assets/textures/";
-	char *fullTexturePath = malloc(strlen(texturesPath) + strlen(value) + 1);
+	char *fullTexturePath = (char *)malloc(strlen(texturesPath) + strlen(value) + 1);
 	strcpy(fullTexturePath, texturesPath);
 	strcat(fullTexturePath, value);
 
@@ -254,7 +254,7 @@ bool Scene_ParseConfig(char *key, char *value)
 	}
 	else if (strcmp(key, "name") == 0)
 	{
-		scene->name = calloc(strlen(value) + 5, sizeof(char));
+		scene->name = (char *)calloc(strlen(value) + 5, sizeof(char));
 		strcpy(scene->name, value);
 		free(fullTexturePath);
 		return true;

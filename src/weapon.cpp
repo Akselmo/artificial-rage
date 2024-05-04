@@ -168,10 +168,10 @@ void Weapon_Change(const int weaponId)
 int TestEntityHit(const Ray rayCast)
 {
 	int id;
-	float levelDistance    = INFINITY;
-	float enemyDistance    = INFINITY;
-	int entitiesAmount     = scene->size;
-	Entity *entities      = scene->entities;
+	float levelDistance = INFINITY;
+	float enemyDistance = INFINITY;
+	int entitiesAmount  = scene->size;
+	Entity *entities    = scene->entities;
 	Entity enemyDataHit;
 
 	for (int i = 0; i < entitiesAmount; i++)
@@ -190,7 +190,7 @@ int TestEntityHit(const Ray rayCast)
 						{
 							enemyDistance =
 								Vector3Length(Vector3Subtract(entities[i].transform.position, rayCast.position));
-							enemyDataHit  = entities[i];
+							enemyDataHit = entities[i];
 						}
 					}
 				}
@@ -209,9 +209,7 @@ int TestEntityHit(const Ray rayCast)
 					}
 				}
 			}
-
 		}
-
 	}
 	if (enemyDistance < levelDistance)
 	{

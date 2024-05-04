@@ -73,7 +73,7 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 
 	// Get integers from tokens
 	int tokenCount = 0;
-	int *output    = calloc(count, sizeof(int));
+	int *output    = (int *)calloc(count, sizeof(int));
 	for (char *token = strtok(tokens, ","); token != nullptr; token = strtok(nullptr, ","))
 	{
 		// Add integers to output

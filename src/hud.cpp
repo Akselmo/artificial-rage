@@ -22,7 +22,7 @@ void Hud_Draw(void)
 	}
 	else
 	{
-		char *Hud_healthText = calloc(50, sizeof(char));
+		char *Hud_healthText = (char *)calloc(50, sizeof(char));
 		snprintf(Hud_healthText, 5, "%d", Player->health);
 		Hud_HealthText(Hud_healthText);
 		free(Hud_healthText);
@@ -37,7 +37,7 @@ void Hud_Draw(void)
 		}
 		else
 		{
-			char *Hud_weaponAmmoText = calloc(50, sizeof(char));
+			char *Hud_weaponAmmoText = (char *)calloc(50, sizeof(char));
 			snprintf(
 				Hud_weaponAmmoText,
 				50,

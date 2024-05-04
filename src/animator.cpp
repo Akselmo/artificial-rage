@@ -56,7 +56,7 @@ Animator_Data Animator_EnemyAnimations(char *modelFileName)
 {
 	int animationsCount              = 0;
 	ModelAnimation *loadedAnimations = LoadModelAnimations(modelFileName, &animationsCount);
-	Animator_Animation *animations   = calloc(animationsCount, sizeof(Animator_Animation));
+	Animator_Animation *animations   = (Animator_Animation *)calloc(animationsCount, sizeof(Animator_Animation));
 
 	// TODO: Could move this to animator.c since its more of its thing
 	animations[ENEMY_DEATH] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_DEATH],
@@ -88,7 +88,7 @@ Animator_Data Animator_EnemyAnimations(char *modelFileName)
 		                                           .loopable      = true };
 
 	Animator_Data data = (Animator_Data){ .animations       = animations,
-		                                  .animationsCount  = animationsCount,
+		                                  .animationsCount  = static_cast<unsigned int>(animationsCount),
 		                                  .currentAnimation = animations[ENEMY_IDLE],
 		                                  .nextFrame        = 0 };
 
