@@ -1,6 +1,6 @@
 target_sources(
-    ${PROJECT_NAME}
-    PUBLIC
+    ArtificialRage
+    PRIVATE
         animator.cpp
         entity.cpp
         hud.cpp
@@ -11,6 +11,6 @@ target_sources(
         settings.cpp
         utilities.cpp
         weapon.cpp
-    PUBLIC FILE_SET CXX_MODULES FILES
+    PRIVATE FILE_SET CXX_MODULES FILES
         game.cpp
 )

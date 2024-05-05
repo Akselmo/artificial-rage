@@ -1,11 +1,11 @@
 # Artificial Rage build file
 cmake_minimum_required(VERSION 3.20.0)
 project(ArtificialRage)
-include(GNUInstallDirs)
+
 set(CMAKE_GENERATOR "Ninja")
 set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_C_STANDARD 23)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 # Use legacy version of OpenGL if possible, to make the game work on older
 # devices
 set(OpenGL_GL_PREFERENCE LEGACY)
@@ -13,7 +13,7 @@ set(OpenGL_GL_PREFERENCE LEGACY)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 # Warning flags, sanitizer
 set(CMAKE_CXX_STANDARD
-    "${CMAKE_CXX_STANDARD} -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
+    "${CMAKE_CXX_STANDARD} -fmodules -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
 )
 
 # Copy commit hook, used for formatting code at commit
@@ -21,15 +21,15 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit
      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/)
 
 # Get raylib 5.0
-find_package(raylib QUIET)
-if(NOT raylib_FOUND)
-  include(FetchContent)
-  FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG 5.0)
-  FetchContent_MakeAvailable(raylib)
-endif()
+find_package(raylib)
+#if(NOT raylibFOUND)
+#  include(FetchContent)
+#  FetchContent_Declare(
+#    raylib
+#    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+#    GIT_TAG 5.0)
+#  FetchContent_MakeAvailable(raylib)
+#endif()
 # Add code to project
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 

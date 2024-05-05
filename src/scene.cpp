@@ -1,6 +1,5 @@
 #include "scene.h"
 #include "entity.h"
-#include "game.h"
 
 #include "player.h"
 #include "projectile.h"
@@ -79,10 +78,10 @@ void Scene_PlaceEntities(void)
 
 void Scene_Update(void)
 {
-	if (!Game_isStarted)
-	{
-		return;
-	}
+	// if (!Game_isStarted)
+	//{
+	//	return;
+	// }
 
 	DrawModel(scene->floorPlane, (Vector3){ scene->position.x, 0.0f, scene->position.z }, 1.0f, WHITE);
 	DrawModelEx(
