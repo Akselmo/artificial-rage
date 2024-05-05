@@ -1,61 +1,65 @@
-#include "game.h"
+module;
 #include "hud.h"
 #include "player.h"
 #include "raylib.h"
 #include "scene.h"
 #include "settings.h"
+#include <stdbool.h>
+export module Game;
 
-// Shared variables
-Camera Game_camera;
-
-// Prototypes
-void Game_HudUpdate(void);
-void Game_MenuUpdate(void);
-bool Game_isStarted = false;
-
-// Initialization
-void Game_Initialize(void)
+export class Game
 {
-	Game_isStarted = false;
+  public:
+	// Shared variables
+	Camera camera;
 
-	// Initialize game
-	Settings_Initialize();
+	// Prototypes
+	bool isStarted = false;
 
-	// Add player camera
-	Game_camera = Scene_Initialize();
-
-	Game_isStarted = true;
-}
-
-// Main game loop
-void Game_Update(void)
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-
-	BeginMode3D(Game_camera);
-
-	if (Game_isStarted)
+	// Initialization
+	void Initialize(void)
 	{
-		Player_Update(&Game_camera);
-		Scene_Update();
+		isStarted = false;
+
+		// Initialize game
+		Settings_Initialize();
+
+		// Add player camera
+		camera = Scene_Initialize();
+
+		isStarted = true;
 	}
 
-	EndMode3D();
+	// Main game loop
+	void Update(void)
+	{
+		BeginDrawing();
 
-	Game_HudUpdate();
-	Game_MenuUpdate();
+		ClearBackground(BLACK);
 
-	EndDrawing();
-}
+		BeginMode3D(camera);
 
-// TODO: Move these to their own files
-void Game_HudUpdate(void) { Hud_Draw(); }
+		if (isStarted)
+		{
+			Player_Update(&camera);
+			Scene_Update();
+		}
 
-void Game_MenuUpdate(void)
-{
-	DisableCursor();
-	// menu presses etc come here
-	// Enable and disable cursor based on if menu is on or off
-}
+		EndMode3D();
+
+		HudUpdate();
+		MenuUpdate();
+
+		EndDrawing();
+	}
+
+	// TODO: Move these to their own files
+	void HudUpdate(void) { Hud_Draw(); }
+
+	void MenuUpdate(void)
+	{
+		DisableCursor();
+		// menu presses etc come here
+		// Enable and disable cursor based on if menu is on or off
+	}
+};

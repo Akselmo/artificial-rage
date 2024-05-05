@@ -16,12 +16,12 @@
                     "run_cmd": ""
                 },
                 {
-                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++",
+                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++  -DCMAKE_GENERATOR:INTERNAL=Ninja",
                     "name": "config-gcc",
                     "run_cmd": ""
                 },
                 {
-                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++",
+                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_GENERATOR:INTERNAL=Ninja",
                     "name": "config-clang",
                     "run_cmd": ""
                 }

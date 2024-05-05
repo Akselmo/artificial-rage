@@ -1,6 +1,8 @@
 # Artificial Rage build file
 cmake_minimum_required(VERSION 3.20.0)
 project(ArtificialRage)
+include(GNUInstallDirs)
+set(CMAKE_GENERATOR "Ninja")
 set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
@@ -28,11 +30,6 @@ if(NOT raylib_FOUND)
     GIT_TAG 5.0)
   FetchContent_MakeAvailable(raylib)
 endif()
-
-# Get all files from src (I know that this is "bad" but for this project it
-# makes sense)
-file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.cpp)
-
 # Add code to project
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
@@ -43,3 +40,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
 # the assets will show up.
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+add_subdirectory(src)
