@@ -10,9 +10,9 @@ set(OpenGL_GL_PREFERENCE LEGACY)
 # Create compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 # Warning flags, sanitizer
-set(CMAKE_CXX_STANDARD
-    "${CMAKE_CXX_STANDARD} -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
-)
+#set(CMAKE_CXX_STANDARD
+#    "${CMAKE_CXX_STANDARD} -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
+#)
 
 # Copy commit hook, used for formatting code at commit
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit
@@ -29,6 +29,21 @@ if(NOT raylib_FOUND)
   FetchContent_MakeAvailable(raylib)
 endif()
 
+# raylib-cpp
+find_package(raylib_cpp QUIET)
+if (NOT raylib_cpp_FOUND)
+    if (NOT DEFINED RAYLIB_CPP_VERSION)
+        set(RAYLIB_CPP_VERSION v5.0.1)
+    endif()
+    include(FetchContent)
+    FetchContent_Declare(
+        raylib_cpp
+        GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
+        GIT_TAG ${RAYLIB_CPP_VERSION}
+    )
+    FetchContent_MakeAvailable(raylib_cpp)
+endif()
+
 # Get all files from src (I know that this is "bad" but for this project it
 # makes sense)
 file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.cpp)
@@ -37,7 +52,7 @@ file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
 
 # Link raylib
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
+target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
 
 # Copy the game assets to build dir, so if you use build dir as the current working dir,
 # the assets will show up.
