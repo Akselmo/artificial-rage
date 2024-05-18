@@ -5,10 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void Hud_HealthText(char *text);
-void Hud_WeaponText(char *text);
+Hud::Hud() {}
 
-void Hud_Draw(void)
+void Hud::draw(void)
 {
 	DrawFPS(10, 10);
 
@@ -18,14 +17,14 @@ void Hud_Draw(void)
 	// Draw health text
 	if (Player->health <= 0)
 	{
-		Hud_HealthText("DEAD");
+		Hud::healthText("DEAD");
 	}
 	else
 	{
-		char *Hud_healthText = (char *)calloc(50, sizeof(char));
-		snprintf(Hud_healthText, 5, "%d", Player->health);
-		Hud_HealthText(Hud_healthText);
-		free(Hud_healthText);
+		char *healthText = (char *)calloc(50, sizeof(char));
+		snprintf(healthText, 5, "%d", Player->health);
+		Hud::healthText(healthText);
+		free(healthText);
 	}
 
 	// Draw weapon ammo text
@@ -33,24 +32,24 @@ void Hud_Draw(void)
 	{
 		if (WeaponHolder.currentWeapon == (Weapon_ID)MELEE)
 		{
-			Hud_WeaponText("-");
+			Hud::weaponText("-");
 		}
 		else
 		{
-			char *Hud_weaponAmmoText = (char *)calloc(50, sizeof(char));
+			char *weaponAmmoText = (char *)calloc(50, sizeof(char));
 			snprintf(
-				Hud_weaponAmmoText,
+				weaponAmmoText,
 				50,
 				"%d / %d",
 				WeaponHolder.Weapons[WeaponHolder.currentWeapon]->ammo,
 				WeaponHolder.Weapons[WeaponHolder.currentWeapon]->maxAmmo
 			);
-			Hud_WeaponText(Hud_weaponAmmoText);
-			free(Hud_weaponAmmoText);
+			Hud::weaponText(weaponAmmoText);
+			free(weaponAmmoText);
 		}
 	}
 }
 
-void Hud_HealthText(char *text) { DrawText(text, 50, GetScreenHeight() - 20, 20, RED); }
+void Hud::healthText(char *text) { DrawText(text, 50, GetScreenHeight() - 20, 20, RED); }
 
-void Hud_WeaponText(char *text) { DrawText(text, GetScreenWidth() - 100, GetScreenHeight() - 20, 20, RED); }
+void Hud::weaponText(char *text) { DrawText(text, GetScreenWidth() - 100, GetScreenHeight() - 20, 20, RED); }

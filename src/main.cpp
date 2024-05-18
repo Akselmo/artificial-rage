@@ -10,8 +10,6 @@ int main(void)
 	// Initialize game
 	Game game;
 
-	game.initialize();
-
 	// Main game loop
 	while (!WindowShouldClose())
 	{

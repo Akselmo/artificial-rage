@@ -1,7 +1,12 @@
 #pragma once
-#ifndef _HUD_H_
-#define _HUD_H_
 
-void Hud_Draw(void);
+class Hud
+{
+  public:
+	void draw();
+	Hud();
 
-#endif
+  private:
+	void healthText(char *text);
+	void weaponText(char *text);
+};

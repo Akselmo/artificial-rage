@@ -7,7 +7,7 @@
 bool Game::isStarted = false;
 raylib::Camera Game::camera;
 // Initialization
-void Game::initialize(void)
+Game::Game()
 {
 	Game::isStarted = false;
 
@@ -44,7 +44,7 @@ void Game::update(void)
 }
 
 // TODO: Move these to their own files
-void Game::hudUpdate(void) { Hud_Draw(); }
+void Game::hudUpdate(void) { Game::hud.draw(); }
 
 void Game::menuUpdate(void)
 {
