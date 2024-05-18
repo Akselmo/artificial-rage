@@ -79,7 +79,7 @@ void Scene_PlaceEntities(void)
 
 void Scene_Update(void)
 {
-	if (!Game_isStarted)
+	if (!Game::isStarted)
 	{
 		return;
 	}

@@ -1,14 +1,15 @@
 #pragma once
-#include "raylib.h"
-#ifndef _GAME_H_
-#define _GAME_H_
+#include <raylib-cpp.hpp>
 
-#include <stdbool.h>
+class Game
+{
+  public:
+	void initialize(void);
+	void update(void);
+	static raylib::Camera camera;
+	static bool isStarted;
 
-void Game_Initialize(void);
-void Game_Update(void);
-
-extern Camera Game_camera;
-extern bool Game_isStarted;
-
-#endif
+  private:
+	void hudUpdate(void);
+	void menuUpdate(void);
+};

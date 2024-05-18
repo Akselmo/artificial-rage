@@ -1,59 +1,52 @@
 #include "game.h"
 #include "hud.h"
 #include "player.h"
-#include "raylib.h"
 #include "scene.h"
 #include "settings.h"
 
-// Shared variables
-Camera Game_camera;
-
-// Prototypes
-void Game_HudUpdate(void);
-void Game_MenuUpdate(void);
-bool Game_isStarted = false;
-
+bool Game::isStarted = false;
+raylib::Camera Game::camera;
 // Initialization
-void Game_Initialize(void)
+void Game::initialize(void)
 {
-	Game_isStarted = false;
+	Game::isStarted = false;
 
 	// Initialize game
 	Settings_Initialize();
 
 	// Add player camera
-	Game_camera = Scene_Initialize();
+	Game::camera = Scene_Initialize();
 
-	Game_isStarted = true;
+	Game::isStarted = true;
 }
 
 // Main game loop
-void Game_Update(void)
+void Game::update(void)
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
 
-	BeginMode3D(Game_camera);
+	BeginMode3D(Game::camera);
 
-	if (Game_isStarted)
+	if (Game::isStarted)
 	{
-		Player_Update(&Game_camera);
+		Player_Update(&Game::camera);
 		Scene_Update();
 	}
 
 	EndMode3D();
 
-	Game_HudUpdate();
-	Game_MenuUpdate();
+	Game::hudUpdate();
+	Game::menuUpdate();
 
 	EndDrawing();
 }
 
 // TODO: Move these to their own files
-void Game_HudUpdate(void) { Hud_Draw(); }
+void Game::hudUpdate(void) { Hud_Draw(); }
 
-void Game_MenuUpdate(void)
+void Game::menuUpdate(void)
 {
 	DisableCursor();
 	// menu presses etc come here
