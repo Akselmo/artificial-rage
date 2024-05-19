@@ -175,7 +175,7 @@ bool Entity_UpdatePosition(Entity *entity)
 		moving = false;
 	}
 
-	entity->transform.boundingBox = Utilities_MakeBoundingBox(entity->transform.position, entity->transform.size);
+	entity->transform.boundingBox = Utilities::makeBoundingBox(entity->transform.position, entity->transform.size);
 	return moving;
 }
 
@@ -211,7 +211,7 @@ void Entity_Destroy(Entity *entity)
 		// corpse/death anim
 		const Vector3 deadBoxPos =
 			(Vector3){ ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION, ACTOR_GRAVEYARD_POSITION };
-		entity->transform.boundingBox = Utilities_MakeBoundingBox(deadBoxPos, Vector3Zero());
+		entity->transform.boundingBox = Utilities::makeBoundingBox(deadBoxPos, Vector3Zero());
 		entity->data.value.actor.dead = true;
 	}
 	else
@@ -403,7 +403,7 @@ Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const 
 
 void Entity_SetupTransform(Entity *entity, Vector3 pos, Vector3 rot, Vector3 size, float scale)
 {
-	entity->transform.boundingBox = Utilities_MakeBoundingBox(pos, size);
+	entity->transform.boundingBox = Utilities::makeBoundingBox(pos, size);
 	entity->transform.position    = pos;
 	entity->transform.rotation    = rot;
 	entity->transform.size        = size;

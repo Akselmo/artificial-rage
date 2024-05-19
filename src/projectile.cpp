@@ -25,7 +25,7 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 				.id          = i,
 				.ownerId     = ownerId,
 				.size        = size,
-				.boundingBox = Utilities_MakeBoundingBox(rayCast.position, projectile.size),
+				.boundingBox = Utilities::makeBoundingBox(rayCast.position, projectile.size),
 				.damage      = damage,
 				.color       = color,
 				.speed       = 0.12f * GetFrameTime(),
@@ -59,7 +59,7 @@ void Projectile_CheckCollision(Projectile *projectile)
 	// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
 	// unless its a wall
 	//  Otherwise tell the entity they've been hit and give them damage
-	const BoundingBox projectileBox = Utilities_MakeBoundingBox(projectile->position, projectile->size);
+	const BoundingBox projectileBox = Utilities::makeBoundingBox(projectile->position, projectile->size);
 	for (int i = 0; i < scene->size; i++)
 	{
 

@@ -65,7 +65,7 @@ Settings_Data Settings_CreateDefault(void)
 
 void Settings_Read(Settings_Data *settings)
 {
-	const int bufferLength = Utilities_GetFileCharacterCount(SETTINGS_FILENAME);
+	const int bufferLength = Utilities::getFileCharacterCount(SETTINGS_FILENAME);
 	FILE *filePointer      = fopen(SETTINGS_FILENAME, "r");
 	if (nullptr == filePointer)
 	{
@@ -82,7 +82,7 @@ void Settings_Read(Settings_Data *settings)
 	{
 		char key[bufferLength];
 		char value[bufferLength];
-		Utilities_ParseKeyValuePair(buffer, key, "=", value);
+		Utilities::parseKeyValuePair(buffer, key, "=", value);
 
 		if (!Settings_Parse(settings, key, (float)atof(value)))
 		{

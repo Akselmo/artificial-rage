@@ -63,7 +63,7 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 	Player->dead                  = false;
 	Player->transform.size        = (Vector3){ 0.1f, 0.1f, 0.1f };
 	Player->transform.position    = (Vector3){ 0.0f, 0.0f, 0.0f };
-	Player->transform.boundingBox = Utilities_MakeBoundingBox(Player->transform.position, Player->transform.size);
+	Player->transform.boundingBox = Utilities::makeBoundingBox(Player->transform.position, Player->transform.size);
 	Player->nextFire              = 0.0f;
 
 	Weapon_Initialize();
@@ -78,7 +78,7 @@ void Player_Update(Camera *camera)
 
 	const Vector3 oldPlayerPos = camera->position;
 
-	Player->transform.boundingBox = Utilities_MakeBoundingBox(camera->position, Player->transform.size);
+	Player->transform.boundingBox = Utilities::makeBoundingBox(camera->position, Player->transform.size);
 
 	const Vector2 mousePositionDelta = GetMouseDelta();
 
@@ -144,7 +144,7 @@ void Player_Update(Camera *camera)
 	}
 
 	Player->transform.position    = camera->position;
-	Player->transform.boundingBox = Utilities_MakeBoundingBox(Player->transform.position, Player->transform.size);
+	Player->transform.boundingBox = Utilities::makeBoundingBox(Player->transform.position, Player->transform.size);
 	// Check if we need to switch weapon
 	Weapon_GetSwitchInput();
 	Player_FireWeapon(camera, &Player_CustomCamera);

@@ -256,7 +256,7 @@ float Weapon_Fire(Camera *camera, float nextFire)
 			WeaponHolder.active       = true;
 			WeaponHolder.currentFrame = weapon->spriteFireFrame;
 
-			Ray rayCast  = GetMouseRay(Utilities_GetScreenCenter(), *camera);
+			Ray rayCast  = GetMouseRay(Utilities::getScreenCenter(), *camera);
 			const int id = TestEntityHit(rayCast);
 
 			if (weapon->hitscan)
@@ -288,8 +288,8 @@ void Weapon_DrawSprite(void)
 	const float frameHeight = (float)weapon->spriteTexture.height;
 	const Vector2 origin    = { (float)frameWidth / 2, (float)frameHeight };
 
-	const float scale = Utilities_MinF(frameWidth * 2.0f / frameWidth, frameHeight * 2.0f / frameHeight);
-	const float posX  = (float)Utilities_GetScreenCenter().x - ((float)frameWidth * weapon->spritePositionOffset.x);
+	const float scale = Utilities::minF(frameWidth * 2.0f / frameWidth, frameHeight * 2.0f / frameHeight);
+	const float posX  = (float)Utilities::getScreenCenter().x - ((float)frameWidth * weapon->spritePositionOffset.x);
 	const float posY  = (float)GetScreenHeight() - ((float)frameHeight * weapon->spritePositionOffset.y);
 
 	Rectangle sourceRec = { 0.0f, 0.0f, frameWidth, frameHeight };

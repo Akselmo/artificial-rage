@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-Vector2 Utilities_GetScreenCenter(void)
+Vector2 Utilities::getScreenCenter(void)
 {
 	const Vector2 center = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 	return center;
 }
 
-BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size)
+BoundingBox Utilities::makeBoundingBox(const Vector3 position, const Vector3 size)
 {
 	BoundingBox bb = (BoundingBox){
 		(Vector3){ position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2 },
@@ -18,7 +18,7 @@ BoundingBox Utilities_MakeBoundingBox(const Vector3 position, const Vector3 size
 	return bb;
 }
 
-Color Utilities_GetLevelPixelColor(const Color *levelMapPixels, const int x, const int width, const int y)
+Color Utilities::getLevelPixelColor(const Color *levelMapPixels, const int x, const int width, const int y)
 {
 	Color pixelColor = {
 		levelMapPixels[y * width + x].r, levelMapPixels[y * width + x].g, levelMapPixels[y * width + x].b, 255
@@ -27,16 +27,16 @@ Color Utilities_GetLevelPixelColor(const Color *levelMapPixels, const int x, con
 	return pixelColor;
 }
 
-bool Utilities_CompareColors(const Color color1, const Color color2)
+bool Utilities::compareColors(const Color color1, const Color color2)
 {
 	return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b);
 }
 
-float Utilities_MinF(float a, float b) { return (a > b) ? b : a; }
+float Utilities::minF(float a, float b) { return (a > b) ? b : a; }
 
-float Utilities_MaxF(float a, float b) { return (a < b) ? b : a; }
+float Utilities::maxF(float a, float b) { return (a < b) ? b : a; }
 
-void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *value)
+void Utilities::parseKeyValuePair(char *input, char *key, char *delim, char *value)
 {
 	char *token = strtok(input, delim);
 	for (int i = 0; i < 2; i++)
@@ -55,7 +55,7 @@ void Utilities_ParseKeyValuePair(char *input, char *key, char *delim, char *valu
 	value[strcspn(value, "\r\n")] = '\0';
 }
 
-int *Utilities_ParseIntArray(char *input, int *outputCount)
+int *Utilities::parseIntArray(char *input, int *outputCount)
 {
 	// Create tokens array
 	char tokens[strlen(input) + 1];
@@ -85,7 +85,7 @@ int *Utilities_ParseIntArray(char *input, int *outputCount)
 	return output;
 }
 
-int Utilities_GetFileCharacterCount(const char *fileName)
+int Utilities::getFileCharacterCount(const char *fileName)
 {
 	FILE *filePointer = fopen(fileName, "r");
 	if (nullptr == filePointer)

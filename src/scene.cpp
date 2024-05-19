@@ -119,7 +119,7 @@ void Scene_UpdateProjectiles(void)
 
 bool Scene_CheckCollision(Vector3 entityPos, Vector3 entitySize, int entityId)
 {
-	const BoundingBox entityBox = Utilities_MakeBoundingBox(entityPos, entitySize);
+	const BoundingBox entityBox = Utilities::makeBoundingBox(entityPos, entitySize);
 
 	for (int i = 0; i < scene->size; i++)
 	{
@@ -201,7 +201,7 @@ void Scene_AddEntityToScene(enum Entity_Type type, float mx, float my, int id)
 void Scene_LoadSceneConfig(void)
 {
 	const char *fileName = "./assets/levels/level1.cfg";
-	const int bufferSize = Utilities_GetFileCharacterCount(fileName);
+	const int bufferSize = Utilities::getFileCharacterCount(fileName);
 
 	FILE *filePointer = fopen(fileName, "r");
 	if (nullptr == filePointer)
@@ -216,7 +216,7 @@ void Scene_LoadSceneConfig(void)
 	{
 		char key[bufferSize];
 		char value[bufferSize];
-		Utilities_ParseKeyValuePair(buffer, key, "=", value);
+		Utilities::parseKeyValuePair(buffer, key, "=", value);
 
 		if (!Scene_ParseConfig(key, value))
 		{
@@ -273,7 +273,7 @@ bool Scene_ParseConfig(char *key, char *value)
 	}
 	else if (strcmp(key, "data") == 0)
 	{
-		scene->data = Utilities_ParseIntArray(value, &scene->dataCount);
+		scene->data = Utilities::parseIntArray(value, &scene->dataCount);
 		free(fullTexturePath);
 		return true; // Handle array after the parsing is done
 	}
