@@ -35,17 +35,17 @@ void Entity_Update(Entity *entity)
 			entity->data.value.actor.playerSpotted = true;
 			if (Entity_FireAtPlayer(entity, entity->data.value.actor.nextFire))
 			{
-				Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_ATTACK);
+				Animator::setAnimation(&entity->data.value.actor.animator, Animator::ENEMY_ATTACK);
 			}
 			else
 			{
 				if (Entity_UpdatePosition(entity))
 				{
-					Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_MOVE);
+					Animator::setAnimation(&entity->data.value.actor.animator, Animator::ENEMY_MOVE);
 				}
 				else
 				{
-					Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_IDLE);
+					Animator::setAnimation(&entity->data.value.actor.animator, Animator::ENEMY_IDLE);
 				}
 			}
 			entity->data.value.actor.nextFire -= GetFrameTime();
@@ -53,10 +53,10 @@ void Entity_Update(Entity *entity)
 	}
 	else
 	{
-		Animator_SetAnimation(&entity->data.value.actor.animator, ENEMY_DEATH);
+		Animator::setAnimation(&entity->data.value.actor.animator, Animator::ENEMY_DEATH);
 	}
 	entity->data.value.actor.animator.nextFrame -= GetFrameTime();
-	entity->data.value.actor.animator.nextFrame = Animator_PlayAnimation(
+	entity->data.value.actor.animator.nextFrame = Animator::playAnimation(
 		&entity->data.value.actor.animator,
 		&entity->model.data,
 		ACTOR_DEFAULT_ANIMATION_SPEED,
@@ -443,7 +443,7 @@ void Entity_CreateEnemy(Entity *entity)
 		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
 		            .fireRate      = 5.75f,
 		            .nextFire      = 5.75f,
-		            .animator      = Animator_EnemyAnimations(entity->model.fileName) };
+		            .animator      = Animator::enemyAnimations(entity->model.fileName) };
 
 	entity->data.value.actor = actor;
 }

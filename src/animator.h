@@ -1,11 +1,13 @@
 #pragma once
-#ifndef _ANIMATOR_H_
-#define _ANIMATOR_H_
 
 #include "raylib.h"
 
+// These are mostly helper functions for animations. This can be eventually turned into
+// a class, but for now just using namespace for it is sufficient.
+namespace Animator
+{
 // Animation ID's for enemies. Can be in other order for other 3d models.
-enum Animator_EnemyAnimationID
+enum EnemyAnimationID
 {
 	ENEMY_DEATH  = 0,
 	ENEMY_ATTACK = 1,
@@ -13,7 +15,7 @@ enum Animator_EnemyAnimationID
 	ENEMY_MOVE   = 3
 };
 
-typedef struct Animator_Animation
+struct Animation
 {
 	ModelAnimation animation;
 	int id;
@@ -23,19 +25,18 @@ typedef struct Animator_Animation
 	                // animation starts/stops
 	bool loopable;
 	bool interruptable;
-} Animator_Animation;
+};
 
-typedef struct Animator_Data
+struct Data
 {
-	Animator_Animation *animations;
+	Animation *animations;
 	unsigned int animationsCount;
-	Animator_Animation currentAnimation;
+	Animation currentAnimation;
 	int animationFrame;
 	float nextFrame;
-} Animator_Data;
+};
 
-float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float animationSpeed, float nextFrame);
-void Animator_SetAnimation(Animator_Data *animator, const int animationId);
-Animator_Data Animator_EnemyAnimations(char *modelFileName);
-
-#endif
+float playAnimation(Data *animator, Model *model, const float animationSpeed, float nextFrame);
+void setAnimation(Data *animator, const int animationId);
+Data enemyAnimations(char *modelFileName);
+}; // namespace Animator

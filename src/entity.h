@@ -53,7 +53,7 @@ typedef struct Actor
 	float rotationSpeed;
 	float fireRate;
 	float nextFire;
-	Animator_Data animator;
+	Animator::Data animator;
 	// TODO: actually utilize the tickrate
 	float tickRate;
 } Actor;

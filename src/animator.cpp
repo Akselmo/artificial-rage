@@ -1,10 +1,10 @@
 #include "animator.h"
 #include <stdlib.h>
 
-void Animator_SetAnimation(Animator_Data *animator, const int animationId)
+void Animator::setAnimation(Animator::Data *animator, const int animationId)
 {
-	const Animator_Animation currentAnimation = animator->currentAnimation;
-	const Animator_Animation newAnimation     = animator->animations[animationId];
+	const Animator::Animation currentAnimation = animator->currentAnimation;
+	const Animator::Animation newAnimation     = animator->animations[animationId];
 
 	if (currentAnimation.id == newAnimation.id)
 	{
@@ -24,7 +24,7 @@ void Animator_SetAnimation(Animator_Data *animator, const int animationId)
 }
 
 // TODO: This would need somekind of frameskip feature if FPS is lower than animationspeed. Ideas welcome!
-float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float animationSpeed, float nextFrame)
+float Animator::playAnimation(Animator::Data *animator, Model *model, const float animationSpeed, float nextFrame)
 {
 
 	if (nextFrame > 0)
@@ -33,7 +33,7 @@ float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float 
 	}
 	else
 	{
-		Animator_Animation currentAnimation = animator->currentAnimation;
+		Animator::Animation currentAnimation = animator->currentAnimation;
 		animator->animationFrame += 1;
 		if (animator->animationFrame > currentAnimation.lastFrame)
 		{
@@ -52,45 +52,45 @@ float Animator_PlayAnimation(Animator_Data *animator, Model *model, const float 
 	return nextFrame;
 }
 
-Animator_Data Animator_EnemyAnimations(char *modelFileName)
+Animator::Data Animator::enemyAnimations(char *modelFileName)
 {
 	int animationsCount              = 0;
 	ModelAnimation *loadedAnimations = LoadModelAnimations(modelFileName, &animationsCount);
-	Animator_Animation *animations   = (Animator_Animation *)calloc(animationsCount, sizeof(Animator_Animation));
+	Animator::Animation *animations  = (Animator::Animation *)calloc(animationsCount, sizeof(Animator::Animation));
 
 	// TODO: Could move this to animator.c since its more of its thing
-	animations[ENEMY_DEATH] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_DEATH],
-		                                            .firstFrame    = 0,
-		                                            .lastFrame     = (loadedAnimations[ENEMY_DEATH].frameCount - 5),
-		                                            .id            = ENEMY_DEATH,
-		                                            .interruptable = false,
-		                                            .loopable      = false };
-
-	animations[ENEMY_ATTACK] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_ATTACK],
+	animations[ENEMY_DEATH] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_DEATH],
 		                                             .firstFrame    = 0,
-		                                             .lastFrame     = loadedAnimations[ENEMY_ATTACK].frameCount,
-		                                             .id            = ENEMY_ATTACK,
+		                                             .lastFrame     = (loadedAnimations[ENEMY_DEATH].frameCount - 5),
+		                                             .id            = ENEMY_DEATH,
 		                                             .interruptable = false,
 		                                             .loopable      = false };
 
-	animations[ENEMY_IDLE] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_IDLE],
-		                                           .firstFrame    = 0,
-		                                           .lastFrame     = loadedAnimations[ENEMY_IDLE].frameCount,
-		                                           .id            = ENEMY_IDLE,
-		                                           .interruptable = true,
-		                                           .loopable      = true };
+	animations[ENEMY_ATTACK] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_ATTACK],
+		                                              .firstFrame    = 0,
+		                                              .lastFrame     = loadedAnimations[ENEMY_ATTACK].frameCount,
+		                                              .id            = ENEMY_ATTACK,
+		                                              .interruptable = false,
+		                                              .loopable      = false };
 
-	animations[ENEMY_MOVE] = (Animator_Animation){ .animation     = loadedAnimations[ENEMY_MOVE],
-		                                           .firstFrame    = 0,
-		                                           .lastFrame     = loadedAnimations[ENEMY_MOVE].frameCount,
-		                                           .id            = ENEMY_MOVE,
-		                                           .interruptable = true,
-		                                           .loopable      = true };
+	animations[ENEMY_IDLE] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_IDLE],
+		                                            .firstFrame    = 0,
+		                                            .lastFrame     = loadedAnimations[ENEMY_IDLE].frameCount,
+		                                            .id            = ENEMY_IDLE,
+		                                            .interruptable = true,
+		                                            .loopable      = true };
 
-	Animator_Data data = (Animator_Data){ .animations       = animations,
-		                                  .animationsCount  = static_cast<unsigned int>(animationsCount),
-		                                  .currentAnimation = animations[ENEMY_IDLE],
-		                                  .nextFrame        = 0 };
+	animations[ENEMY_MOVE] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_MOVE],
+		                                            .firstFrame    = 0,
+		                                            .lastFrame     = loadedAnimations[ENEMY_MOVE].frameCount,
+		                                            .id            = ENEMY_MOVE,
+		                                            .interruptable = true,
+		                                            .loopable      = true };
+
+	Animator::Data data = (Animator::Data){ .animations       = animations,
+		                                    .animationsCount  = static_cast<unsigned int>(animationsCount),
+		                                    .currentAnimation = animations[ENEMY_IDLE],
+		                                    .nextFrame        = 0 };
 
 	return data;
 }
