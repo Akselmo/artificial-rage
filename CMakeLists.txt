@@ -2,17 +2,13 @@
 cmake_minimum_required(VERSION 3.20.0)
 project(ArtificialRage)
 set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
 # Use legacy version of OpenGL if possible, to make the game work on older
 # devices
 set(OpenGL_GL_PREFERENCE LEGACY)
 # Create compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-# Warning flags, sanitizer
-#set(CMAKE_CXX_STANDARD
-#    "${CMAKE_CXX_STANDARD} -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined,address"
-#)
 
 # Copy commit hook, used for formatting code at commit
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hooks/pre-commit
@@ -50,6 +46,9 @@ file(GLOB_RECURSE SOURCE_CODE CONFIGURE_DEPENDS ./src/*.h ./src/*.cpp)
 
 # Add code to project
 add_executable(${PROJECT_NAME} ${SOURCE_CODE})
+
+# Warning flags
+target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion)
 
 # Link raylib
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
