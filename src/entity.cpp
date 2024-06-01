@@ -88,8 +88,8 @@ Ray Entity_CreateRay(Entity *entity)
 	const Vector3 v              = Vector3Normalize(Vector3Subtract(entity->transform.position, playerPosition));
 
 	Ray rayCast = {
+		.position  = entity->transform.position,
 		.direction = (Vector3){ -1.0f * v.x, -1.0f * v.y, -1.0f * v.z },
-          .position = entity->transform.position
 	};
 
 	return rayCast;
@@ -433,12 +433,12 @@ void Entity_CreateEnemy(Entity *entity)
 	Entity_SetupTransform(entity, entityPosition, Vector3Zero(), entitySize, 0.5);
 	entity->model.data = LoadModel(entity->model.fileName);
 
-	Actor actor = { .dead          = false,
+	Actor actor = { .health        = 15, // Check actor health balance later
+		            .damage        = 2,
+		            .dead          = false,
 		            .moving        = false,
 		            .attacking     = false,
 		            .playerSpotted = false,
-		            .damage        = 2,
-		            .health        = 15, // Check actor health balance later
 		            .movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
 		            .rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
 		            .fireRate      = 5.75f,
