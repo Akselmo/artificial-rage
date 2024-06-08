@@ -60,32 +60,32 @@ Animator::Data Animator::enemyAnimations(char *modelFileName)
 
 	// TODO: Could move this to animator.c since its more of its thing
 	animations[ENEMY_DEATH] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_DEATH],
+		                                             .id            = ENEMY_DEATH,
 		                                             .firstFrame    = 0,
 		                                             .lastFrame     = (loadedAnimations[ENEMY_DEATH].frameCount - 5),
-		                                             .id            = ENEMY_DEATH,
-		                                             .interruptable = false,
-		                                             .loopable      = false };
+		                                             .loopable      = false,
+		                                             .interruptable = false };
 
 	animations[ENEMY_ATTACK] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_ATTACK],
+		                                              .id            = ENEMY_ATTACK,
 		                                              .firstFrame    = 0,
 		                                              .lastFrame     = loadedAnimations[ENEMY_ATTACK].frameCount,
-		                                              .id            = ENEMY_ATTACK,
-		                                              .interruptable = false,
-		                                              .loopable      = false };
+		                                              .loopable      = false,
+		                                              .interruptable = false };
 
 	animations[ENEMY_IDLE] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_IDLE],
+		                                            .id            = ENEMY_IDLE,
 		                                            .firstFrame    = 0,
 		                                            .lastFrame     = loadedAnimations[ENEMY_IDLE].frameCount,
-		                                            .id            = ENEMY_IDLE,
-		                                            .interruptable = true,
-		                                            .loopable      = true };
+		                                            .loopable      = true,
+		                                            .interruptable = true };
 
 	animations[ENEMY_MOVE] = (Animator::Animation){ .animation     = loadedAnimations[ENEMY_MOVE],
+		                                            .id            = ENEMY_MOVE,
 		                                            .firstFrame    = 0,
 		                                            .lastFrame     = loadedAnimations[ENEMY_MOVE].frameCount,
-		                                            .id            = ENEMY_MOVE,
-		                                            .interruptable = true,
-		                                            .loopable      = true };
+		                                            .loopable      = true,
+		                                            .interruptable = true };
 
 	Animator::Data data = (Animator::Data){ .animations       = animations,
 		                                    .animationsCount  = static_cast<unsigned int>(animationsCount),

@@ -327,7 +327,11 @@ void Entity_HandlePlayerPickup(Entity *entity)
 Entity Entity_Create(const enum Entity_Type type, const Vector3 position, const int id)
 {
 	// Default settings
-	Entity entity = { .data.type = type, .id = id, .transform.position = position, .transform.canCollide = true };
+	Entity entity;
+	entity.id                   = id;
+	entity.data.type            = type;
+	entity.transform.position   = position;
+	entity.transform.canCollide = true;
 
 	switch (type)
 	{
@@ -456,7 +460,7 @@ void Entity_CreateItem(Entity *entity, bool pickup, int value)
 		entity->model.isBillboard    = true;
 		entity->transform.canCollide = false;
 	}
-	Item item = { .value = value, .pickup = pickup };
+	Item item = { .pickup = pickup, .value = value };
 
 	entity->transform.size = (Vector3){ 1.0f, 1.0f, 0.01f };
 	entity->transform.position =

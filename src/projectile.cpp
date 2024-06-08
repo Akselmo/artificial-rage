@@ -17,20 +17,19 @@ void Projectile_Create(Ray rayCast, Vector3 size, int damage, int ownerId, Color
 	{
 		if (scene->projectiles[i].id != i || scene->projectiles[i].destroyed == true)
 		{
-			Projectile projectile = {
-				.startPosition = rayCast.position,
-				.endPosition =
-					Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE)),
-				.position    = projectile.startPosition,
-				.id          = i,
-				.ownerId     = ownerId,
-				.size        = size,
-				.boundingBox = Utilities::makeBoundingBox(rayCast.position, projectile.size),
-				.damage      = damage,
-				.color       = color,
-				.speed       = 0.12f * GetFrameTime(),
-				.destroyed   = false,
-			};
+			Projectile projectile;
+			projectile.startPosition = rayCast.position;
+			projectile.endPosition =
+				Vector3Add(rayCast.position, Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE));
+			projectile.position    = projectile.startPosition;
+			projectile.size        = size;
+			projectile.id          = i;
+			projectile.ownerId     = ownerId;
+			projectile.boundingBox = Utilities::makeBoundingBox(rayCast.position, projectile.size);
+			projectile.damage      = damage;
+			projectile.color       = color;
+			projectile.speed       = 0.12f * GetFrameTime();
+			projectile.destroyed   = false;
 			projectile.model = LoadModelFromMesh(GenMeshCube(projectile.size.x, projectile.size.y, projectile.size.z));
 			printf("Projectile id created %d\n", projectile.id);
 			scene->projectiles[i] = projectile;

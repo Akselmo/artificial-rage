@@ -12,7 +12,7 @@
 
 void Weapon_Change(int weaponId);
 bool WeaponHasAmmo(int currentWeapon);
-
+// TODO: these need to be turned into classes that are initialized or something
 Weapon_Data Weapon_Melee = {
 	.name                 = "Fists",
 	.inputKey             = KEY_ONE,
