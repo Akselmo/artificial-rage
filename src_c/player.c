@@ -58,13 +58,13 @@ Camera Player_InitializeCamera(float pos_x, float pos_z)
 	Player_CustomCamera.mouseSensitivity = Settings.mouseSensitivity;
 
 	// Initialize player data
-	Player              = calloc(1, sizeof(Player_Data));
-	Player->health      = PLAYER_MAX_HEALTH;
-	Player->dead        = false;
+	Player                        = calloc(1, sizeof(Player_Data));
+	Player->health                = PLAYER_MAX_HEALTH;
+	Player->dead                  = false;
 	Player->transform.size        = (Vector3){ 0.1f, 0.1f, 0.1f };
 	Player->transform.position    = (Vector3){ 0.0f, 0.0f, 0.0f };
 	Player->transform.boundingBox = Utilities_MakeBoundingBox(Player->transform.position, Player->transform.size);
-	Player->nextFire    = 0.0f;
+	Player->nextFire              = 0.0f;
 
 	Weapon_Initialize();
 
