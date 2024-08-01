@@ -1,6 +1,7 @@
 package game
 
 import rl "vendor:raylib"
+import "src:game/settings"
 
 camera : rl.Camera
 isStarted : bool = false
@@ -9,9 +10,11 @@ initialize :: proc()
 {
     isStarted = false
 
-    // settings.initialize
+    settings.Initialize()
     //camera = //scene camera
 
+    rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, "Artificial Rage")
+    rl.SetTargetFPS(settings.Values.maxFPS)
     isStarted = true
 
 }
