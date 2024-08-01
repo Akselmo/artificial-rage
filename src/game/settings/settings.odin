@@ -60,3 +60,18 @@ CreateDefault :: proc() -> SettingData
 
 	return defaults
 }
+
+Read :: proc()
+{
+
+}
+
+Write :: proc()
+{
+
+}
+
+Parse :: proc() -> bool
+{
+
+}

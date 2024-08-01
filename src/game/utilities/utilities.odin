@@ -16,3 +16,13 @@ MakeBoundingBox :: proc(position: rl.Vector3, size: rl.Vector3) -> rl.BoundingBo
 	}
 	return bb
 }
+
+// GetLevelPixelColor is different here since rl.Color is an array, not struct
+// Basically we need to take image, then just coordinates and we get the color, without any
+// extra work here??
+
+// CompareColors is just comparing two color arrays so no need for extra stuff here
+
+// For MinF and MaxF, Odin probably has its own things already?
+
+// TODO: does Odin have things for ParseKeyValuePair, ParseIntArray and GetFileCharacterCount already?
