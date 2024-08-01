@@ -6,12 +6,12 @@ import rl "vendor:raylib"
 // Entry point
 main :: proc()
 {
-    game.initialize()
+	game.Initialize()
 
-    for !rl.WindowShouldClose() {
-        game.update()
-    }
+	for !rl.WindowShouldClose()
+	{
+		game.Update()
+	}
 
-    rl.CloseWindow()
+	rl.CloseWindow()
 }
-
