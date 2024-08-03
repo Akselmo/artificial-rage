@@ -13,7 +13,7 @@ Initialize :: proc()
 	settings.Initialize()
 	//camera = //scene camera
 
-	rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, "Artificial Rage")
+	rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, settings.GameTitle)
 	rl.SetTargetFPS(settings.Values.maxFPS)
 	isStarted = true
 

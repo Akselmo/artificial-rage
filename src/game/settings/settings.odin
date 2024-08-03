@@ -1,5 +1,8 @@
 package settings
 
+import "core:fmt"
+import "core:os"
+import "core:strings"
 import rl "vendor:raylib"
 
 Input :: union
@@ -8,6 +11,9 @@ Input :: union
 	rl.MouseButton,
 	rl.GamepadButton,
 }
+
+GameTitle: cstring = "Artificial Rage"
+FileName: string = "settings.cfg"
 
 SettingData :: struct
 {
@@ -34,7 +40,16 @@ Values: SettingData
 
 Initialize :: proc()
 {
-	Values = CreateDefault()
+	if (Read())
+	{
+
+	}
+	 else
+	{
+		Values = CreateDefault()
+		Write()
+	}
+
 }
 
 CreateDefault :: proc() -> SettingData
@@ -61,17 +76,50 @@ CreateDefault :: proc() -> SettingData
 	return defaults
 }
 
-Read :: proc()
+Read :: proc() -> bool
 {
+	data, success := os.read_entire_file(FileName)
+	defer delete(data)
+	settingsFileText := string(data)
+	if (!success)
+	{
+		return false
+	}
+	settingsArr := strings.split_lines(settingsFileText)
+	for setting in settingsArr
+	{
+		keyValuePair := strings.split(setting, "=")
+		if (len(keyValuePair) < 2)
+		{
+			continue
+		}
+		Parse(keyValuePair[0], keyValuePair[1])
+	}
+	return true
 
 }
 
 Write :: proc()
 {
+	sb := strings.builder_make()
+	// TODO add all values
+	strings.write_string(&sb, fmt.aprintfln("screenWidth=%[0]d", Values.screenWidth))
+	strings.write_string(&sb, fmt.aprintfln("screenHeight=%[0]d", Values.screenHeight))
 
+	stringToWrite := strings.to_string(sb)
+
+	data := transmute([]u8)stringToWrite
+
+	success := os.write_entire_file(FileName, data)
+	if (!success)
+	{
+		fmt.println("error lol")
+	}
 }
 
-Parse :: proc() -> bool
+Parse :: proc(key: string, value: string) -> bool
 {
-
+	fmt.printfln("%[0]v %[1]v", key, value)
+	// Switch ladder here to parse the values to right places
+	return true
 }
