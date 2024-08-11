@@ -2,6 +2,7 @@ package game
 
 import "src:game/settings"
 import rl "vendor:raylib"
+import "src:game/player"
 
 camera: rl.Camera
 isStarted: bool = false
@@ -17,6 +18,9 @@ Initialize :: proc()
 	rl.SetTargetFPS(settings.Values.maxFPS)
 	isStarted = true
 
+	camera = player.InitializeCamera(0,0)
+	isStarted = true
+
 }
 
 Update :: proc()
@@ -29,7 +33,7 @@ Update :: proc()
 
 	if (isStarted)
 	{
-		// player update
+		player.Update(&camera)
 		// scene update
 	}
 	rl.EndMode3D()

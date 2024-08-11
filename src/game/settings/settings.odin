@@ -14,7 +14,7 @@ SettingData :: struct
 	screenWidth:      i32,
 	screenHeight:     i32,
 	mouseSensitivity: f32,
-	cameraFOV:        i32,
+	cameraFOV:        f32,
 	maxFPS:           i32,
 	keyMoveForward:   i32,
 	keyMoveBackward:  i32,
@@ -139,7 +139,7 @@ Parse :: proc(key: string, value: string)
 		case "mouseSensitivity":
 			Values.mouseSensitivity = cast(f32)strconv.atof(value)
 		case "cameraFOV":
-			Values.cameraFOV = cast(i32)strconv.atoi(value)
+			Values.cameraFOV = cast(f32)strconv.atoi(value)
 		case "maxFPS":
 			Values.maxFPS = cast(i32)strconv.atoi(value)
 		case "keyMoveForward":
