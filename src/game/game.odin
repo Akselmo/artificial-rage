@@ -1,14 +1,13 @@
 package game
 
+import "src:game/player"
 import "src:game/settings"
 import rl "vendor:raylib"
-import "src:game/player"
 
 camera: rl.Camera
 isStarted: bool = false
 
-Initialize :: proc()
-{
+Initialize :: proc() {
 	isStarted = false
 
 	settings.Initialize()
@@ -18,40 +17,37 @@ Initialize :: proc()
 	rl.SetTargetFPS(settings.Values.maxFPS)
 	isStarted = true
 
-	camera = player.InitializeCamera(0,0)
+	camera = player.InitializeCamera(0, 0)
 	isStarted = true
 
 }
 
-Update :: proc()
-{
+Update :: proc() {
 	rl.BeginDrawing()
 
 	rl.ClearBackground(rl.BLACK)
 
 	rl.BeginMode3D(camera)
 
-	if (isStarted)
-	{
+	if (isStarted) {
 		player.Update(&camera)
 		// scene update
 	}
 	rl.EndMode3D()
 
-	//game hudupdate
-	// game menuupdate
+	HudUpdate()
+	MenuUpdate()
 	rl.EndDrawing()
 }
 
-HudUpdate :: proc()
-{
+HudUpdate :: proc() {
 	// hud draw
 }
 
-MenuUpdate :: proc()
-{
-	rl.DisableCursor()
+MenuUpdate :: proc() {
+	//rl.DisableCursor()
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
 }
+
