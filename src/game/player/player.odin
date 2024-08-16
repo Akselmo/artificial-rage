@@ -1,19 +1,20 @@
 package player
 
 import "core:math"
-import "src:game/settings"
 import "src:game/entity"
+import "src:game/settings"
 import rl "vendor:raylib"
 
 
-PLAYER_ID := -1
-PLAYER_MAX_HEALTH: i32 = 20
-PLAYER_CAMERA_MIN_CLAMP := 89.0
-PLAYER_CAMERA_MAX_CLAMP := -89.0
-PLAYER_CAMERA_PANNING_DIVIDER := 5.1
-PLAYER_START_POSITION_Y: f32 = 0.4
+PLAYER_ID: i32 : -1
+PLAYER_MAX_HEALTH: i32 : 20
+PLAYER_CAMERA_MIN_CLAMP: f32 : 89.0
+PLAYER_CAMERA_MAX_CLAMP: f32 : -89.0
+PLAYER_CAMERA_PANNING_DIVIDER: f32 : 5.1
+PLAYER_START_POSITION_Y: f32 : 0.4
 
-CustomCameraData :: struct {
+CustomCameraData :: struct
+{
 	targetDistance:     f32,
 	playerEyesPosition: f32,
 	angle:              rl.Vector2,
@@ -21,21 +22,24 @@ CustomCameraData :: struct {
 	playerSpeed:        f32,
 }
 
-Data :: struct {
-	health:   i32,
-	dead:     bool,
-	transform : entity.Transform
-	nextFire: f32,
+Data :: struct
+{
+	health:    i32,
+	dead:      bool,
+	transform: entity.Transform,
+	nextFire:  f32,
 }
 
-CameraMoveKeys :: enum {
+CameraMoveKeys :: enum
+{
 	MOVE_FRONT = 0,
 	MOVE_BACK  = 1,
 	MOVE_RIGHT = 2,
 	MOVE_LEFT  = 3,
 }
 
-CustomCamera: CustomCameraData = {
+CustomCamera: CustomCameraData = \
+{
 	targetDistance     = 0,
 	playerEyesPosition = 1.85,
 	angle              = {0, 0},
@@ -45,7 +49,8 @@ CustomCamera: CustomCameraData = {
 
 Player: Data
 
-InitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
+InitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera
+{
 	camera: rl.Camera
 
 	// Place camera and apply settings
@@ -88,15 +93,17 @@ InitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 
 }
 
-Update :: proc(camera: ^rl.Camera) {
+Update :: proc(camera: ^rl.Camera)
+{
 	oldPlayerPos := camera.position
 }
 
-SetHealth :: proc(healthToAdd: i32) {
+SetHealth :: proc(healthToAdd: i32)
+{
 
 }
 
-FireWeapon :: proc(camera: ^rl.Camera) {
+FireWeapon :: proc(camera: ^rl.Camera)
+{
 
 }
-
