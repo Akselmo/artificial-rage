@@ -1,7 +1,6 @@
 package entity
 import "core:c/libc"
 import "core:fmt"
-import "src:game/player"
 import rl "vendor:raylib"
 
 WALL_MODEL_ID: i32 : -2
@@ -102,7 +101,7 @@ Update :: proc(entity: ^Entity)
 {
 	Draw(entity)
 
-	if (entity.data.type != ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
 	{
 		return
 	}
@@ -115,11 +114,9 @@ Draw :: proc(entity: ^Entity)
 
 CreateRay :: proc(entity: ^Entity) -> rl.Ray
 {
-	v := rl.Vector3Normalize(
-		rl.Vector3Subtract(entity.transform.position, player.Player.transform.position),
-	)
+	v := rl.Vector3Normalize(entity.transform.position - Player.transform.position)
 
-	rayCast: Ray = \
+	rayCast: rl.Ray = \
 	{
 		direction = rl.Vector3{-1.0 * v.x, -1.0 * v.y, -1.0 * v.z},
 		position  = entity.transform.position,
@@ -133,12 +130,12 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
 
-	if (entity.data.type != ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
 	{
 		return false
 	}
 
-	if (rl.Vector3Distance(player.Player.transform.position, entity.transform.position) > 5.0 &&
+	if (rl.Vector3Distance(Player.transform.position, entity.transform.position) > 5.0 &&
 		   entity.data.value.(Actor).playerSpotted)
 	{
 		return false
@@ -156,33 +153,31 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool
 
 UpdatePosition :: proc(entity: ^Entity) -> bool
 {
-	if (entity.data.type != ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
 	{
 		return false
 	}
 
 	moving: bool = true
 	// Move entity towards player
-	distanceFromPlayer: rl.Vector3 : rl.Vector3Subtract(
-		entity.transform.position,
-		player.Player.transform.position,
-	)
+	distanceFromPlayer := entity.transform.position - Player.transform.position
+
 	// Check if player can be seen (first racyast hit returns player)
 	// If in certain range from player, stop
 
 	if (libc.fabsf(distanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
 		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
 	{
-		entityOldPosition: rl.Vector3 : entity.transform.position
-		entityNewPosition: rl.Vector3 : {
-			player.Player.transform.position.x,
+		entityOldPosition: rl.Vector3 = entity.transform.position
+		entityNewPosition: rl.Vector3 = {
+			Player.transform.position.x,
 			ACTOR_POSITION_Y,
-			player.Player.transform.position.z,
+			Player.transform.position.z,
 		}
-		entity.transform.position := rl.Vector3Lerp(
+		entity.transform.position = rl.Vector3Lerp(
 			entity.transform.position,
 			entityNewPosition,
-			entity.data.value.(Actor).movementSpeed * GetFrameTime(),
+			entity.data.value.(Actor).movementSpeed * rl.GetFrameTime(),
 		)
 
 		// if scene check collision etc etc
@@ -195,23 +190,24 @@ UpdatePosition :: proc(entity: ^Entity) -> bool
 
 TakeDamage :: proc(entity: ^Entity, damageAmount: i32)
 {
-	if (entity.data.type != ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
 	{
-		return false
+		return
 	}
 
-	if (entity.data.value.(Actor).dead)
+	actor := entity.data.value.(Actor)
+	if (actor.dead)
 	{
-		if (!entity.data.value.(Actor).playerSpotted)
+		if (!actor.playerSpotted)
 		{
-			entity.data.value.(Actor).playerSpotted = true
+			actor.playerSpotted = true
 		}
 
-		entity.data.value.(Actor).health -= damageAmount
+		actor.health -= damageAmount
 
 		fmt.printfln("Entity id %[0]v took %[1]v damage", entity.id, damageAmount)
 
-		if (entity.data.value.(Actor).health <= 0)
+		if (actor.health <= 0)
 		{
 			Destroy(entity)
 		}
@@ -225,7 +221,7 @@ Destroy :: proc(entity: ^Entity)
 
 FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool
 {
-	if (entity.data.type != ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
 	{
 		return false
 	}
@@ -242,7 +238,7 @@ HandlePlayerPickup :: proc(entity: ^Entity)
 
 }
 
-Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity
+Create :: proc(type: Type, position: rl.Vector3, id: i32) //-> Entity
 {
 
 }
@@ -273,3 +269,4 @@ CreateItem :: proc(entity: ^Entity, pickup: bool, value: i32)
 {
 
 }
+

@@ -4,7 +4,7 @@ import rl "vendor:raylib"
 
 GetScreenCenter :: proc() -> rl.Vector2
 {
-	center := rl.Vector2{rl.GetScreenWidth() / 2.0, rl.GetScreenHeight() / 2.0}
+	center := rl.Vector2{cast(f32)rl.GetScreenWidth() / 2.0, cast(f32)rl.GetScreenHeight() / 2.0}
 	return center
 }
 
@@ -26,3 +26,4 @@ MakeBoundingBox :: proc(position: rl.Vector3, size: rl.Vector3) -> rl.BoundingBo
 // For MinF and MaxF, Odin probably has its own things already?
 
 // TODO: does Odin have things for ParseKeyValuePair, ParseIntArray and GetFileCharacterCount already?
+

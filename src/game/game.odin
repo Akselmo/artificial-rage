@@ -1,6 +1,6 @@
 package game
 
-import "src:game/player"
+import "src:game/entity"
 import "src:game/settings"
 import rl "vendor:raylib"
 
@@ -18,7 +18,7 @@ Initialize :: proc()
 	rl.SetTargetFPS(settings.Values.maxFPS)
 	isStarted = true
 
-	camera = player.InitializeCamera(0, 0)
+	camera = entity.PlayerInitializeCamera(0, 0)
 	isStarted = true
 
 }
@@ -33,7 +33,7 @@ Update :: proc()
 
 	if (isStarted)
 	{
-		player.Update(&camera)
+		entity.PlayerUpdate(&camera)
 		// scene update
 	}
 	rl.EndMode3D()
@@ -55,3 +55,4 @@ MenuUpdate :: proc()
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
 }
+

@@ -2,8 +2,8 @@ package settings
 
 import "core:fmt"
 import "core:os"
-import "core:strings"
 import "core:strconv"
+import "core:strings"
 import rl "vendor:raylib"
 
 GameTitle: cstring = "Artificial Rage"
@@ -38,7 +38,7 @@ Initialize :: proc()
 	{
 		fmt.printfln("Settings file read and loaded succesfully!")
 	}
-	else
+	 else
 	{
 		fmt.printfln("Reading settings failed, creating a new settings file...")
 		Values = CreateDefault()
@@ -131,42 +131,44 @@ Write :: proc()
 Parse :: proc(key: string, value: string)
 {
 	switch key
+
 	{
-		case "screenWidth":
-			Values.screenWidth = cast(i32)strconv.atoi(value)
-		case "screenHeight":
-			Values.screenHeight = cast(i32)strconv.atoi(value)
-		case "mouseSensitivity":
-			Values.mouseSensitivity = cast(f32)strconv.atof(value)
-		case "cameraFOV":
-			Values.cameraFOV = cast(f32)strconv.atoi(value)
-		case "maxFPS":
-			Values.maxFPS = cast(i32)strconv.atoi(value)
-		case "keyMoveForward":
-			Values.keyMoveForward = cast(i32)strconv.atoi(value)
-		case "keyMoveBackward":
-			Values.keyMoveBackward = cast(i32)strconv.atoi(value)
-		case "keyMoveLeft":
-			Values.keyMoveLeft = cast(i32)strconv.atoi(value)
-		case "keyMoveRight":
-			Values.keyMoveRight = cast(i32)strconv.atoi(value)
-		case "keyFire":
-			Values.keyFire = cast(i32)strconv.atoi(value)
-		case "keyUse":
-			Values.keyUse = cast(i32)strconv.atoi(value)
-		case "keyJump":
-			Values.keyJump = cast(i32)strconv.atoi(value)
-		case "keyWeaponOne":
-			Values.keyWeaponOne = cast(i32)strconv.atoi(value)
-		case "keyWeaponTwo":
-			Values.keyWeaponTwo = cast(i32)strconv.atoi(value)
-		case "keyWeaponThree":
-			Values.keyWeaponThree = cast(i32)strconv.atoi(value)
-		case "keyWeaponFour":
-			Values.keyWeaponFour = cast(i32)strconv.atoi(value)
-		case "keyWeaponFive":
-			Values.keyWeaponFive = cast(i32)strconv.atoi(value)
-		case:
-			fmt.printfln("Key or value does not exist: Key %[0]v - Value %[1]v", key, value)
+	case "screenWidth":
+		Values.screenWidth = cast(i32)strconv.atoi(value)
+	case "screenHeight":
+		Values.screenHeight = cast(i32)strconv.atoi(value)
+	case "mouseSensitivity":
+		Values.mouseSensitivity = cast(f32)strconv.atof(value)
+	case "cameraFOV":
+		Values.cameraFOV = cast(f32)strconv.atoi(value)
+	case "maxFPS":
+		Values.maxFPS = cast(i32)strconv.atoi(value)
+	case "keyMoveForward":
+		Values.keyMoveForward = cast(i32)strconv.atoi(value)
+	case "keyMoveBackward":
+		Values.keyMoveBackward = cast(i32)strconv.atoi(value)
+	case "keyMoveLeft":
+		Values.keyMoveLeft = cast(i32)strconv.atoi(value)
+	case "keyMoveRight":
+		Values.keyMoveRight = cast(i32)strconv.atoi(value)
+	case "keyFire":
+		Values.keyFire = cast(i32)strconv.atoi(value)
+	case "keyUse":
+		Values.keyUse = cast(i32)strconv.atoi(value)
+	case "keyJump":
+		Values.keyJump = cast(i32)strconv.atoi(value)
+	case "keyWeaponOne":
+		Values.keyWeaponOne = cast(i32)strconv.atoi(value)
+	case "keyWeaponTwo":
+		Values.keyWeaponTwo = cast(i32)strconv.atoi(value)
+	case "keyWeaponThree":
+		Values.keyWeaponThree = cast(i32)strconv.atoi(value)
+	case "keyWeaponFour":
+		Values.keyWeaponFour = cast(i32)strconv.atoi(value)
+	case "keyWeaponFive":
+		Values.keyWeaponFive = cast(i32)strconv.atoi(value)
+	case:
+		fmt.printfln("Key or value does not exist: Key %[0]v - Value %[1]v", key, value)
 	}
 }
+
