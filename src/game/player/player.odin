@@ -1,8 +1,10 @@
 package player
 
+import "core:fmt"
 import "core:math"
 import "src:game/entity"
 import "src:game/settings"
+import "src:game/utilities"
 import rl "vendor:raylib"
 
 
@@ -30,12 +32,12 @@ Data :: struct
 	nextFire:  f32,
 }
 
-CameraMoveKeys :: enum
+CameraMoveKeys :: map[string]bool \
 {
-	MOVE_FRONT = 0,
-	MOVE_BACK  = 1,
-	MOVE_RIGHT = 2,
-	MOVE_LEFT  = 3,
+	"MOVE_FRONT" = rl.IsKeyDown(settings.Values.keyMoveForward),
+	"MOVE_BACK"  = rl.IsKeyDown(settings.Values.keyMoveBackward),
+	"MOVE_RIGHT" = rl.IsKeyDown(settings.Values.keyMoveRight),
+	"MOVE_LEFT"  = rl.IsKeyDown(settings.Values.keyMoveLeft),
 }
 
 CustomCamera: CustomCameraData = \
@@ -96,14 +98,114 @@ InitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera
 Update :: proc(camera: ^rl.Camera)
 {
 	oldPlayerPos := camera.position
+
+	Player.transform.boundingBox = utilities.MakeBoundingBox(
+		camera.position,
+		Player.transform.size,
+	)
+
+	mousePositionDelta := rl.GetMouseDelta()
+
+	// Move camera around X pos
+	camera.position.x +=
+		((math.sin(CustomCamera.angle.x) * CameraMoveKeys["MOVE_BACK"] -
+				math.sin(CustomCamera.angle.x) * CameraMoveKeys["MOVE_FRONT"] -
+				math.cos(CustomCamera.angle.x) * CameraMoveKeys["MOVE_LEFT"] +
+				math.cos(CustomCamera.angle.x) * CameraMoveKeys["MOVE_RIGHT"]) *
+			CustomCamera.playerSpeed) *
+		rl.GetFrameTime()
+
+	// Move camera around Y pos
+	camera.position.y +=
+		((math.sin(CustomCamera.angle.y) * CameraMoveKeys["MOVE_FRONT"] -
+				math.sinf(CustomCamera.angle.y) * CameraMoveKeys["MOVE_BACK"]) *
+			CustomCamera.playerSpeed) *
+		rl.GetFrameTime()
+
+	// Move camera around Z pos
+	camera.position.z +=
+		((math.cos(CustomCamera.angle.x) * CameraMoveKeys["MOVE_BACK"] -
+				math.cos(CustomCamera.angle.x) * CameraMoveKeys["MOVE_FRONT"] +
+				math.sin(CustomCamera.angle.x) * CameraMoveKeys["MOVE_LEFT"] -
+				math.sin(CustomCamera.angle.x) * CameraMoveKeys["MOVE_RIGHT"]) *
+			CustomCamera.playerSpeed) *
+		rl.GetFrameTime()
+
+	// Camera orientation calculation
+	CustomCamera.angle.x -=
+		mousePositionDelta.x * CustomCamera.mouseSensitivity * rl.GetFrameTime()
+	CustomCamera.angle.y -=
+		mousePositionDelta.y * CustomCamera.mouseSensitivity * rl.GetFrameTime()
+
+	// Angle clamp
+	if (CustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP * math.DEG_PER_RAD)
+	{
+		CustomCamera.angle.y = PLAYER_CAMERA_MIN_CLAMP * math.DEG_PER_RAD
+	}
+	 else if (CustomCamera.angle.y < PLAYER_CAMERA_MAX_CLAMP * math.DEG_PER_RAD)
+	{
+		CustomCamera.angle.y = PLAYER_CAMERA_MAX_CLAMP * math.DEG_PER_RAD
+	}
+
+	// Recalculate camera target considering translation and rotation
+	translation :: rl.MatrixTranslate(
+		0,
+		0,
+		(CustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER),
+	)
+	rotation :: rl.MatrixInvert(
+		rl.MatrixRotateXYZ(
+			(rl.Vector3 {
+					math.PI * 2 - CustomCamera.angle.y,
+					math.PI * 2 - CustomCamera.angle.x,
+					0,
+				}),
+		),
+	)
+	transform :: rl.MatrixMultiply(translation, rotation)
+
+	// Move camera according to matrix position (where camera looks at)
+	camera.target.x = camera.position.x - transform.m12
+	camera.target.y = camera.position.y - transform.m13
+	camera.target.z = camera.position.z - transform.m14
+
+	// Camera position update
+	camera.position.y = CustomCamera.playerEyesPosition
+
+	//TODO scene check collision
+
+	Player.transform.position = camera.position
+	Player.transform.boundingBox = utilities.MakeBoundingBox(
+		Player.transform.position,
+		Player.transform.size,
+	)
+
+	// Check if we need to switch weapon
+	// TODO weapon.GetSwitchInput()
+	FireWeapon(camera, CustomCamera)
 }
 
 SetHealth :: proc(healthToAdd: i32)
 {
+	Player.health += healthToAdd
+	if (Player.health > PLAYER_MAX_HEALTH)
+	{
+		Player.health = PLAYER_MAX_HEALTH
+	}
+	 else if (Player.health <= 0)
+	{
+		Player.dead = true
+	}
 
 }
 
-FireWeapon :: proc(camera: ^rl.Camera)
+FireWeapon :: proc(camera: ^rl.Camera, cameraData: ^CustomCameraData)
 {
-
+	Player.nextFire -= GetFrameTime()
+	if (rl.IsMouseButtonDown(settings.Values.keyFire) || rl.IsKeyDown(settings.Values.keyFire))
+	{
+		Player.nextFire = GetFrameTime() // weapon.Fire(camera, Player.nextFire)
+		fmt.println("pew pew")
+	}
 }
+
