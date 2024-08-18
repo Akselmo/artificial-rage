@@ -1,6 +1,7 @@
 package game
 
 import "src:game/entity"
+import "src:game/scene"
 import "src:game/settings"
 import rl "vendor:raylib"
 
@@ -12,7 +13,7 @@ Initialize :: proc()
 	isStarted = false
 
 	settings.Initialize()
-	//camera = //scene camera
+	camera = scene.Initialize()
 
 	rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, settings.GameTitle)
 	rl.SetTargetFPS(settings.Values.maxFPS)

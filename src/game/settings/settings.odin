@@ -76,11 +76,11 @@ Read :: proc() -> bool
 {
 	data, success := os.read_entire_file(FileName)
 	defer delete(data)
-	settingsFileText := string(data)
 	if (!success)
 	{
 		return false
 	}
+	settingsFileText := string(data)
 	settingsArr := strings.split_lines(settingsFileText)
 	for setting in settingsArr
 	{
@@ -131,7 +131,6 @@ Write :: proc()
 Parse :: proc(key: string, value: string)
 {
 	switch key
-
 	{
 	case "screenWidth":
 		Values.screenWidth = cast(i32)strconv.atoi(value)
