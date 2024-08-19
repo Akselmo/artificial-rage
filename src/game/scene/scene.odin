@@ -16,8 +16,7 @@ Data :: struct
 	name:                string,
 	height:              i32,
 	width:               i32,
-	square:              [dynamic]i32,
-	squareCount:         i32,
+	squares:             [dynamic]i32,
 	ceilingHeight:       i32,
 	floorPlane:          rl.Model,
 	floorPlaneTexture:   rl.Texture2D,
@@ -82,6 +81,9 @@ ParseConfig :: proc(key: string, value: string) -> bool
 {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
 	switch key
+
+
+
 	{
 	case "ceilingtexture":
 		level.ceilingPlaneTexture = rl.LoadTexture(texturesPath)
@@ -105,7 +107,7 @@ ParseConfig :: proc(key: string, value: string) -> bool
 		{
 			r: []rune = {d}
 			s := utf8.runes_to_string(r)
-			append(&level.square, cast(i32)strconv.atoi(s))
+			append(&level.squares, cast(i32)strconv.atoi(s))
 		}
 		return true
 	case:
@@ -115,12 +117,59 @@ ParseConfig :: proc(key: string, value: string) -> bool
 
 PlaceEntities :: proc()
 {
+	mapPosZ := cast(f32)level.height
+	mapPosX := cast(f32)level.width
 
+	level.ceilingPlane = rl.LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0))
+	level.floorPlane = rl.LoadModelFromMesh(MakeCustomPlaneMesh(mapPosZ, mapPosX, 1.0))
+
+	level.ceilingPlane.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture =
+		level.ceilingPlaneTexture
+	level.floorPlane.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture =
+		level.floorPlaneTexture
+
+	level.position = rl.Vector3{-mapPosX / 2.0, 0.5, -mapPosZ / 2.0}
+	level.size = level.height * level.width
+
+	for e: i32 = 0; e < level.size; e += 1
+	{
+		entityPosX := e % level.width
+		entityPosY := e / level.width
+		mx := level.position.x - 0.5 + cast(f32)entityPosX * 1.0
+		my := level.position.z - 0.5 + cast(f32)entityPosY * 1.0
+
+		AddEntityToScene(cast(entity.Type)level.squares[e], mx, my, e)
+	}
+
+	fmt.printfln("Level has total %[0]v entities", level.size)
 }
 
 Update :: proc()
 {
+	rl.DrawModel(
+		level.floorPlane,
+		rl.Vector3{level.position.x, 0.0, level.position.z},
+		1.0,
+		rl.WHITE,
+	)
 
+	rl.DrawModelEx(
+		level.ceilingPlane,
+		rl.Vector3{level.position.x, 1.0, -level.position.z},
+		rl.Vector3{-1.0, 0.0, 0.0},
+		180.0,
+		rl.Vector3{1.0, 1.0, 1.0},
+		rl.WHITE,
+	)
+
+	for i: i32 = 0; i < cast(i32)len(level.entities); i += 1
+	{
+		ent := &level.entities[i]
+		if (ent.id != 0)
+		{
+			entity.Update(ent)
+		}
+	}
 }
 
 UpdateProjectiles :: proc()
@@ -133,19 +182,100 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 	return false
 }
 
-MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32)
+MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mesh
 {
-	//return rl.Mesh
-}
+	mesh: rl.Mesh = {}
 
-// Could be moved to utils
-AllocateMeshData :: proc(mesh: ^rl.Mesh, triangleCount: i32)
-{
+	mesh.vertexCount = 6
+	mesh.triangleCount = 2
+
+	verts := [?]f32 {
+		0.0,
+		0.0,
+		0.0,
+		width,
+		0.0,
+		height,
+		width,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		height,
+		width,
+		0.0,
+		height,
+	}
+
+	mesh.vertices = raw_data(verts[:])
+
+	normals := [?]f32 {
+		0.0,
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+	}
+
+	mesh.normals = raw_data(normals[:])
+
+
+	texcoords := [?]f32 {
+		0.0,
+		0.0,
+		width / textureSize,
+		height / textureSize,
+		width / textureSize,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		height / textureSize,
+		width / textureSize,
+		height / textureSize,
+	}
+
+	mesh.texcoords = raw_data(texcoords[:])
+
+	rl.UploadMesh(&mesh, false)
+
+	return mesh
 
 }
 
 AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32)
 {
+	#partial switch type
+
+
+
+	{
+	case entity.Type.NONE:
+		return
+	case entity.Type.START:
+		level.startPosition = rl.Vector3{mx, 0.0, my}
+	case entity.Type.END:
+		level.endPosition = rl.Vector3{mx, 0.0, my}
+	case:
+		append(&level.entities, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
+	}
+
 
 }
 

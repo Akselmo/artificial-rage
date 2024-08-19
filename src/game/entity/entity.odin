@@ -1,6 +1,8 @@
 package entity
 import "core:c/libc"
 import "core:fmt"
+import "core:strings"
+import "src:game/utilities"
 import rl "vendor:raylib"
 
 WALL_MODEL_ID: i32 : -2
@@ -14,25 +16,25 @@ ITEM_START_POSITION_Y: f32 : 0.1
 
 Type :: enum
 {
-	ENTITY_NONE, // This is ignored in entities.json
-	ENTITY_START, // Tile map template index is 0. Here index is 1.
-	ENTITY_END,
-	ENTITY_WALL_CARGO,
-	ENTITY_WALL_CARGO_SCUFFED,
-	ENTITY_ENEMY_DEFAULT,
-	ENTITY_ITEM_HEALTH_SMALL,
-	ENTITY_ITEM_HEALTH_MEDIUM,
-	ENTITY_ITEM_HEALTH_LARGE,
-	ENTITY_ITEM_CLUTTER, // an item that provides collision but nothing else
-	ENTITY_ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
-	ENTITY_ITEM_PICKUP_RIFLE,
-	ENTITY_ITEM_PICKUP_SHOTGUN,
-	ENTITY_ITEM_PICKUP_RAILGUN,
-	ENTITY_ITEM_AMMO_PISTOL, // Gives only ammo
-	ENTITY_ITEM_AMMO_RIFLE,
-	ENTITY_ITEM_AMMO_SHOTGUN,
-	ENTITY_ITEM_AMMO_RAILGUN,
-	ENTITY_ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
+	NONE, // This is ignored in entities.json
+	START, // Tile map template index is 0. Here index is 1.
+	END,
+	WALL_CARGO,
+	WALL_CARGO_SCUFFED,
+	ENEMY_DEFAULT,
+	ITEM_HEALTH_SMALL,
+	ITEM_HEALTH_MEDIUM,
+	ITEM_HEALTH_LARGE,
+	ITEM_CLUTTER, // an item that provides collision but nothing else
+	ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
+	ITEM_PICKUP_RIFLE,
+	ITEM_PICKUP_SHOTGUN,
+	ITEM_PICKUP_RAILGUN,
+	ITEM_AMMO_PISTOL, // Gives only ammo
+	ITEM_AMMO_RIFLE,
+	ITEM_AMMO_SHOTGUN,
+	ITEM_AMMO_RAILGUN,
+	ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
 }
 
 
@@ -101,7 +103,7 @@ Update :: proc(entity: ^Entity)
 {
 	Draw(entity)
 
-	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENEMY_DEFAULT)
 	{
 		return
 	}
@@ -109,6 +111,15 @@ Update :: proc(entity: ^Entity)
 
 Draw :: proc(entity: ^Entity)
 {
+	if (!entity.active)
+	{
+		return
+	}
+	rl.DrawModel(entity.model.data, entity.transform.position, entity.transform.scale, rl.WHITE)
+	if (entity.model.isBillboard)
+	{
+		RotateTowards(entity, Player.transform.position)
+	}
 
 }
 
@@ -130,7 +141,7 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
 
-	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENEMY_DEFAULT)
 	{
 		return false
 	}
@@ -153,7 +164,7 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool
 
 UpdatePosition :: proc(entity: ^Entity) -> bool
 {
-	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENEMY_DEFAULT)
 	{
 		return false
 	}
@@ -190,7 +201,7 @@ UpdatePosition :: proc(entity: ^Entity) -> bool
 
 TakeDamage :: proc(entity: ^Entity, damageAmount: i32)
 {
-	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENEMY_DEFAULT)
 	{
 		return
 	}
@@ -221,7 +232,7 @@ Destroy :: proc(entity: ^Entity)
 
 FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool
 {
-	if (entity.data.type != Type.ENTITY_ENEMY_DEFAULT)
+	if (entity.data.type != Type.ENEMY_DEFAULT)
 	{
 		return false
 	}
@@ -238,9 +249,68 @@ HandlePlayerPickup :: proc(entity: ^Entity)
 
 }
 
-Create :: proc(type: Type, position: rl.Vector3, id: i32) //-> Entity
+Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity
 {
+	entity: Entity = {}
 
+	entity.data.type = type
+	entity.id = id
+	entity.transform.position = position
+	entity.transform.canCollide = true
+
+	#partial switch type
+
+
+
+	{
+	case Type.WALL_CARGO:
+		entity.model.textureFilename = "./assets/textures/wall1.png"
+		CreateWall(&entity)
+	case Type.WALL_CARGO_SCUFFED:
+		entity.model.textureFilename = "./assets/textures/wall2.png"
+		CreateWall(&entity)
+	case Type.ENEMY_DEFAULT:
+		entity.model.fileName = "./assets/models/enemy.m3d"
+		CreateEnemy(&entity)
+	case Type.ITEM_HEALTH_SMALL:
+		entity.model.textureFilename = "./assets/textures/health_small.png"
+		CreateItem(&entity, true, 5)
+	case Type.ITEM_HEALTH_MEDIUM:
+		entity.model.textureFilename = "./assets/textures/health_medium.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_HEALTH_LARGE:
+		entity.model.textureFilename = "./assets/textures/health_large.png"
+		CreateItem(&entity, true, 15)
+	case Type.ITEM_PICKUP_PISTOL:
+		entity.model.textureFilename = "./assets/textures/pistol.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_PICKUP_RIFLE:
+		entity.model.textureFilename = "./assets/textures/rifle.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_PICKUP_SHOTGUN:
+		entity.model.textureFilename = "./assets/textures/shotgun.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_PICKUP_RAILGUN:
+		entity.model.textureFilename = "./assets/textures/railgun.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_AMMO_PISTOL:
+		entity.model.textureFilename = "./assets/textures/ammo_pistol.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_AMMO_RIFLE:
+		entity.model.textureFilename = "./assets/textures/ammo_rifle.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_AMMO_SHOTGUN:
+		entity.model.textureFilename = "./assets/textures/ammo_shotgun.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_AMMO_RAILGUN:
+		entity.model.textureFilename = "./assets/textures/ammo_railgun.png"
+		CreateItem(&entity, true, 10)
+	case Type.ITEM_KEY_TELEPORT:
+		entity.model.textureFilename = "./assets/textures/pickup_teleportkey.png"
+		CreateItem(&entity, true, 10)
+	}
+
+	return entity
 }
 
 SetupTransform :: proc(
@@ -251,12 +321,28 @@ SetupTransform :: proc(
 	scale: f32,
 )
 {
-
+	entity.transform.boundingBox = utilities.MakeBoundingBox(pos, size)
+	entity.transform.position = pos
+	entity.transform.rotation = rot
+	entity.transform.size = size
+	entity.transform.scale = scale
 }
 
 // NOTE: Should this be in scene? Idk
 CreateWall :: proc(entity: ^Entity)
 {
+	textureImage := rl.LoadImage(strings.clone_to_cstring(entity.model.textureFilename))
+
+	rl.ImageFlipVertical(&textureImage)
+
+	texture := rl.LoadTextureFromImage(textureImage)
+
+	cube: rl.Mesh = rl.GenMeshCube(1.0, 1.0, 1.0)
+	entity.model.data = rl.LoadModelFromMesh(cube)
+	SetupTransform(entity, entity.transform.position, rl.Vector3Zero(), rl.Vector3One(), 1.0)
+
+	entity.model.data.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
+
 
 }
 

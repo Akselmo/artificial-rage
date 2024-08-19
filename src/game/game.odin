@@ -34,7 +34,7 @@ Update :: proc()
 	if (isStarted)
 	{
 		entity.PlayerUpdate(&camera)
-		// scene update
+		scene.Update()
 	}
 	rl.EndMode3D()
 
@@ -50,7 +50,7 @@ HudUpdate :: proc()
 
 MenuUpdate :: proc()
 {
-	//rl.DisableCursor()
+	rl.DisableCursor()
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off

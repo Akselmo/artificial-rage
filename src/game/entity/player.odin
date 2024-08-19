@@ -31,6 +31,7 @@ PlayerData :: struct
 	nextFire:  f32,
 }
 
+// TODO this doesnt work
 PlayerCameraMoveKeys := map[string]f32 \
 {
 	"MOVE_FRONT" = cast(f32)cast(i32)rl.IsKeyDown(
@@ -54,7 +55,7 @@ PlayerCustomCamera: PlayerCameraData = \
 	playerSpeed        = 1.75,
 }
 
-Player: PlayerData
+Player: PlayerData = {}
 
 PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera
 {
@@ -102,6 +103,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera
 
 PlayerUpdate :: proc(camera: ^rl.Camera)
 {
+	//TODO camera moves up and down but not to sides, something wrong in the matrix i guess?
 	oldPlayerPos := camera.position
 
 	Player.transform.boundingBox = utilities.MakeBoundingBox(
@@ -110,7 +112,6 @@ PlayerUpdate :: proc(camera: ^rl.Camera)
 	)
 
 	mousePositionDelta := rl.GetMouseDelta()
-
 	// Move camera around X pos
 	camera.position.x +=
 		((math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_BACK"] -
