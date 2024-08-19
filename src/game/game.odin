@@ -13,13 +13,12 @@ Initialize :: proc()
 	isStarted = false
 
 	settings.Initialize()
-	camera = scene.Initialize()
 
 	rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, settings.GameTitle)
 	rl.SetTargetFPS(settings.Values.maxFPS)
 	isStarted = true
 
-	camera = entity.PlayerInitializeCamera(0, 0)
+	camera = scene.Initialize()
 	isStarted = true
 
 }
