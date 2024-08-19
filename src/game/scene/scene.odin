@@ -10,6 +10,7 @@ import rl "vendor:raylib"
 
 MAX_PROJECTILE_AMOUNT: i32 : 254
 
+// do we need this struct? can we just place things in here
 Data :: struct
 {
 	name:                string,
@@ -31,12 +32,12 @@ Data :: struct
 	size:                i32,
 }
 
-data: Data = {}
+level: Data = {}
 
 Initialize :: proc() -> rl.Camera
 {
 	Build()
-	return entity.PlayerInitializeCamera(data.startPosition.x, data.startPosition.z)
+	return entity.PlayerInitializeCamera(level.startPosition.x, level.startPosition.z)
 }
 
 Build :: proc()
@@ -49,7 +50,6 @@ LoadSceneConfig :: proc()
 {
 	fileName := "./assets/levels/level1.cfg"
 	data, success := os.read_entire_file(fileName)
-	defer delete(data)
 
 	if (!success)
 	{
@@ -75,36 +75,28 @@ LoadSceneConfig :: proc()
 				keyValuePair[1],
 			)
 		}
-		 else
-		{
-			fmt.printfln(
-				"Failed to parse level.cfg key-value: %[0]v - %[1]v",
-				keyValuePair[0],
-				keyValuePair[1],
-			)
-		}
 	}
 }
 
 ParseConfig :: proc(key: string, value: string) -> bool
 {
-	texturesPath := fmt.aprintf("./assets/textures/%[0]v", value)
+	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
 	switch key
 	{
 	case "ceilingtexture":
-		data.ceilingPlaneTexture = rl.LoadTexture(strings.clone_to_cstring(texturesPath))
+		level.ceilingPlaneTexture = rl.LoadTexture(texturesPath)
 		return true
 	case "floortexture":
-		data.floorPlaneTexture = rl.LoadTexture(strings.clone_to_cstring(texturesPath))
+		level.floorPlaneTexture = rl.LoadTexture(texturesPath)
 		return true
 	case "name":
-		data.name = value
+		level.name = value
 		return true
 	case "height":
-		data.height = cast(i32)strconv.atoi(value)
+		level.height = cast(i32)strconv.atoi(value)
 		return true
 	case "width":
-		data.width = cast(i32)strconv.atoi(value)
+		level.width = cast(i32)strconv.atoi(value)
 		return true
 	case "data":
 		arr := fmt.aprint(value, sep = ",")
@@ -113,11 +105,10 @@ ParseConfig :: proc(key: string, value: string) -> bool
 		{
 			r: []rune = {d}
 			s := utf8.runes_to_string(r)
-			append(&data.square, cast(i32)strconv.atoi(s))
+			append(&level.square, cast(i32)strconv.atoi(s))
 		}
 		return true
 	case:
-		fmt.printfln("Key or value does not exist: Key %[0]v - Value %[1]v", key, value)
 		return false
 	}
 }
@@ -142,9 +133,9 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 	return false
 }
 
-MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mesh
+MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32)
 {
-	return rl.Mesh
+	//return rl.Mesh
 }
 
 // Could be moved to utils
