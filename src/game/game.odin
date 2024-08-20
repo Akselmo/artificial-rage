@@ -46,6 +46,7 @@ Update :: proc()
 HudUpdate :: proc()
 {
 	// hud draw
+	rl.DrawFPS(10, 10)
 }
 
 MenuUpdate :: proc()
