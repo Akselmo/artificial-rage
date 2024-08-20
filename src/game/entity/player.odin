@@ -32,19 +32,7 @@ PlayerData :: struct
 }
 
 // TODO this doesnt work
-PlayerCameraMoveKeys := map[string]f32 \
-{
-	"MOVE_FRONT" = cast(f32)cast(i32)rl.IsKeyDown(
-		cast(rl.KeyboardKey)settings.Values.keyMoveForward,
-	),
-	"MOVE_BACK"  = cast(f32)cast(i32)rl.IsKeyDown(
-		cast(rl.KeyboardKey)settings.Values.keyMoveBackward,
-	),
-	"MOVE_RIGHT" = cast(f32)cast(i32)rl.IsKeyDown(
-		cast(rl.KeyboardKey)settings.Values.keyMoveRight,
-	),
-	"MOVE_LEFT"  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveLeft),
-}
+
 
 PlayerCustomCamera: PlayerCameraData = \
 {
@@ -105,6 +93,22 @@ PlayerUpdate :: proc(camera: ^rl.Camera)
 {
 	//TODO camera moves up and down but not to sides, something wrong in the matrix i guess?
 	oldPlayerPos := camera.position
+
+	PlayerCameraMoveKeys := map[string]f32 \
+	{
+		"MOVE_FRONT" = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveForward,
+		),
+		"MOVE_BACK"  = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveBackward,
+		),
+		"MOVE_RIGHT" = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveRight,
+		),
+		"MOVE_LEFT"  = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveLeft,
+		),
+	}
 
 	Player.transform.boundingBox = utilities.MakeBoundingBox(
 		camera.position,
@@ -168,12 +172,12 @@ PlayerUpdate :: proc(camera: ^rl.Camera)
 				}),
 		),
 	)
-	transform := rl.MatrixMultiply(translation, rotation)
+	transform: rl.Matrix = rl.MatrixMultiply(rotation, translation)
 
 	// Move camera according to matrix position (where camera looks at)
-	camera.target.x = camera.position.x - transform[0, 1]
-	camera.target.y = camera.position.y - transform[0, 2]
-	camera.target.z = camera.position.z - transform[0, 3]
+	camera.target.x = camera.position.x - transform[0, 3]
+	camera.target.y = camera.position.y - transform[1, 3]
+	camera.target.z = camera.position.z - transform[2, 3]
 
 	// Camera position update
 	camera.position.y = PlayerCustomCamera.playerEyesPosition
@@ -185,6 +189,7 @@ PlayerUpdate :: proc(camera: ^rl.Camera)
 		Player.transform.position,
 		Player.transform.size,
 	)
+	fmt.printfln("transform %[0]v camerapos %[1]v", transform, camera.position)
 
 	// Check if we need to switch weapon
 	// TODO weapon.GetSwitchInput()
