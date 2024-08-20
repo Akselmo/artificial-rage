@@ -189,7 +189,6 @@ PlayerUpdate :: proc(camera: ^rl.Camera)
 		Player.transform.position,
 		Player.transform.size,
 	)
-	fmt.printfln("transform %[0]v camerapos %[1]v", transform, camera.position)
 
 	// Check if we need to switch weapon
 	// TODO weapon.GetSwitchInput()

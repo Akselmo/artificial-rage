@@ -343,6 +343,8 @@ CreateWall :: proc(entity: ^Entity)
 
 	entity.model.data.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
 
+	entity.active = true
+
 
 }
 

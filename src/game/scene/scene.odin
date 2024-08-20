@@ -101,13 +101,10 @@ ParseConfig :: proc(key: string, value: string) -> bool
 		level.width = cast(i32)strconv.atoi(value)
 		return true
 	case "data":
-		arr := fmt.aprint(value, sep = ",")
-		// we need to convert runes to string
-		for d in arr
+		arr := strings.split(value, ",")
+		for character in arr
 		{
-			r: []rune = {d}
-			s := utf8.runes_to_string(r)
-			append(&level.squares, cast(i32)strconv.atoi(s))
+			append(&level.squares, cast(i32)strconv.atoi(character))
 		}
 		return true
 	case:
@@ -162,7 +159,8 @@ Update :: proc()
 		rl.WHITE,
 	)
 
-	for i: i32 = 0; i < cast(i32)len(level.entities); i += 1
+	//TODO I need to grow level.entities to the level.size
+	for i := 0; i < len(level.entities); i += 1
 	{
 		ent := &level.entities[i]
 		if (ent.id != 0)
