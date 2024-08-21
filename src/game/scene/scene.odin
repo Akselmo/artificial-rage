@@ -6,6 +6,7 @@ import "core:strconv"
 import "core:strings"
 import "core:unicode/utf8"
 import "src:game/entity"
+import "src:game/utilities"
 import rl "vendor:raylib"
 
 MAX_PROJECTILE_AMOUNT: i32 : 254
@@ -81,9 +82,6 @@ ParseConfig :: proc(key: string, value: string) -> bool
 {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
 	switch key
-
-
-
 	{
 	case "ceilingtexture":
 		level.ceilingPlaneTexture = rl.LoadTexture(texturesPath)
@@ -175,8 +173,27 @@ UpdateProjectiles :: proc()
 
 }
 
+// TODO entity should check the collision, not scene!
+// Alternatively we could have "GameUpdater" that brings these two together to avoid cyclical deps
 CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool
 {
+	entityBox := utilities.MakeBoundingBox(entityPos, entitySize)
+	for i := 0; i < len(level.entities); i += 1
+	{
+		ent := level.entities[i]
+		if (ent.id != entityId && rl.CheckCollisionBoxes(entityBox, ent.transform.boundingBox))
+		{
+			if (ent.transform.canCollide)
+			{
+				return true
+			}
+			 else if (entityId == entity.PLAYER_ID)
+			{
+				// TODO: make player type instead of comparing ids
+				entity.HandlePlayerPickup(&ent)
+			}
+		}
+	}
 	return false
 }
 
@@ -260,8 +277,6 @@ MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mes
 AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32)
 {
 	#partial switch type
-
-
 
 	{
 	case entity.Type.NONE:
