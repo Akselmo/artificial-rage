@@ -14,8 +14,7 @@ ACTOR_DEFAULT_ROTATION_SPEED: f32 : 3.0
 ACTOR_DEFAULT_ANIMATION_SPEED: f32 : 30.0 // Animation played in FPS
 ITEM_START_POSITION_Y: f32 : 0.1
 
-Type :: enum
-{
+Type :: enum {
 	NONE, // This is ignored in entities.json
 	START, // Tile map template index is 0. Here index is 1.
 	END,
@@ -38,8 +37,7 @@ Type :: enum
 }
 
 
-Actor :: struct
-{
+Actor :: struct {
 	health:        i32,
 	damage:        i32,
 	dead:          bool,
@@ -54,14 +52,12 @@ Actor :: struct
 	tickRate:      f32,
 }
 
-Item :: struct
-{
+Item :: struct {
 	pickup: bool,
 	value:  i32,
 }
 
-Transform :: struct
-{
+Transform :: struct {
 	position:    rl.Vector3,
 	rotation:    rl.Vector3,
 	size:        rl.Vector3,
@@ -70,28 +66,24 @@ Transform :: struct
 	canCollide:  bool,
 }
 
-Model :: struct
-{
+Model :: struct {
 	fileName:        string,
 	textureFilename: string,
 	data:            rl.Model,
 	isBillboard:     bool,
 }
 
-EntityData :: union
-{
+EntityData :: union {
 	Item,
 	Actor,
 }
 
-Data :: struct
-{
+Data :: struct {
 	type:  Type,
 	value: EntityData,
 }
 
-Entity :: struct
-{
+Entity :: struct {
 	id:        i32,
 	active:    bool,
 	transform: Transform,
@@ -99,36 +91,29 @@ Entity :: struct
 	data:      Data,
 }
 
-Update :: proc(entity: ^Entity)
-{
+Update :: proc(entity: ^Entity) {
 	Draw(entity)
 
-	if (entity.data.type != Type.ENEMY_DEFAULT)
-	{
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return
 	}
 }
 
-Draw :: proc(entity: ^Entity)
-{
-	if (!entity.active)
-	{
+Draw :: proc(entity: ^Entity) {
+	if (!entity.active) {
 		return
 	}
 	rl.DrawModel(entity.model.data, entity.transform.position, entity.transform.scale, rl.WHITE)
-	if (entity.model.isBillboard)
-	{
+	if (entity.model.isBillboard) {
 		RotateTowards(entity, Player.transform.position)
 	}
 
 }
 
-CreateRay :: proc(entity: ^Entity) -> rl.Ray
-{
+CreateRay :: proc(entity: ^Entity) -> rl.Ray {
 	v := rl.Vector3Normalize(entity.transform.position - Player.transform.position)
 
-	rayCast: rl.Ray = \
-	{
+	rayCast: rl.Ray = {
 		direction = rl.Vector3{-1.0 * v.x, -1.0 * v.y, -1.0 * v.z},
 		position  = entity.transform.position,
 	}
@@ -136,19 +121,16 @@ CreateRay :: proc(entity: ^Entity) -> rl.Ray
 	return rayCast
 }
 
-TestPlayerHit :: proc(entity: ^Entity) -> bool
-{
+TestPlayerHit :: proc(entity: ^Entity) -> bool {
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
 
-	if (entity.data.type != Type.ENEMY_DEFAULT)
-	{
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return false
 	}
 
 	if (rl.Vector3Distance(Player.transform.position, entity.transform.position) > 5.0 &&
-		   entity.data.value.(Actor).playerSpotted)
-	{
+		   entity.data.value.(Actor).playerSpotted) {
 		return false
 	}
 
@@ -162,10 +144,8 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool
 	return false
 }
 
-UpdatePosition :: proc(entity: ^Entity) -> bool
-{
-	if (entity.data.type != Type.ENEMY_DEFAULT)
-	{
+UpdatePosition :: proc(entity: ^Entity) -> bool {
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return false
 	}
 
@@ -177,14 +157,9 @@ UpdatePosition :: proc(entity: ^Entity) -> bool
 	// If in certain range from player, stop
 
 	if (libc.fabsf(distanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
-		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER)
-	{
+		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER) {
 		entityOldPosition: rl.Vector3 = entity.transform.position
-		entityNewPosition: rl.Vector3 = {
-			Player.transform.position.x,
-			ACTOR_POSITION_Y,
-			Player.transform.position.z,
-		}
+		entityNewPosition: rl.Vector3 = {Player.transform.position.x, ACTOR_POSITION_Y, Player.transform.position.z}
 		entity.transform.position = rl.Vector3Lerp(
 			entity.transform.position,
 			entityNewPosition,
@@ -199,18 +174,14 @@ UpdatePosition :: proc(entity: ^Entity) -> bool
 }
 
 
-TakeDamage :: proc(entity: ^Entity, damageAmount: i32)
-{
-	if (entity.data.type != Type.ENEMY_DEFAULT)
-	{
+TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return
 	}
 
 	actor := entity.data.value.(Actor)
-	if (actor.dead)
-	{
-		if (!actor.playerSpotted)
-		{
+	if (actor.dead) {
+		if (!actor.playerSpotted) {
 			actor.playerSpotted = true
 		}
 
@@ -218,39 +189,32 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32)
 
 		fmt.printfln("Entity id %[0]v took %[1]v damage", entity.id, damageAmount)
 
-		if (actor.health <= 0)
-		{
+		if (actor.health <= 0) {
 			Destroy(entity)
 		}
 	}
 }
 
-Destroy :: proc(entity: ^Entity)
-{
+Destroy :: proc(entity: ^Entity) {
 
 }
 
-FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool
-{
-	if (entity.data.type != Type.ENEMY_DEFAULT)
-	{
+FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool {
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return false
 	}
 	return false
 }
 
-RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3)
-{
+RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 
 }
 
-HandlePlayerPickup :: proc(entity: ^Entity)
-{
+HandlePlayerPickup :: proc(entity: ^Entity) {
 
 }
 
-Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity
-{
+Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 	entity: Entity = {}
 
 	entity.data.type = type
@@ -259,7 +223,6 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity
 	entity.transform.canCollide = true
 
 	#partial switch type
-
 
 
 	{
@@ -313,14 +276,7 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity
 	return entity
 }
 
-SetupTransform :: proc(
-	entity: ^Entity,
-	pos: rl.Vector3,
-	rot: rl.Vector3,
-	size: rl.Vector3,
-	scale: f32,
-)
-{
+SetupTransform :: proc(entity: ^Entity, pos: rl.Vector3, rot: rl.Vector3, size: rl.Vector3, scale: f32) {
 	entity.transform.boundingBox = utilities.MakeBoundingBox(pos, size)
 	entity.transform.position = pos
 	entity.transform.rotation = rot
@@ -329,8 +285,7 @@ SetupTransform :: proc(
 }
 
 // NOTE: Should this be in scene? Idk
-CreateWall :: proc(entity: ^Entity)
-{
+CreateWall :: proc(entity: ^Entity) {
 	textureImage := rl.LoadImage(strings.clone_to_cstring(entity.model.textureFilename))
 
 	rl.ImageFlipVertical(&textureImage)
@@ -348,13 +303,11 @@ CreateWall :: proc(entity: ^Entity)
 
 }
 
-CreateEnemy :: proc(entity: ^Entity)
-{
+CreateEnemy :: proc(entity: ^Entity) {
 
 }
 
-CreateItem :: proc(entity: ^Entity, pickup: bool, value: i32)
-{
+CreateItem :: proc(entity: ^Entity, pickup: bool, value: i32) {
 
 }
 

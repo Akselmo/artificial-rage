@@ -4,14 +4,13 @@ import "src:game"
 import rl "vendor:raylib"
 
 // Entry point
-main :: proc()
-{
+main :: proc() {
 	game.Initialize()
 
-	for !rl.WindowShouldClose()
-	{
+	for !rl.WindowShouldClose() {
 		game.Update()
 	}
 
 	rl.CloseWindow()
 }
+

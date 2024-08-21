@@ -9,8 +9,7 @@ import rl "vendor:raylib"
 GameTitle: cstring = "Artificial Rage"
 FileName: string = "settings.cfg"
 
-SettingData :: struct
-{
+SettingData :: struct {
 	screenWidth:      i32,
 	screenHeight:     i32,
 	mouseSensitivity: f32,
@@ -32,14 +31,10 @@ SettingData :: struct
 
 Values: SettingData
 
-Initialize :: proc()
-{
-	if (Read())
-	{
+Initialize :: proc() {
+	if (Read()) {
 		fmt.printfln("Settings file read and loaded succesfully!")
-	}
-	 else
-	{
+	} else {
 		fmt.printfln("Reading settings failed, creating a new settings file...")
 		Values = CreateDefault()
 		Write()
@@ -47,8 +42,7 @@ Initialize :: proc()
 
 }
 
-CreateDefault :: proc() -> SettingData
-{
+CreateDefault :: proc() -> SettingData {
 	defaults := SettingData{}
 	defaults.screenWidth = 800
 	defaults.screenHeight = 600
@@ -72,21 +66,17 @@ CreateDefault :: proc() -> SettingData
 	return defaults
 }
 
-Read :: proc() -> bool
-{
+Read :: proc() -> bool {
 	data, success := os.read_entire_file(FileName)
 	defer delete(data)
-	if (!success)
-	{
+	if (!success) {
 		return false
 	}
 	settingsFileText := string(data)
 	settingsArr := strings.split_lines(settingsFileText)
-	for setting in settingsArr
-	{
+	for setting in settingsArr {
 		keyValuePair := strings.split(setting, "=")
-		if (len(keyValuePair) < 2)
-		{
+		if (len(keyValuePair) < 2) {
 			continue
 		}
 		Parse(keyValuePair[0], keyValuePair[1])
@@ -95,8 +85,7 @@ Read :: proc() -> bool
 
 }
 
-Write :: proc()
-{
+Write :: proc() {
 	sb := strings.builder_make()
 	strings.write_string(&sb, fmt.aprintfln("screenWidth=%[0]v", Values.screenWidth))
 	strings.write_string(&sb, fmt.aprintfln("screenHeight=%[0]v", Values.screenHeight))
@@ -122,14 +111,12 @@ Write :: proc()
 	data := transmute([]u8)stringToWrite
 
 	success := os.write_entire_file(FileName, data)
-	if (!success)
-	{
+	if (!success) {
 		fmt.println("Writing settings file failed!")
 	}
 }
 
-Parse :: proc(key: string, value: string)
-{
+Parse :: proc(key: string, value: string) {
 	switch key
 	{
 	case "screenWidth":

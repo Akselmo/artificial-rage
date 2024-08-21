@@ -8,8 +8,7 @@ import rl "vendor:raylib"
 camera: rl.Camera
 isStarted: bool = false
 
-Initialize :: proc()
-{
+Initialize :: proc() {
 	isStarted = false
 
 	settings.Initialize()
@@ -23,16 +22,14 @@ Initialize :: proc()
 
 }
 
-Update :: proc()
-{
+Update :: proc() {
 	rl.BeginDrawing()
 
 	rl.ClearBackground(rl.BLACK)
 
 	rl.BeginMode3D(camera)
 
-	if (isStarted)
-	{
+	if (isStarted) {
 		entity.PlayerUpdate(&camera)
 		scene.Update()
 	}
@@ -43,14 +40,12 @@ Update :: proc()
 	rl.EndDrawing()
 }
 
-HudUpdate :: proc()
-{
+HudUpdate :: proc() {
 	// hud draw
 	rl.DrawFPS(10, 10)
 }
 
-MenuUpdate :: proc()
-{
+MenuUpdate :: proc() {
 	rl.DisableCursor()
 
 	// menu presses etc come here
