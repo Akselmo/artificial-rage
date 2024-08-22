@@ -89,44 +89,62 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	//TODO camera moves up and down but not to sides, something wrong in the matrix i guess?
 	oldPlayerPos := camera.position
 
-	PlayerCameraMoveKeys := map[string]f32 {
-		"MOVE_FRONT" = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveForward),
-		"MOVE_BACK"  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveBackward),
-		"MOVE_RIGHT" = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveRight),
-		"MOVE_LEFT"  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveLeft),
+	MOVE_FRONT :: 1
+	MOVE_BACK :: 2
+	MOVE_RIGHT :: 3
+	MOVE_LEFT :: 4
+
+	PlayerCameraMoveKeys := map[i32]f32 {
+		MOVE_FRONT = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveForward,
+		),
+		MOVE_BACK  = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveBackward,
+		),
+		MOVE_RIGHT = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveRight,
+		),
+		MOVE_LEFT  = cast(f32)cast(i32)rl.IsKeyDown(
+			cast(rl.KeyboardKey)settings.Values.keyMoveLeft,
+		),
 	}
 
-	Player.transform.boundingBox = utilities.MakeBoundingBox(camera.position, Player.transform.size)
+	Player.transform.boundingBox = utilities.MakeBoundingBox(
+		camera.position,
+		Player.transform.size,
+	)
 
 	mousePositionDelta := rl.GetMouseDelta()
 	// Move camera around X pos
 	camera.position.x +=
-		((math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_BACK"] -
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_FRONT"] -
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_LEFT"] +
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_RIGHT"]) *
+		((math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_BACK] -
+				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_FRONT] -
+				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_LEFT] +
+				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_RIGHT]) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
 	// Move camera around Y pos
 	camera.position.y +=
-		((math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys["MOVE_FRONT"] -
-				math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys["MOVE_BACK"]) *
+		((math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys[MOVE_FRONT] -
+				math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys[MOVE_BACK]) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
 	// Move camera around Z pos
 	camera.position.z +=
-		((math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_BACK"] -
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_FRONT"] +
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_LEFT"] -
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys["MOVE_RIGHT"]) *
+		((math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_BACK] -
+				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_FRONT] +
+				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_LEFT] -
+				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_RIGHT]) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
 	// Camera orientation calculation
-	PlayerCustomCamera.angle.x -= mousePositionDelta.x * PlayerCustomCamera.mouseSensitivity * rl.GetFrameTime()
-	PlayerCustomCamera.angle.y -= mousePositionDelta.y * PlayerCustomCamera.mouseSensitivity * rl.GetFrameTime()
+	PlayerCustomCamera.angle.x -=
+		mousePositionDelta.x * PlayerCustomCamera.mouseSensitivity * rl.GetFrameTime()
+	PlayerCustomCamera.angle.y -=
+		mousePositionDelta.y * PlayerCustomCamera.mouseSensitivity * rl.GetFrameTime()
 
 	// Angle clamp
 	if (PlayerCustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP * math.DEG_PER_RAD) {
@@ -136,10 +154,18 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	}
 
 	// Recalculate camera target considering translation and rotation
-	translation := rl.MatrixTranslate(0, 0, (PlayerCustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER))
+	translation := rl.MatrixTranslate(
+		0,
+		0,
+		(PlayerCustomCamera.targetDistance / PLAYER_CAMERA_PANNING_DIVIDER),
+	)
 	rotation := rl.MatrixInvert(
 		rl.MatrixRotateXYZ(
-			(rl.Vector3{math.PI * 2 - PlayerCustomCamera.angle.y, math.PI * 2 - PlayerCustomCamera.angle.x, 0}),
+			(rl.Vector3 {
+					math.PI * 2 - PlayerCustomCamera.angle.y,
+					math.PI * 2 - PlayerCustomCamera.angle.x,
+					0,
+				}),
 		),
 	)
 	transform: rl.Matrix = rl.MatrixMultiply(rotation, translation)
@@ -155,7 +181,10 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	//TODO scene check collision
 
 	Player.transform.position = camera.position
-	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
+	Player.transform.boundingBox = utilities.MakeBoundingBox(
+		Player.transform.position,
+		Player.transform.size,
+	)
 
 	// Check if we need to switch weapon
 	// TODO weapon.GetSwitchInput()
