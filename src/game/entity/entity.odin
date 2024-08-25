@@ -91,6 +91,9 @@ Entity :: struct {
 	data:      Data,
 }
 
+// Amount of entities loaded in a scene
+inScene: [dynamic]Entity
+
 Update :: proc(entity: ^Entity) {
 	Draw(entity)
 
@@ -141,6 +144,22 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 	playerDistance: f32 = libc.INFINITY
 	//entitiesAmount : i32 : scene.size
 	//TODO need to do scene for this
+	return false
+}
+
+CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool {
+	entityBox := utilities.MakeBoundingBox(entityPos, entitySize)
+	for i := 0; i < len(inScene); i += 1 {
+		ent := inScene[i]
+		if (ent.id != entityId && rl.CheckCollisionBoxes(entityBox, ent.transform.boundingBox)) {
+			if (ent.transform.canCollide) {
+				return true
+			} else if (entityId == PLAYER_ID) {
+				// TODO: make player type instead of comparing ids
+				HandlePlayerPickup(&ent)
+			}
+		}
+	}
 	return false
 }
 
@@ -222,7 +241,7 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 	entity.transform.position = position
 	entity.transform.canCollide = true
 
-	#partial switch type
+	#partial switch type 
 
 
 	{
