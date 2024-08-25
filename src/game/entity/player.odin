@@ -29,9 +29,6 @@ PlayerData :: struct {
 	nextFire:  f32,
 }
 
-// TODO this doesnt work
-
-
 PlayerCustomCamera: PlayerCameraData = {
 	targetDistance     = 0,
 	playerEyesPosition = 1.85,
@@ -49,7 +46,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 	camera.position = {pos_x, PLAYER_START_POSITION_Y, pos_z}
 	camera.target = {0.0, 0.5, 0.0}
 	camera.up = {0.0, 1.0, 0.0}
-	camera.fovy = settings.Values.cameraFOV // get fov from settings file
+	camera.fovy = settings.cameraFOV // get fov from settings file
 	camera.projection = rl.CameraProjection.PERSPECTIVE
 
 	// Distances
@@ -71,7 +68,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 	// Init player eyes position to camera Y position
 	PlayerCustomCamera.playerEyesPosition = camera.position.y
 
-	PlayerCustomCamera.mouseSensitivity = settings.Values.mouseSensitivity
+	PlayerCustomCamera.mouseSensitivity = settings.mouseSensitivity
 
 	Player.health = PLAYER_MAX_HEALTH
 	Player.dead = false
@@ -97,10 +94,10 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	MOVE_LEFT :: 4
 
 	PlayerCameraMoveKeys := map[i32]f32 {
-		MOVE_FRONT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveForward),
-		MOVE_BACK  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveBackward),
-		MOVE_RIGHT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveRight),
-		MOVE_LEFT  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.Values.keyMoveLeft),
+		MOVE_FRONT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveForward),
+		MOVE_BACK  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveBackward),
+		MOVE_RIGHT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveRight),
+		MOVE_LEFT  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveLeft),
 	}
 
 	Player.transform.boundingBox = utilities.MakeBoundingBox(camera.position, Player.transform.size)
@@ -184,7 +181,7 @@ PlayerSetHealth :: proc(healthToAdd: i32) {
 
 PlayerFireWeapon :: proc(camera: ^rl.Camera, cameraData: ^PlayerCameraData) {
 	Player.nextFire -= rl.GetFrameTime()
-	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.Values.keyFire)) {
+	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.keyFire)) {
 		Player.nextFire = rl.GetFrameTime() // weapon.Fire(camera, entity.nextFire)
 		fmt.println("pew pew")
 	}

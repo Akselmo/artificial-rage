@@ -13,8 +13,8 @@ Initialize :: proc() {
 
 	settings.Initialize()
 
-	rl.InitWindow(settings.Values.screenWidth, settings.Values.screenHeight, settings.GameTitle)
-	rl.SetTargetFPS(settings.Values.maxFPS)
+	rl.InitWindow(settings.screenWidth, settings.screenHeight, settings.GameTitle)
+	rl.SetTargetFPS(settings.maxFPS)
 	isStarted = true
 
 	camera = scene.Initialize()
