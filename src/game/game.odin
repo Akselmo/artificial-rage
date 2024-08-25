@@ -40,11 +40,6 @@ Update :: proc() {
 	rl.EndDrawing()
 }
 
-HudUpdate :: proc() {
-	// hud draw
-	rl.DrawFPS(10, 10)
-}
-
 MenuUpdate :: proc() {
 	rl.DisableCursor()
 
