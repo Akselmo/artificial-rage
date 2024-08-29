@@ -178,7 +178,11 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 	if (libc.fabsf(distanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
 		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER) {
 		entityOldPosition: rl.Vector3 = entity.transform.position
-		entityNewPosition: rl.Vector3 = {Player.transform.position.x, ACTOR_POSITION_Y, Player.transform.position.z}
+		entityNewPosition: rl.Vector3 = {
+			Player.transform.position.x,
+			ACTOR_POSITION_Y,
+			Player.transform.position.z,
+		}
 		entity.transform.position = rl.Vector3Lerp(
 			entity.transform.position,
 			entityNewPosition,
@@ -241,10 +245,7 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 	entity.transform.position = position
 	entity.transform.canCollide = true
 
-	#partial switch type 
-
-
-	{
+	#partial switch type {
 	case Type.WALL_CARGO:
 		entity.model.textureFilename = "./assets/textures/wall1.png"
 		CreateWall(&entity)
@@ -295,7 +296,13 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 	return entity
 }
 
-SetupTransform :: proc(entity: ^Entity, pos: rl.Vector3, rot: rl.Vector3, size: rl.Vector3, scale: f32) {
+SetupTransform :: proc(
+	entity: ^Entity,
+	pos: rl.Vector3,
+	rot: rl.Vector3,
+	size: rl.Vector3,
+	scale: f32,
+) {
 	entity.transform.boundingBox = utilities.MakeBoundingBox(pos, size)
 	entity.transform.position = pos
 	entity.transform.rotation = rot

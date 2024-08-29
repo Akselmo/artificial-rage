@@ -111,8 +111,8 @@ Write :: proc() {
 }
 
 Parse :: proc(key: string, value: string) {
-	switch key
-	{
+
+	switch key {
 	case "screenWidth":
 		screenWidth = cast(i32)strconv.atoi(value)
 	case "screenHeight":

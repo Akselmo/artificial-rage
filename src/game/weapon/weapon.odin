@@ -86,6 +86,8 @@ Change :: proc(weaponId: i32) {
 // Although that causes cyclical deps so idk
 // Hitscan detection could be done in entity package, just as damaging is
 // Then we just ask the weapon pckg if its hitscan and the damage it does
+// For projectiles, we just check in entity if we collide with a projectile,
+// then get the damage value from projectile
 
 HasAmmo :: proc(weaponId: i32) -> bool {
 
