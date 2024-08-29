@@ -196,6 +196,59 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 	return false
 }
 
+// Returns the id of closest item the raycast hits.
+// If 0, then it hit either a wall or nothing.
+RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
+	levelDistance: f32 = libc.INFINITY
+	enemyDistance: f32 = libc.INFINITY
+	entitiesAmount: i32 = len(inScene)
+	hitEnemyData: Data
+
+	for i: i32 = 0; i < entitiesAmount; i += 1 {
+		entity := inScene[i]
+		if (entity.data.type != Type.NONE && !entity.model.isBillboard) {
+			if (entity.data.type == Type.ENEMY_DEFAULT) {
+				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(
+					rayCast,
+					entity.transform.boundingBox,
+				)
+				if (enemyHit.hit && !entity.data.value.(Actor).dead) {
+
+					dist := rl.Vector3Length(
+						rl.Vector3Subtract(entity.transform.position, rayCast.position),
+					)
+					if (dist < enemyDistance) {
+						enemyDistance = dist
+						hitEnemyData = entity
+					}
+				}
+			} else {
+				pos: rl.Vector3 = entity.transform.position
+				hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
+					rayCast,
+					entity.model.data.meshes[0],
+					rl.MatrixTranslate(pos.x, pos.y, pos.z),
+				)
+				if (hitLevel.hit && hitLevel.distance < levelDistance) {
+					levelDistance = hitLevel.distance
+				}
+			}
+		}
+
+	}
+	if (enemyDistance < levelDistance) {
+		return hitEnemyData.id
+	}
+
+	return 0
+
+}
+
+// TODO: check if the entity that calls this hits a projectile
+CollidesWithProjectile :: proc() {
+
+}
+
 
 TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 	if (entity.data.type != Type.ENEMY_DEFAULT) {
