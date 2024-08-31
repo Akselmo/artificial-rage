@@ -34,6 +34,7 @@ Type :: enum {
 	ITEM_AMMO_SHOTGUN,
 	ITEM_AMMO_RAILGUN,
 	ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
+	PROJECTILE,
 }
 
 
@@ -76,6 +77,7 @@ Model :: struct {
 EntityData :: union {
 	Item,
 	Actor,
+	Projectile,
 }
 
 Data :: struct {
@@ -236,12 +238,6 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 	return 0
 
 }
-
-// TODO: check if the entity that calls this hits a projectile
-CollidesWithProjectile :: proc() {
-
-}
-
 
 TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 	if (entity.data.type != Type.ENEMY_DEFAULT) {
