@@ -178,11 +178,7 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 	if (libc.fabsf(distanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
 		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER) {
 		entityOldPosition: rl.Vector3 = entity.transform.position
-		entityNewPosition: rl.Vector3 = {
-			Player.transform.position.x,
-			ACTOR_POSITION_Y,
-			Player.transform.position.z,
-		}
+		entityNewPosition: rl.Vector3 = {Player.transform.position.x, ACTOR_POSITION_Y, Player.transform.position.z}
 		entity.transform.position = rl.Vector3Lerp(
 			entity.transform.position,
 			entityNewPosition,
@@ -201,22 +197,17 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 	levelDistance: f32 = libc.INFINITY
 	enemyDistance: f32 = libc.INFINITY
-	entitiesAmount: i32 = len(inScene)
-	hitEnemyData: Data
+	entitiesAmount: i32 = cast(i32)len(inScene)
+	hitEnemyData: Entity
 
 	for i: i32 = 0; i < entitiesAmount; i += 1 {
 		entity := inScene[i]
 		if (entity.data.type != Type.NONE && !entity.model.isBillboard) {
 			if (entity.data.type == Type.ENEMY_DEFAULT) {
-				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(
-					rayCast,
-					entity.transform.boundingBox,
-				)
+				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
 				if (enemyHit.hit && !entity.data.value.(Actor).dead) {
 
-					dist := rl.Vector3Length(
-						rl.Vector3Subtract(entity.transform.position, rayCast.position),
-					)
+					dist := rl.Vector3Length(rl.Vector3Subtract(entity.transform.position, rayCast.position))
 					if (dist < enemyDistance) {
 						enemyDistance = dist
 						hitEnemyData = entity
@@ -224,13 +215,15 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 				}
 			} else {
 				pos: rl.Vector3 = entity.transform.position
-				hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
-					rayCast,
-					entity.model.data.meshes[0],
-					rl.MatrixTranslate(pos.x, pos.y, pos.z),
-				)
-				if (hitLevel.hit && hitLevel.distance < levelDistance) {
-					levelDistance = hitLevel.distance
+				if (entity.model.data.meshCount > 0) {
+					hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
+						rayCast,
+						entity.model.data.meshes[0],
+						rl.MatrixTranslate(pos.x, pos.y, pos.z),
+					)
+					if (hitLevel.hit && hitLevel.distance < levelDistance) {
+						levelDistance = hitLevel.distance
+					}
 				}
 			}
 		}
@@ -349,13 +342,7 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 	return entity
 }
 
-SetupTransform :: proc(
-	entity: ^Entity,
-	pos: rl.Vector3,
-	rot: rl.Vector3,
-	size: rl.Vector3,
-	scale: f32,
-) {
+SetupTransform :: proc(entity: ^Entity, pos: rl.Vector3, rot: rl.Vector3, size: rl.Vector3, scale: f32) {
 	entity.transform.boundingBox = utilities.MakeBoundingBox(pos, size)
 	entity.transform.position = pos
 	entity.transform.rotation = rot

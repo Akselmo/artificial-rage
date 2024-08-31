@@ -23,10 +23,10 @@ PlayerCameraData :: struct {
 }
 
 PlayerData :: struct {
-	health:    i32,
-	dead:      bool,
-	transform: Transform,
-	nextFire:  f32,
+	health:       i32,
+	dead:         bool,
+	transform:    Transform,
+	nextFireTime: f32,
 }
 
 PlayerCustomCamera: PlayerCameraData = {
@@ -75,7 +75,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 	Player.transform.size = rl.Vector3{0.1, 0.1, 0.1}
 	Player.transform.position = rl.Vector3{0.0, 0.0, 0.0}
 	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
-	Player.nextFire = 0.0
+	Player.nextFireTime = 0.0
 
 	// Weapon initialize
 	// Weapon selectdefault
@@ -180,10 +180,10 @@ PlayerSetHealth :: proc(healthToAdd: i32) {
 }
 
 PlayerFireWeapon :: proc(camera: ^rl.Camera, cameraData: ^PlayerCameraData) {
-	Player.nextFire -= rl.GetFrameTime()
+	Player.nextFireTime -= rl.GetFrameTime()
 	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.keyFire)) {
-		Player.nextFire = rl.GetFrameTime() // weapon.Fire(camera, entity.nextFire)
-		fmt.println("pew pew")
+		nextFire := WeaponFire(Player.nextFireTime, camera)
+		Player.nextFireTime = nextFire
 	}
 }
 

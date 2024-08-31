@@ -1,4 +1,7 @@
-package weapon
+package entity
+
+// Weapon, while not strictly an entity, is best handled as such
+// since they're used to interact with entities
 
 import "core:fmt"
 import "src:game/settings"
@@ -20,7 +23,7 @@ WeaponID :: enum {
 	RAILGUN = 4,
 }
 
-Data :: struct {
+WeaponData :: struct {
 	name:                 string,
 	weaponId:             i32,
 	inputKey:             i32,
@@ -42,12 +45,12 @@ Data :: struct {
 
 CurrentWeapon: i32 = 0
 // TODO: Could be a map?
-Weapons: [WEAPON_AMOUNT]Data
+Weapons: [WEAPON_AMOUNT]WeaponData
 FrameCounter: i32 = 0
 CurrentFrame: i32 = 0
 Active: bool = false
 
-Initialize :: proc() {
+WeaponInitialize :: proc() {
 	// Initialize keys
 	Weapons[WeaponID.MELEE].inputKey = settings.keyWeaponOne
 	Weapons[WeaponID.PISTOL].inputKey = settings.keyWeaponTwo
@@ -63,33 +66,26 @@ Initialize :: proc() {
 	Weapons[WeaponID.RAILGUN].spriteTexture = rl.LoadTexture("./assets/weapons/railgun.png")
 }
 
-SelectDefault :: proc() {
+WeaponSelectDefault :: proc() {
 	CurrentWeapon = Weapons[WeaponID.MELEE].weaponId
 }
 
-GetSwitchInput :: proc() {
+WeaponGetSwitchInput :: proc() {
 	key := rl.GetKeyPressed()
-	for i := 0; i < WEAPON_AMOUNT; i += 1 {
-		if (key == Weapons[i].inputKey) {
-			Change(Weapons[i].weaponId)
+	for i: i32 = 0; i < WEAPON_AMOUNT; i += 1 {
+		if (cast(i32)key == Weapons[i].inputKey) {
+			WeaponChange(Weapons[i].weaponId)
 		}
 	}
 }
 
-Change :: proc(weaponId: i32) {
+WeaponChange :: proc(weaponId: i32) {
 	if (Active) {
 		CurrentWeapon = weaponId
 	}
 }
 
-// TODO: TestEntityHit? I think this goes to entity package: GetHitEntityId
-// Although that causes cyclical deps so idk
-// Hitscan detection could be done in entity package, just as damaging is
-// Then we just ask the weapon pckg if its hitscan and the damage it does
-// For projectiles, we just check in entity if we collide with a projectile,
-// then get the damage value from projectile
-
-HasAmmo :: proc(weaponId: i32) -> bool {
+WeaponHasAmmo :: proc(weaponId: WeaponID) -> bool {
 
 	// Fists always have ammo :D
 	if (weaponId == WeaponID.MELEE) {
@@ -103,20 +99,33 @@ HasAmmo :: proc(weaponId: i32) -> bool {
 	return false
 }
 
-Fire :: proc(camera: ^rl.Camera, nextFire: f32) -> f32 {
 
-	if (nextFire > 0.0) {
-		nextFire -= rl.GetFrameTime()
+WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
+
+	nextFireTime := oldFireTime
+	if (nextFireTime > 0.0) {
+		nextFireTime -= rl.GetFrameTime()
 	} else {
 		wpn := Weapons[CurrentWeapon]
-		if (HasAmmo(wpn.weaponId) && !Active) {
+		if (WeaponHasAmmo(cast(WeaponID)wpn.weaponId) && !Active) {
 			Active = true
-			CurrentFrame = wpn.spriteFrame
-			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), &camera)
-			//TODO rest of this, needs GetHitEntityId
+			CurrentFrame = wpn.spriteFireFrame
+
+			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), camera^)
+			entityHitId := RaycastHitsEntityId(rayCast)
+			if (wpn.hitscan) {
+				// hitscan
+				entity := inScene[entityHitId]
+				if (entity.id != 0 && entity.id != PLAYER_ID && entity.data.type == Type.ENEMY_DEFAULT) {
+					TakeDamage(&entity, wpn.damage)
+				}
+			} else {
+				// projectile
+			}
 		}
+		nextFireTime := wpn.fireRate
 	}
-	return nextFire
+	return nextFireTime
 
 }
 
