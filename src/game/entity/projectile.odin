@@ -19,3 +19,27 @@ Projectile :: struct {
 	speed:         f32,
 }
 
+ProjectileCreate :: proc(rayCast: rl.Ray, size: rl.Vector3, damage: i32, ownerId: i32, color: rl.Color) {
+
+}
+
+ProjectileUpdate :: proc(projectile: ^Projectile) {
+
+}
+
+ProjectileCheckCollision :: proc(projectile: ^Projectile) {
+
+}
+
+ProjectileDestroyOverTime :: proc(projectile: ^Projectile) {
+
+}
+
+ProjectileDestroy :: proc(projectile: ^Projectile) {
+
+}
+
+ProjectileRotateTowards :: proc(projectile: ^Projectile) {
+
+}
+
