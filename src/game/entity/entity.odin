@@ -37,7 +37,7 @@ Type :: enum {
 	PROJECTILE,
 }
 
-
+// TODO: move into enemy file
 Actor :: struct {
 	health:        i32,
 	damage:        i32,

@@ -43,11 +43,11 @@ WeaponData :: struct {
 	projectileColor:      rl.Color,
 }
 
-CurrentWeapon: i32 = 0
+WeaponCurrent: i32 = 0
 // TODO: Could be a map?
 Weapons: [WEAPON_AMOUNT]WeaponData
-FrameCounter: i32 = 0
-CurrentFrame: i32 = 0
+WeaponFrameCounter: i32 = 0
+WeaponCurrentFrame: i32 = 0
 Active: bool = false
 
 WeaponInitialize :: proc() {
@@ -67,7 +67,7 @@ WeaponInitialize :: proc() {
 }
 
 WeaponSelectDefault :: proc() {
-	CurrentWeapon = Weapons[WeaponID.MELEE].weaponId
+	WeaponCurrent = Weapons[WeaponID.MELEE].weaponId
 }
 
 WeaponGetSwitchInput :: proc() {
@@ -81,7 +81,7 @@ WeaponGetSwitchInput :: proc() {
 
 WeaponChange :: proc(weaponId: i32) {
 	if (Active) {
-		CurrentWeapon = weaponId
+		WeaponCurrent = weaponId
 	}
 }
 
@@ -106,10 +106,10 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 	if (nextFireTime > 0.0) {
 		nextFireTime -= rl.GetFrameTime()
 	} else {
-		wpn := Weapons[CurrentWeapon]
+		wpn := Weapons[WeaponCurrent]
 		if (WeaponHasAmmo(cast(WeaponID)wpn.weaponId) && !Active) {
 			Active = true
-			CurrentFrame = wpn.spriteFireFrame
+			WeaponCurrentFrame = wpn.spriteFireFrame
 
 			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), camera^)
 			entityHitId := RaycastHitsEntityId(rayCast)
