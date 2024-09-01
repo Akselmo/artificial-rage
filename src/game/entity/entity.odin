@@ -94,7 +94,7 @@ Entity :: struct {
 }
 
 // Amount of entities loaded in a scene
-inScene: [dynamic]Entity
+entitiesInScene: [dynamic]Entity
 
 Update :: proc(entity: ^Entity) {
 	Draw(entity)
@@ -151,8 +151,8 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 
 CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool {
 	entityBox := utilities.MakeBoundingBox(entityPos, entitySize)
-	for i := 0; i < len(inScene); i += 1 {
-		ent := inScene[i]
+	for i := 0; i < len(entitiesInScene); i += 1 {
+		ent := entitiesInScene[i]
 		if (ent.id != entityId && rl.CheckCollisionBoxes(entityBox, ent.transform.boundingBox)) {
 			if (ent.transform.canCollide) {
 				return true
@@ -199,11 +199,11 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 	levelDistance: f32 = libc.INFINITY
 	enemyDistance: f32 = libc.INFINITY
-	entitiesAmount: i32 = cast(i32)len(inScene)
+	entitiesAmount: i32 = cast(i32)len(entitiesInScene)
 	hitEnemyData: Entity
 
 	for i: i32 = 0; i < entitiesAmount; i += 1 {
-		entity := inScene[i]
+		entity := entitiesInScene[i]
 		if (entity.data.type != Type.NONE && !entity.model.isBillboard) {
 			if (entity.data.type == Type.ENEMY_DEFAULT) {
 				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)

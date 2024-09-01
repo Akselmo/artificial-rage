@@ -115,7 +115,7 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 			entityHitId := RaycastHitsEntityId(rayCast)
 			if (wpn.hitscan) {
 				// hitscan
-				entity := inScene[entityHitId]
+				entity := entitiesInScene[entityHitId]
 				if (entity.id != 0 && entity.id != PLAYER_ID && entity.data.type == Type.ENEMY_DEFAULT) {
 					TakeDamage(&entity, wpn.damage)
 				}

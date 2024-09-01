@@ -128,8 +128,8 @@ Update :: proc() {
 	)
 
 	//TODO I need to grow entity.inScene to the size
-	for i := 0; i < len(entity.inScene); i += 1 {
-		ent := &entity.inScene[i]
+	for i := 0; i < len(entity.entitiesInScene); i += 1 {
+		ent := &entity.entitiesInScene[i]
 		if (ent.id != 0) {
 			entity.Update(ent)
 		}
@@ -208,7 +208,7 @@ AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32) {
 	case entity.Type.END:
 		endPosition = rl.Vector3{mx, 0.0, my}
 	case:
-		append(&entity.inScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
+		append(&entity.entitiesInScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
 	}
 
 
