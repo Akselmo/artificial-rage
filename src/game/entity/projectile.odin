@@ -1,6 +1,8 @@
 package entity
 
 import "core:fmt"
+import "core:c/libc"
+import "core:math"
 import "src:game/utilities"
 import rl "vendor:raylib"
 // Projectiles are just entitites like the rest.
@@ -109,14 +111,23 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 }
 
 ProjectileDestroyOverTime :: proc(projectile: ^Projectile) {
-
+	// TODO: Destroy after 20 seconds
 }
 
 ProjectileDestroy :: proc(projectile: ^Projectile) {
-
+	fmt.printfln("Projectile %[0]v destroyed", projectile.id)
+	projectile.destroyed = true
+	// delete projectile
 }
 
 ProjectileRotateTowards :: proc(projectile: ^Projectile) {
+	dx : f32 = projectile.endPosition.x - projectile.startPosition.x
+	dy : f32 = projectile.endPosition.y - projectile.startPosition.y
+	dz : f32 = projectile.endPosition.z - projectile.startPosition.z
 
+	y_angle : f32 = -(libc.atan2f(dz, dx) + math.PI / 2.0)
+	z_angle : f32 = libc.atan2f(dy, libc.sqrtf(dx * dx + dz * dz))
+
+	projectile.model.transform = rl.QuaternionToMatrix(rl.QuaternionFromEuler(z_angle, y_angle, 0))
 }
 

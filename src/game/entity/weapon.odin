@@ -121,6 +121,9 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 				}
 			} else {
 				// projectile
+				// Move raycast start position a bit further from player if firing a projectile
+				rayCast.position = rl.Vector3Add(rayCast.position, rl.Vector3Scale(rayCast.direction, 0.1))
+				ProjectileCreate(rayCast, wpn.projectileSize, wpn.damage, PLAYER_ID, wpn.projectileColor)
 			}
 		}
 		nextFireTime := wpn.fireRate
