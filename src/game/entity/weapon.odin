@@ -25,7 +25,7 @@ WeaponID :: enum {
 
 WeaponData :: struct {
 	name:                 string,
-	weaponId:             i32,
+	weaponId:             WeaponID,
 	inputKey:             i32,
 	damage:               i32,
 	ammo:                 i32,
@@ -43,7 +43,7 @@ WeaponData :: struct {
 	projectileColor:      rl.Color,
 }
 
-WeaponCurrent: i32 = 0
+WeaponCurrent: WeaponID = WeaponID.MELEE
 // TODO: Could be a map?
 Weapons: [WEAPON_AMOUNT]WeaponData
 WeaponFrameCounter: i32 = 0
@@ -79,7 +79,7 @@ WeaponGetSwitchInput :: proc() {
 	}
 }
 
-WeaponChange :: proc(weaponId: i32) {
+WeaponChange :: proc(weaponId: WeaponID) {
 	if (Active) {
 		WeaponCurrent = weaponId
 	}

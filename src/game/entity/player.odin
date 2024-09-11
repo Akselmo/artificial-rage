@@ -77,8 +77,8 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
 	Player.nextFireTime = 0.0
 
-	// Weapon initialize
-	// Weapon selectdefault
+	WeaponInitialize()
+	WeaponSelectDefault()
 
 	return camera
 
@@ -165,7 +165,7 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
 
 	// Check if we need to switch weapon
-	// TODO weapon.GetSwitchInput()
+	WeaponGetSwitchInput()
 	PlayerFireWeapon(camera, &PlayerCustomCamera)
 }
 
