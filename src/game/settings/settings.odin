@@ -9,55 +9,34 @@ import rl "vendor:raylib"
 GameTitle: cstring = "Artificial Rage"
 FileName: string = "settings.cfg"
 
-screenWidth: i32
-screenHeight: i32
-mouseSensitivity: f32
-cameraFOV: f32
-maxFPS: i32
-keyMoveForward: i32
-keyMoveBackward: i32
-keyMoveRight: i32
-keyMoveLeft: i32
-keyFire: i32
-keyUse: i32
-keyJump: i32
-keyWeaponOne: i32
-keyWeaponTwo: i32
-keyWeaponThree: i32
-keyWeaponFour: i32
-keyWeaponFive: i32
+// Default settings values
+screenWidth : i32 = 800
+screenHeight : i32 = 600
+mouseSensitivity : f32 = 0.25
+cameraFOV : f32 = 90.0
+maxFPS : i32 = 200
+// We have to cast these to integers since Odin Raylib handles them as enums
+keyMoveForward : i32 = cast(i32)rl.KeyboardKey.W
+keyMoveBackward : i32  = cast(i32)rl.KeyboardKey.S
+keyMoveLeft : i32 = cast(i32)rl.KeyboardKey.A
+keyMoveRight : i32 = cast(i32)rl.KeyboardKey.D
+keyFire : i32 = cast(i32)rl.MouseButton.LEFT
+keyUse : i32 = cast(i32)rl.KeyboardKey.E
+keyJump : i32 = cast(i32)rl.KeyboardKey.SPACE
+keyWeaponOne : i32 = cast(i32)rl.KeyboardKey.ONE
+keyWeaponTwo : i32 = cast(i32)rl.KeyboardKey.TWO
+keyWeaponThree : i32 = cast(i32)rl.KeyboardKey.THREE
+keyWeaponFour : i32 = cast(i32)rl.KeyboardKey.FOUR
+keyWeaponFive : i32 = cast(i32)rl.KeyboardKey.FIVE
 
 Initialize :: proc() {
 	if (Read()) {
 		fmt.printfln("Settings file read and loaded succesfully!")
 	} else {
 		fmt.printfln("Reading settings failed, creating a new settings file...")
-		SetDefaults()
 		Write()
 	}
 
-}
-
-SetDefaults :: proc() {
-
-	screenWidth = 800
-	screenHeight = 600
-	mouseSensitivity = 0.25
-	cameraFOV = 90
-	maxFPS = 200
-	// We have to cast these to integers since Odin Raylib handles them as enums
-	keyMoveForward = cast(i32)rl.KeyboardKey.W
-	keyMoveBackward = cast(i32)rl.KeyboardKey.S
-	keyMoveLeft = cast(i32)rl.KeyboardKey.A
-	keyMoveRight = cast(i32)rl.KeyboardKey.D
-	keyFire = cast(i32)rl.MouseButton.LEFT
-	keyUse = cast(i32)rl.KeyboardKey.E
-	keyJump = cast(i32)rl.KeyboardKey.SPACE
-	keyWeaponOne = cast(i32)rl.KeyboardKey.ONE
-	keyWeaponTwo = cast(i32)rl.KeyboardKey.TWO
-	keyWeaponThree = cast(i32)rl.KeyboardKey.THREE
-	keyWeaponFour = cast(i32)rl.KeyboardKey.FOUR
-	keyWeaponFive = cast(i32)rl.KeyboardKey.FIVE
 }
 
 Read :: proc() -> bool {

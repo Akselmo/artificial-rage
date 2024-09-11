@@ -51,12 +51,12 @@ WeaponCurrentFrame: i32 = 0
 Active: bool = false
 
 WeaponInitialize :: proc() {
-	// Initialize keys
-	Weapons[WeaponID.MELEE].inputKey = settings.keyWeaponOne
-	Weapons[WeaponID.PISTOL].inputKey = settings.keyWeaponTwo
-	Weapons[WeaponID.RIFLE].inputKey = settings.keyWeaponThree
-	Weapons[WeaponID.SHOTGUN].inputKey = settings.keyWeaponFour
-	Weapons[WeaponID.RAILGUN].inputKey = settings.keyWeaponFive
+	// Initialize base weapon items
+	Weapons[WeaponID.MELEE] = WeaponMelee
+	Weapons[WeaponID.PISTOL] = WeaponPistol
+	Weapons[WeaponID.RIFLE] = WeaponRifle
+	Weapons[WeaponID.SHOTGUN] = WeaponShotgun
+	Weapons[WeaponID.RAILGUN] = WeaponRailgun
 
 	// Initialize sprites
 	Weapons[WeaponID.MELEE].spriteTexture = rl.LoadTexture("./assets/weapons/melee.png")
@@ -67,14 +67,19 @@ WeaponInitialize :: proc() {
 }
 
 WeaponSelectDefault :: proc() {
-	WeaponCurrent = Weapons[WeaponID.MELEE].weaponId
+	WeaponCurrent = WeaponID.MELEE
 }
 
 WeaponGetSwitchInput :: proc() {
 	key := rl.GetKeyPressed()
+	if (key == rl.KeyboardKey.KEY_NULL)
+	{
+		return
+	}
 	for i: i32 = 0; i < WEAPON_AMOUNT; i += 1 {
 		if (cast(i32)key == Weapons[i].inputKey) {
 			WeaponChange(Weapons[i].weaponId)
+			return
 		}
 	}
 }
@@ -107,7 +112,8 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 		nextFireTime -= rl.GetFrameTime()
 	} else {
 		wpn := Weapons[WeaponCurrent]
-		if (WeaponHasAmmo(cast(WeaponID)wpn.weaponId) && !Active) {
+		fmt.printfln("%[0]v", wpn)
+		if (WeaponHasAmmo(wpn.weaponId) && !Active) {
 			Active = true
 			WeaponCurrentFrame = wpn.spriteFireFrame
 

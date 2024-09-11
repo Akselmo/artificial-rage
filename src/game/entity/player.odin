@@ -182,8 +182,7 @@ PlayerSetHealth :: proc(healthToAdd: i32) {
 PlayerFireWeapon :: proc(camera: ^rl.Camera, cameraData: ^PlayerCameraData) {
 	Player.nextFireTime -= rl.GetFrameTime()
 	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.keyFire)) {
-		nextFire := WeaponFire(Player.nextFireTime, camera)
-		Player.nextFireTime = nextFire
+		Player.nextFireTime = WeaponFire(Player.nextFireTime, camera)
 	}
 }
 
