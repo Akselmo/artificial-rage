@@ -4,6 +4,7 @@ package entity
 // since they're used to interact with entities
 
 import "core:fmt"
+import "core:math"
 import "src:game/settings"
 import "src:game/utilities"
 import rl "vendor:raylib"
@@ -36,7 +37,7 @@ WeaponData :: struct {
 	hitscan:              bool,
 	spriteTexture:        rl.Texture2D,
 	spritesTotal:         i32,
-	spriteSpeed:          i32,
+	spriteSpeed:          f32,
 	spriteFireFrame:      i32,
 	spritePositionOffset: rl.Vector2,
 	projectileSize:       rl.Vector3,
@@ -48,7 +49,7 @@ WeaponCurrent: WeaponID = WeaponID.MELEE
 Weapons: [WEAPON_AMOUNT]WeaponData
 WeaponFrameCounter: i32 = 0
 WeaponCurrentFrame: i32 = 0
-Active: bool = false
+WeaponActive: bool = false
 
 WeaponInitialize :: proc() {
 	// Initialize base weapon items
@@ -72,8 +73,7 @@ WeaponSelectDefault :: proc() {
 
 WeaponGetSwitchInput :: proc() {
 	key := rl.GetKeyPressed()
-	if (key == rl.KeyboardKey.KEY_NULL)
-	{
+	if (key == rl.KeyboardKey.KEY_NULL) {
 		return
 	}
 	for i: i32 = 0; i < WEAPON_AMOUNT; i += 1 {
@@ -85,7 +85,7 @@ WeaponGetSwitchInput :: proc() {
 }
 
 WeaponChange :: proc(weaponId: WeaponID) {
-	if (Active) {
+	if (WeaponActive) {
 		WeaponCurrent = weaponId
 	}
 }
@@ -113,8 +113,8 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 	} else {
 		wpn := Weapons[WeaponCurrent]
 		fmt.printfln("%[0]v", wpn)
-		if (WeaponHasAmmo(wpn.weaponId) && !Active) {
-			Active = true
+		if (WeaponHasAmmo(wpn.weaponId) && !WeaponActive) {
+			WeaponActive = true
 			WeaponCurrentFrame = wpn.spriteFireFrame
 
 			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), camera^)
@@ -136,5 +136,37 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 	}
 	return nextFireTime
 
+}
+
+WeaponDrawSprite :: proc() {
+	wpn := Weapons[WeaponCurrent]
+
+	frameWidth: f32 = cast(f32)wpn.spriteTexture.width / cast(f32)wpn.spritesTotal
+	frameHeight: f32 = cast(f32)wpn.spriteTexture.height
+	origin: rl.Vector2 = {frameWidth / 2.0, frameHeight}
+
+	scale: f32 = math.min(frameWidth * 2.0 / frameWidth, frameHeight * 2.0 / frameHeight)
+	posX: f32 = utilities.GetScreenCenter().x - (frameWidth * wpn.spritePositionOffset.x)
+	posY: f32 = cast(f32)rl.GetScreenHeight() - (frameHeight * wpn.spritePositionOffset.y)
+
+	sourceRec: rl.Rectangle = {0.0, 0.0, frameWidth, frameHeight}
+	destRec: rl.Rectangle = {posX, posY, frameWidth * scale, frameHeight * scale}
+
+	if (WeaponActive) {
+		WeaponFrameCounter += 1
+		if (cast(f32)WeaponFrameCounter >= cast(f32)rl.GetFPS() / (wpn.spriteSpeed / wpn.fireRate)) {
+			WeaponCurrentFrame += 1
+
+			if (WeaponCurrentFrame >= wpn.spritesTotal) {
+				WeaponCurrentFrame = 0
+				WeaponActive = false
+			}
+			WeaponFrameCounter = 0
+		}
+	}
+
+	sourceRec.x = frameWidth * cast(f32)WeaponCurrentFrame
+
+	rl.DrawTexturePro(wpn.spriteTexture, sourceRec, destRec, origin, 0, rl.WHITE)
 }
 

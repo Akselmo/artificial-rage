@@ -9,7 +9,7 @@ HudUpdate :: proc() {
 	rl.DrawFPS(10, 10)
 
 	// Draw weapon
-	// weapon.DrawSprite()
+	entity.WeaponDrawSprite()
 	if (entity.Player.health <= 0) {
 		HealthText("DEAD", rl.RED)
 	} else {
