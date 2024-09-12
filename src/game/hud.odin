@@ -18,8 +18,16 @@ HudUpdate :: proc() {
 		HealthText(txt, rl.GREEN)
 	}
 
-	// TODO Draw weapon ammo text
-	// if weaponholder etc etc....
+	// Draw weapon ammo text
+	wpn := entity.Weapons[entity.WeaponCurrent]
+	if (wpn.weaponId == entity.WeaponID.MELEE) {
+		WeaponText("-", rl.GREEN)
+	} else {
+		wpnText := strings.clone_to_cstring(fmt.aprintf("%[0]v / %[1]v", wpn.ammo, wpn.maxAmmo))
+		WeaponText(wpnText, rl.GREEN)
+	}
+
+
 }
 
 @(private = "file")
