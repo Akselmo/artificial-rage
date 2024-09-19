@@ -1,7 +1,7 @@
 package entity
 
-import "core:fmt"
 import "core:c/libc"
+import "core:fmt"
 import "core:math"
 import "src:game/utilities"
 import rl "vendor:raylib"
@@ -65,8 +65,7 @@ ProjectileCreate :: proc(rayCast: rl.Ray, size: rl.Vector3, damage: i32, ownerId
 
 ProjectileUpdate :: proc(projectile: ^Projectile) {
 
-	if (!projectile.destroyed && projectile.id != 0)
-	{
+	if (!projectile.destroyed && projectile.id != 0) {
 		// TODO: draw texture
 		rl.DrawModel(projectile.model, projectile.position, 1.0, projectile.color)
 
@@ -81,27 +80,23 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 	// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
 	// unless its a wall
 	//  Otherwise tell the entity they've been hit and give them damage
-	projectileBox : rl.BoundingBox = utilities.MakeBoundingBox(projectile.position, projectile.size)
+	projectileBox: rl.BoundingBox = utilities.MakeBoundingBox(projectile.position, projectile.size)
 	for i := 0; i < len(entitiesInScene); i += 1 {
 		ent := entitiesInScene[i]
-		if (ent.transform.canCollide)
-		{
-			continue;
+		if (!ent.transform.canCollide) {
+			continue
 		}
-		if (rl.CheckCollisionBoxes(projectileBox, ent.transform.boundingBox) && ent.id != projectile.ownerId)
-		{
+		if (rl.CheckCollisionBoxes(projectileBox, ent.transform.boundingBox) && ent.id != projectile.ownerId) {
 			// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
-				// unless its a wall
-				//  Otherwise tell the entity they've been hit and give them damage
-			if (ent.data.type == Type.ENEMY_DEFAULT)
-			{
+			// unless its a wall
+			//  Otherwise tell the entity they've been hit and give them damage
+			if (ent.data.type == Type.ENEMY_DEFAULT) {
 				TakeDamage(&ent, projectile.damage)
 			}
 			ProjectileDestroy(projectile)
 			return
-		}
-		else if (rl.CheckCollisionBoxes(projectileBox, Player.transform.boundingBox) && PLAYER_ID != projectile.ownerId)
-		{
+		} else if (rl.CheckCollisionBoxes(projectileBox, Player.transform.boundingBox) &&
+			   PLAYER_ID != projectile.ownerId) {
 			PlayerSetHealth(-1 * projectile.damage)
 			ProjectileDestroy(projectile)
 			return
@@ -121,12 +116,12 @@ ProjectileDestroy :: proc(projectile: ^Projectile) {
 }
 
 ProjectileRotateTowards :: proc(projectile: ^Projectile) {
-	dx : f32 = projectile.endPosition.x - projectile.startPosition.x
-	dy : f32 = projectile.endPosition.y - projectile.startPosition.y
-	dz : f32 = projectile.endPosition.z - projectile.startPosition.z
+	dx: f32 = projectile.endPosition.x - projectile.startPosition.x
+	dy: f32 = projectile.endPosition.y - projectile.startPosition.y
+	dz: f32 = projectile.endPosition.z - projectile.startPosition.z
 
-	y_angle : f32 = -(libc.atan2f(dz, dx) + math.PI / 2.0)
-	z_angle : f32 = libc.atan2f(dy, libc.sqrtf(dx * dx + dz * dz))
+	y_angle: f32 = -(libc.atan2f(dz, dx) + math.PI / 2.0)
+	z_angle: f32 = libc.atan2f(dy, libc.sqrtf(dx * dx + dz * dz))
 
 	projectile.model.transform = rl.QuaternionToMatrix(rl.QuaternionFromEuler(z_angle, y_angle, 0))
 }

@@ -85,7 +85,7 @@ WeaponGetSwitchInput :: proc() {
 }
 
 WeaponChange :: proc(weaponId: WeaponID) {
-	if (WeaponActive) {
+	if (!WeaponActive) {
 		WeaponCurrent = weaponId
 	}
 }
@@ -112,7 +112,6 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 		nextFireTime -= rl.GetFrameTime()
 	} else {
 		wpn := Weapons[WeaponCurrent]
-		fmt.printfln("%[0]v", wpn)
 		if (WeaponHasAmmo(wpn.weaponId) && !WeaponActive) {
 			WeaponActive = true
 			WeaponCurrentFrame = wpn.spriteFireFrame
