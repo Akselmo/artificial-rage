@@ -98,7 +98,6 @@ entitiesInScene: [dynamic]Entity
 
 Update :: proc(entity: ^Entity) {
 	Draw(entity)
-
 	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return
 	}

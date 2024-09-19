@@ -134,6 +134,10 @@ Update :: proc() {
 			entity.Update(ent)
 		}
 	}
+	// TODO i think this could be made to be in the entity.Update loop, and the projectiles could be part of the entity array
+	for p := 0; p < len(entity.projectilesInScene); p += 1 {
+		entity.ProjectileUpdate(&entity.projectilesInScene[p])
+	}
 }
 
 UpdateProjectiles :: proc() {
