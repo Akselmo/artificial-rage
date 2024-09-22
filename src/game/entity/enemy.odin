@@ -31,6 +31,14 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 	enemyAnimationsCount: i32 = 0
 	enemyLoadedAnimations := rl.LoadModelAnimations(cstringName, &enemyAnimationsCount)
 
+	enemyAnimator: Animator = Animator {
+		animationsCount = enemyAnimationsCount,
+		animationFrame  = 0,
+		nextFrame       = 0.0,
+	}
+
+	// NOTE: make sure to append them in right order!
+
 	deathAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.DEATH],
 		firstFrame    = 0,
@@ -39,6 +47,8 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		interruptable = false,
 		loopable      = false,
 	}
+	append(&enemyAnimator.animations, deathAnim)
+
 
 	attackAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.ATTACK],
@@ -48,6 +58,8 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		interruptable = false,
 		loopable      = false,
 	}
+	append(&enemyAnimator.animations, attackAnim)
+
 
 	idleAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.IDLE],
@@ -57,6 +69,8 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		interruptable = true,
 		loopable      = true,
 	}
+	append(&enemyAnimator.animations, idleAnim)
+
 
 	moveAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.MOVE],
@@ -67,14 +81,9 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		loopable      = true,
 	}
 
+	append(&enemyAnimator.animations, moveAnim)
 
-	enemyAnimator: Animator = Animator {
-		animations       = []Animation{deathAnim, attackAnim, idleAnim, moveAnim},
-		animationsCount  = enemyAnimationsCount,
-		currentAnimation = idleAnim,
-		animationFrame   = 0,
-		nextFrame        = 0.0,
-	}
+	enemyAnimator.currentAnimation = enemyAnimator.animations[cast(i32)EnemyAnimationID.IDLE]
 
 	// animations seem to be valid here
 	return enemyAnimator
@@ -100,7 +109,6 @@ EnemyUpdate :: proc(entity: ^Entity) {
 		SetAnimation(&enemy.animator, cast(i32)EnemyAnimationID.DEATH)
 	}
 
-	//BUG: this is what breaks and crashes things, the animation is not valid for some reason??
 	if (rl.IsModelAnimationValid(entity.model.data, enemy.animator.currentAnimation.animation)) {
 		enemy.animator.nextFrame = PlayAnimation(
 			&enemy.animator,

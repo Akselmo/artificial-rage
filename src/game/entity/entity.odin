@@ -7,12 +7,12 @@ import "src:game/utilities"
 import rl "vendor:raylib"
 
 WALL_MODEL_ID: i32 : -2
-ACTOR_POSITION_Y: f32 : 0.25
+ACTOR_POSITION_Y: f32 : 0.0
 ACTOR_GRAVEYARD_POSITION: f32 : 999.0
 ACTOR_MAX_DISTANCE_FROM_PLAYER: f32 : 1.25
 ACTOR_DEFAULT_MOVEMENT_SPEED: f32 : 0.45 // Lower values result to lower speed
 ACTOR_DEFAULT_ROTATION_SPEED: f32 : 3.0
-ACTOR_DEFAULT_ANIMATION_SPEED: f32 : 30.0 // Animation played in FPS
+ACTOR_DEFAULT_ANIMATION_SPEED: f32 : 60.0 // Animation played in FPS
 ITEM_START_POSITION_Y: f32 : 0.1
 
 Type :: enum {
@@ -423,7 +423,6 @@ CreateEnemy :: proc(entity: ^Entity) {
 	size := rl.Vector3{0.25, 1.1, 0.25}
 
 	SetupTransform(entity, position, rl.Vector3Zero(), size, 0.5)
-
 
 
 	filename := strings.clone_to_cstring(entity.model.fileName)

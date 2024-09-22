@@ -13,7 +13,7 @@ Animation :: struct {
 }
 
 Animator :: struct {
-	animations:       []Animation,
+	animations:       [dynamic]Animation,
 	animationsCount:  i32,
 	currentAnimation: Animation,
 	animationFrame:   i32,
