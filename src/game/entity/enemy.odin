@@ -27,6 +27,7 @@ Enemy :: struct {
 
 EnemyAnimations :: proc(modelFileName: string) -> Animator {
 	cstringName := strings.clone_to_cstring(modelFileName)
+	defer delete(cstringName)
 	enemyAnimationsCount: i32 = 0
 	enemyLoadedAnimations := rl.LoadModelAnimations(cstringName, &enemyAnimationsCount)
 	enemyAnimations: [4]Animation

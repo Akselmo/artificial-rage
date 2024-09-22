@@ -418,13 +418,17 @@ CreateWall :: proc(entity: ^Entity) {
 
 CreateEnemy :: proc(entity: ^Entity) {
 
-	position := rl.Vector3{entity.transform.position.x, ACTOR_POSITION_Y, entity.transform.position.x}
+	position := rl.Vector3{entity.transform.position.x, ACTOR_POSITION_Y, entity.transform.position.z}
 
 	size := rl.Vector3{0.25, 1.1, 0.25}
 
 	SetupTransform(entity, position, rl.Vector3Zero(), size, 0.5)
 
-	entity.model.data = rl.LoadModel(strings.clone_to_cstring(entity.model.fileName))
+
+
+	filename := strings.clone_to_cstring(entity.model.fileName)
+	defer delete(filename)
+	entity.model.data = rl.LoadModel(filename)
 
 	enemy: Enemy = {
 		dead          = false,
