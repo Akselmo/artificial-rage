@@ -2,6 +2,7 @@ package entity
 import "core:c/libc"
 import "core:fmt"
 import "core:math"
+import "core:math/linalg"
 import "core:strings"
 import "src:game/utilities"
 import rl "vendor:raylib"
@@ -150,7 +151,7 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 		}
 	}
 
-	playerDistance = rl.Vector3Length(rl.Vector3Subtract(Player.transform.position, rayCast.position))
+	playerDistance = rl.Vector3Length(Player.transform.position - rayCast.position)
 
 	hitPlayer = (playerDistance < levelDistance)
 
@@ -190,7 +191,7 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 
 		entityOldPosition: rl.Vector3 = entity.transform.position
 		entityNewPosition: rl.Vector3 = {Player.transform.position.x, ACTOR_POSITION_Y, Player.transform.position.z}
-		entity.transform.position = rl.Vector3Lerp(
+		entity.transform.position = linalg.lerp(
 			entity.transform.position,
 			entityNewPosition,
 			entity.data.value.(Enemy).movementSpeed * rl.GetFrameTime(),
@@ -221,7 +222,7 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
 				if (enemyHit.hit && !entity.data.value.(Enemy).dead) {
 
-					dist := rl.Vector3Length(rl.Vector3Subtract(entity.transform.position, rayCast.position))
+					dist := rl.Vector3Length(entity.transform.position - rayCast.position)
 					if (dist < enemyDistance) {
 						enemyDistance = dist
 						hitEnemyData = entity
@@ -284,7 +285,7 @@ Destroy :: proc(entity: ^Entity) {
 			ACTOR_GRAVEYARD_POSITION,
 			ACTOR_GRAVEYARD_POSITION,
 		}
-		entity.transform.boundingBox = utilities.MakeBoundingBox(deadBoxPos, rl.Vector3Zero())
+		entity.transform.boundingBox = utilities.MakeBoundingBox(deadBoxPos, rl.Vector3(0))
 		enemy.dead = true
 	} else {
 		entity.active = false
@@ -310,7 +311,7 @@ FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool {
 }
 
 RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
-	diff: rl.Vector3 = rl.Vector3Subtract(entity.transform.position, targetPosition)
+	diff: rl.Vector3 = entity.transform.position - targetPosition
 	y_angle: f32 = -(libc.atan2f(diff.z, diff.x) + math.PI / 2.0)
 	newRotation: rl.Vector3 = rl.Vector3{0, y_angle, 0}
 
@@ -407,7 +408,7 @@ CreateWall :: proc(entity: ^Entity) {
 
 	cube: rl.Mesh = rl.GenMeshCube(1.0, 1.0, 1.0)
 	entity.model.data = rl.LoadModelFromMesh(cube)
-	SetupTransform(entity, entity.transform.position, rl.Vector3Zero(), rl.Vector3One(), 1.0)
+	SetupTransform(entity, entity.transform.position, rl.Vector3(0), rl.Vector3(1), 1.0)
 
 	entity.model.data.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
 
@@ -422,7 +423,7 @@ CreateEnemy :: proc(entity: ^Entity) {
 
 	size := rl.Vector3{0.25, 1.1, 0.25}
 
-	SetupTransform(entity, position, rl.Vector3Zero(), size, 0.5)
+	SetupTransform(entity, position, rl.Vector3(0), size, 0.5)
 
 
 	filename := strings.clone_to_cstring(entity.model.fileName)

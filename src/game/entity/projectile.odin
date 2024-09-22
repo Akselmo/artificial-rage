@@ -3,6 +3,7 @@ package entity
 import "core:c/libc"
 import "core:fmt"
 import "core:math"
+import "core:math/linalg"
 import "src:game/utilities"
 import rl "vendor:raylib"
 // Projectiles are just entitites like the rest.
@@ -35,10 +36,7 @@ ProjectileCreate :: proc(rayCast: rl.Ray, size: rl.Vector3, damage: i32, ownerId
 		if (proj.id != i || proj.destroyed == true) {
 			newProjectile: Projectile = {
 				startPosition = rayCast.position,
-				endPosition   = rl.Vector3Add(
-					rayCast.position,
-					rl.Vector3Scale(rayCast.direction, PROJECTILE_TRAVEL_DISTANCE),
-				),
+				endPosition   = rayCast.position + (rayCast.direction * PROJECTILE_TRAVEL_DISTANCE),
 				id            = i,
 				ownerId       = ownerId,
 				size          = size,
@@ -69,7 +67,7 @@ ProjectileUpdate :: proc(projectile: ^Projectile) {
 		// TODO: draw texture
 		rl.DrawModel(projectile.model, projectile.position, 1.0, projectile.color)
 
-		projectile.position = rl.Vector3Lerp(projectile.position, projectile.endPosition, projectile.speed)
+		projectile.position = linalg.lerp(projectile.position, projectile.endPosition, projectile.speed)
 		ProjectileDestroyOverTime(projectile)
 		ProjectileCheckCollision(projectile)
 	}

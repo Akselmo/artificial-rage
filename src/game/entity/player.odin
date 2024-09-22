@@ -146,7 +146,7 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 			(rl.Vector3{math.PI * 2 - PlayerCustomCamera.angle.y, math.PI * 2 - PlayerCustomCamera.angle.x, 0}),
 		),
 	)
-	transform: rl.Matrix = rl.MatrixMultiply(rotation, translation)
+	transform: rl.Matrix = rotation * translation
 
 	// Move camera according to matrix position (where camera looks at)
 	camera.target.x = camera.position.x - transform[0, 3]
