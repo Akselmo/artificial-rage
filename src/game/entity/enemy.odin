@@ -30,9 +30,8 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 	defer delete(cstringName)
 	enemyAnimationsCount: i32 = 0
 	enemyLoadedAnimations := rl.LoadModelAnimations(cstringName, &enemyAnimationsCount)
-	enemyAnimations: [4]Animation
 
-	enemyAnimations[EnemyAnimationID.DEATH] = Animation {
+	deathAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.DEATH],
 		firstFrame    = 0,
 		lastFrame     = (enemyLoadedAnimations[EnemyAnimationID.DEATH].frameCount - 5),
@@ -41,7 +40,7 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		loopable      = false,
 	}
 
-	enemyAnimations[EnemyAnimationID.ATTACK] = Animation {
+	attackAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.ATTACK],
 		firstFrame    = 0,
 		lastFrame     = enemyLoadedAnimations[EnemyAnimationID.ATTACK].frameCount,
@@ -50,7 +49,7 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		loopable      = false,
 	}
 
-	enemyAnimations[EnemyAnimationID.IDLE] = Animation {
+	idleAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.IDLE],
 		firstFrame    = 0,
 		lastFrame     = enemyLoadedAnimations[EnemyAnimationID.IDLE].frameCount,
@@ -59,7 +58,7 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		loopable      = true,
 	}
 
-	enemyAnimations[EnemyAnimationID.MOVE] = Animation {
+	moveAnim := Animation {
 		animation     = enemyLoadedAnimations[EnemyAnimationID.MOVE],
 		firstFrame    = 0,
 		lastFrame     = enemyLoadedAnimations[EnemyAnimationID.MOVE].frameCount,
@@ -68,13 +67,16 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 		loopable      = true,
 	}
 
+
 	enemyAnimator: Animator = Animator {
-		animations       = enemyAnimations[:],
-		animationsCount  = 4,
-		currentAnimation = enemyAnimations[EnemyAnimationID.IDLE],
+		animations       = []Animation{deathAnim, attackAnim, idleAnim, moveAnim},
+		animationsCount  = enemyAnimationsCount,
+		currentAnimation = idleAnim,
+		animationFrame   = 0,
 		nextFrame        = 0.0,
 	}
 
+	// animations seem to be valid here
 	return enemyAnimator
 }
 
@@ -97,12 +99,18 @@ EnemyUpdate :: proc(entity: ^Entity) {
 	} else {
 		SetAnimation(&enemy.animator, cast(i32)EnemyAnimationID.DEATH)
 	}
-	enemy.animator.nextFrame = PlayAnimation(
-		&enemy.animator,
-		&entity.model.data,
-		ACTOR_DEFAULT_ANIMATION_SPEED,
-		enemy.animator.nextFrame,
-	)
+
+	//BUG: this is what breaks and crashes things, the animation is not valid for some reason??
+	if (rl.IsModelAnimationValid(entity.model.data, enemy.animator.currentAnimation.animation)) {
+		enemy.animator.nextFrame = PlayAnimation(
+			&enemy.animator,
+			&entity.model.data,
+			ACTOR_DEFAULT_ANIMATION_SPEED,
+			enemy.animator.nextFrame,
+		)
+	} else {
+		fmt.printfln("Enemy animation %[0]v is not valid!", cast(EnemyAnimationID)enemy.animator.currentAnimation.id)
+	}
 
 }
 
