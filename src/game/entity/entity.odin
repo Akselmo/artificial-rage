@@ -1,12 +1,13 @@
 package entity
 import "core:c/libc"
 import "core:fmt"
+import "core:math"
 import "core:strings"
 import "src:game/utilities"
 import rl "vendor:raylib"
 
 WALL_MODEL_ID: i32 : -2
-ACTOR_POSITION_Y: f32 : 0.0
+ACTOR_POSITION_Y: f32 : 0.25
 ACTOR_GRAVEYARD_POSITION: f32 : 999.0
 ACTOR_MAX_DISTANCE_FROM_PLAYER: f32 : 1.25
 ACTOR_DEFAULT_MOVEMENT_SPEED: f32 : 0.45 // Lower values result to lower speed
@@ -37,21 +38,6 @@ Type :: enum {
 	PROJECTILE,
 }
 
-// TODO: move into enemy file
-Actor :: struct {
-	health:        i32,
-	damage:        i32,
-	dead:          bool,
-	moving:        bool,
-	attacking:     bool,
-	playerSpotted: bool,
-	movementSpeed: f32,
-	rotationSpeed: f32,
-	fireRate:      f32,
-	nextFire:      f32,
-	// Animator
-	tickRate:      f32,
-}
 
 Item :: struct {
 	pickup: bool,
@@ -76,7 +62,7 @@ Model :: struct {
 
 EntityData :: union {
 	Item,
-	Actor,
+	Enemy,
 	Projectile,
 }
 
@@ -97,16 +83,19 @@ Entity :: struct {
 entitiesInScene: [dynamic]Entity
 
 Update :: proc(entity: ^Entity) {
-	Draw(entity)
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
-		return
-	}
-}
-
-Draw :: proc(entity: ^Entity) {
 	if (!entity.active) {
 		return
 	}
+	Draw(entity)
+	if (entity.data.type != Type.ENEMY_DEFAULT) {
+		return
+	} else {
+		EnemyUpdate(entity)
+	}
+
+}
+
+Draw :: proc(entity: ^Entity) {
 	rl.DrawModel(entity.model.data, entity.transform.position, entity.transform.scale, rl.WHITE)
 	if (entity.model.isBillboard) {
 		RotateTowards(entity, Player.transform.position)
@@ -134,7 +123,7 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 	}
 
 	if (rl.Vector3Distance(Player.transform.position, entity.transform.position) > 5.0 &&
-		   entity.data.value.(Actor).playerSpotted) {
+		   entity.data.value.(Enemy).playerSpotted) {
 		return false
 	}
 
@@ -143,9 +132,29 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 	hitPlayer: bool = false
 	levelDistance: f32 = libc.INFINITY
 	playerDistance: f32 = libc.INFINITY
-	//entitiesAmount : i32 : scene.size
-	//TODO need to do scene for this
-	return false
+
+	for i := 0; i < len(entitiesInScene); i += 1 {
+		ent := entitiesInScene[i]
+		if (ent.id != 0 && ent.id != entity.id && ent.model.isBillboard) {
+			pos: rl.Vector3 = ent.transform.position
+			hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
+				rayCast,
+				ent.model.data.meshes[0],
+				rl.MatrixTranslate(pos.x, pos.y, pos.z),
+			)
+			if (hitLevel.hit) {
+				if (hitLevel.distance < levelDistance) {
+					levelDistance = hitLevel.distance
+				}
+			}
+		}
+	}
+
+	playerDistance = rl.Vector3Length(rl.Vector3Subtract(Player.transform.position, rayCast.position))
+
+	hitPlayer = (playerDistance < levelDistance)
+
+	return hitPlayer
 }
 
 CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool {
@@ -178,19 +187,23 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 
 	if (libc.fabsf(distanceFromPlayer.x) >= ACTOR_MAX_DISTANCE_FROM_PLAYER ||
 		   libc.fabsf(distanceFromPlayer.z) >= ACTOR_MAX_DISTANCE_FROM_PLAYER) {
+
 		entityOldPosition: rl.Vector3 = entity.transform.position
 		entityNewPosition: rl.Vector3 = {Player.transform.position.x, ACTOR_POSITION_Y, Player.transform.position.z}
 		entity.transform.position = rl.Vector3Lerp(
 			entity.transform.position,
 			entityNewPosition,
-			entity.data.value.(Actor).movementSpeed * rl.GetFrameTime(),
+			entity.data.value.(Enemy).movementSpeed * rl.GetFrameTime(),
 		)
-
-		// if scene check collision etc etc
-		return false
+		if (CheckCollision(entity.transform.position, entity.transform.size, entity.id)) {
+			entity.transform.position = entityOldPosition
+		}
+	} else {
+		moving = false
 	}
+	entity.transform.boundingBox = utilities.MakeBoundingBox(entity.transform.position, entity.transform.size)
 
-	return false
+	return moving
 }
 
 // Returns the id of closest item the raycast hits.
@@ -206,7 +219,7 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 		if (entity.data.type != Type.NONE && !entity.model.isBillboard) {
 			if (entity.data.type == Type.ENEMY_DEFAULT) {
 				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
-				if (enemyHit.hit && !entity.data.value.(Actor).dead) {
+				if (enemyHit.hit && !entity.data.value.(Enemy).dead) {
 
 					dist := rl.Vector3Length(rl.Vector3Subtract(entity.transform.position, rayCast.position))
 					if (dist < enemyDistance) {
@@ -243,7 +256,7 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 		return
 	}
 
-	actor := entity.data.value.(Actor)
+	actor := entity.data.value.(Enemy)
 	if (actor.dead) {
 		if (!actor.playerSpotted) {
 			actor.playerSpotted = true
@@ -261,17 +274,56 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 
 Destroy :: proc(entity: ^Entity) {
 
+	if (entity.data.type == Type.ENEMY_DEFAULT) {
+		enemy := &entity.data.value.(Enemy)
+		// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
+		// We want to keep entity in the memory so we can use its position to display the
+		// corpse/death anim
+		deadBoxPos: rl.Vector3 = rl.Vector3 {
+			ACTOR_GRAVEYARD_POSITION,
+			ACTOR_GRAVEYARD_POSITION,
+			ACTOR_GRAVEYARD_POSITION,
+		}
+		entity.transform.boundingBox = utilities.MakeBoundingBox(deadBoxPos, rl.Vector3Zero())
+		enemy.dead = true
+	} else {
+		entity.active = false
+	}
 }
 
 FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool {
 	if (entity.data.type != Type.ENEMY_DEFAULT) {
 		return false
 	}
-	return false
+
+	enemy := &entity.data.value.(Enemy)
+	RotateTowards(entity, Player.transform.position)
+	if (nextFire > 0) {
+		enemy.nextFire -= rl.GetFrameTime()
+		return false
+	} else {
+		enemy.attacking = true
+		ProjectileCreate(CreateRay(entity), rl.Vector3{0.2, 0.2, 0.2}, enemy.damage, entity.id, rl.PURPLE)
+		enemy.nextFire = enemy.fireRate
+		return true
+	}
 }
 
 RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
+	diff: rl.Vector3 = rl.Vector3Subtract(entity.transform.position, targetPosition)
+	y_angle: f32 = -(libc.atan2f(diff.z, diff.x) + math.PI / 2.0)
+	newRotation: rl.Vector3 = rl.Vector3{0, y_angle, 0}
 
+	start: rl.Quaternion = rl.QuaternionFromEuler(
+		entity.transform.rotation.z,
+		entity.transform.rotation.y,
+		entity.transform.rotation.x,
+	)
+	end: rl.Quaternion = rl.QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x)
+	slerp: rl.Quaternion = rl.QuaternionSlerp(start, end, entity.data.value.(Enemy).rotationSpeed * rl.GetFrameTime())
+
+	entity.model.data.transform = rl.QuaternionToMatrix(slerp)
+	entity.transform.rotation = newRotation
 }
 
 HandlePlayerPickup :: proc(entity: ^Entity) {
@@ -365,6 +417,32 @@ CreateWall :: proc(entity: ^Entity) {
 }
 
 CreateEnemy :: proc(entity: ^Entity) {
+
+	position := rl.Vector3{entity.transform.position.x, ACTOR_POSITION_Y, entity.transform.position.x}
+
+	size := rl.Vector3{0.25, 1.1, 0.25}
+
+	SetupTransform(entity, position, rl.Vector3Zero(), size, 0.5)
+
+	entity.model.data = rl.LoadModel(strings.clone_to_cstring(entity.model.fileName))
+
+	enemy: Enemy = {
+		dead          = false,
+		moving        = false,
+		attacking     = false,
+		playerSpotted = false,
+		damage        = 2,
+		health        = 15,
+		movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		fireRate      = 5.75,
+		nextFire      = 5.75,
+		animator      = EnemyAnimations(entity.model.fileName),
+	}
+
+	entity.data.value = enemy
+
+	entity.active = true
 
 }
 

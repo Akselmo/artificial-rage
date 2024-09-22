@@ -97,7 +97,6 @@ WeaponHasAmmo :: proc(weaponId: WeaponID) -> bool {
 		return true
 	}
 	wpn := Weapons[weaponId]
-	fmt.printfln("Ammo: %[0]v", wpn.ammo)
 	if (wpn.ammo > 0) {
 		return true
 	}

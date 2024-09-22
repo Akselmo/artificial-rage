@@ -202,9 +202,7 @@ MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mes
 }
 
 AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32) {
-	#partial switch type 
-
-	{
+	#partial switch type {
 	case entity.Type.NONE:
 		return
 	case entity.Type.START:
@@ -214,7 +212,6 @@ AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32) {
 	case:
 		append(&entity.entitiesInScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
 	}
-
-
+	fmt.printfln("Creating entity type %[0]v", type)
 }
 
