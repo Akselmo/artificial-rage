@@ -103,13 +103,18 @@ PlaceEntities :: proc() {
 	position = rl.Vector3{-mapPosX / 2.0, 0.5, -mapPosZ / 2.0}
 	size = height * width
 
+	id: i32 = 0
 	for e: i32 = 0; e < size; e += 1 {
 		entityPosX := e % width
 		entityPosY := e / width
 		mx := position.x - 0.5 + cast(f32)entityPosX * 1.0
 		my := position.z - 0.5 + cast(f32)entityPosY * 1.0
 
-		AddEntityToScene(cast(entity.Type)squares[e], mx, my, e)
+		type := cast(entity.Type)squares[e]
+		if (type != entity.Type.NONE) {
+			id += 1
+			AddEntityToScene(type, mx, my, id)
+		}
 	}
 
 	fmt.printfln("Level has total %[0]v entities", size)
@@ -138,10 +143,6 @@ Update :: proc() {
 	for p := 0; p < len(entity.projectilesInScene); p += 1 {
 		entity.ProjectileUpdate(&entity.projectilesInScene[p])
 	}
-}
-
-UpdateProjectiles :: proc() {
-
 }
 
 MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mesh {
@@ -212,6 +213,6 @@ AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32) {
 	case:
 		append(&entity.entitiesInScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
 	}
-	fmt.printfln("Creating entity type %[0]v", type)
+	fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
 }
 
