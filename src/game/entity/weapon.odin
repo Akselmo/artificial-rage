@@ -110,7 +110,7 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 	if (nextFireTime > 0.0) {
 		nextFireTime -= rl.GetFrameTime()
 	} else {
-		wpn := Weapons[WeaponCurrent]
+		wpn := &Weapons[WeaponCurrent]
 		if (WeaponHasAmmo(wpn.weaponId) && !WeaponActive) {
 			WeaponActive = true
 			WeaponCurrentFrame = wpn.spriteFireFrame
@@ -128,6 +128,9 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 				// Move raycast start position a bit further from player if firing a projectile
 				rayCast.position = rayCast.position + (rayCast.direction * 0.1)
 				ProjectileCreate(rayCast, wpn.projectileSize, wpn.damage, PLAYER_ID, wpn.projectileColor)
+			}
+			if (wpn.weaponId != WeaponID.MELEE) {
+				wpn.ammo -= 1
 			}
 		}
 		nextFireTime := wpn.fireRate
