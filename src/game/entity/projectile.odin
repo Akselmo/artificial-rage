@@ -80,16 +80,16 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 	//  Otherwise tell the entity they've been hit and give them damage
 	projectileBox: rl.BoundingBox = utilities.MakeBoundingBox(projectile.position, projectile.size)
 	for i := 0; i < len(entitiesInScene); i += 1 {
-		ent := entitiesInScene[i]
+		ent := &entitiesInScene[i]
 		if (!ent.transform.canCollide) {
 			continue
 		}
-		if (rl.CheckCollisionBoxes(projectileBox, ent.transform.boundingBox) && ent.id != projectile.ownerId) {
+		if (ent.id != projectile.ownerId && rl.CheckCollisionBoxes(projectileBox, ent.transform.boundingBox)) {
 			// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
 			// unless its a wall
 			//  Otherwise tell the entity they've been hit and give them damage
 			if (ent.data.type == Type.ENEMY_DEFAULT) {
-				TakeDamage(&ent, projectile.damage)
+				TakeDamage(ent, projectile.damage)
 			}
 			ProjectileDestroy(projectile)
 			return

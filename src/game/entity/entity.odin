@@ -257,15 +257,15 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 		return
 	}
 
-	actor := entity.data.value.(Enemy)
-	if (actor.dead) {
+	actor := &entity.data.value.(Enemy)
+	if (!actor.dead) {
 		if (!actor.playerSpotted) {
 			actor.playerSpotted = true
 		}
 
 		actor.health -= damageAmount
 
-		fmt.printfln("Entity id %[0]v took %[1]v damage", entity.id, damageAmount)
+		fmt.printfln("Entity id %[0]v took %[1]v damage, health left: %[2]v", entity.id, damageAmount, actor.health)
 
 		if (actor.health <= 0) {
 			Destroy(entity)
@@ -275,6 +275,7 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 
 Destroy :: proc(entity: ^Entity) {
 
+	fmt.printfln("Entity dead")
 	if (entity.data.type == Type.ENEMY_DEFAULT) {
 		enemy := &entity.data.value.(Enemy)
 		// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
