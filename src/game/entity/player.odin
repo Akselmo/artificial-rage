@@ -9,8 +9,8 @@ import rl "vendor:raylib"
 
 PLAYER_ID: i32 : -1
 PLAYER_MAX_HEALTH: i32 : 20
-PLAYER_CAMERA_MIN_CLAMP: f32 : 89.0
-PLAYER_CAMERA_MAX_CLAMP: f32 : -89.0
+PLAYER_CAMERA_MIN_CLAMP: f32 : 1.5
+PLAYER_CAMERA_MAX_CLAMP: f32 : -1.5
 PLAYER_CAMERA_PANNING_DIVIDER: f32 : 5.1
 PLAYER_START_POSITION_Y: f32 : 0.4
 
@@ -133,10 +133,10 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	PlayerCustomCamera.angle.y -= mousePositionDelta.y * PlayerCustomCamera.mouseSensitivity * rl.GetFrameTime()
 
 	// Angle clamp
-	if (PlayerCustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP * math.DEG_PER_RAD) {
-		PlayerCustomCamera.angle.y = PLAYER_CAMERA_MIN_CLAMP * math.DEG_PER_RAD
-	} else if (PlayerCustomCamera.angle.y < PLAYER_CAMERA_MAX_CLAMP * math.DEG_PER_RAD) {
-		PlayerCustomCamera.angle.y = PLAYER_CAMERA_MAX_CLAMP * math.DEG_PER_RAD
+	if (PlayerCustomCamera.angle.y > PLAYER_CAMERA_MIN_CLAMP) {
+		PlayerCustomCamera.angle.y = PLAYER_CAMERA_MIN_CLAMP
+	} else if (PlayerCustomCamera.angle.y < PLAYER_CAMERA_MAX_CLAMP) {
+		PlayerCustomCamera.angle.y = PLAYER_CAMERA_MAX_CLAMP
 	}
 
 	// Recalculate camera target considering translation and rotation
