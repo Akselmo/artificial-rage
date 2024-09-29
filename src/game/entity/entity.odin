@@ -7,6 +7,10 @@ import "core:strings"
 import "src:game/utilities"
 import rl "vendor:raylib"
 
+// Holds all the shared entity structs like transform etc..
+// TODO: move these things to their own files, use tagged unions
+// fix the update proc
+
 WALL_MODEL_ID: i32 : -2
 ACTOR_POSITION_Y: f32 : 0.0
 ACTOR_GRAVEYARD_POSITION: f32 : 999.0
@@ -16,28 +20,28 @@ ACTOR_DEFAULT_ROTATION_SPEED: f32 : 3.0
 ACTOR_DEFAULT_ANIMATION_SPEED: f32 : 60.0 // Animation played in FPS
 ITEM_START_POSITION_Y: f32 : 0.1
 
-Type :: enum {
-	NONE, // This is ignored in entities.json
-	START, // Tile map template index is 0. Here index is 1.
-	END,
-	WALL_CARGO,
-	WALL_CARGO_SCUFFED,
-	ENEMY_DEFAULT,
-	ITEM_HEALTH_SMALL,
-	ITEM_HEALTH_MEDIUM,
-	ITEM_HEALTH_LARGE,
-	ITEM_CLUTTER, // an item that provides collision but nothing else
-	ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
-	ITEM_PICKUP_RIFLE,
-	ITEM_PICKUP_SHOTGUN,
-	ITEM_PICKUP_RAILGUN,
-	ITEM_AMMO_PISTOL, // Gives only ammo
-	ITEM_AMMO_RIFLE,
-	ITEM_AMMO_SHOTGUN,
-	ITEM_AMMO_RAILGUN,
-	ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
-	PROJECTILE,
-}
+//Type :: enum {
+//	NONE, // This is ignored in entities.json
+//	START, // Tile map template index is 0. Here index is 1.
+//	END,
+//	WALL_CARGO,
+//	WALL_CARGO_SCUFFED,
+//	ENEMY_DEFAULT,
+//	ITEM_HEALTH_SMALL,
+//	ITEM_HEALTH_MEDIUM,
+//	ITEM_HEALTH_LARGE,
+//	ITEM_CLUTTER, // an item that provides collision but nothing else
+//	ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
+//	ITEM_PICKUP_RIFLE,
+//	ITEM_PICKUP_SHOTGUN,
+//	ITEM_PICKUP_RAILGUN,
+//	ITEM_AMMO_PISTOL, // Gives only ammo
+//	ITEM_AMMO_RIFLE,
+//	ITEM_AMMO_SHOTGUN,
+//	ITEM_AMMO_RAILGUN,
+//	ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
+//	PROJECTILE,
+//}
 
 
 Item :: struct {
@@ -54,29 +58,32 @@ Transform :: struct {
 	canCollide:  bool,
 }
 
-Model :: struct {
-	fileName:        string,
+Visuals :: struct {
+	modelFileName:   string,
 	textureFilename: string,
-	data:            rl.Model,
+	model:           rl.Model,
 	isBillboard:     bool,
 }
 
-EntityData :: union {
+Audio :: struct {
+	fileName: string,
+	volume:   f32,
+	loop:     bool,
+}
+
+Data :: union {
 	Item,
 	Enemy,
 	Projectile,
 }
 
-Data :: struct {
-	type:  Type,
-	value: EntityData,
-}
 
 Entity :: struct {
 	id:        i32,
 	active:    bool,
 	transform: Transform,
-	model:     Model,
+	visuals:   Visuals,
+	audio:     Audio,
 	data:      Data,
 }
 
@@ -97,8 +104,8 @@ Update :: proc(entity: ^Entity) {
 }
 
 Draw :: proc(entity: ^Entity) {
-	rl.DrawModel(entity.model.data, entity.transform.position, entity.transform.scale, rl.WHITE)
-	if (entity.model.isBillboard) {
+	rl.DrawModel(entity.visuals.model, entity.transform.position, entity.transform.scale, rl.WHITE)
+	if (entity.visuals.isBillboard) {
 		RotateTowards(entity, Player.transform.position)
 	}
 
@@ -136,11 +143,11 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 
 	for i := 0; i < len(entitiesInScene); i += 1 {
 		ent := entitiesInScene[i]
-		if (ent.id != 0 && ent.id != entity.id && ent.model.isBillboard) {
+		if (ent.id != 0 && ent.id != entity.id && ent.visuals.isBillboard) {
 			pos: rl.Vector3 = ent.transform.position
 			hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
 				rayCast,
-				ent.model.data.meshes[0],
+				ent.visuals.model.meshes[0],
 				rl.MatrixTranslate(pos.x, pos.y, pos.z),
 			)
 			if (hitLevel.hit) {
@@ -217,7 +224,7 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 
 	for i: i32 = 0; i < entitiesAmount; i += 1 {
 		entity := entitiesInScene[i]
-		if (entity.data.type != Type.NONE && !entity.model.isBillboard) {
+		if (entity.data.type != Type.NONE && !entity.visuals.isBillboard) {
 			if (entity.data.type == Type.ENEMY_DEFAULT) {
 				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
 				if (enemyHit.hit && !entity.data.value.(Enemy).dead) {
@@ -230,10 +237,10 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 				}
 			} else {
 				pos: rl.Vector3 = entity.transform.position
-				if (entity.model.data.meshCount > 0) {
+				if (entity.visuals.model.meshCount > 0) {
 					hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(
 						rayCast,
-						entity.model.data.meshes[0],
+						entity.visuals.model.meshes[0],
 						rl.MatrixTranslate(pos.x, pos.y, pos.z),
 					)
 					if (hitLevel.hit && hitLevel.distance < levelDistance) {
@@ -324,7 +331,7 @@ RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 	end: rl.Quaternion = rl.QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x)
 	slerp: rl.Quaternion = rl.QuaternionSlerp(start, end, entity.data.value.(Enemy).rotationSpeed * rl.GetFrameTime())
 
-	entity.model.data.transform = rl.QuaternionToMatrix(slerp)
+	entity.visuals.model.transform = rl.QuaternionToMatrix(slerp)
 	entity.transform.rotation = newRotation
 }
 
@@ -342,49 +349,49 @@ Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
 
 	#partial switch type {
 	case Type.WALL_CARGO:
-		entity.model.textureFilename = "./assets/textures/wall1.png"
+		entity.visuals.textureFilename = "./assets/textures/wall1.png"
 		CreateWall(&entity)
 	case Type.WALL_CARGO_SCUFFED:
-		entity.model.textureFilename = "./assets/textures/wall2.png"
+		entity.visuals.textureFilename = "./assets/textures/wall2.png"
 		CreateWall(&entity)
 	case Type.ENEMY_DEFAULT:
-		entity.model.fileName = "./assets/models/enemy.m3d"
+		entity.visuals.modelFileName = "./assets/models/enemy.m3d"
 		CreateEnemy(&entity)
 	case Type.ITEM_HEALTH_SMALL:
-		entity.model.textureFilename = "./assets/textures/health_small.png"
+		entity.visuals.textureFilename = "./assets/textures/health_small.png"
 		CreateItem(&entity, true, 5)
 	case Type.ITEM_HEALTH_MEDIUM:
-		entity.model.textureFilename = "./assets/textures/health_medium.png"
+		entity.visuals.textureFilename = "./assets/textures/health_medium.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_HEALTH_LARGE:
-		entity.model.textureFilename = "./assets/textures/health_large.png"
+		entity.visuals.textureFilename = "./assets/textures/health_large.png"
 		CreateItem(&entity, true, 15)
 	case Type.ITEM_PICKUP_PISTOL:
-		entity.model.textureFilename = "./assets/textures/pistol.png"
+		entity.visuals.textureFilename = "./assets/textures/pistol.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_PICKUP_RIFLE:
-		entity.model.textureFilename = "./assets/textures/rifle.png"
+		entity.visuals.textureFilename = "./assets/textures/rifle.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_PICKUP_SHOTGUN:
-		entity.model.textureFilename = "./assets/textures/shotgun.png"
+		entity.visuals.textureFilename = "./assets/textures/shotgun.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_PICKUP_RAILGUN:
-		entity.model.textureFilename = "./assets/textures/railgun.png"
+		entity.visuals.textureFilename = "./assets/textures/railgun.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_AMMO_PISTOL:
-		entity.model.textureFilename = "./assets/textures/ammo_pistol.png"
+		entity.visuals.textureFilename = "./assets/textures/ammo_pistol.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_AMMO_RIFLE:
-		entity.model.textureFilename = "./assets/textures/ammo_rifle.png"
+		entity.visuals.textureFilename = "./assets/textures/ammo_rifle.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_AMMO_SHOTGUN:
-		entity.model.textureFilename = "./assets/textures/ammo_shotgun.png"
+		entity.visuals.textureFilename = "./assets/textures/ammo_shotgun.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_AMMO_RAILGUN:
-		entity.model.textureFilename = "./assets/textures/ammo_railgun.png"
+		entity.visuals.textureFilename = "./assets/textures/ammo_railgun.png"
 		CreateItem(&entity, true, 10)
 	case Type.ITEM_KEY_TELEPORT:
-		entity.model.textureFilename = "./assets/textures/pickup_teleportkey.png"
+		entity.visuals.textureFilename = "./assets/textures/pickup_teleportkey.png"
 		CreateItem(&entity, true, 10)
 	}
 
@@ -401,17 +408,17 @@ SetupTransform :: proc(entity: ^Entity, pos: rl.Vector3, rot: rl.Vector3, size: 
 
 // NOTE: Should this be in scene? Idk
 CreateWall :: proc(entity: ^Entity) {
-	textureImage := rl.LoadImage(strings.clone_to_cstring(entity.model.textureFilename))
+	textureImage := rl.LoadImage(strings.clone_to_cstring(entity.visuals.textureFilename))
 
 	rl.ImageFlipVertical(&textureImage)
 
 	texture := rl.LoadTextureFromImage(textureImage)
 
 	cube: rl.Mesh = rl.GenMeshCube(1.0, 1.0, 1.0)
-	entity.model.data = rl.LoadModelFromMesh(cube)
+	entity.visuals.model = rl.LoadModelFromMesh(cube)
 	SetupTransform(entity, entity.transform.position, rl.Vector3(0), rl.Vector3(1), 1.0)
 
-	entity.model.data.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
+	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
 
 	entity.active = true
 
@@ -427,9 +434,9 @@ CreateEnemy :: proc(entity: ^Entity) {
 	SetupTransform(entity, position, rl.Vector3(0), size, 0.5)
 
 
-	filename := strings.clone_to_cstring(entity.model.fileName)
+	filename := strings.clone_to_cstring(entity.visuals.modelFileName)
 	defer delete(filename)
-	entity.model.data = rl.LoadModel(filename)
+	entity.visuals.model = rl.LoadModel(filename)
 
 	enemy: Enemy = {
 		dead          = false,
@@ -442,7 +449,7 @@ CreateEnemy :: proc(entity: ^Entity) {
 		rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
 		fireRate      = 5.75,
 		nextFire      = 5.75,
-		animator      = EnemyAnimations(entity.model.fileName),
+		animator      = EnemyAnimations(entity.visuals.modelFileName),
 	}
 
 	entity.data.value = enemy

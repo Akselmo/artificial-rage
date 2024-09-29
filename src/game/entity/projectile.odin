@@ -18,7 +18,7 @@ Projectile :: struct {
 	position:      rl.Vector3,
 	size:          rl.Vector3,
 	color:         rl.Color,
-	model:         rl.Model,
+	model:         rl.Visuals,
 	boundingBox:   rl.BoundingBox,
 	id:            i32,
 	ownerId:       i32,
