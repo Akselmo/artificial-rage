@@ -120,7 +120,8 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 			if (wpn.hitscan) {
 				// hitscan
 				entity := entitiesInScene[entityHitId]
-				if (entity.id != 0 && entity.id != PLAYER_ID && entity.data.type == Type.ENEMY_DEFAULT) {
+				ent, ok := entity.type.(Enemy)
+				if (entity.id != 0 && entity.id != PLAYER_ID && ok) {
 					TakeDamage(&entity, wpn.damage)
 				}
 			} else {

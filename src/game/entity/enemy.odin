@@ -1,6 +1,7 @@
 package entity
 import "core:fmt"
 import "core:strings"
+import "src:game/utilities"
 import rl "vendor:raylib"
 
 EnemyAnimationID :: enum {
@@ -90,7 +91,7 @@ EnemyAnimations :: proc(modelFileName: string) -> Animator {
 }
 
 EnemyUpdate :: proc(entity: ^Entity) {
-	enemy := &entity.data.value.(Enemy)
+	enemy := &entity.type.(Enemy)
 	if (!enemy.dead) {
 		if (TestPlayerHit(entity)) {
 			enemy.playerSpotted = true
@@ -109,16 +110,54 @@ EnemyUpdate :: proc(entity: ^Entity) {
 		SetAnimation(&enemy.animator, cast(i32)EnemyAnimationID.DEATH)
 	}
 
-	if (rl.IsModelAnimationValid(entity.model.data, enemy.animator.currentAnimation.animation)) {
+	if (rl.IsModelAnimationValid(entity.visuals.model, enemy.animator.currentAnimation.animation)) {
 		enemy.animator.nextFrame = PlayAnimation(
 			&enemy.animator,
-			&entity.model.data,
+			&entity.visuals,
 			ACTOR_DEFAULT_ANIMATION_SPEED,
 			enemy.animator.nextFrame,
 		)
 	} else {
 		fmt.printfln("Enemy animation %[0]v is not valid!", cast(EnemyAnimationID)enemy.animator.currentAnimation.id)
 	}
+
+}
+
+CreateEnemy :: proc(entity: ^Entity) {
+
+	entity.visuals.modelFileName = "./assets/models/enemy.m3d"
+	position := rl.Vector3{entity.transform.position.x, ACTOR_POSITION_Y, entity.transform.position.z}
+
+	size := rl.Vector3{0.25, 1.1, 0.25}
+
+	entity.transform.position = position
+	entity.transform.rotation = rl.Vector3(0)
+	entity.transform.size = size
+	entity.transform.scale = 0.5
+	entity.transform.boundingBox = utilities.MakeBoundingBox(position, size)
+
+
+	filename := strings.clone_to_cstring(entity.visuals.modelFileName)
+	defer delete(filename)
+	entity.visuals.model = rl.LoadModel(filename)
+
+	enemy: Enemy = {
+		dead          = false,
+		moving        = false,
+		attacking     = false,
+		playerSpotted = false,
+		damage        = 2,
+		health        = 15,
+		movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
+		rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
+		fireRate      = 5.75,
+		nextFire      = 5.75,
+		animator      = EnemyAnimations(entity.visuals.modelFileName),
+	}
+
+	entity.type = enemy
+
+	entity.active = true
 
 }
 

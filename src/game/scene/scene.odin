@@ -110,10 +110,9 @@ PlaceEntities :: proc() {
 		mx := position.x - 0.5 + cast(f32)entityPosX * 1.0
 		my := position.z - 0.5 + cast(f32)entityPosY * 1.0
 
-		type := cast(entity.Type)squares[e]
-		if (type != entity.Type.NONE) {
+		if (squares[e] != 0) {
 			id += 1
-			AddEntityToScene(type, mx, my, id)
+			AddEntityToScene(squares[e], mx, my, id)
 		}
 	}
 
@@ -202,13 +201,13 @@ MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mes
 
 }
 
-AddEntityToScene :: proc(type: entity.Type, mx: f32, my: f32, id: i32) {
-	#partial switch type {
-	case entity.Type.NONE:
+AddEntityToScene :: proc(type: i32, mx: f32, my: f32, id: i32) {
+	switch type {
+	case 0:
 		return
-	case entity.Type.START:
+	case 1:
 		startPosition = rl.Vector3{mx, 0.0, my}
-	case entity.Type.END:
+	case 2:
 		endPosition = rl.Vector3{mx, 0.0, my}
 	case:
 		append(&entity.entitiesInScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))

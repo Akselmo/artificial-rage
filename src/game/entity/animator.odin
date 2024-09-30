@@ -41,7 +41,7 @@ SetAnimation :: proc(animator: ^Animator, id: i32) {
 }
 
 // TODO: This would need somekind of frameskip feature if FPS is lower than animationspeed.
-PlayAnimation :: proc(animator: ^Animator, model: ^rl.Visuals, speed: f32, oldFrame: f32) -> f32 {
+PlayAnimation :: proc(animator: ^Animator, model: ^Visuals, speed: f32, oldFrame: f32) -> f32 {
 	nextFrame := oldFrame
 
 	if (nextFrame > 0) {
@@ -56,7 +56,7 @@ PlayAnimation :: proc(animator: ^Animator, model: ^rl.Visuals, speed: f32, oldFr
 				animator.animationFrame = currentAnimation.lastFrame
 			}
 		}
-		rl.UpdateModelAnimation(model^, currentAnimation.animation, animator.animationFrame)
+		rl.UpdateModelAnimation(model.model, currentAnimation.animation, animator.animationFrame)
 		nextFrame = 1.0 / speed
 	}
 	return nextFrame

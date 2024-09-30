@@ -18,7 +18,7 @@ Projectile :: struct {
 	position:      rl.Vector3,
 	size:          rl.Vector3,
 	color:         rl.Color,
-	model:         rl.Visuals,
+	model:         Visuals,
 	boundingBox:   rl.BoundingBox,
 	id:            i32,
 	ownerId:       i32,
@@ -47,7 +47,7 @@ ProjectileCreate :: proc(rayCast: rl.Ray, size: rl.Vector3, damage: i32, ownerId
 				destroyed     = false,
 			}
 			newProjectile.position = newProjectile.startPosition
-			newProjectile.model = rl.LoadModelFromMesh(
+			newProjectile.model.model = rl.LoadModelFromMesh(
 				rl.GenMeshCube(newProjectile.size.x, newProjectile.size.y, newProjectile.size.z),
 			)
 			fmt.printfln("Projectile id %[0]v created", newProjectile.id)
@@ -65,7 +65,7 @@ ProjectileUpdate :: proc(projectile: ^Projectile) {
 
 	if (!projectile.destroyed && projectile.id != 0) {
 		// TODO: draw texture
-		rl.DrawModel(projectile.model, projectile.position, 1.0, projectile.color)
+		rl.DrawModel(projectile.model.model, projectile.position, 1.0, projectile.color)
 
 		projectile.position = linalg.lerp(projectile.position, projectile.endPosition, projectile.speed)
 		ProjectileDestroyOverTime(projectile)
@@ -88,7 +88,8 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 			// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
 			// unless its a wall
 			//  Otherwise tell the entity they've been hit and give them damage
-			if (ent.data.type == Type.ENEMY_DEFAULT) {
+			asd, ok := ent.type.(Enemy)
+			if (ok) {
 				TakeDamage(ent, projectile.damage)
 			}
 			ProjectileDestroy(projectile)
@@ -121,6 +122,6 @@ ProjectileRotateTowards :: proc(projectile: ^Projectile) {
 	y_angle: f32 = -(libc.atan2f(dz, dx) + math.PI / 2.0)
 	z_angle: f32 = libc.atan2f(dy, libc.sqrtf(dx * dx + dz * dz))
 
-	projectile.model.transform = rl.QuaternionToMatrix(rl.QuaternionFromEuler(z_angle, y_angle, 0))
+	projectile.model.model.transform = rl.QuaternionToMatrix(rl.QuaternionFromEuler(z_angle, y_angle, 0))
 }
 

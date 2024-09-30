@@ -20,30 +20,6 @@ ACTOR_DEFAULT_ROTATION_SPEED: f32 : 3.0
 ACTOR_DEFAULT_ANIMATION_SPEED: f32 : 60.0 // Animation played in FPS
 ITEM_START_POSITION_Y: f32 : 0.1
 
-//Type :: enum {
-//	NONE, // This is ignored in entities.json
-//	START, // Tile map template index is 0. Here index is 1.
-//	END,
-//	WALL_CARGO,
-//	WALL_CARGO_SCUFFED,
-//	ENEMY_DEFAULT,
-//	ITEM_HEALTH_SMALL,
-//	ITEM_HEALTH_MEDIUM,
-//	ITEM_HEALTH_LARGE,
-//	ITEM_CLUTTER, // an item that provides collision but nothing else
-//	ITEM_PICKUP_PISTOL, // Gives weapon and some ammo
-//	ITEM_PICKUP_RIFLE,
-//	ITEM_PICKUP_SHOTGUN,
-//	ITEM_PICKUP_RAILGUN,
-//	ITEM_AMMO_PISTOL, // Gives only ammo
-//	ITEM_AMMO_RIFLE,
-//	ITEM_AMMO_SHOTGUN,
-//	ITEM_AMMO_RAILGUN,
-//	ITEM_KEY_TELEPORT, // Needed to go through ending teleporter
-//	PROJECTILE,
-//}
-
-
 Item :: struct {
 	pickup: bool,
 	value:  i32,
@@ -71,20 +47,24 @@ Audio :: struct {
 	loop:     bool,
 }
 
-Data :: union {
+Type :: union {
+	PlayerStart,
+	PlayerEnd,
+	WallCargo,
+	WallCargoScuffed,
 	Item,
 	Enemy,
 	Projectile,
 }
 
-
+//NOTE: maybe the entity could only hold id, active, transform and type?
 Entity :: struct {
 	id:        i32,
 	active:    bool,
 	transform: Transform,
 	visuals:   Visuals,
 	audio:     Audio,
-	data:      Data,
+	type:      Type,
 }
 
 // Amount of entities loaded in a scene
@@ -95,9 +75,9 @@ Update :: proc(entity: ^Entity) {
 		return
 	}
 	Draw(entity)
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
-		return
-	} else {
+
+	#partial switch _ in entity.type {
+	case Enemy:
 		EnemyUpdate(entity)
 	}
 
@@ -126,12 +106,13 @@ TestPlayerHit :: proc(entity: ^Entity) -> bool {
 	// TODO: this function can be quite heavy, could give it a tickrate?
 	//  every 1-2 seconds instead of every frame
 
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
+	ent, ok := entity.type.(Enemy)
+	if (!ok) {
 		return false
 	}
 
 	if (rl.Vector3Distance(Player.transform.position, entity.transform.position) > 5.0 &&
-		   entity.data.value.(Enemy).playerSpotted) {
+		   entity.type.(Enemy).playerSpotted) {
 		return false
 	}
 
@@ -182,7 +163,9 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 }
 
 UpdatePosition :: proc(entity: ^Entity) -> bool {
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
+	ent, ok := entity.type.(Enemy)
+
+	if (!ok) {
 		return false
 	}
 
@@ -201,7 +184,7 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 		entity.transform.position = linalg.lerp(
 			entity.transform.position,
 			entityNewPosition,
-			entity.data.value.(Enemy).movementSpeed * rl.GetFrameTime(),
+			entity.type.(Enemy).movementSpeed * rl.GetFrameTime(),
 		)
 		if (CheckCollision(entity.transform.position, entity.transform.size, entity.id)) {
 			entity.transform.position = entityOldPosition
@@ -224,10 +207,11 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 
 	for i: i32 = 0; i < entitiesAmount; i += 1 {
 		entity := entitiesInScene[i]
-		if (entity.data.type != Type.NONE && !entity.visuals.isBillboard) {
-			if (entity.data.type == Type.ENEMY_DEFAULT) {
+		if (!entity.visuals.isBillboard) {
+			ent, ok := entity.type.(Enemy)
+			if (ok) {
 				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
-				if (enemyHit.hit && !entity.data.value.(Enemy).dead) {
+				if (enemyHit.hit && !entity.type.(Enemy).dead) {
 
 					dist := rl.Vector3Length(entity.transform.position - rayCast.position)
 					if (dist < enemyDistance) {
@@ -260,11 +244,12 @@ RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 }
 
 TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
+	ent, ok := entity.type.(Enemy)
+	if (!ok) {
 		return
 	}
 
-	actor := &entity.data.value.(Enemy)
+	actor := &entity.type.(Enemy)
 	if (!actor.dead) {
 		if (!actor.playerSpotted) {
 			actor.playerSpotted = true
@@ -283,8 +268,9 @@ TakeDamage :: proc(entity: ^Entity, damageAmount: i32) {
 Destroy :: proc(entity: ^Entity) {
 
 	fmt.printfln("Entity dead")
-	if (entity.data.type == Type.ENEMY_DEFAULT) {
-		enemy := &entity.data.value.(Enemy)
+	ent, ok := entity.type.(Enemy)
+	if (ok) {
+		enemy := &entity.type.(Enemy)
 		// HACK: Dirty hack to move bounding box outside of map so it cant be collided to.
 		// We want to keep entity in the memory so we can use its position to display the
 		// corpse/death anim
@@ -301,11 +287,12 @@ Destroy :: proc(entity: ^Entity) {
 }
 
 FireAtPlayer :: proc(entity: ^Entity, nextFire: f32) -> bool {
-	if (entity.data.type != Type.ENEMY_DEFAULT) {
+	ent, ok := entity.type.(Enemy)
+	if (!ok) {
 		return false
 	}
 
-	enemy := &entity.data.value.(Enemy)
+	enemy := &entity.type.(Enemy)
 	RotateTowards(entity, Player.transform.position)
 	if (nextFire > 0) {
 		enemy.nextFire -= rl.GetFrameTime()
@@ -329,7 +316,7 @@ RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 		entity.transform.rotation.x,
 	)
 	end: rl.Quaternion = rl.QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x)
-	slerp: rl.Quaternion = rl.QuaternionSlerp(start, end, entity.data.value.(Enemy).rotationSpeed * rl.GetFrameTime())
+	slerp: rl.Quaternion = rl.QuaternionSlerp(start, end, entity.type.(Enemy).rotationSpeed * rl.GetFrameTime())
 
 	entity.visuals.model.transform = rl.QuaternionToMatrix(slerp)
 	entity.transform.rotation = newRotation
@@ -339,126 +326,52 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 
 }
 
-Create :: proc(type: Type, position: rl.Vector3, id: i32) -> Entity {
+Create :: proc(type: i32, position: rl.Vector3, id: i32) -> Entity {
 	entity: Entity = {}
 
-	entity.data.type = type
 	entity.id = id
 	entity.transform.position = position
 	entity.transform.canCollide = true
 
-	#partial switch type {
-	case Type.WALL_CARGO:
-		entity.visuals.textureFilename = "./assets/textures/wall1.png"
-		CreateWall(&entity)
-	case Type.WALL_CARGO_SCUFFED:
-		entity.visuals.textureFilename = "./assets/textures/wall2.png"
-		CreateWall(&entity)
-	case Type.ENEMY_DEFAULT:
-		entity.visuals.modelFileName = "./assets/models/enemy.m3d"
+	// TODO create the things
+
+
+	switch type {
+	case 0:
+		//empty
+		break
+	case 1:
+		//start
+		CreatePlayerStart(&entity)
+	case 2:
+		//end
+		CreatePlayerEnd(&entity)
+	case 3:
+		//wall1
+		CreateWallCargo(&entity)
+	case 4:
+		//wall2
+		CreateWallCargoScuffed(&entity)
+	case 5:
+		//enemy
 		CreateEnemy(&entity)
-	case Type.ITEM_HEALTH_SMALL:
-		entity.visuals.textureFilename = "./assets/textures/health_small.png"
-		CreateItem(&entity, true, 5)
-	case Type.ITEM_HEALTH_MEDIUM:
-		entity.visuals.textureFilename = "./assets/textures/health_medium.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_HEALTH_LARGE:
-		entity.visuals.textureFilename = "./assets/textures/health_large.png"
-		CreateItem(&entity, true, 15)
-	case Type.ITEM_PICKUP_PISTOL:
-		entity.visuals.textureFilename = "./assets/textures/pistol.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_PICKUP_RIFLE:
-		entity.visuals.textureFilename = "./assets/textures/rifle.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_PICKUP_SHOTGUN:
-		entity.visuals.textureFilename = "./assets/textures/shotgun.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_PICKUP_RAILGUN:
-		entity.visuals.textureFilename = "./assets/textures/railgun.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_AMMO_PISTOL:
-		entity.visuals.textureFilename = "./assets/textures/ammo_pistol.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_AMMO_RIFLE:
-		entity.visuals.textureFilename = "./assets/textures/ammo_rifle.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_AMMO_SHOTGUN:
-		entity.visuals.textureFilename = "./assets/textures/ammo_shotgun.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_AMMO_RAILGUN:
-		entity.visuals.textureFilename = "./assets/textures/ammo_railgun.png"
-		CreateItem(&entity, true, 10)
-	case Type.ITEM_KEY_TELEPORT:
-		entity.visuals.textureFilename = "./assets/textures/pickup_teleportkey.png"
-		CreateItem(&entity, true, 10)
+	case 6: //health_small
+	case 7: //health_medium
+	case 8: //health_large
+	case 9: //clutter
+	case 10: //pickup_pistol
+	case 11: //pickup_rifle
+	case 12: //pickup_shotgun
+	case 13: //pickup_railgun
+	case 14: //ammo_pistol
+	case 15: //ammo_rifle
+	case 16: //ammo_shotgun
+	case 17: //ammo_railgun
+	case 18: //pickup_teleportkey
+
 	}
+
 
 	return entity
-}
-
-SetupTransform :: proc(entity: ^Entity, pos: rl.Vector3, rot: rl.Vector3, size: rl.Vector3, scale: f32) {
-	entity.transform.boundingBox = utilities.MakeBoundingBox(pos, size)
-	entity.transform.position = pos
-	entity.transform.rotation = rot
-	entity.transform.size = size
-	entity.transform.scale = scale
-}
-
-// NOTE: Should this be in scene? Idk
-CreateWall :: proc(entity: ^Entity) {
-	textureImage := rl.LoadImage(strings.clone_to_cstring(entity.visuals.textureFilename))
-
-	rl.ImageFlipVertical(&textureImage)
-
-	texture := rl.LoadTextureFromImage(textureImage)
-
-	cube: rl.Mesh = rl.GenMeshCube(1.0, 1.0, 1.0)
-	entity.visuals.model = rl.LoadModelFromMesh(cube)
-	SetupTransform(entity, entity.transform.position, rl.Vector3(0), rl.Vector3(1), 1.0)
-
-	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
-
-	entity.active = true
-
-
-}
-
-CreateEnemy :: proc(entity: ^Entity) {
-
-	position := rl.Vector3{entity.transform.position.x, ACTOR_POSITION_Y, entity.transform.position.z}
-
-	size := rl.Vector3{0.25, 1.1, 0.25}
-
-	SetupTransform(entity, position, rl.Vector3(0), size, 0.5)
-
-
-	filename := strings.clone_to_cstring(entity.visuals.modelFileName)
-	defer delete(filename)
-	entity.visuals.model = rl.LoadModel(filename)
-
-	enemy: Enemy = {
-		dead          = false,
-		moving        = false,
-		attacking     = false,
-		playerSpotted = false,
-		damage        = 2,
-		health        = 15,
-		movementSpeed = ACTOR_DEFAULT_MOVEMENT_SPEED,
-		rotationSpeed = ACTOR_DEFAULT_ROTATION_SPEED,
-		fireRate      = 5.75,
-		nextFire      = 5.75,
-		animator      = EnemyAnimations(entity.visuals.modelFileName),
-	}
-
-	entity.data.value = enemy
-
-	entity.active = true
-
-}
-
-CreateItem :: proc(entity: ^Entity, pickup: bool, value: i32) {
-
 }
 
