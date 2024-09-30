@@ -202,16 +202,51 @@ MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mes
 }
 
 AddEntityToScene :: proc(type: i32, mx: f32, my: f32, id: i32) {
+
+	ent: entity.Entity = {}
+
+	ent.id = id
+	ent.transform.position = rl.Vector3{mx, 0.5, my}
+	ent.transform.canCollide = true
+
+	// TODO create the things
 	switch type {
 	case 0:
-		return
+		//empty
+		break
 	case 1:
+		//start
+		entity.CreatePlayerStart(&ent)
 		startPosition = rl.Vector3{mx, 0.0, my}
 	case 2:
+		//end
+		entity.CreatePlayerEnd(&ent)
 		endPosition = rl.Vector3{mx, 0.0, my}
-	case:
-		append(&entity.entitiesInScene, entity.Create(type, rl.Vector3{mx, 0.5, my}, id))
+	case 3:
+		//wall1
+		entity.CreateWallCargo(&ent)
+	case 4:
+		//wall2
+		entity.CreateWallCargoScuffed(&ent)
+	case 5:
+		//enemy
+		entity.CreateEnemy(&ent)
+	case 6: //health_small
+	case 7: //health_medium
+	case 8: //health_large
+	case 9: //clutter
+	case 10: //pickup_pistol
+	case 11: //pickup_rifle
+	case 12: //pickup_shotgun
+	case 13: //pickup_railgun
+	case 14: //ammo_pistol
+	case 15: //ammo_rifle
+	case 16: //ammo_shotgun
+	case 17: //ammo_railgun
+	case 18: //pickup_teleportkey
 	}
+
+	append(&entity.entitiesInScene, ent)
 	fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
 }
 
