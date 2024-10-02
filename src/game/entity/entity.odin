@@ -202,10 +202,9 @@ UpdatePosition :: proc(entity: ^Entity) -> bool {
 RaycastHitsEntityId :: proc(rayCast: rl.Ray) -> i32 {
 	levelDistance: f32 = libc.INFINITY
 	enemyDistance: f32 = libc.INFINITY
-	entitiesAmount: i32 = cast(i32)len(entitiesInScene)
 	hitEnemyData: Entity
 
-	for i: i32 = 0; i < entitiesAmount; i += 1 {
+	for i := 0; i < len(entitiesInScene); i += 1 {
 		entity := entitiesInScene[i]
 		if (!entity.visuals.isBillboard) {
 			ent, ok := entity.type.(Enemy)
