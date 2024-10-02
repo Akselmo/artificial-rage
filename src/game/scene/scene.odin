@@ -14,14 +14,13 @@ MAX_PROJECTILE_AMOUNT: i32 : 254
 name: string
 height: i32
 width: i32
-squares: [dynamic]i32
+squares: [dynamic]string
 ceilingHeight: i32
 floorPlane: rl.Model
 floorPlaneTexture: rl.Texture2D
 ceilingPlane: rl.Model
 ceilingPlaneTexture: rl.Texture2D
 entitiesTotal: i32 // entitiesTotal = (last_entity_id + 1) in entities.json
-// projectiles: [dynamic]projectile.Projectile
 position: rl.Vector3
 startPosition: rl.Vector3
 endPosition: rl.Vector3
@@ -62,7 +61,7 @@ LoadSceneConfig :: proc() {
 
 ParseConfig :: proc(key: string, value: string) -> bool {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
-	switch key 
+	switch key
 	{
 	case "ceilingtexture":
 		ceilingPlaneTexture = rl.LoadTexture(texturesPath)
@@ -81,8 +80,8 @@ ParseConfig :: proc(key: string, value: string) -> bool {
 		return true
 	case "data":
 		arr := strings.split(value, ",")
-		for character in arr {
-			append(&squares, cast(i32)strconv.atoi(character))
+		for item in arr {
+			append(&squares, item)
 		}
 		return true
 	case:
@@ -110,7 +109,7 @@ PlaceEntities :: proc() {
 		mx := position.x - 0.5 + cast(f32)entityPosX * 1.0
 		my := position.z - 0.5 + cast(f32)entityPosY * 1.0
 
-		if (squares[e] != 0) {
+		if (squares[e] != "empty") {
 			id += 1
 			AddEntityToScene(squares[e], mx, my, id)
 		}
@@ -201,7 +200,7 @@ MakeCustomPlaneMesh :: proc(height: f32, width: f32, textureSize: f32) -> rl.Mes
 
 }
 
-AddEntityToScene :: proc(type: i32, mx: f32, my: f32, id: i32) {
+AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 
 	ent: entity.Entity = {}
 
@@ -209,44 +208,36 @@ AddEntityToScene :: proc(type: i32, mx: f32, my: f32, id: i32) {
 	ent.transform.position = rl.Vector3{mx, 0.5, my}
 	ent.transform.canCollide = true
 
-	// TODO create the things
 	switch type {
-	case 0:
-		//empty
-		break
-	case 1:
-		//start
+	case "empty":
+	case "start":
 		entity.CreatePlayerStart(&ent)
 		startPosition = rl.Vector3{mx, 0.0, my}
-	case 2:
-		//end
+	case "end":
 		entity.CreatePlayerEnd(&ent)
 		endPosition = rl.Vector3{mx, 0.0, my}
-	case 3:
-		//wall1
+	case "wall1":
 		entity.CreateWallCargo(&ent)
-	case 4:
-		//wall2
+	case "wall2":
 		entity.CreateWallCargoScuffed(&ent)
-	case 5:
-		//enemy
+	case "enemy":
 		entity.CreateEnemy(&ent)
-	case 6: //health_small
-	case 7: //health_medium
-	case 8: //health_large
-	case 9: //clutter
-	case 10: //pickup_pistol
-	case 11: //pickup_rifle
-	case 12: //pickup_shotgun
-	case 13: //pickup_railgun
-	case 14: //ammo_pistol
-	case 15: //ammo_rifle
-	case 16: //ammo_shotgun
-	case 17: //ammo_railgun
-	case 18: //pickup_teleportkey
+	case "health_small":
+	case "health_medium":
+	case "health_large":
+	case "clutter":
+	case "pickup_pistol":
+	case "pickup_rifle":
+	case "pickup_shotgun":
+	case "pickup_railgun":
+	case "ammo_pistol":
+	case "ammo_rifle":
+	case "ammo_shotgun":
+	case "ammo_railgun":
+	case "pickup_teleportkey":
 	}
 
 	append(&entity.entitiesInScene, ent)
-	fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
+	//fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
 }
 

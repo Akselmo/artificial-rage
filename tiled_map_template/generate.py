@@ -53,10 +53,12 @@ class MapConfigGenerator:
         data_array: list[str] = []
         for item in map_layer["data"]:
             if item <= 0:
-                data_array.append(0)
+                data_array.append("empty")
             else:
-                data_array.append(item - self.firstgid)
-        self.level_array = str(data_array).strip(r"[]").replace(" ", "")
+                data_array.append(f"{self.entities[item]}")
+        self.level_array = (
+            str(data_array).strip(r"[]").replace(" ", "").replace("'", "")
+        )
         self.level_height = map_layer["height"]
         self.level_width = map_layer["width"]
 
@@ -93,7 +95,7 @@ class MapConfigGenerator:
             "Copy the following switch-case ladder to AddEntityToScene if you modified entities!"
         )
         for entity in self.entities:
-            print(f"case {entity-1}: //{self.entities[entity]}")
+            print(f'case "{self.entities[entity]}":')
 
     def run(self):
         self.prepare_values()
