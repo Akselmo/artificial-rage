@@ -1,11 +1,10 @@
 package game
 
-import "src:game/entity"
 import "src:game/scene"
 import "src:game/settings"
 import rl "vendor:raylib"
 
-camera: rl.Camera
+playerCamera: rl.Camera
 isStarted: bool = false
 
 Initialize :: proc() {
@@ -17,7 +16,7 @@ Initialize :: proc() {
 	rl.SetTargetFPS(settings.maxFPS)
 	isStarted = true
 
-	camera = scene.Initialize()
+	playerCamera = scene.Initialize()
 	isStarted = true
 
 }
@@ -27,11 +26,10 @@ Update :: proc() {
 
 	rl.ClearBackground(rl.BLACK)
 
-	rl.BeginMode3D(camera)
+	rl.BeginMode3D(playerCamera)
 
 	if (isStarted) {
-		entity.PlayerUpdate(&camera)
-		scene.Update()
+		scene.Update(&playerCamera)
 	}
 	rl.EndMode3D()
 

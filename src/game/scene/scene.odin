@@ -118,7 +118,7 @@ PlaceEntities :: proc() {
 	fmt.printfln("Level has total %[0]v entities", size)
 }
 
-Update :: proc() {
+Update :: proc(playerCamera: ^rl.Camera) {
 	rl.DrawModel(floorPlane, rl.Vector3{position.x, 0.0, position.z}, 1.0, rl.WHITE)
 
 	rl.DrawModelEx(
@@ -129,6 +129,8 @@ Update :: proc() {
 		rl.Vector3{1.0, 1.0, 1.0},
 		rl.WHITE,
 	)
+
+	entity.PlayerUpdate(playerCamera)
 
 	//TODO I need to grow entity.inScene to the size
 	for i := 0; i < len(entity.entitiesInScene); i += 1 {
