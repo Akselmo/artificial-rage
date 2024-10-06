@@ -1,6 +1,5 @@
 package entity
 
-import "core:c/libc"
 import "core:fmt"
 import "core:math"
 import "core:math/linalg"
@@ -119,8 +118,8 @@ ProjectileRotateTowards :: proc(projectile: ^Projectile) {
 	dy: f32 = projectile.endPosition.y - projectile.startPosition.y
 	dz: f32 = projectile.endPosition.z - projectile.startPosition.z
 
-	y_angle: f32 = -(libc.atan2f(dz, dx) + math.PI / 2.0)
-	z_angle: f32 = libc.atan2f(dy, libc.sqrtf(dx * dx + dz * dz))
+	y_angle: f32 = -(math.atan2(dz, dx) + math.PI / 2.0)
+	z_angle: f32 = math.atan2(dy, math.sqrt(dx * dx + dz * dz))
 
 	projectile.model.model.transform = rl.QuaternionToMatrix(rl.QuaternionFromEuler(z_angle, y_angle, 0))
 }

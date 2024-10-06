@@ -1,5 +1,4 @@
 package entity
-import "core:c/libc"
 import "core:fmt"
 import "core:math"
 import "core:math/linalg"
@@ -125,7 +124,7 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 RaycastHitsEntity :: proc(rayCast: rl.Ray) -> ^Entity {
 	hitEntity := DummyEntity
 
-	entityDistanceFromPlayer: f32 = libc.INFINITY
+	entityDistanceFromPlayer: f32 = math.F32_MAX
 
 	for i := 0; i < len(entitiesInScene); i += 1 {
 		entity := entitiesInScene[i]
@@ -182,7 +181,7 @@ Destroy :: proc(entity: ^Entity) {
 
 RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 	diff: rl.Vector3 = entity.transform.position - targetPosition
-	y_angle: f32 = -(libc.atan2f(diff.z, diff.x) + math.PI / 2.0)
+	y_angle: f32 = -(math.atan2(diff.z, diff.x) + math.PI / 2.0)
 	newRotation: rl.Vector3 = rl.Vector3{0, y_angle, 0}
 
 	start: rl.Quaternion = rl.QuaternionFromEuler(
