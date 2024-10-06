@@ -88,9 +88,9 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 			// Check against the owner of the projectile and the entity id. if theres a match, ignore it,
 			// unless its a wall
 			//  Otherwise tell the entity they've been hit and give them damage
-			asd, ok := ent.type.(Enemy)
-			if (ok) {
-				TakeDamage(ent, projectile.damage)
+			#partial switch _ in ent.type {
+			case Enemy:
+				EnemyTakeDamage(ent, projectile.damage)
 			}
 			ProjectileDestroy(projectile)
 			return

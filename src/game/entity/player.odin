@@ -164,9 +164,10 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	Player.transform.position = camera.position
 	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
 
+
 	// Check if we need to switch weapon
 	WeaponGetSwitchInput()
-	PlayerFireWeapon(camera, &PlayerCustomCamera)
+	PlayerFireWeapon(camera)
 }
 
 PlayerSetHealth :: proc(healthToAdd: i32) {
@@ -179,7 +180,7 @@ PlayerSetHealth :: proc(healthToAdd: i32) {
 
 }
 
-PlayerFireWeapon :: proc(camera: ^rl.Camera, cameraData: ^PlayerCameraData) {
+PlayerFireWeapon :: proc(camera: ^rl.Camera) {
 	Player.nextFireTime -= rl.GetFrameTime()
 	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.keyFire)) {
 		Player.nextFireTime = WeaponFire(Player.nextFireTime, camera)

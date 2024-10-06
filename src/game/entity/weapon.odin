@@ -116,13 +116,15 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 			WeaponCurrentFrame = wpn.spriteFireFrame
 
 			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), camera^)
-			entityHitId := RaycastHitsEntityId(rayCast)
 			if (wpn.hitscan) {
 				// hitscan
-				entity := entitiesInScene[entityHitId]
-				ent, ok := entity.type.(Enemy)
-				if (entity.id != 0 && entity.id != PLAYER_ID && ok) {
-					TakeDamage(&entity, wpn.damage)
+				entityHit := RaycastHitsEntity(rayCast)
+				distanceFromPlayer := rl.Vector3Distance(Player.transform.position, entityHit.transform.position)
+				if (distanceFromPlayer < 1.0) {
+					#partial switch _ in entityHit.type {
+					case Enemy:
+						EnemyTakeDamage(entityHit, wpn.damage)
+					}
 				}
 			} else {
 				// projectile
