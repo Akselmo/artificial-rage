@@ -12,13 +12,6 @@ import rl "vendor:raylib"
 
 WALL_MODEL_ID: i32 : -2
 
-ITEM_START_POSITION_Y: f32 : 0.1
-
-Item :: struct {
-	pickup: bool,
-	value:  i32,
-}
-
 Transform :: struct {
 	position:    rl.Vector3,
 	rotation:    rl.Vector3,
@@ -26,6 +19,7 @@ Transform :: struct {
 	scale:       f32,
 	boundingBox: rl.BoundingBox,
 	canCollide:  bool,
+	isPickup:    bool,
 }
 
 Visuals :: struct {
@@ -46,9 +40,9 @@ Type :: union {
 	PlayerEnd,
 	WallCargo,
 	WallCargoScuffed,
-	Item,
 	Enemy,
 	Projectile,
+	ItemHealthSmall,
 }
 
 //NOTE: maybe the entity could only hold id, active, transform and type?
@@ -112,6 +106,7 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 			} else if (entityId == PLAYER_ID) {
 				// TODO: make player type instead of comparing ids
 				HandlePlayerPickup(&entity)
+				return false
 			}
 		}
 	}
@@ -188,13 +183,29 @@ RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 		entity.transform.rotation.x,
 	)
 	end: rl.Quaternion = rl.QuaternionFromEuler(newRotation.z, newRotation.y, newRotation.x)
-	slerp: rl.Quaternion = rl.QuaternionSlerp(start, end, entity.type.(Enemy).rotationSpeed * rl.GetFrameTime())
+
+	slerp: rl.Quaternion
+
+	#partial switch _ in entity.type {
+	case Enemy:
+		slerp = rl.QuaternionSlerp(start, end, entity.type.(Enemy).rotationSpeed * rl.GetFrameTime())
+	case:
+		slerp = rl.QuaternionSlerp(start, end, 3.0 * rl.GetFrameTime())
+	}
 
 	entity.visuals.model.transform = rl.QuaternionToMatrix(slerp)
 	entity.transform.rotation = newRotation
 }
 
 HandlePlayerPickup :: proc(entity: ^Entity) {
-
+	#partial switch ent in entity.type {
+	case ItemHealthSmall:
+		PlayerSetHealth(ent.healAmount)
+	case:
+		fmt.printfln("Unimplemented: %[0]v", entity.type)
+	}
+	entity.transform.isPickup = false
+	entity.active = false
+	Destroy(entity)
 }
 

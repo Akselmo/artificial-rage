@@ -224,6 +224,7 @@ AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 	case "enemy":
 		entity.CreateEnemy(&ent)
 	case "health_small":
+		entity.CreateItemHealthSmall(&ent)
 	case "health_medium":
 	case "health_large":
 	case "clutter":
