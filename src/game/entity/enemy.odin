@@ -185,8 +185,7 @@ EnemyTestPlayerHit :: proc(entity: ^Entity) -> bool {
 	levelDistance: f32 = math.F32_MAX
 	playerDistance: f32 = math.F32_MAX
 
-	for i := 0; i < len(entitiesInScene); i += 1 {
-		ent := entitiesInScene[i]
+	for &ent in entitiesInScene {
 		if (ent.id != 0 && ent.id != entity.id && ent.visuals.isBillboard) {
 			pos: rl.Vector3 = ent.transform.position
 			hitLevel: rl.RayCollision = rl.GetRayCollisionMesh(

@@ -105,14 +105,13 @@ CreateRay :: proc(entity: ^Entity) -> rl.Ray {
 
 CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool {
 	entityBox := utilities.MakeBoundingBox(entityPos, entitySize)
-	for i := 0; i < len(entitiesInScene); i += 1 {
-		ent := entitiesInScene[i]
-		if (ent.id != entityId && rl.CheckCollisionBoxes(entityBox, ent.transform.boundingBox)) {
-			if (ent.transform.canCollide) {
+	for &entity in entitiesInScene {
+		if (entity.id != entityId && rl.CheckCollisionBoxes(entityBox, entity.transform.boundingBox)) {
+			if (entity.transform.canCollide) {
 				return true
 			} else if (entityId == PLAYER_ID) {
 				// TODO: make player type instead of comparing ids
-				HandlePlayerPickup(&ent)
+				HandlePlayerPickup(&entity)
 			}
 		}
 	}
@@ -126,8 +125,7 @@ RaycastHitsEntity :: proc(rayCast: rl.Ray) -> ^Entity {
 
 	entityDistanceFromPlayer: f32 = math.F32_MAX
 
-	for i := 0; i < len(entitiesInScene); i += 1 {
-		entity := entitiesInScene[i]
+	for &entity in entitiesInScene {
 		if (!entity.visuals.isBillboard) {
 			#partial switch _ in entity.type {
 			case Enemy:

@@ -78,8 +78,7 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 	// unless its a wall
 	//  Otherwise tell the entity they've been hit and give them damage
 	projectileBox: rl.BoundingBox = utilities.MakeBoundingBox(projectile.position, projectile.size)
-	for i := 0; i < len(entitiesInScene); i += 1 {
-		ent := &entitiesInScene[i]
+	for &ent in entitiesInScene {
 		if (!ent.transform.canCollide) {
 			continue
 		}
@@ -89,7 +88,7 @@ ProjectileCheckCollision :: proc(projectile: ^Projectile) {
 			//  Otherwise tell the entity they've been hit and give them damage
 			#partial switch _ in ent.type {
 			case Enemy:
-				EnemyTakeDamage(ent, projectile.damage)
+				EnemyTakeDamage(&ent, projectile.damage)
 			}
 			ProjectileDestroy(projectile)
 			return

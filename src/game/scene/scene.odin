@@ -61,7 +61,7 @@ LoadSceneConfig :: proc() {
 
 ParseConfig :: proc(key: string, value: string) -> bool {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
-	switch key
+	switch key 
 	{
 	case "ceilingtexture":
 		ceilingPlaneTexture = rl.LoadTexture(texturesPath)
@@ -133,15 +133,14 @@ Update :: proc(playerCamera: ^rl.Camera) {
 	entity.PlayerUpdate(playerCamera)
 
 	//TODO I need to grow entity.inScene to the size
-	for i := 0; i < len(entity.entitiesInScene); i += 1 {
-		ent := &entity.entitiesInScene[i]
+	for &ent in entity.entitiesInScene {
 		if (ent.id != 0) {
-			entity.Update(ent)
+			entity.Update(&ent)
 		}
 	}
 	// TODO i think this could be made to be in the entity.Update loop, and the projectiles could be part of the entity array
-	for p := 0; p < len(entity.projectilesInScene); p += 1 {
-		entity.ProjectileUpdate(&entity.projectilesInScene[p])
+	for &proj in entity.projectilesInScene {
+		entity.ProjectileUpdate(&proj)
 	}
 }
 

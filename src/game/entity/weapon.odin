@@ -76,9 +76,9 @@ WeaponGetSwitchInput :: proc() {
 	if (key == rl.KeyboardKey.KEY_NULL) {
 		return
 	}
-	for i: i32 = 0; i < WEAPON_AMOUNT; i += 1 {
-		if (cast(i32)key == Weapons[i].inputKey) {
-			WeaponChange(Weapons[i].weaponId)
+	for &weapon in Weapons {
+		if (cast(i32)key == weapon.inputKey) {
+			WeaponChange(weapon.weaponId)
 			return
 		}
 	}
