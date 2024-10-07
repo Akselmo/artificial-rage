@@ -100,6 +100,9 @@ CreateRay :: proc(entity: ^Entity) -> rl.Ray {
 CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: i32) -> bool {
 	entityBox := utilities.MakeBoundingBox(entityPos, entitySize)
 	for &entity in entitiesInScene {
+		if (!entity.active) {
+			continue
+		}
 		if (entity.id != entityId && rl.CheckCollisionBoxes(entityBox, entity.transform.boundingBox)) {
 			if (entity.transform.canCollide) {
 				return true
@@ -162,7 +165,6 @@ GetEntityWithId :: proc(id: i32) -> ^Entity {
 }
 
 Destroy :: proc(entity: ^Entity) {
-	fmt.printfln("Entity dead")
 	#partial switch _ in entity.type {
 	case Enemy:
 		EnemyDestroy(entity)
