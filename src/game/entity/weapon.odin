@@ -78,7 +78,9 @@ WeaponGetSwitchInput :: proc() {
 	}
 	for &weapon in Weapons {
 		if (cast(i32)key == weapon.inputKey) {
-			WeaponChange(weapon.weaponId)
+			if (weapon.pickedUp) {
+				WeaponChange(weapon.weaponId)
+			}
 			return
 		}
 	}
