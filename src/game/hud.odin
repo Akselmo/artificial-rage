@@ -26,8 +26,6 @@ HudUpdate :: proc() {
 		wpnText := strings.clone_to_cstring(fmt.aprintf("%[0]v / %[1]v", wpn.ammo, wpn.maxAmmo))
 		WeaponText(wpnText, rl.GREEN)
 	}
-
-
 }
 
 @(private = "file")

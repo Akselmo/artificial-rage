@@ -42,7 +42,7 @@ Type :: union {
 	WallCargoScuffed,
 	Enemy,
 	Projectile,
-	ItemHealthSmall,
+	ItemHealth,
 }
 
 //NOTE: maybe the entity could only hold id, active, transform and type?
@@ -200,14 +200,20 @@ RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 }
 
 HandlePlayerPickup :: proc(entity: ^Entity) {
+	destroyed := false
 	#partial switch ent in entity.type {
-	case ItemHealthSmall:
-		PlayerSetHealth(ent.healAmount)
+	case ItemHealth:
+		if (Player.health < PLAYER_MAX_HEALTH) {
+			PlayerSetHealth(ent.healAmount)
+			destroyed = true
+		}
 	case:
 		fmt.printfln("Unimplemented: %[0]v", entity.type)
 	}
-	entity.transform.isPickup = false
-	entity.active = false
-	Destroy(entity)
+	if (destroyed) {
+		entity.transform.isPickup = false
+		entity.active = false
+		Destroy(entity)
+	}
 }
 

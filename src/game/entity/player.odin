@@ -70,7 +70,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 
 	PlayerCustomCamera.mouseSensitivity = settings.mouseSensitivity
 
-	Player.health = PLAYER_MAX_HEALTH
+	Player.health = 5
 	Player.dead = false
 	Player.transform.size = rl.Vector3{0.1, 0.1, 0.1}
 	Player.transform.position = rl.Vector3{0.0, 0.0, 0.0}

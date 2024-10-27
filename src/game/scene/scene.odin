@@ -224,9 +224,11 @@ AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 	case "enemy":
 		entity.CreateEnemy(&ent)
 	case "health_small":
-		entity.CreateItemHealthSmall(&ent)
+		entity.CreateItemHealth(&ent, entity.ItemHealthSize.small)
 	case "health_medium":
+		entity.CreateItemHealth(&ent, entity.ItemHealthSize.medium)
 	case "health_large":
+		entity.CreateItemHealth(&ent, entity.ItemHealthSize.large)
 	case "clutter":
 	case "pickup_pistol":
 	case "pickup_rifle":
