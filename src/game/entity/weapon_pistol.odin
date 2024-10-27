@@ -6,7 +6,7 @@ import "src:game/settings"
 WeaponPistol : WeaponData = {
     name                 = "Pistol",
     inputKey             = settings.keyWeaponTwo,
-    weaponId             = WeaponID.PISTOL,
+    weaponId             = WeaponType.PISTOL,
     damage               = 3,
     ammo                 = 30,
     fireRate             = 1.0,

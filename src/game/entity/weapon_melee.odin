@@ -6,7 +6,7 @@ import "src:game/settings"
 WeaponMelee : WeaponData = {
     name                 = "Fists",
     inputKey             = settings.keyWeaponOne,
-    weaponId             = WeaponID.MELEE,
+    weaponId             = WeaponType.MELEE,
     damage               = 5,
     ammo                 = WEAPON_MELEE_AMMO_MAX, // Unlimited ammo for your fists!
     fireRate             = 1.25,

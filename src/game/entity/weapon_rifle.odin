@@ -6,7 +6,7 @@ import rl "vendor:raylib"
 WeaponRifle: WeaponData = {
 	name                 = "Rifle",
 	inputKey             = settings.keyWeaponThree,
-	weaponId             = WeaponID.RIFLE,
+	weaponId             = WeaponType.RIFLE,
 	damage               = 3,
 	ammo                 = 60, // TODO: Set to 0 for release!
 	fireRate             = 0.6,

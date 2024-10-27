@@ -16,7 +16,7 @@ WEAPON_RIFLE_AMMO_MAX: i32 : 200
 WEAPON_SHOTGUN_AMMO_MAX: i32 : 50
 WEAPON_RAILGUN_AMMO_MAX: i32 : 25
 
-WeaponID :: enum {
+WeaponType :: enum {
 	MELEE   = 0,
 	PISTOL  = 1,
 	RIFLE   = 2,
@@ -26,7 +26,7 @@ WeaponID :: enum {
 
 WeaponData :: struct {
 	name:                 string,
-	weaponId:             WeaponID,
+	weaponId:             WeaponType,
 	inputKey:             i32,
 	damage:               i32,
 	ammo:                 i32,
@@ -44,7 +44,7 @@ WeaponData :: struct {
 	projectileColor:      rl.Color,
 }
 
-WeaponCurrent: WeaponID = WeaponID.MELEE
+WeaponCurrent: WeaponType = WeaponType.MELEE
 // TODO: Could be a map?
 Weapons: [WEAPON_AMOUNT]WeaponData
 WeaponFrameCounter: i32 = 0
@@ -53,22 +53,22 @@ WeaponActive: bool = false
 
 WeaponInitialize :: proc() {
 	// Initialize base weapon items
-	Weapons[WeaponID.MELEE] = WeaponMelee
-	Weapons[WeaponID.PISTOL] = WeaponPistol
-	Weapons[WeaponID.RIFLE] = WeaponRifle
-	Weapons[WeaponID.SHOTGUN] = WeaponShotgun
-	Weapons[WeaponID.RAILGUN] = WeaponRailgun
+	Weapons[WeaponType.MELEE] = WeaponMelee
+	Weapons[WeaponType.PISTOL] = WeaponPistol
+	Weapons[WeaponType.RIFLE] = WeaponRifle
+	Weapons[WeaponType.SHOTGUN] = WeaponShotgun
+	Weapons[WeaponType.RAILGUN] = WeaponRailgun
 
 	// Initialize sprites
-	Weapons[WeaponID.MELEE].spriteTexture = rl.LoadTexture("./assets/weapons/melee.png")
-	Weapons[WeaponID.PISTOL].spriteTexture = rl.LoadTexture("./assets/weapons/pistol.png")
-	Weapons[WeaponID.RIFLE].spriteTexture = rl.LoadTexture("./assets/weapons/rifle.png")
-	Weapons[WeaponID.SHOTGUN].spriteTexture = rl.LoadTexture("./assets/weapons/shotgun.png")
-	Weapons[WeaponID.RAILGUN].spriteTexture = rl.LoadTexture("./assets/weapons/railgun.png")
+	Weapons[WeaponType.MELEE].spriteTexture = rl.LoadTexture("./assets/weapons/melee.png")
+	Weapons[WeaponType.PISTOL].spriteTexture = rl.LoadTexture("./assets/weapons/pistol.png")
+	Weapons[WeaponType.RIFLE].spriteTexture = rl.LoadTexture("./assets/weapons/rifle.png")
+	Weapons[WeaponType.SHOTGUN].spriteTexture = rl.LoadTexture("./assets/weapons/shotgun.png")
+	Weapons[WeaponType.RAILGUN].spriteTexture = rl.LoadTexture("./assets/weapons/railgun.png")
 }
 
 WeaponSelectDefault :: proc() {
-	WeaponCurrent = WeaponID.MELEE
+	WeaponCurrent = WeaponType.MELEE
 }
 
 WeaponGetSwitchInput :: proc() {
@@ -84,16 +84,16 @@ WeaponGetSwitchInput :: proc() {
 	}
 }
 
-WeaponChange :: proc(weaponId: WeaponID) {
+WeaponChange :: proc(weaponId: WeaponType) {
 	if (!WeaponActive) {
 		WeaponCurrent = weaponId
 	}
 }
 
-WeaponHasAmmo :: proc(weaponId: WeaponID) -> bool {
+WeaponHasAmmo :: proc(weaponId: WeaponType) -> bool {
 
 	// Fists always have ammo :D
-	if (weaponId == WeaponID.MELEE) {
+	if (weaponId == WeaponType.MELEE) {
 		return true
 	}
 	wpn := Weapons[weaponId]
@@ -132,7 +132,7 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 				rayCast.position = rayCast.position + (rayCast.direction * 0.1)
 				ProjectileCreate(rayCast, wpn.projectileSize, wpn.damage, PLAYER_ID, wpn.projectileColor)
 			}
-			if (wpn.weaponId != WeaponID.MELEE) {
+			if (wpn.weaponId != WeaponType.MELEE) {
 				wpn.ammo -= 1
 			}
 		}
@@ -172,5 +172,20 @@ WeaponDrawSprite :: proc() {
 	sourceRec.x = frameWidth * cast(f32)WeaponCurrentFrame
 
 	rl.DrawTexturePro(wpn.spriteTexture, sourceRec, destRec, origin, 0, rl.WHITE)
+}
+
+WeaponAddAmmo :: proc(amount: i32, type: WeaponType) -> bool {
+	ammoAdded := false
+	wpn := Weapons[type]
+	if (wpn.pickedUp) {
+		if (wpn.ammo < wpn.maxAmmo) {
+			wpn.ammo += amount
+			ammoAdded = true
+		}
+		if (wpn.ammo > wpn.maxAmmo) {
+			wpn.ammo = wpn.maxAmmo
+		}
+	}
+	return ammoAdded
 }
 

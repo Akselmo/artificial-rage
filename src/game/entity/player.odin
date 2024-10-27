@@ -177,7 +177,6 @@ PlayerSetHealth :: proc(healthToAdd: i32) {
 	} else if (Player.health <= 0) {
 		Player.dead = true
 	}
-
 }
 
 PlayerFireWeapon :: proc(camera: ^rl.Camera) {

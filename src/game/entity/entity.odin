@@ -43,6 +43,7 @@ Type :: union {
 	Enemy,
 	Projectile,
 	ItemHealth,
+	ItemAmmo,
 }
 
 //NOTE: maybe the entity could only hold id, active, transform and type?
@@ -207,6 +208,8 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 			PlayerSetHealth(ent.healAmount)
 			destroyed = true
 		}
+	case ItemAmmo:
+		destroyed = WeaponAddAmmo(ent.ammoAmount, ent.ammoMorph)
 	case:
 		fmt.printfln("Unimplemented: %[0]v", entity.type)
 	}

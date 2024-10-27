@@ -224,20 +224,24 @@ AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 	case "enemy":
 		entity.CreateEnemy(&ent)
 	case "health_small":
-		entity.CreateItemHealth(&ent, entity.ItemHealthSize.small)
+		entity.CreateItemHealth(&ent, entity.ItemHealthMorph.SMALL)
 	case "health_medium":
-		entity.CreateItemHealth(&ent, entity.ItemHealthSize.medium)
+		entity.CreateItemHealth(&ent, entity.ItemHealthMorph.MEDIUM)
 	case "health_large":
-		entity.CreateItemHealth(&ent, entity.ItemHealthSize.large)
+		entity.CreateItemHealth(&ent, entity.ItemHealthMorph.LARGE)
 	case "clutter":
 	case "pickup_pistol":
 	case "pickup_rifle":
 	case "pickup_shotgun":
 	case "pickup_railgun":
 	case "ammo_pistol":
+		entity.CreateItemAmmo(&ent, entity.WeaponType.PISTOL)
 	case "ammo_rifle":
+		entity.CreateItemAmmo(&ent, entity.WeaponType.RIFLE)
 	case "ammo_shotgun":
+		entity.CreateItemAmmo(&ent, entity.WeaponType.SHOTGUN)
 	case "ammo_railgun":
+		entity.CreateItemAmmo(&ent, entity.WeaponType.RAILGUN)
 	case "pickup_teleportkey":
 	}
 

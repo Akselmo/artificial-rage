@@ -6,7 +6,7 @@ import "src:game/settings"
 WeaponRailgun : WeaponData = {
     name                 = "Railgun",
     inputKey             = settings.keyWeaponFive,
-    weaponId             = WeaponID.RAILGUN,
+    weaponId             = WeaponType.RAILGUN,
     damage               = 30,
     ammo                 = 10, // TODO: Set to 0 for release!
     fireRate             = 2.6,
