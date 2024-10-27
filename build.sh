@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-cmake -Bbuild && cmake --build build --parallel
+
+odin build ./src -collection:src=src -debug -out:./build/ArtificialRage

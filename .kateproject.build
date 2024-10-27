@@ -2,28 +2,15 @@
     "Auto_generated": "This file is auto-generated. Any extra tags or formatting will be lost",
     "target_sets": [
         {
-            "directory": "/home/akseli/Repositories/artificial-rage/build",
+            "cmake_config": "",
+            "directory": "/home/akseli/Repositories/artificial-rage/",
+            "loaded_via_cmake": false,
             "name": "artificial-rage",
             "targets": [
                 {
-                    "build_cmd": "cmake --build .",
+                    "build_cmd": "odin build ./src -collection:src=src -debug -out:./build/ArtificialRage",
                     "name": "build",
-                    "run_cmd": "./ArtificialRage"
-                },
-                {
-                    "build_cmd": "cmake --build . --target clean",
-                    "name": "clean",
-                    "run_cmd": ""
-                },
-                {
-                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++",
-                    "name": "config-gcc",
-                    "run_cmd": ""
-                },
-                {
-                    "build_cmd": "cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++",
-                    "name": "config-clang",
-                    "run_cmd": ""
+                    "run_cmd": "odin run ./src -collection:src=src -debug -out:./build/ArtificialRage"
                 }
             ]
         }

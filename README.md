@@ -12,9 +12,17 @@
 <p align="center"><img alt="Screenshot of Artificial Rage" src="./screenshot.png" /></p>
 
 
-A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and pure C.
+A simple FPS project (Wolfenstein 3D clone), made with [Raylib](https://www.raylib.com/) and [Odin](https://odin-lang.org/) programming language.
 
-This project is a learning platform for me to learn C. I also hope that one day this game will be fun to play, and I want
+This project was originally a way for me to learn programming C, but it got rather tiresome to work with C..
+So I moved the whole thing to Odin instead!
+
+The Odin code is still somewhat messy since I basically "transpiled" all the C code to Odin. It will
+be cleaned over time. Hopefully.
+
+- TODO: Link here a blogpost about this whole C to Odin codebase movement
+
+I also hope that one day this game will be fun to play, and I want
 people to tinker with the source code, create mods, maps etc..
 
 I also want this project to be a starting point for those who want to make their own simple FPS, or to be used
@@ -32,28 +40,35 @@ First, get the dependencies that Raylib uses: https://github.com/raysan5/raylib/
 
 The game should run on anywhere where Raylib compiles.
 
-### CMake
+### Using Odin to build
 
-This project uses CMake to build.
+Since this project uses Odin, it's rather simple to build and run.
 
-Here's the basic commands you need.
+The Odin version I am using is usually latest git master, but when there's a 
+stable versions in Fedora packages, I will likely stick with those.
 
 ```sh
-# build
-git clone https://codeberg.org/akselmo/artificial-rage.git
-cd artificial-rage
-cmake -Bbuild && cmake --build build --parallel
-# run
-cd build
-./ArtificialRage
+# For building
+odin build ./src -collection:src=src -debug -out:./build/ArtificialRage
+
+# For building and running
+odin run ./src -collection:src=src -debug -out:./build/ArtificialRage
+
+# There's also corresponding ./build.sh and ./run.sh files for the above commands
+
 ```
 
 Make sure to run the game in same folder where `assets` folder is. These assets are needed for level textures and so on.
 
-### XMake
+### Debugging
 
-If you wish to use XMake instead, the xmake.lua can be found from here: [xmake.lua](https://codeberg.org/akselmo/artificial-rage/src/commit/98f54fc2b42be833f1b1f79b3a4eb086533777e1/xmake.lua)
+You can use LLDB to debug. I use LLDB DAP with Kate and it works really well for this,
+but any debugger (visual or CLI) that uses LLDB should work.
 
 ## TODO:
+
 Check this project for TODO list: https://codeberg.org/akselmo/artificial-rage/projects/1358
 
+## Old C code
+
+The old C codebase can be found from this commit: [e93149492545cbc93971c07cc9e7a976ca5ff35e](https://codeberg.org/akselmo/artificial-rage/src/commit/e93149492545cbc93971c07cc9e7a976ca5ff35e).
