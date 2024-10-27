@@ -24,7 +24,14 @@ HudUpdate :: proc() {
 		WeaponText("-", rl.GREEN)
 	} else {
 		wpnText := strings.clone_to_cstring(fmt.aprintf("%[0]v / %[1]v", wpn.ammo, wpn.maxAmmo))
+		defer delete(wpnText)
 		WeaponText(wpnText, rl.GREEN)
+	}
+
+	if (entity.Player.hasTeleportKey) {
+		keyText := strings.clone_to_cstring(fmt.aprintf("You have the key!"))
+		defer delete(keyText)
+		TeleportKeyText(keyText, rl.BLUE)
 	}
 }
 
@@ -36,5 +43,10 @@ HealthText :: proc(txt: cstring, color: rl.Color) {
 @(private = "file")
 WeaponText :: proc(txt: cstring, color: rl.Color) {
 	rl.DrawText(txt, rl.GetScreenWidth() - 100, rl.GetScreenHeight() - 20, 20, color)
+}
+
+@(private = "file")
+TeleportKeyText :: proc(txt: cstring, color: rl.Color) {
+	rl.DrawText(txt, rl.GetScreenWidth() / 2, 20, 20, color)
 }
 

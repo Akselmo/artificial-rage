@@ -44,6 +44,8 @@ Type :: union {
 	Projectile,
 	ItemHealth,
 	ItemAmmo,
+	ItemWeapon,
+	ItemKey,
 }
 
 //NOTE: maybe the entity could only hold id, active, transform and type?
@@ -210,6 +212,13 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 		}
 	case ItemAmmo:
 		destroyed = WeaponAddAmmo(ent.ammoAmount, ent.ammoMorph)
+	case ItemWeapon:
+		pickedUp := WeaponPickup(ent.weaponType)
+		ammoAdded := WeaponAddAmmo(ent.ammoAmount, ent.weaponType)
+		destroyed = pickedUp || ammoAdded
+	case ItemKey:
+		destroyed = true
+		Player.hasTeleportKey = true
 	case:
 		fmt.printfln("Unimplemented: %[0]v", entity.type)
 	}

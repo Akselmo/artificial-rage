@@ -176,7 +176,7 @@ WeaponDrawSprite :: proc() {
 
 WeaponAddAmmo :: proc(amount: i32, type: WeaponType) -> bool {
 	ammoAdded := false
-	wpn := Weapons[type]
+	wpn := &Weapons[type]
 	if (wpn.pickedUp) {
 		if (wpn.ammo < wpn.maxAmmo) {
 			wpn.ammo += amount
@@ -187,5 +187,15 @@ WeaponAddAmmo :: proc(amount: i32, type: WeaponType) -> bool {
 		}
 	}
 	return ammoAdded
+}
+
+WeaponPickup :: proc(type: WeaponType) -> bool {
+	weaponPickedUp := false
+	wpn := &Weapons[type]
+	if (!wpn.pickedUp) {
+		wpn.pickedUp = true
+		weaponPickedUp = true
+	}
+	return weaponPickedUp
 }
 

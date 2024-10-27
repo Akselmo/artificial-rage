@@ -23,10 +23,11 @@ PlayerCameraData :: struct {
 }
 
 PlayerData :: struct {
-	health:       i32,
-	dead:         bool,
-	transform:    Transform,
-	nextFireTime: f32,
+	health:         i32,
+	dead:           bool,
+	transform:      Transform,
+	nextFireTime:   f32,
+	hasTeleportKey: bool,
 }
 
 PlayerCustomCamera: PlayerCameraData = {
@@ -76,6 +77,7 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 	Player.transform.position = rl.Vector3{0.0, 0.0, 0.0}
 	Player.transform.boundingBox = utilities.MakeBoundingBox(Player.transform.position, Player.transform.size)
 	Player.nextFireTime = 0.0
+	Player.hasTeleportKey = false
 
 	WeaponInitialize()
 	WeaponSelectDefault()
