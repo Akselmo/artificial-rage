@@ -19,7 +19,7 @@ So I moved the whole thing to Odin instead!
 The Odin code is still somewhat messy since I basically "transpiled" all the C code to Odin. It will
 be cleaned over time. Hopefully.
 
-- TODO: Link here a blogpost about this whole C to Odin codebase movement
+Here's a blog post I wrote about the ordeal: [https://akselmo.dev/posts/moving-from-c-to-odin/](https://akselmo.dev/posts/moving-from-c-to-odin/)
 
 I also hope that one day this game will be fun to play, and I want
 people to tinker with the source code, create mods, maps etc..
