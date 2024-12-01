@@ -117,7 +117,7 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 			WeaponActive = true
 			WeaponCurrentFrame = wpn.spriteFireFrame
 
-			rayCast := rl.GetMouseRay(utilities.GetScreenCenter(), camera^)
+			rayCast := rl.GetScreenToWorldRay(utilities.GetScreenCenter(), camera^)
 			if (wpn.hitscan) {
 				// hitscan
 				entityHit := RaycastHitsEntity(rayCast)
