@@ -40,6 +40,7 @@ Update :: proc() {
 
 MenuUpdate :: proc() {
 	rl.DisableCursor()
+	MenuButton("Test", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
