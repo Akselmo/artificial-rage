@@ -1,5 +1,6 @@
 package game
 
+import "core:fmt"
 import "src:game/scene"
 import "src:game/settings"
 import rl "vendor:raylib"
@@ -33,14 +34,22 @@ Update :: proc() {
 
 	rl.ClearBackground(rl.BLACK)
 
-	if state == GameState.GameRunning {
+	switch state {
+	case GameState.MainMenu:
+		MenuUpdate()
+	case GameState.Loading:
+		fmt.printfln("no loading screen!")
+	case GameState.GameRunning:
 		rl.BeginMode3D(playerCamera)
 		scene.Update(&playerCamera)
 		rl.EndMode3D()
 		HudUpdate()
-	} else if state == GameState.MainMenu {
-		MenuUpdate()
+	case GameState.GamePauseMenu:
+		fmt.printfln("no pause menu yet!")
+	case GameState.GameOver:
+		fmt.printfln("no gameover yet!")
 	}
+
 	rl.EndDrawing()
 }
 
