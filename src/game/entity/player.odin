@@ -95,12 +95,12 @@ PlayerUpdate :: proc(camera: ^rl.Camera) {
 	MOVE_RIGHT :: 3
 	MOVE_LEFT :: 4
 
-	PlayerCameraMoveKeys := map[i32]f32 {
-		MOVE_FRONT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveForward),
-		MOVE_BACK  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveBackward),
-		MOVE_RIGHT = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveRight),
-		MOVE_LEFT  = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveLeft),
-	}
+	// TODO: this is cursed and needs refactor
+	PlayerCameraMoveKeys := map[i32]f32{}
+	PlayerCameraMoveKeys[MOVE_FRONT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveForward)
+	PlayerCameraMoveKeys[MOVE_BACK] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveBackward)
+	PlayerCameraMoveKeys[MOVE_RIGHT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveRight)
+	PlayerCameraMoveKeys[MOVE_LEFT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveLeft)
 
 	Player.transform.boundingBox = utilities.MakeBoundingBox(camera.position, Player.transform.size)
 
