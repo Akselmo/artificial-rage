@@ -30,6 +30,7 @@ PlayerData :: struct {
 	hasTeleportKey: bool,
 }
 
+
 PlayerCustomCamera: PlayerCameraData = {
 	targetDistance     = 0,
 	playerEyesPosition = 1.85,
@@ -87,46 +88,33 @@ PlayerInitializeCamera :: proc(pos_x: f32, pos_z: f32) -> rl.Camera {
 }
 
 PlayerUpdate :: proc(camera: ^rl.Camera) {
-	//TODO camera moves up and down but not to sides, something wrong in the matrix i guess?
 	oldPlayerPos := camera.position
-
-	MOVE_FRONT :: 1
-	MOVE_BACK :: 2
-	MOVE_RIGHT :: 3
-	MOVE_LEFT :: 4
-
-	// TODO: this is cursed and needs refactor
-	PlayerCameraMoveKeys := map[i32]f32{}
-	PlayerCameraMoveKeys[MOVE_FRONT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveForward)
-	PlayerCameraMoveKeys[MOVE_BACK] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveBackward)
-	PlayerCameraMoveKeys[MOVE_RIGHT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveRight)
-	PlayerCameraMoveKeys[MOVE_LEFT] = cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveLeft)
 
 	Player.transform.boundingBox = utilities.MakeBoundingBox(camera.position, Player.transform.size)
 
 	mousePositionDelta := rl.GetMouseDelta()
 	// Move camera around X pos
 	camera.position.x +=
-		((math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_BACK] -
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_FRONT] -
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_LEFT] +
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_RIGHT]) *
+		((math.sin(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Back) -
+				math.sin(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Forward) -
+				math.cos(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Left) +
+				math.cos(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Right)) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
 	// Move camera around Y pos
 	camera.position.y +=
-		((math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys[MOVE_FRONT] -
-				math.sin(PlayerCustomCamera.angle.y) * PlayerCameraMoveKeys[MOVE_BACK]) *
+		((math.sin(PlayerCustomCamera.angle.y) * GetMovementKey(MovementKey.Forward) -
+				math.sin(PlayerCustomCamera.angle.y) * GetMovementKey(MovementKey.Back)) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
 	// Move camera around Z pos
 	camera.position.z +=
-		((math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_BACK] -
-				math.cos(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_FRONT] +
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_LEFT] -
-				math.sin(PlayerCustomCamera.angle.x) * PlayerCameraMoveKeys[MOVE_RIGHT]) *
+		((math.cos(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Back) -
+				math.cos(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Forward) +
+				math.sin(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Left) -
+				math.sin(PlayerCustomCamera.angle.x) * GetMovementKey(MovementKey.Right)) *
 			PlayerCustomCamera.playerSpeed) *
 		rl.GetFrameTime()
 
@@ -186,5 +174,28 @@ PlayerFireWeapon :: proc(camera: ^rl.Camera) {
 	if (rl.IsMouseButtonDown(cast(rl.MouseButton)settings.keyFire)) {
 		Player.nextFireTime = WeaponFire(Player.nextFireTime, camera)
 	}
+}
+
+@(private = "file")
+MovementKey :: enum {
+	Forward,
+	Back,
+	Left,
+	Right,
+}
+
+@(private = "file")
+GetMovementKey :: proc(key: MovementKey) -> f32 {
+	switch key {
+	case MovementKey.Forward:
+		return cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveForward)
+	case MovementKey.Back:
+		return cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveBackward)
+	case MovementKey.Left:
+		return cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveLeft)
+	case MovementKey.Right:
+		return cast(f32)cast(i32)rl.IsKeyDown(cast(rl.KeyboardKey)settings.keyMoveRight)
+	}
+	return 0.0
 }
 

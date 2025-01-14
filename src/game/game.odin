@@ -66,3 +66,5 @@ MenuUpdate :: proc() {
 
 }
 
+// TODO: state updater that sniffs for inputs like pause menu etc.
+
