@@ -46,7 +46,7 @@ Update :: proc() {
 		rl.EndMode3D()
 		HudUpdate()
 	case GameState.GamePauseMenu:
-		fmt.printfln("no pause menu yet!")
+		PauseUpdate()
 	case GameState.GameOver:
 		// TODO this has to clean up and then remake the same level if player restarts
 		fmt.printfln("no gameover yet!")
@@ -54,6 +54,12 @@ Update :: proc() {
 	GlobalStateUpdate()
 
 	rl.EndDrawing()
+}
+
+PauseUpdate :: proc() {
+
+	MenuButton("Press esc to continue", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
+	MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
 }
 
 MenuUpdate :: proc() {
