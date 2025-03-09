@@ -58,6 +58,7 @@ Update :: proc() {
 
 PauseUpdate :: proc() {
 
+	HeaderText("PAUSED", rl.GREEN, rl.Vector2{10,20},10);
 	MenuButton("Press esc to continue", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
 	MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
 }
@@ -65,16 +66,17 @@ PauseUpdate :: proc() {
 MenuUpdate :: proc() {
 	// TODO We need to do level clean up here
 	rl.DisableCursor()
+	HeaderText("Artificial Rage - Menu", rl.GREEN, rl.Vector2{10,20},10);
 	//https://www.raylib.com/examples/textures/loader.html?name=textures_image_processing
 	MenuButton("Press space to start", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
-	MenuButton("Press esc to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
+	MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
 	if rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
 		state = GameState.GameRunning
 	}
-	if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
+	if rl.IsKeyPressed(rl.KeyboardKey.Q) {
 		fmt.printfln("goodbye!")
 		rl.CloseWindow()
 	}
