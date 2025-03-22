@@ -14,6 +14,7 @@ GameState :: enum {
 	GameRunning,
 	GameOver,
 	GamePauseMenu,
+	Exit,
 }
 
 Initialize :: proc() {
@@ -50,10 +51,18 @@ Update :: proc() {
 	case GameState.GameOver:
 		// TODO this has to clean up and then remake the same level if player restarts
 		fmt.printfln("no gameover yet!")
+	case GameState.Exit:
+		// Don't do anything
+		return
 	}
+
 	GlobalStateUpdate()
 
 	rl.EndDrawing()
+}
+
+ShouldExit :: proc() -> bool {
+	return (state == GameState.Exit)
 }
 
 PauseUpdate :: proc() {
@@ -78,8 +87,7 @@ MenuUpdate :: proc() {
 		state = GameState.GameRunning
 	}
 	if rl.IsKeyPressed(rl.KeyboardKey.Q) {
-		fmt.printfln("goodbye!")
-		rl.CloseWindow()
+		state = GameState.Exit
 	}
 
 }
