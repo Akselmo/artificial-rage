@@ -36,6 +36,11 @@ Update :: proc() {
 
 	rl.ClearBackground(rl.BLACK)
 
+	// Check if close button was pressed
+	if (rl.WindowShouldClose()) {
+		state = GameState.Exit
+	}
+
 	switch state {
 	case GameState.MainMenu:
 		MenuUpdate()
