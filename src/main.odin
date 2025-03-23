@@ -7,7 +7,7 @@ import rl "vendor:raylib"
 main :: proc() {
 	game.Initialize()
 
-	for !rl.WindowShouldClose() {
+	for !game.ShouldExit() {
 		game.Update()
 	}
 
