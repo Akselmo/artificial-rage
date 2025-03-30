@@ -39,6 +39,7 @@ Build :: proc() {
 Clean :: proc() -> rl.Camera {
 	// Is it REALLY this easy????
 	// It seems to just.. work. I am so confused. Wtf.
+	// Memory is never cleared when this is done
 	clear(&entity.entitiesInScene)
 	return rl.Camera{}
 }
