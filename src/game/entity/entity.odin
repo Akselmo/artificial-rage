@@ -48,7 +48,6 @@ Type :: union {
 	ItemKey,
 }
 
-//NOTE: maybe the entity could only hold id, active, transform and type?
 Entity :: struct {
 	id:        i32,
 	active:    bool,
@@ -228,4 +227,3 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 		Destroy(entity)
 	}
 }
-

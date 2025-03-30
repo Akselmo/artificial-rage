@@ -27,6 +27,8 @@ endPosition: rl.Vector3
 size: i32
 
 Initialize :: proc() -> rl.Camera {
+	// Load textures
+	entity.LoadTextures()
 	// Prepare the entities array
 	entity.entitiesInScene = make([dynamic]entity.Entity)
 	Build()
@@ -39,9 +41,15 @@ Build :: proc() {
 }
 
 Clean :: proc() {
-	// Is it REALLY this easy????
-	// It seems to just.. work. I am so confused. Wtf.
-	// Unsure how memory is handled here, it's probably not fully freed?
+	// TODO: Make the textures into shareable pointers
+	// TODO: do same for audio eventually
+	// TODO: create "Delete" procs for all entities to clear other things like model
+
+	for e: int = 0; e < len(entity.entitiesInScene); e += 1 {
+		rl.UnloadModel(entity.entitiesInScene[e].visuals.model)
+	}
+ 	// This does not yet clear everything from memory, but it allows
+ 	// for restarting levels pretty well
 	delete(entity.entitiesInScene)
 }
 
