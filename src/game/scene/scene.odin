@@ -27,6 +27,8 @@ endPosition: rl.Vector3
 size: i32
 
 Initialize :: proc() -> rl.Camera {
+	// Prepare the entities array
+	entity.entitiesInScene = make([dynamic]entity.Entity)
 	Build()
 	return entity.PlayerInitializeCamera(startPosition.x, startPosition.z)
 }
@@ -36,12 +38,11 @@ Build :: proc() {
 	PlaceEntities()
 }
 
-Clean :: proc() -> rl.Camera {
+Clean :: proc() {
 	// Is it REALLY this easy????
 	// It seems to just.. work. I am so confused. Wtf.
-	// Memory is never cleared when this is done
-	clear(&entity.entitiesInScene)
-	return rl.Camera{}
+	// Unsure how memory is handled here, it's probably not fully freed?
+	delete(entity.entitiesInScene)
 }
 
 LoadSceneConfig :: proc() {

@@ -28,7 +28,6 @@ Initialize :: proc() {
 	rl.SetTargetFPS(settings.maxFPS)
 	rl.SetExitKey(rl.KeyboardKey.KEY_NULL)
 
-	//playerCamera = scene.Initialize()
 	state = GameState.MainMenu
 
 }
@@ -63,7 +62,7 @@ Update :: proc() {
 		fmt.printfln("no gameover yet!")
 	case GameState.CleanUp:
 		fmt.printfln("Cleaning up the scene")
-		playerCamera = scene.Clean()
+		scene.Clean()
 		rl.EnableCursor()
 		state = GameState.MainMenu
 	case GameState.Exit:
