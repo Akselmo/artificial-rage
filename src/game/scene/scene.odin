@@ -36,6 +36,13 @@ Build :: proc() {
 	PlaceEntities()
 }
 
+Clean :: proc() -> rl.Camera {
+	// Is it REALLY this easy????
+	// It seems to just.. work. I am so confused. Wtf.
+	clear(&entity.entitiesInScene)
+	return rl.Camera{}
+}
+
 LoadSceneConfig :: proc() {
 	fileName := "./assets/levels/level1.cfg"
 	data, success := os.read_entire_file(fileName)
@@ -61,8 +68,7 @@ LoadSceneConfig :: proc() {
 
 ParseConfig :: proc(key: string, value: string) -> bool {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
-	switch key 
-	{
+	switch key {
 	case "ceilingtexture":
 		ceilingPlaneTexture = rl.LoadTexture(texturesPath)
 		return true
@@ -253,4 +259,3 @@ AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 	append(&entity.entitiesInScene, ent)
 	//fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
 }
-

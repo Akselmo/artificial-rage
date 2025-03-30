@@ -6,6 +6,7 @@ import "src:game/settings"
 import rl "vendor:raylib"
 
 playerCamera: rl.Camera
+menuCamera: rl.Camera2D
 state: GameState
 
 GameState :: enum {
@@ -14,6 +15,7 @@ GameState :: enum {
 	GameRunning,
 	GameOver,
 	GamePauseMenu,
+	CleanUp,
 	Exit,
 }
 
@@ -26,7 +28,7 @@ Initialize :: proc() {
 	rl.SetTargetFPS(settings.maxFPS)
 	rl.SetExitKey(rl.KeyboardKey.KEY_NULL)
 
-	playerCamera = scene.Initialize()
+	//playerCamera = scene.Initialize()
 	state = GameState.MainMenu
 
 }
@@ -41,11 +43,14 @@ Update :: proc() {
 		state = GameState.Exit
 	}
 
+	// TODO: could the pause menu stuff be handled here
 	switch state {
 	case GameState.MainMenu:
 		MenuUpdate()
 	case GameState.Loading:
-		fmt.printfln("no loading screen!")
+		fmt.printfln("Loading scene")
+		playerCamera = scene.Initialize()
+		state = GameState.GameRunning
 	case GameState.GameRunning:
 		rl.BeginMode3D(playerCamera)
 		scene.Update(&playerCamera)
@@ -56,6 +61,11 @@ Update :: proc() {
 	case GameState.GameOver:
 		// TODO this has to clean up and then remake the same level if player restarts
 		fmt.printfln("no gameover yet!")
+	case GameState.CleanUp:
+		fmt.printfln("Cleaning up the scene")
+		playerCamera = scene.Clean()
+		rl.EnableCursor()
+		state = GameState.MainMenu
 	case GameState.Exit:
 		// Don't do anything
 		return
@@ -67,7 +77,7 @@ Update :: proc() {
 }
 
 ShouldExit :: proc() -> bool {
-	return (state == GameState.Exit)
+	return state == GameState.Exit
 }
 
 PauseUpdate :: proc() {
@@ -77,19 +87,19 @@ PauseUpdate :: proc() {
 }
 
 MenuUpdate :: proc() {
-	rl.EnableCursor()
+
 	// TODO We need to do level clean up here
 	HeaderText("Artificial Rage - Menu", rl.GREEN, rl.Vector2{10, 20}, 20)
 	//https://www.raylib.com/examples/textures/loader.html?name=textures_image_processing
-	MenuButton("Press space to start", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
-	MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
+	startButton := MenuButton("Press space to start", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
+	quitButton := MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
-	if rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
+	if startButton || rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
 		rl.DisableCursor()
 		// TODO somekind of state updater proc that runs disable/enable cursor as well
-		state = GameState.GameRunning
+		state = GameState.Loading
 	}
 	if rl.IsKeyPressed(rl.KeyboardKey.Q) {
 		state = GameState.Exit
@@ -97,20 +107,18 @@ MenuUpdate :: proc() {
 
 }
 
-// TODO: state updater that sniffs for inputs like pause menu etc.
+// Used for handling pausemenu regardless of state
 GlobalStateUpdate :: proc() {
-
 	if (state == GameState.GamePauseMenu) {
 		if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
 			fmt.printfln("state set to gamin")
 			rl.DisableCursor()
 			state = GameState.GameRunning
-
 		}
 		if rl.IsKeyPressed(rl.KeyboardKey.Q) {
 			fmt.printfln("state set to menu")
 			rl.EnableCursor()
-			state = GameState.MainMenu
+			state = GameState.CleanUp
 		}
 	} else if (state == GameState.GameRunning) {
 		if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
@@ -119,5 +127,4 @@ GlobalStateUpdate :: proc() {
 			state = GameState.GamePauseMenu
 		}
 	}
-
 }
