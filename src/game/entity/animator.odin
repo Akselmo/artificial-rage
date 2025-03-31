@@ -13,7 +13,7 @@ Animation :: struct {
 }
 
 Animator :: struct {
-	animations:       [dynamic]Animation,
+	animations:       [dynamic]Animation, //TODO cleanup the animations and modelAnimations
 	animationsCount:  i32,
 	currentAnimation: Animation,
 	animationFrame:   i32,

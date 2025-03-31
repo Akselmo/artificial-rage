@@ -48,8 +48,8 @@ Clean :: proc() {
 	for e: int = 0; e < len(entity.entitiesInScene); e += 1 {
 		rl.UnloadModel(entity.entitiesInScene[e].visuals.model)
 	}
- 	// This does not yet clear everything from memory, but it allows
- 	// for restarting levels pretty well
+	// This does not yet clear everything from memory, but it allows
+	// for restarting levels pretty well
 	delete(entity.entitiesInScene)
 }
 
@@ -80,6 +80,7 @@ ParseConfig :: proc(key: string, value: string) -> bool {
 	texturesPath := strings.clone_to_cstring(fmt.aprintf("./assets/textures/%[0]v", value))
 	switch key {
 	case "ceilingtexture":
+		// TODO: load these at startup too only once
 		ceilingPlaneTexture = rl.LoadTexture(texturesPath)
 		return true
 	case "floortexture":
@@ -269,3 +270,4 @@ AddEntityToScene :: proc(type: string, mx: f32, my: f32, id: i32) {
 	append(&entity.entitiesInScene, ent)
 	//fmt.printfln("Creating entity type %[0]v id %[1]v", type, id)
 }
+
