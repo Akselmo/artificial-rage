@@ -3,12 +3,13 @@ import "core:strings"
 import "src:game/utilities"
 import rl "vendor:raylib"
 
-WallCargo :: struct {}
+WallCargo :: struct {
+}
 
 CreateWallCargo :: proc(entity: ^Entity) {
 	entity.type = WallCargo{}
+	entity.visuals.texture = TextureWallCargo^
 	SharedWallCubeModel(entity)
-	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = TextureWallCargo^
 	entity.active = true
 }
 
@@ -20,5 +21,7 @@ SharedWallCubeModel :: proc(entity: ^Entity) {
 	entity.transform.size = rl.Vector3(1)
 	entity.transform.scale = 1.0
 	entity.transform.boundingBox = utilities.MakeBoundingBox(entity.transform.position, entity.transform.size)
+	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = entity.visuals.texture
+
 }
 

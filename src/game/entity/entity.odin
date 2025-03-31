@@ -23,10 +23,10 @@ Transform :: struct {
 }
 
 Visuals :: struct {
-	modelFileName:   string,
-	textureFilename: string,
-	model:           rl.Model,
-	isBillboard:     bool,
+	texture:       rl.Texture2D,
+	modelFileName: string,
+	model:         rl.Model,
+	isBillboard:   bool,
 }
 
 Audio :: struct {
@@ -227,3 +227,4 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 		Destroy(entity)
 	}
 }
+

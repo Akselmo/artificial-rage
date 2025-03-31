@@ -18,13 +18,13 @@ CreateItemHealth :: proc(entity: ^Entity, morph: ItemHealthMorph) {
 
 	switch (morph) {
 	case ItemHealthMorph.SMALL:
-		entity.visuals.textureFilename = "./assets/textures/health_small.png"
+		entity.visuals.texture = TextureItemHealthSmall^
 		item.healAmount = 5
 	case ItemHealthMorph.MEDIUM:
-		entity.visuals.textureFilename = "./assets/textures/health_medium.png"
+		entity.visuals.texture = TextureItemHealthMedium^
 		item.healAmount = 10
 	case ItemHealthMorph.LARGE:
-		entity.visuals.textureFilename = "./assets/textures/health_large.png"
+		entity.visuals.texture = TextureItemHealthLarge^
 		item.healAmount = 15
 	}
 

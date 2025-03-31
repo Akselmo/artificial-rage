@@ -16,7 +16,7 @@ CreateItemKey :: proc(entity: ^Entity, morph: ItemKeyMorph) {
 
 	switch (morph) {
 	case ItemKeyMorph.TELEPORT:
-		entity.visuals.textureFilename = "./assets/textures/pickup_teleportkey.png"
+		entity.visuals.texture = TextureItemPickupKey^
 	}
 
 	item.keyMorph = morph

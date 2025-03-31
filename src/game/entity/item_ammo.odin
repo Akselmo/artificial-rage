@@ -13,16 +13,16 @@ CreateItemAmmo :: proc(entity: ^Entity, morph: WeaponType) {
 
 	switch (morph) {
 	case WeaponType.PISTOL:
-		entity.visuals.textureFilename = "./assets/textures/ammo_pistol.png"
+		entity.visuals.texture = TextureItemAmmoPistol^
 		item.ammoAmount = 10
 	case WeaponType.RIFLE:
-		entity.visuals.textureFilename = "./assets/textures/ammo_rifle.png"
+		entity.visuals.texture = TextureItemAmmoRifle^
 		item.ammoAmount = 20
 	case WeaponType.SHOTGUN:
-		entity.visuals.textureFilename = "./assets/textures/ammo_shotgun.png"
+		entity.visuals.texture = TextureItemAmmoShotgun^
 		item.ammoAmount = 5
 	case WeaponType.RAILGUN:
-		entity.visuals.textureFilename = "./assets/textures/ammo_railgun.png"
+		entity.visuals.texture = TextureItemAmmoRailgun^
 		item.ammoAmount = 1
 	case WeaponType.MELEE:
 		fmt.printfln("How did you pick up ammo for fists????")

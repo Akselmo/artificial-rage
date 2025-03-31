@@ -19,12 +19,6 @@ InitializeItem :: proc(entity: ^Entity, isPickup: bool, yPos: f32) {
 		fmt.printfln("Entity $[0]v scale is 0, did you forget to set the scale?", entity.type)
 	}
 
-	textureName := strings.clone_to_cstring(entity.visuals.textureFilename)
-	defer delete(textureName)
-	textureImage := rl.LoadImage(textureName)
-	rl.ImageFlipVertical(&textureImage)
-
-	texture := rl.LoadTextureFromImage(textureImage)
 
 	cube := rl.GenMeshCube(entity.transform.size.x, entity.transform.size.y, entity.transform.size.z)
 
@@ -32,7 +26,7 @@ InitializeItem :: proc(entity: ^Entity, isPickup: bool, yPos: f32) {
 
 	entity.transform.boundingBox = utilities.MakeBoundingBox(entity.transform.position, entity.transform.size)
 
-	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = texture
+	entity.visuals.model.materials[0].maps[rl.MaterialMapIndex.ALBEDO].texture = entity.visuals.texture
 
 }
 

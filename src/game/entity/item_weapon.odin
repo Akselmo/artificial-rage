@@ -13,16 +13,16 @@ CreateItemWeaponPickup :: proc(entity: ^Entity, morph: WeaponType) {
 
 	switch (morph) {
 	case WeaponType.PISTOL:
-		entity.visuals.textureFilename = "./assets/textures/pistol.png"
+		entity.visuals.texture = TextureItemPickupPistol^
 		item.ammoAmount = 5
 	case WeaponType.RIFLE:
-		entity.visuals.textureFilename = "./assets/textures/rifle.png"
+		entity.visuals.texture = TextureItemPickupRifle^
 		item.ammoAmount = 15
 	case WeaponType.SHOTGUN:
-		entity.visuals.textureFilename = "./assets/textures/shotgun.png"
+		entity.visuals.texture = TextureItemPickupShotgun^
 		item.ammoAmount = 2
 	case WeaponType.RAILGUN:
-		entity.visuals.textureFilename = "./assets/textures/railgun.png"
+		entity.visuals.texture = TextureItemPickupRailgun^
 		item.ammoAmount = 1
 	case WeaponType.MELEE:
 		fmt.printfln("How did you pick up fists from the ground????")
