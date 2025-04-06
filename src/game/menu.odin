@@ -21,7 +21,8 @@ MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bo
 		rl.BLACK,
 	)
 
-	if (rl.CheckCollisionPointRec(rl.GetMousePosition(), rectangle) && rl.IsMouseButtonDown(rl.MouseButton.LEFT)) {
+	if (rl.CheckCollisionPointRec(rl.GetMousePosition(), rectangle) &&
+		   rl.IsMouseButtonReleased(rl.MouseButton.LEFT)) {
 		fmt.printfln("%[0]v clicked", txt)
 		return true
 	}
@@ -31,3 +32,4 @@ MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bo
 HeaderText :: proc(txt: cstring, color: rl.Color, position: rl.Vector2, fontSize: i32) {
 	rl.DrawText(txt, cast(i32)position.x, cast(i32)position.y, fontSize, color)
 }
+

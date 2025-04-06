@@ -105,7 +105,8 @@ CheckCollision :: proc(entityPos: rl.Vector3, entitySize: rl.Vector3, entityId: 
 		if (!entity.active) {
 			continue
 		}
-		if (entity.id != entityId && rl.CheckCollisionBoxes(entityBox, entity.transform.boundingBox)) {
+		if (entity.id != entityId &&
+			   rl.CheckCollisionBoxes(entityBox, entity.transform.boundingBox)) {
 			if (entity.transform.canCollide) {
 				return true
 			} else if (entityId == PLAYER_ID) {
@@ -130,7 +131,10 @@ RaycastHitsEntity :: proc(rayCast: rl.Ray) -> ^Entity {
 			#partial switch _ in entity.type {
 			case Enemy:
 				enemy := &entity.type.(Enemy)
-				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(rayCast, entity.transform.boundingBox)
+				enemyHit: rl.RayCollision = rl.GetRayCollisionBox(
+					rayCast,
+					entity.transform.boundingBox,
+				)
 				if (enemyHit.hit && !enemy.dead) {
 					dist := rl.Vector3Length(entity.transform.position - rayCast.position)
 					if (dist < entityDistanceFromPlayer) {
@@ -192,7 +196,11 @@ RotateTowards :: proc(entity: ^Entity, targetPosition: rl.Vector3) {
 
 	#partial switch _ in entity.type {
 	case Enemy:
-		slerp = rl.QuaternionSlerp(start, end, entity.type.(Enemy).rotationSpeed * rl.GetFrameTime())
+		slerp = rl.QuaternionSlerp(
+			start,
+			end,
+			entity.type.(Enemy).rotationSpeed * rl.GetFrameTime(),
+		)
 	case:
 		slerp = rl.QuaternionSlerp(start, end, 3.0 * rl.GetFrameTime())
 	}

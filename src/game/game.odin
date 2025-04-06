@@ -3,11 +3,13 @@ package game
 import "core:fmt"
 import "src:game/scene"
 import "src:game/settings"
+import "src:game/utilities"
 import rl "vendor:raylib"
 
 playerCamera: rl.Camera
 menuCamera: rl.Camera2D
 state: GameState
+screenCenter: rl.Vector2
 
 GameState :: enum {
 	MainMenu,
@@ -29,6 +31,7 @@ Initialize :: proc() {
 	rl.SetExitKey(rl.KeyboardKey.KEY_NULL)
 
 	state = GameState.MainMenu
+	screenCenter = utilities.GetScreenCenter()
 
 }
 
@@ -51,10 +54,7 @@ Update :: proc() {
 		playerCamera = scene.Initialize()
 		state = GameState.GameRunning
 	case GameState.GameRunning:
-		rl.BeginMode3D(playerCamera)
-		scene.Update(&playerCamera)
-		rl.EndMode3D()
-		HudUpdate()
+		GameUpdate()
 	case GameState.GamePauseMenu:
 		PauseUpdate()
 	case GameState.GameOver:
@@ -70,8 +70,6 @@ Update :: proc() {
 		return
 	}
 
-	GlobalStateUpdate()
-
 	rl.EndDrawing()
 }
 
@@ -80,50 +78,61 @@ ShouldExit :: proc() -> bool {
 }
 
 PauseUpdate :: proc() {
-	HeaderText("PAUSED", rl.GREEN, rl.Vector2{10, 20}, 20)
-	MenuButton("Press esc to continue", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
-	MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
+	HeaderText("PAUSED", rl.GREEN, rl.Vector2{screenCenter.x, 10}, 20)
+	continueButton := MenuButton(
+		"CONTINUE",
+		rl.WHITE,
+		rl.Rectangle{screenCenter.x, 50.0, 150.0, 30.0},
+	)
+	quitButton := MenuButton(
+		"EXIT TO MENU",
+		rl.WHITE,
+		rl.Rectangle{screenCenter.x, 80.0, 150.0, 30.0},
+	)
+
+	if continueButton || rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
+		fmt.printfln("state set to gamin")
+		rl.DisableCursor()
+		state = GameState.GameRunning
+	}
+	if quitButton {
+		fmt.printfln("state set to menu")
+		rl.EnableCursor()
+		state = GameState.CleanUp
+	}
+
 }
 
 MenuUpdate :: proc() {
 
 	// TODO We need to do level clean up here
-	HeaderText("Artificial Rage - Menu", rl.GREEN, rl.Vector2{10, 20}, 20)
+	HeaderText("Artificial Rage - Menu", rl.GREEN, rl.Vector2{screenCenter.x, 10}, 20)
 	//https://www.raylib.com/examples/textures/loader.html?name=textures_image_processing
-	startButton := MenuButton("Press space to start", rl.WHITE, rl.Rectangle{40.0, 50.0, 150.0, 30.0})
-	quitButton := MenuButton("Press q to quit", rl.WHITE, rl.Rectangle{40.0, 80.0, 150.0, 30.0})
+	startButton := MenuButton("START", rl.WHITE, rl.Rectangle{screenCenter.x, 50.0, 150.0, 30.0})
+	quitButton := MenuButton("QUIT", rl.WHITE, rl.Rectangle{screenCenter.x, 80.0, 150.0, 30.0})
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
-	if startButton || rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
+	if startButton {
 		rl.DisableCursor()
 		// TODO somekind of state updater proc that runs disable/enable cursor as well
 		state = GameState.Loading
 	}
-	if rl.IsKeyPressed(rl.KeyboardKey.Q) {
+	if quitButton {
 		state = GameState.Exit
 	}
 
 }
 
-// Used for handling pausemenu regardless of state
-GlobalStateUpdate :: proc() {
-	if (state == GameState.GamePauseMenu) {
-		if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
-			fmt.printfln("state set to gamin")
-			rl.DisableCursor()
-			state = GameState.GameRunning
-		}
-		if rl.IsKeyPressed(rl.KeyboardKey.Q) {
-			fmt.printfln("state set to menu")
-			rl.EnableCursor()
-			state = GameState.CleanUp
-		}
-	} else if (state == GameState.GameRunning) {
-		if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
-			fmt.printfln("state set to pause")
-			rl.EnableCursor()
-			state = GameState.GamePauseMenu
-		}
+GameUpdate :: proc() {
+	rl.BeginMode3D(playerCamera)
+	scene.Update(&playerCamera)
+	rl.EndMode3D()
+	HudUpdate()
+	if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
+		fmt.printfln("state set to pause")
+		rl.EnableCursor()
+		state = GameState.GamePauseMenu
 	}
 }
+
