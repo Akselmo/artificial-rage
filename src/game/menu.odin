@@ -4,15 +4,22 @@ import "core:fmt"
 import "src:game/settings"
 import rl "vendor:raylib"
 
+// Returns true when clicked, false when idle
 MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bool {
+	// Draw background
 	rl.DrawRectangleRec(rectangle, color)
-	rl.DrawRectangleLines(
-		cast(i32)rectangle.x,
-		cast(i32)rectangle.y,
-		cast(i32)rectangle.width,
-		cast(i32)rectangle.height,
-		color,
-	)
+
+	if rl.CheckCollisionPointRec(rl.GetMousePosition(), rectangle) {
+		// Draw hover effect
+		rl.DrawRectangleRec(rectangle, rl.BLUE)
+		// Handle clicking
+		if rl.IsMouseButtonReleased(rl.MouseButton.LEFT) {
+			fmt.printfln("%[0]v clicked", txt)
+			return true
+		}
+	}
+
+	// Draw text after everything
 	rl.DrawText(
 		txt,
 		cast(i32)(rectangle.x + rectangle.width / 2.0 - cast(f32)rl.MeasureText(txt, 10) / 2.0),
@@ -20,12 +27,6 @@ MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bo
 		10,
 		rl.BLACK,
 	)
-
-	if (rl.CheckCollisionPointRec(rl.GetMousePosition(), rectangle) &&
-		   rl.IsMouseButtonReleased(rl.MouseButton.LEFT)) {
-		fmt.printfln("%[0]v clicked", txt)
-		return true
-	}
 	return false
 }
 
