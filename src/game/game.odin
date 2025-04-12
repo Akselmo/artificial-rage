@@ -78,16 +78,38 @@ ShouldExit :: proc() -> bool {
 }
 
 PauseUpdate :: proc() {
-	HeaderText("PAUSED", rl.GREEN, rl.Vector2{screenCenter.x, 10}, 20)
+	rectangleWidth: f32 = 150.0
+	rectangleHeight: f32 = 30.0
+	HeaderText(
+		"Paused",
+		rl.GREEN,
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight,
+			rectangleWidth,
+			rectangleHeight,
+		},
+		20,
+	)
 	continueButton := MenuButton(
 		"CONTINUE",
 		rl.WHITE,
-		rl.Rectangle{screenCenter.x, 50.0, 150.0, 30.0},
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight * 3,
+			rectangleWidth,
+			rectangleHeight,
+		},
 	)
 	quitButton := MenuButton(
 		"EXIT TO MENU",
 		rl.WHITE,
-		rl.Rectangle{screenCenter.x, 80.0, 150.0, 30.0},
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight * 4.5,
+			rectangleWidth,
+			rectangleHeight,
+		},
 	)
 
 	if continueButton || rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
@@ -104,12 +126,40 @@ PauseUpdate :: proc() {
 }
 
 MenuUpdate :: proc() {
-
-	// TODO We need to do level clean up here
-	HeaderText("Artificial Rage - Menu", rl.GREEN, rl.Vector2{screenCenter.x, 10}, 20)
+	rectangleWidth: f32 = 150.0
+	rectangleHeight: f32 = 30.0
+	HeaderText(
+		"Artificial Rage - Menu",
+		rl.GREEN,
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight,
+			rectangleWidth,
+			rectangleHeight,
+		},
+		20,
+	)
 	//https://www.raylib.com/examples/textures/loader.html?name=textures_image_processing
-	startButton := MenuButton("START", rl.WHITE, rl.Rectangle{screenCenter.x, 50.0, 150.0, 30.0})
-	quitButton := MenuButton("QUIT", rl.WHITE, rl.Rectangle{screenCenter.x, 80.0, 150.0, 30.0})
+	startButton := MenuButton(
+		"START",
+		rl.WHITE,
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight * 3,
+			rectangleWidth,
+			rectangleHeight,
+		},
+	)
+	quitButton := MenuButton(
+		"QUIT",
+		rl.WHITE,
+		rl.Rectangle {
+			screenCenter.x - rectangleWidth / 2,
+			rectangleHeight * 4.5,
+			rectangleWidth,
+			rectangleHeight,
+		},
+	)
 
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off

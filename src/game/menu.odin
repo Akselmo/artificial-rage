@@ -30,7 +30,15 @@ MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bo
 	return false
 }
 
-HeaderText :: proc(txt: cstring, color: rl.Color, position: rl.Vector2, fontSize: i32) {
-	rl.DrawText(txt, cast(i32)position.x, cast(i32)position.y, fontSize, color)
+HeaderText :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle, fontSize: i32) {
+	rl.DrawText(
+		txt,
+		cast(i32)(rectangle.x +
+			rectangle.width / 2.0 -
+			cast(f32)rl.MeasureText(txt, fontSize) / 2.0),
+		cast(i32)rectangle.y + 11.0,
+		fontSize,
+		color,
+	)
 }
 
