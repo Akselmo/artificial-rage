@@ -23,7 +23,7 @@ MenuButton :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle) -> bo
 	rl.DrawText(
 		txt,
 		cast(i32)(rectangle.x + rectangle.width / 2.0 - cast(f32)rl.MeasureText(txt, 10) / 2.0),
-		cast(i32)rectangle.y + 11.0,
+		cast(i32)rectangle.y + 10.0,
 		10,
 		rl.BLACK,
 	)
@@ -36,7 +36,7 @@ HeaderText :: proc(txt: cstring, color: rl.Color, rectangle: rl.Rectangle, fontS
 		cast(i32)(rectangle.x +
 			rectangle.width / 2.0 -
 			cast(f32)rl.MeasureText(txt, fontSize) / 2.0),
-		cast(i32)rectangle.y + 11.0,
+		cast(i32)rectangle.y + 10.0,
 		fontSize,
 		color,
 	)

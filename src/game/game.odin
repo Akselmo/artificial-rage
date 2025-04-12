@@ -10,6 +10,8 @@ playerCamera: rl.Camera
 menuCamera: rl.Camera2D
 state: GameState
 screenCenter: rl.Vector2
+rectangleWidth: f32 = 150.0
+rectangleHeight: f32 = 30.0
 
 GameState :: enum {
 	MainMenu,
@@ -78,8 +80,7 @@ ShouldExit :: proc() -> bool {
 }
 
 PauseUpdate :: proc() {
-	rectangleWidth: f32 = 150.0
-	rectangleHeight: f32 = 30.0
+
 	HeaderText(
 		"Paused",
 		rl.GREEN,
@@ -126,8 +127,7 @@ PauseUpdate :: proc() {
 }
 
 MenuUpdate :: proc() {
-	rectangleWidth: f32 = 150.0
-	rectangleHeight: f32 = 30.0
+
 	HeaderText(
 		"Artificial Rage - Menu",
 		rl.GREEN,
