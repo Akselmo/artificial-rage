@@ -156,6 +156,8 @@ WeaponDrawSprite :: proc() {
 	posY: f32 = cast(f32)rl.GetScreenHeight() - (frameHeight * wpn.spritePositionOffset.y)
 
 	sourceRec: rl.Rectangle = {0.0, 0.0, frameWidth, frameHeight}
+	// TODO: allow scaling destRec.. Ideally we check what resolution we are using and then scale it
+	//       so that the weapon is always good size on any resolution
 	destRec: rl.Rectangle = {posX, posY, frameWidth * scale, frameHeight * scale}
 
 	if (WeaponActive) {
