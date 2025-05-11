@@ -32,7 +32,7 @@ Initialize :: proc() {
 	rl.SetTargetFPS(settings.maxFPS)
 	rl.SetExitKey(rl.KeyboardKey.KEY_NULL)
 
-	state = GameState.MainMenu
+	ChangeState(GameState.MainMenu)
 	screenCenter = utilities.GetScreenCenter()
 
 }
@@ -44,7 +44,7 @@ Update :: proc() {
 
 	// Check if close button was pressed
 	if (rl.WindowShouldClose()) {
-		state = GameState.Exit
+		ChangeState(GameState.Exit)
 	}
 
 	// TODO: could the pause menu stuff be handled here
@@ -54,7 +54,7 @@ Update :: proc() {
 	case GameState.Loading:
 		fmt.printfln("Loading scene")
 		playerCamera = scene.Initialize()
-		state = GameState.GameRunning
+		ChangeState(GameState.GameRunning)
 	case GameState.GameRunning:
 		GameUpdate()
 	case GameState.GamePauseMenu:
@@ -66,7 +66,7 @@ Update :: proc() {
 		fmt.printfln("Cleaning up the scene")
 		scene.Clean()
 		rl.EnableCursor()
-		state = GameState.MainMenu
+		ChangeState(GameState.MainMenu)
 	case GameState.Exit:
 		// Don't do anything
 		return
@@ -116,12 +116,12 @@ PauseUpdate :: proc() {
 	if continueButton || rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
 		fmt.printfln("state set to gamin")
 		rl.DisableCursor()
-		state = GameState.GameRunning
+		ChangeState(GameState.GameRunning)
 	}
 	if quitButton {
 		fmt.printfln("state set to menu")
 		rl.EnableCursor()
-		state = GameState.CleanUp
+		ChangeState(GameState.CleanUp)
 	}
 
 }
@@ -164,12 +164,10 @@ MenuUpdate :: proc() {
 	// menu presses etc come here
 	// Enable and disable cursor based on if menu is on or off
 	if startButton {
-		rl.DisableCursor()
-		// TODO somekind of state updater proc that runs disable/enable cursor as well
-		state = GameState.Loading
+		ChangeState(GameState.Loading)
 	}
 	if quitButton {
-		state = GameState.Exit
+		ChangeState(GameState.Exit)
 	}
 
 }
@@ -182,7 +180,20 @@ GameUpdate :: proc() {
 	if rl.IsKeyPressed(rl.KeyboardKey.ESCAPE) {
 		fmt.printfln("state set to pause")
 		rl.EnableCursor()
-		state = GameState.GamePauseMenu
+		ChangeState(GameState.GamePauseMenu)
+	}
+}
+
+ChangeState :: proc(newState: GameState) {
+	if (state == newState) {
+		return
+	}
+	state = newState
+
+	if (state == GameState.GamePauseMenu || state == GameState.MainMenu) {
+		rl.EnableCursor()
+	} else {
+		rl.DisableCursor()
 	}
 }
 

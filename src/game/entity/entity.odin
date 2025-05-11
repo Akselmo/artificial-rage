@@ -226,6 +226,7 @@ HandlePlayerPickup :: proc(entity: ^Entity) {
 	case ItemKey:
 		destroyed = true
 		Player.hasTeleportKey = true
+	// TODO implement the rest
 	case:
 		fmt.printfln("Unimplemented: %[0]v", entity.type)
 	}
