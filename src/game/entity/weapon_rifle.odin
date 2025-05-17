@@ -19,6 +19,6 @@ WeaponRifle: WeaponData = {
 	projectileSize       = rl.Vector3{0.05, 0.05, 0.1},
 	projectileColor      = rl.BLUE,
 	spritesTotal         = 5,
-	spritePositionOffset = rl.Vector2{-0.10, 1.0},
+	spritePositionOffset = rl.Vector2{0.25, 0.01},
 }
 

@@ -121,7 +121,10 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 			if (wpn.hitscan) {
 				// hitscan
 				entityHit := RaycastHitsEntity(rayCast)
-				distanceFromPlayer := rl.Vector3Distance(Player.transform.position, entityHit.transform.position)
+				distanceFromPlayer := rl.Vector3Distance(
+					Player.transform.position,
+					entityHit.transform.position,
+				)
 				if (distanceFromPlayer < 1.0) {
 					#partial switch _ in entityHit.type {
 					case Enemy:
@@ -132,7 +135,13 @@ WeaponFire :: proc(oldFireTime: f32, camera: ^rl.Camera) -> f32 {
 				// projectile
 				// Move raycast start position a bit further from player if firing a projectile
 				rayCast.position = rayCast.position + (rayCast.direction * 0.1)
-				ProjectileCreate(rayCast, wpn.projectileSize, wpn.damage, PLAYER_ID, wpn.projectileColor)
+				ProjectileCreate(
+					rayCast,
+					wpn.projectileSize,
+					wpn.damage,
+					PLAYER_ID,
+					wpn.projectileColor,
+				)
 			}
 			if (wpn.weaponId != WeaponType.MELEE) {
 				wpn.ammo -= 1
@@ -149,20 +158,28 @@ WeaponDrawSprite :: proc() {
 
 	frameWidth: f32 = cast(f32)wpn.spriteTexture.width / cast(f32)wpn.spritesTotal
 	frameHeight: f32 = cast(f32)wpn.spriteTexture.height
-	origin: rl.Vector2 = {frameWidth / 2.0, frameHeight}
+	origin: rl.Vector2 = {0, 0}
 
-	scale: f32 = math.min(frameWidth * 2.0 / frameWidth, frameHeight * 2.0 / frameHeight)
-	posX: f32 = utilities.GetScreenCenter().x - (frameWidth * wpn.spritePositionOffset.x)
-	posY: f32 = cast(f32)rl.GetScreenHeight() - (frameHeight * wpn.spritePositionOffset.y)
+	// TODO: make this a changeable setting
+	scaleMod: f32 = 3.0
+	scaleX: f32 = frameWidth * scaleMod / frameWidth
+	scaleY: f32 = frameHeight * scaleMod / frameHeight
+	posX: f32 =
+		(cast(f32)rl.GetScreenWidth() / 2.0) -
+		((frameWidth * scaleX) / 2.0) +
+		(frameWidth * scaleX * wpn.spritePositionOffset.x)
+
+	posY: f32 =
+		(cast(f32)rl.GetScreenHeight() - (frameHeight * scaleY)) +
+		(frameHeight * scaleY * wpn.spritePositionOffset.y)
 
 	sourceRec: rl.Rectangle = {0.0, 0.0, frameWidth, frameHeight}
-	// TODO: allow scaling destRec.. Ideally we check what resolution we are using and then scale it
-	//       so that the weapon is always good size on any resolution
-	destRec: rl.Rectangle = {posX, posY, frameWidth * scale, frameHeight * scale}
+	destRec: rl.Rectangle = {posX, posY, frameWidth * scaleX, frameHeight * scaleY}
 
 	if (WeaponActive) {
 		WeaponFrameCounter += 1
-		if (cast(f32)WeaponFrameCounter >= cast(f32)rl.GetFPS() / (wpn.spriteSpeed / wpn.fireRate)) {
+		if (cast(f32)WeaponFrameCounter >=
+			   cast(f32)rl.GetFPS() / (wpn.spriteSpeed / wpn.fireRate)) {
 			WeaponCurrentFrame += 1
 
 			if (WeaponCurrentFrame >= wpn.spritesTotal) {
